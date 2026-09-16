@@ -23,10 +23,7 @@ godot.exe
 # Testing-related ignores
 # ...
 
-# Coding agent-related files
-.claude/*
-!.claude/settings.json
-
 # IDE-related files
+.claude/settings.local.json
 .vscode/*
 !.vscode/extensions.json

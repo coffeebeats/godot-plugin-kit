@@ -2,9 +2,6 @@
 
 Opinionated Godot game infrastructure, assembled from 'std'.
 
-> [!NOTE]
-> After instantiating a plugin from this repository, be sure to update placeholder text in [plugin.cfg](./plugin.cfg).
-
 ## Usage
 
 ### Add as a dependency
@@ -12,7 +9,7 @@ Opinionated Godot game infrastructure, assembled from 'std'.
 Add this repository's `dist` branch as a submodule of a Godot project, typically under the `addons` directory:
 
 ```sh
-git submodule add -b dist https://github.com/coffeebeats/godot-plugin-kit addons/template
+git submodule add -b dist https://github.com/coffeebeats/godot-plugin-kit addons/kit
 ```
 
 Each release is a commit on `dist`, tagged `dist/vX.Y.Z`. Versions follow semantic versioning independently of Godot; raising the minimum Godot version is a major release.
@@ -64,30 +61,15 @@ When submitting code for review, ensure the following requirements are met:
 
 ### Secrets
 
-After instantiating a project from this template repository, the default GitHub actions and workflows require the following repository secrets to be set:
+The default GitHub actions and workflows read the following repository secrets:
 
 - `GHA_TOKEN` - If desired, create a PAT for GitHub actions to use when checking a project; allows fix-formatting commits to trigger actions.
 - `RELEASE_PLEASE_TOKEN` - Enables release pull requests to run CI/CD workflows.
-
-### Customization
-
-In addition to [Secrets](#secrets), the following files should be customized for the instantiated repository:
-
-- [plugin.cfg](./plugin.cfg) - update the title, description, and other properties of the plugin configuration file.
-- [.github/workflows/release-please.yml](.github/workflows/release-please.yml) - ensure the project is correctly packaged into an addon.
-
-Also update repository settings in GitHub, including:
-
-- General repository features
-- Branch protection for `main` and the `dist` branch
 
 ## **Version history**
 
 See [CHANGELOG.md](https://github.com/coffeebeats/godot-plugin-kit/blob/main/CHANGELOG.md).
 
 ## **License**
-
-> [!IMPORTANT]
-> After instantiating this repository, consider removing this license if the project isn't intended to be open source.
 
 [MIT License](https://github.com/coffeebeats/godot-plugin-kit/blob/main/LICENSE)
