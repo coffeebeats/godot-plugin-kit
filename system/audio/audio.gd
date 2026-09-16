@@ -20,8 +20,23 @@ const GROUP_AUDIO_SHIM := &"system/audio:shim"
 @export var covered_snapshot: StdMixSnapshot = null
 
 ## screens is the game's screen manager, whose covered and uncovered signals drive
-## the mix snapshot. Ducking is optional, so an unset value disables it silently.
-@export var screens: StdScreenManager = null
+## the mix snapshot. It lives in the game's own scene rather than this one, so the
+## game assigns it at runtime. Ducking is optional, so an unset value disables it
+## silently.
+@export var screens: StdScreenManager = null:
+	set(value):
+		if value == screens:
+			return
+
+		if screens:
+			Signals.disconnect_safe(screens.screen_covered, _on_screen_covered)
+			Signals.disconnect_safe(screens.screen_uncovered, _on_screen_uncovered)
+
+		screens = value
+
+		if screens:
+			Signals.connect_safe(screens.screen_covered, _on_screen_covered)
+			Signals.connect_safe(screens.screen_uncovered, _on_screen_uncovered)
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
@@ -49,21 +64,6 @@ func _exit_tree() -> void:
 	super._exit_tree()
 
 	StdGroup.with_id(GROUP_AUDIO_SHIM).remove_member(self)
-
-
-func _ready() -> void:
-	_connect_screen_signals.call_deferred()
-
-
-# -- PRIVATE METHODS ----------------------------------------------------------------- #
-
-
-func _connect_screen_signals() -> void:
-	if not screens:
-		return
-
-	Signals.connect_safe(screens.screen_covered, _on_screen_covered)
-	Signals.connect_safe(screens.screen_uncovered, _on_screen_uncovered)
 
 
 # -- SIGNAL HANDLERS ----------------------------------------------------------------- #
