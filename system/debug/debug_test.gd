@@ -82,7 +82,7 @@ func test_debug_identifiers_collects_each_name_once() -> void:
 
 func test_debug_resolve_finds_what_expression_cannot() -> void:
 	# Then: An autoload, an engine singleton and a global class each resolve.
-	assert_true(_bridge._resolve("System") is Node)
+	assert_true(_bridge._resolve("Platform") is Node)
 	assert_not_null(_bridge._resolve("ResourceLoader"))
 	assert_true(_bridge._resolve("KitSystems") is Script)
 
@@ -94,11 +94,11 @@ func test_debug_resolve_with_an_unknown_name_returns_null() -> void:
 
 func test_debug_node_accepts_every_form_of_the_same_path() -> void:
 	# Given: An autoload the caller may name three ways.
-	var expected := _bridge.get_tree().root.get_node_or_null(^"System")
+	var expected := _bridge.get_tree().root.get_node_or_null(^"Platform")
 	# Then: The absolute, root-prefixed and bare forms all find it.
-	assert_eq(_bridge._node("/root/System"), expected)
-	assert_eq(_bridge._node("root/System"), expected)
-	assert_eq(_bridge._node("System"), expected)
+	assert_eq(_bridge._node("/root/Platform"), expected)
+	assert_eq(_bridge._node("root/Platform"), expected)
+	assert_eq(_bridge._node("Platform"), expected)
 
 
 func test_debug_node_with_no_path_returns_the_root() -> void:
@@ -173,8 +173,10 @@ func test_debug_to_json_renders_a_bare_object_as_text() -> void:
 
 
 func before_each() -> void:
-	_bridge = Debug.instance()
-	assert_not_null(_bridge, "invalid state; the debug feature should be present")
+	# NOTE: A game composes this node into its own tree. The test stands it up alone,
+	# so the bridge is covered without the rest of the system.
+	_bridge = add_child_autofree(DebugScene.instantiate())
+	assert_not_null(Debug.instance(), "invalid state; the bridge did not register")
 
 
 func after_each() -> void:
