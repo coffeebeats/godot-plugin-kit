@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://beb4vb4fgtaik"]
+
+[ext_resource type="Script" uid="uid://b48nei7xl0xrh" path="res://addons/std/condition/condition_loader.gd" id="1_0neaf"]
+[ext_resource type="Script" uid="uid://be11f4pqliry0" path="res://addons/std/condition/expression.gd" id="2_elne7"]
+[ext_resource type="Resource" uid="uid://nggtxsyr5rs2" path="res://platform/storefront/steam/steam_storefront_expression.tres" id="3_loaae"]
+
+[node name="Storefront" type="Node" unique_id=1573060488]
+
+[node name="StdConditionLoader" type="Node" parent="." unique_id=91151433]
+script = ExtResource("1_0neaf")
+scene = "uid://b4m43lixcajnq"
+expressions_allow = Array[ExtResource("2_elne7")]([ExtResource("3_loaae")])

@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://cfr2tqmntmsnf"]
+
+[ext_resource type="Script" uid="uid://3k72xl13c1j1" path="res://platform/logging/logging.gd" id="1_irdeh"]
+[ext_resource type="Resource" uid="uid://b8jax3yxbr67j" path="res://platform/logging/profile_editor.tres" id="2_ne8c3"]
+[ext_resource type="Resource" uid="uid://6l3ir8pgjdox" path="res://platform/logging/profile_default.tres" id="2_vx4e5"]
+
+[node name="Logging" type="Node" unique_id=868001764]
+script = ExtResource("1_irdeh")
+profile_default = ExtResource("2_vx4e5")
+profile_editor = ExtResource("2_ne8c3")
