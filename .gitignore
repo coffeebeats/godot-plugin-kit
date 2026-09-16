@@ -1,0 +1,32 @@
+# Godot-specific ignores
+.godot/
+
+# Python tooling
+.venv/
+.ruff_cache/
+__pycache__/
+
+# Imported translations (automatically generated from CSV files)
+*.translation
+
+# MacOS-specific ignores
+.DS_Store
+
+# Godot source/editor files
+/.scons
+/godot
+Godot.app
+godot.app
+Godot.exe
+godot.exe
+
+# Testing-related ignores
+# ...
+
+# Coding agent-related files
+.claude/*
+!.claude/settings.json
+
+# IDE-related files
+.vscode/*
+!.vscode/extensions.json

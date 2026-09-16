@@ -1,0 +1,4 @@
+[submodule "addons/gut"]
+	path = addons/gut
+	url = https://github.com/coffeebeats/gut
+	branch = dist

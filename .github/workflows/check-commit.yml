@@ -1,0 +1,32 @@
+name: "🔎 Check: Godot project"
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    uses: coffeebeats/godot-infra/.github/workflows/check-project.yaml@v6
+    secrets: inherit
+
+  # NOTE: This job name is required by the branch ruleset.
+  branch_protection:
+    needs: [check]
+    if: ${{ always() }}
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+
+    steps:
+      - name: Verify status of dependencies
+        if: |
+          always() &&
+          (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled'))
+        run: exit 1
