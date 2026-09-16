@@ -55,3 +55,9 @@ gdscript/warnings/function_used_as_property=2
 
 enabled=PackedStringArray("res://addons/gut/plugin.cfg")
 
+[steam]
+
+initialization/app_id=0
+initialization/initialize_on_startup=false
+initialization/embed_callbacks=false
+multiplayer_peer/max_channels=4
