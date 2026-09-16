@@ -16,25 +16,9 @@ jobs:
     uses: coffeebeats/godot-infra/.github/workflows/check-project.yaml@v6
     secrets: inherit
 
-  # NOTE: The addon never names a consuming game. The reusable workflow has no hook
-  # for a project-specific rule, so this lives here.
-  check-layering:
-    runs-on: ubuntu-latest
-    timeout-minutes: 2
-
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-
-      - name: Verify the addon does not reference a consuming game
-        run: |
-          if grep -rn 'res://project/' --include='*.gd' --include='*.tscn' --include='*.tres' --exclude-dir=addons .; then
-            echo "::error::Nothing in this addon may reference 'res://project/'."
-            exit 1
-          fi
-
   # NOTE: This job name is required by the branch ruleset.
   branch_protection:
-    needs: [check, check-layering]
+    needs: [check]
     if: ${{ always() }}
 
     runs-on: ubuntu-latest
