@@ -1,4 +1,15 @@
 [submodule "addons/gut"]
-	path = addons/gut
-	url = https://github.com/coffeebeats/gut
-	branch = dist
+path = addons/gut
+url = https://github.com/coffeebeats/gut
+branch = dist
+
+[submodule "addons/godotsteam"]
+path = addons/godotsteam
+url = https://github.com/coffeebeats/GodotSteam
+branch = dist
+shallow = true
+
+[submodule "addons/std"]
+path = addons/std
+url = https://github.com/coffeebeats/godot-plugin-std
+branch = dist
