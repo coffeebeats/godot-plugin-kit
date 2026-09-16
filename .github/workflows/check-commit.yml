@@ -32,8 +32,8 @@ jobs:
             exit 1
           fi
 
-          # NOTE: A global class is reached by bare name, which the path check above
-          # cannot see, so each name the system layer declares is checked too.
+          # NOTE: Nothing names a global class through a path, so the check above
+          # cannot see one.
           for name in $(grep -rh '^class_name' --include='*.gd' system/ | awk '{print $2}'); do
             if grep -rnw "$name" --include='*.gd' --include='*.tscn' --include='*.tres' platform/; then
               echo "::error::'platform/' may not reference '$name', declared in 'system/'."
