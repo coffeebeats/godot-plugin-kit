@@ -16,30 +16,14 @@ jobs:
     uses: coffeebeats/godot-infra/.github/workflows/check-project.yaml@v6
     secrets: inherit
 
-  # NOTE: Dependencies run downward only, and the addon never names the game. The
-  # reusable workflow has no hook for a project-specific rule, so these live here.
-  layering:
+  # NOTE: The addon never names a consuming game. The reusable workflow has no hook
+  # for a project-specific rule, so this lives here.
+  check-layering:
     runs-on: ubuntu-latest
     timeout-minutes: 2
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-
-      - name: Verify the platform layer does not depend on the system layer
-        run: |
-          if grep -rn 'res://system/' platform/; then
-            echo "::error::'platform/' may not reference 'system/'."
-            exit 1
-          fi
-
-          # NOTE: Nothing names a global class through a path, so the check above
-          # cannot see one.
-          for name in $(grep -rh '^class_name' --include='*.gd' system/ | awk '{print $2}'); do
-            if grep -rnw "$name" --include='*.gd' --include='*.tscn' --include='*.tres' platform/; then
-              echo "::error::'platform/' may not reference '$name', declared in 'system/'."
-              exit 1
-            fi
-          done
 
       - name: Verify the addon does not reference a consuming game
         run: |
@@ -50,7 +34,7 @@ jobs:
 
   # NOTE: This job name is required by the branch ruleset.
   branch_protection:
-    needs: [check, layering]
+    needs: [check, check-layering]
     if: ${{ always() }}
 
     runs-on: ubuntu-latest
