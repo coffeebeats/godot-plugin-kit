@@ -2,7 +2,7 @@
 ## error.gd
 ##
 ## A canonical error descriptor for both pending errors (enqueued before the UI exists)
-## and runtime errors (passed to `Main.show_error()`).
+## and runtime errors. The game drains the queue and decides how to present them.
 ##
 
 class_name KitError

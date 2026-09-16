@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="StdSettingsPropertyBool" format=3 uid="uid://bto0jfkd0pli7"]
+
+[ext_resource type="Resource" uid="uid://mwqxsj0u3y8u" path="res://system/setting/user_settings_scope.tres" id="1_rtfi2"]
+[ext_resource type="Script" uid="uid://c3wbsp1i53ohf" path="res://addons/std/setting/property_bool.gd" id="1_xbqx7"]
+
+[resource]
+script = ExtResource("1_xbqx7")
+default = true
+category = &"display"
+name = &"fullscreen"
+scope = ExtResource("1_rtfi2")
