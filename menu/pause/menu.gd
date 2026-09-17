@@ -43,6 +43,13 @@ var _confirm_return: KitAlertDialog
 # -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
 
 
+func _enter_tree() -> void:
+	# NOTE: A cached instance re-enters without `_ready`, so a hook set after the menu
+	# first opened still shows its option.
+	if is_node_ready():
+		_return.visible = return_to_main_menu.is_valid()
+
+
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE or what == NOTIFICATION_WM_CLOSE_REQUEST:
 		if is_instance_valid(_confirm_quit):
