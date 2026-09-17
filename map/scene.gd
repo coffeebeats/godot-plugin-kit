@@ -5,7 +5,7 @@
 ## Expected scene tree:
 ##
 ##   Scene (Control, full-rect)
-##   ├── StdInputActionSetLoader  (optional)
+##   ├── StdInputActionSetLoader  (export: 'action_set_loader')
 ##   ├── StdSoundEmitter          (BGM; optional)
 ##   ├── SubViewportContainer     (full-rect or scaled)
 ##   │   └── SubViewport          (export: 'sub_viewport')
@@ -46,11 +46,38 @@ const Debug := preload("../system/debug/debug.gd")
 ## `KitMap.for_node`.
 @export var feel: KitFeelLayer = null
 
-# -- INITIALIZATION ------------------------------------------------------------------ #
+## action_set_loader is the loader handed `action_set` and `action_set_layers` when the
+## map enters the tree.
+@export var action_set_loader: StdInputActionSetLoader = null
 
-var _save_data: ProjectSaveData = null
+@export_group("Input")
+
+## action_set is the game's gameplay action set, loaded while the map is in the tree.
+## It is required; a map inheriting this scene sets it on its root.
+@export var action_set: StdInputActionSet = null
+
+## action_set_layers are the layers enabled over `action_set` while the map is in the
+## tree, such as the game's in-game options.
+@export var action_set_layers: Array[StdInputActionSetLayer] = []
 
 # -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
+
+
+func _enter_tree() -> void:
+	if Engine.is_editor_hint():
+		return
+
+	# NOTE: A map built without the base scene, such as a test double, has no loader
+	# and so no input to configure.
+	if not action_set_loader:
+		return
+
+	if not action_set:
+		push_error("invalid config; missing action set")
+
+	# NOTE: The loader loads as it enters the tree, which is after its parent does.
+	action_set_loader.action_set = action_set
+	action_set_loader.action_set_layers = action_set_layers
 
 
 func _exit_tree() -> void:
@@ -58,8 +85,6 @@ func _exit_tree() -> void:
 		return
 
 	Debug.unregister(&"map", _get_debug_state)
-
-	_save_data = null
 
 	# NOTE: Godot #100755 - null `world_2d` to prevent crash when changing scenes while
 	# a `SubViewport` shares the main viewport's `World2D`.
@@ -81,6 +106,12 @@ func _get_configuration_warnings() -> PackedStringArray:
 	if not feel:
 		warnings.append("Missing property: 'feel'")
 
+	if not action_set_loader:
+		warnings.append("Missing property: 'action_set_loader'")
+
+	if not action_set:
+		warnings.append("Missing property: 'action_set'")
+
 	return warnings
 
 
@@ -88,14 +119,7 @@ func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
 
-	# NOTE: Registered before the save data check below, so a map run on its own, with
-	# no save data and no `Main`, is still inspectable.
 	Debug.register(&"map", _get_debug_state)
-
-	_save_data = Main.get_active_save_data()
-	if not _save_data:
-		Main.go_to_main_menu()  # TODO: Add better error handling.
-		return
 
 
 # -- PUBLIC METHODS ------------------------------------------------------------------ #

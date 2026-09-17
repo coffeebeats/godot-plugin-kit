@@ -69,6 +69,42 @@ func test_templates_order_the_world_then_feel_then_the_hud() -> void:
 		map.free()
 
 
+func test_templates_hand_the_action_set_to_their_loader() -> void:
+	for scene: PackedScene in [TEMPLATE_2D, TEMPLATE_2D_PIXEL, TEMPLATE_3D]:
+		# Given: A template whose root carries an action set and a layer, as a map
+		# inheriting it sets them.
+		var map: KitMap = scene.instantiate()
+		map.action_set = StdInputActionSet.new()
+		map.action_set_layers = [StdInputActionSetLayer.new()]
+
+		# NOTE: No input slot exists under test, so the loader must not act on them.
+		var loader := map.action_set_loader
+		loader.load_on_enter = false
+		loader.enable_on_enter = false
+		loader.disable_on_exit = false
+
+		# When: It enters the tree, noting what the loader holds as it enters, which is
+		# when it loads them.
+		var entered := {}
+		loader.tree_entered.connect(
+			func() -> void:
+				entered[&"action_set"] = loader.action_set
+				entered[&"action_set_layers"] = loader.action_set_layers
+		)
+
+		add_child_autofree(map)
+
+		# Then: The loader already held both.
+		var context := "in %s" % scene.resource_path
+
+		assert_eq(entered.get(&"action_set"), map.action_set, "set %s" % context)
+		assert_eq(
+			entered.get(&"action_set_layers"),
+			map.action_set_layers,
+			"layers %s" % context
+		)
+
+
 # -- PRIVATE METHODS ----------------------------------------------------------------- #
 
 
@@ -78,6 +114,7 @@ func _assert_layers_are_wired(map: KitMap, hud: String, feel: String) -> void:
 	assert_not_null(map.sub_viewport, "'sub_viewport' resolved")
 	assert_not_null(map.hud, "'hud' resolved")
 	assert_not_null(map.feel, "'feel' resolved")
+	assert_not_null(map.action_set_loader, "'action_set_loader' resolved")
 
 	if not map.hud or not map.feel:
 		return

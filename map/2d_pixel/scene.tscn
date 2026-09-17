@@ -2,9 +2,6 @@
 
 [ext_resource type="Script" uid="uid://dfkxv8yvc2sqy" path="res://map/2d_pixel/scene.gd" id="1_script"]
 [ext_resource type="Script" uid="uid://dlrw0lhorb5uc" path="res://addons/std/input/loader.gd" id="4_loader"]
-[ext_resource type="Resource" uid="uid://c6ihq60tiqoap" path="res://project/input/actions/gameplay.tres" id="5_gameplay"]
-[ext_resource type="Script" uid="uid://dmvb2tblavngm" path="res://addons/std/input/action_set_layer.gd" id="6_layer"]
-[ext_resource type="Resource" uid="uid://cochnwdj5p8h5" path="res://project/input/actions/gameplay_options.tres" id="7_options"]
 [ext_resource type="Shader" uid="uid://bhvhbj1ty1k5k" path="res://map/2d_pixel/smooth_pixel.gdshader" id="8_shader"]
 [ext_resource type="Script" uid="uid://dnrthqe7p8b3n" path="res://ui/hud/layer_2d.gd" id="9_hud"]
 [ext_resource type="Script" uid="uid://dnbvkthuyvfw2" path="res://ui/feel/feel_2d.gd" id="10_feel"]
@@ -13,7 +10,7 @@
 shader = ExtResource("8_shader")
 shader_parameter/vertex_offset = Vector2(0, 0)
 
-[node name="ProjectMap2DPixel" type="Control" unique_id=1030227919 node_paths=PackedStringArray("sub_viewport", "hud", "feel")]
+[node name="ProjectMap2DPixel" type="Control" unique_id=1030227919 node_paths=PackedStringArray("sub_viewport", "hud", "feel", "action_set_loader")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -24,14 +21,13 @@ script = ExtResource("1_script")
 sub_viewport = NodePath("SubViewportContainer/SubViewport")
 hud = NodePath("UI/Hud")
 feel = NodePath("Feel")
+action_set_loader = NodePath("StdInputActionSetLoader")
 
 [node name="StdInputActionSetLoader" type="Control" parent="." unique_id=315263392]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("4_loader")
-action_set = ExtResource("5_gameplay")
-action_set_layers = Array[ExtResource("6_layer")]([ExtResource("7_options")])
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1423678673]
 texture_filter = 2
