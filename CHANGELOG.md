@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.2 (2026-09-17)
+
+## What's Changed
+* fix(ci): stop publishing the project icon to 'dist' by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/5
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v0.1.1...v0.1.2
+
 ## 0.1.1 (2026-09-17)
 
 ## What's Changed
