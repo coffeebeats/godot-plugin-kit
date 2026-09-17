@@ -5,8 +5,8 @@
 ## extends the command set by registering handlers, so the bridge stays ignorant of
 ## whatever it is inspecting.
 ##
-## NOTE: `system/system.tscn` only places this node when the `debug` feature is present,
-## so a release export carries none of it, and it listens only when given a port.
+## NOTE: Place `debug.tscn` behind `debug_build_expression.tres`, so a release export
+## carries none of it. It listens only when given a port.
 ##
 
 extends Node
