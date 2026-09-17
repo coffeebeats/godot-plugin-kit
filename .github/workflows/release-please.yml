@@ -74,6 +74,10 @@ jobs:
             icon.svg
             icon.svg.import
 
+            tools
+            **/*.po
+            **/*.pot
+
   branch_protection:
     needs: ["release-please", "publish"]
     if: always()
