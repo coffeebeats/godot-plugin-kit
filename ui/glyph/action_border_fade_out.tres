@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="KitAnimationBorderFade" format=3 uid="uid://q35clnd6xfgg"]
+
+[ext_resource type="Script" uid="uid://cp3bmhip3v3go" path="res://ui/animation/border_fade.gd" id="1_4s1tv"]
+
+[resource]
+script = ExtResource("1_4s1tv")
+duration = 0.16
+transition_type = 3

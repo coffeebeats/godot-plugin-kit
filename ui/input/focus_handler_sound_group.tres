@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="StdSoundGroup" format=3 uid="uid://qhsnu8axd0er"]
+
+[ext_resource type="Script" uid="uid://ca8ufw3i0ul2m" path="res://addons/std/sound/group.gd" id="1_4w8xf"]
+
+[resource]
+script = ExtResource("1_4w8xf")
+max_audible = 4
+resume_playing_on_unmute = false

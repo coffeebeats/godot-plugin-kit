@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://duc23xhqmudrj"]
+
+[ext_resource type="Script" uid="uid://c24b62ncc7mt" path="res://ui/hud/numbers/number.gd" id="1_number"]
+
+[node name="HudNumber" type="Label"]
+mouse_filter = 2
+theme_type_variation = &"hud_number"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("1_number")

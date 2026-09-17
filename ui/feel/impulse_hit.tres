@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="KitFeelImpulse" load_steps=2 format=3 uid="uid://c28stm16atka5"]
+
+[ext_resource type="Script" uid="uid://wgg21f4aenuu" path="res://ui/feel/impulse.gd" id="1_impulse"]
+
+[resource]
+script = ExtResource("1_impulse")
+trauma = 0.35
+decay = 2.5
+power = 2.0
+frequency = 22.0
+amplitude = Vector2(10, 8)
+roll = 0.0
+kick_strength = 6.0
+kick_decay = 14.0

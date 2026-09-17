@@ -1,0 +1,101 @@
+[gd_scene format=3 uid="uid://4brfq2tumt1o"]
+
+[ext_resource type="Script" uid="uid://dp6o8d1i3y7t3" path="res://ui/menu/alert.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://b7ynn70doalds" path="res://addons/std/screen/screen.gd" id="2_screen"]
+[ext_resource type="PackedScene" uid="uid://bbsvnrhcyccl5" path="res://ui/menu/scrim.tscn" id="3_scrim"]
+[ext_resource type="PackedScene" uid="uid://duam2ndvsfv4n" path="res://ui/input/button.tscn" id="4_button"]
+[ext_resource type="Script" uid="uid://dlrw0lhorb5uc" path="res://addons/std/input/loader.gd" id="5_loader"]
+[ext_resource type="Resource" uid="uid://ldk7k2w5uvks" path="res://system/input/actions/menu.tres" id="6_menu"]
+
+[sub_resource type="Resource" id="SubResource_screen"]
+resource_local_to_scene = true
+script = ExtResource("2_screen")
+cache_instance = true
+
+[node name="AlertDialog" type="Control" unique_id=2078874449]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+screen = SubResource("SubResource_screen")
+
+[node name="StdInputActionSetLoader" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("5_loader")
+action_set = ExtResource("6_menu")
+
+[node name="Scrim" parent="." unique_id=1451285999 instance=ExtResource("3_scrim")]
+layout_mode = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=546758916]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Panel" type="PanelContainer" parent="CenterContainer" unique_id=758535495]
+custom_minimum_size = Vector2(640, 0)
+layout_mode = 2
+theme_type_variation = &"panel_dialog"
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/Panel" unique_id=260022418]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/Panel/MarginContainer" unique_id=2033357153]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Title" type="Label" parent="CenterContainer/Panel/MarginContainer/VBoxContainer" unique_id=956283937]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="Message" type="Label" parent="CenterContainer/Panel/MarginContainer/VBoxContainer" unique_id=2122202452]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/Panel/MarginContainer/VBoxContainer" unique_id=1339541960]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Secondary" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=2020329531 instance=ExtResource("4_button")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_type_variation = &"button_dialog"
+action_mode = 1
+text = "kit_alert_cancel"
+
+[node name="FocusHandler" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer/Secondary" index="0" unique_id=976075707]
+use_as_anchor = true
+priority = 1
+
+[node name="Primary" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1951974589 instance=ExtResource("4_button")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_type_variation = &"button_dialog"
+action_mode = 1
+text = "kit_alert_okay"
+
+[node name="FocusHandler" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer/Primary" index="0" unique_id=976075707]
+use_as_anchor = true
+
+[editable path="CenterContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer/Secondary"]
+[editable path="CenterContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer/Primary"]

@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://bq40qgckghub0"]
+
+[ext_resource type="PackedScene" uid="uid://11thq3wp16vi" path="res://ui/input/focus_handler.tscn" id="1_uik81"]
+
+[node name="Checkbox" type="CheckBox" unique_id=919079215]
+
+[node name="FocusHandler" parent="." unique_id=512983346 instance=ExtResource("1_uik81")]
+layout_mode = 0
