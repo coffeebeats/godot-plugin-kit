@@ -13,8 +13,8 @@ extends Object
 # -- PUBLIC METHODS ------------------------------------------------------------------ #
 
 
-## find_manager returns the nearest `StdScreenManager` among the node's ancestors, or
-## `null` if the node is not beneath one.
+## find_manager returns the nearest `StdScreenManager` among the node's ancestors. The
+## node must be mounted beneath one, as every screen's scene is.
 static func find_manager(node: Node) -> StdScreenManager:
 	var parent := node.get_parent()
 	while parent:
@@ -23,4 +23,16 @@ static func find_manager(node: Node) -> StdScreenManager:
 
 		parent = parent.get_parent()
 
+	assert(false, "invalid state; missing screen manager")
+
 	return null
+
+
+# -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
+
+
+func _init() -> void:
+	assert(
+		not OS.is_debug_build(),
+		"Invalid config; this 'Object' should not be instantiated!"
+	)
