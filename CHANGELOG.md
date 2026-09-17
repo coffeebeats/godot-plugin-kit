@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.5 (2026-09-17)
+
+## What's Changed
+* fix(menu): require a screen manager and guard the screens library by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/15
+* fix(save): let the save system's own default set the slot count by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/17
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v0.1.4...v0.1.5
+
 ## 0.1.4 (2026-09-17)
 
 ## What's Changed
