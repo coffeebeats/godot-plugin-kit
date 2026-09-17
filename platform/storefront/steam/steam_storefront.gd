@@ -42,8 +42,8 @@ func _enter_tree() -> void:
 	var error := (
 		KitError
 		. new(
-			"error_platform_init_title",
-			"error_platform_init_steam_message",
+			"kit_error_platform_init_title",
+			"kit_error_platform_init_steam_message",
 			KitError.Severity.CRITICAL,
 		)
 	)

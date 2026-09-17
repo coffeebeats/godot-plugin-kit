@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="StdInputActionSetLayer" format=3 uid="uid://bhsjw6b4deo8i"]
+
+[ext_resource type="Script" uid="uid://dmvb2tblavngm" path="res://addons/std/input/action_set_layer.gd" id="1_dw1gk"]
+[ext_resource type="Resource" uid="uid://ldk7k2w5uvks" path="res://system/input/actions/menu.tres" id="1_mx1jk"]
+
+[resource]
+script = ExtResource("1_dw1gk")
+parent = ExtResource("1_mx1jk")
+name = &"MenuBinding"
+actions_digital = Array[StringName]([&"ui_binding_stop"])

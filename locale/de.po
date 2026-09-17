@@ -1,0 +1,105 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: kit\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-01-26 16:13-0800\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. The default primary button label used in alert dialogs.
+msgctxt "alert"
+msgid "Okay"
+msgstr ""
+
+#. The default secondary/cancel button label used in alert dialogs.
+msgctxt "alert"
+msgid "Cancel"
+msgstr ""
+
+#. The title of the error dialog shown when platform initialization fails (e.g. Steam).
+msgid "Startup Error"
+msgstr ""
+
+#. The message shown when Steam fails to initialize, advising the player to check that Steam is running.
+msgid "Steam could not be initialized. Please make sure Steam is running and restart the game."
+msgstr ""
+
+#. Used as a category name for a group of input actions related to menu navigation.
+msgctxt "action_sets"
+msgid "Menus"
+msgstr ""
+
+#. An input action that confirms the current selection.
+msgctxt "actions_Menu"
+msgid "Accept"
+msgstr ""
+
+#. An input action used to cancel the current selection/leave the current menu page.
+msgctxt "actions_Menu"
+msgid "Cancel"
+msgstr ""
+
+#. An input action used to navigate left within a game menu.
+msgctxt "actions_Menu"
+msgid "Left"
+msgstr ""
+
+#. An input action used to navigate right within a game menu.
+msgctxt "actions_Menu"
+msgid "Right"
+msgstr ""
+
+#. An input action used to navigate up within a game menu.
+msgctxt "actions_Menu"
+msgid "Up"
+msgstr ""
+
+#. An input action used to navigate down within a game menu.
+msgctxt "actions_Menu"
+msgid "Down"
+msgstr ""
+
+#. An input action used to navigate to the next item within a game menu.
+msgctxt "actions_Menu"
+msgid "Next"
+msgstr ""
+
+#. An input action used to navigate to the previous item within a game menu.
+msgctxt "actions_Menu"
+msgid "Previous"
+msgstr ""
+
+#. Used as a category name for a group of input actions related to the options menu.
+msgctxt "action_sets"
+msgid "Menu options"
+msgstr "Optionen"
+
+#. Used as a category name for a group of input actions related to changing tabs in a tabbed menu.
+msgctxt "action_sets"
+msgid "Menu tabs"
+msgstr ""
+
+#. An input action that moves to the next tab/page within a game menu.
+msgctxt "actions_MenuTabbed"
+msgid "Next tab"
+msgstr ""
+
+#. An input action that moves to the previous tab/page within a game menu.
+msgctxt "actions_MenuTabbed"
+msgid "Previous tab"
+msgstr ""
+
+#. Used as a category name for a group of input actions related to changing which game actions are bound to a controller input button.
+msgctxt "action_sets"
+msgid "Input binding"
+msgstr ""
+
+#. An input action that cancels the "rebinding" operation.
+msgctxt "actions_MenuBinding"
+msgid "Cancel binding"
+msgstr ""
