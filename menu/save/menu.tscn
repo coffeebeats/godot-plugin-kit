@@ -1,11 +1,10 @@
 [gd_scene format=3 uid="uid://hbb2wxcb7sxf"]
 
 [ext_resource type="Script" uid="uid://e65imwf654xt" path="res://menu/save/menu.gd" id="1_sihek"]
-[ext_resource type="PackedScene" uid="uid://ig0aeexy2dcl" path="res://menu/save/slot_button.tscn" id="3_842n5"]
-[ext_resource type="PackedScene" uid="uid://11thq3wp16vi" path="res://ui/input/focus_handler.tscn" id="4_dj346"]
 [ext_resource type="PackedScene" uid="uid://bbsvnrhcyccl5" path="res://ui/menu/scrim.tscn" id="5_scrim"]
 [ext_resource type="PackedScene" uid="uid://dm7k3close1bt" path="res://ui/menu/button_close.tscn" id="6_close"]
 [ext_resource type="PackedScene" uid="uid://dkw2li5unhvv7" path="res://menu/save/delete.tscn" id="7_delete"]
+[ext_resource type="PackedScene" uid="uid://ddxpi3xey10gr" path="res://menu/save/delete_failed.tscn" id="10_failed"]
 [ext_resource type="Script" uid="uid://dlrw0lhorb5uc" path="res://addons/std/input/loader.gd" id="8_loader"]
 [ext_resource type="Resource" uid="uid://ldk7k2w5uvks" path="res://system/input/actions/menu.tres" id="9_menu"]
 
@@ -42,6 +41,7 @@ layout_mode = 2
 theme_type_variation = &"panel_dialog"
 script = ExtResource("1_sihek")
 confirm_delete_scene = ExtResource("7_delete")
+delete_failed_scene = ExtResource("10_failed")
 
 [node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer" unique_id=1929183545]
 layout_mode = 2
@@ -69,71 +69,11 @@ size_flags_vertical = 3
 size_flags_stretch_ratio = 4.0
 theme_override_constants/separation = 32
 
-[node name="SlotButton1" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/SlotButtons" unique_id=1617259521 instance=ExtResource("3_842n5")]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="FocusHandler" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/SlotButtons/SlotButton1" index="0" unique_id=1405551856]
-use_as_anchor = true
-
-[node name="SlotButton2" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/SlotButtons" unique_id=1539022446 instance=ExtResource("3_842n5")]
-layout_mode = 2
-size_flags_horizontal = 3
-slot = 1
-
-[node name="SlotButton3" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/SlotButtons" unique_id=528857432 instance=ExtResource("3_842n5")]
-layout_mode = 2
-size_flags_horizontal = 3
-slot = 2
-
-[node name="SlotButton4" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/SlotButtons" unique_id=512214276 instance=ExtResource("3_842n5")]
-layout_mode = 2
-size_flags_horizontal = 3
-slot = 3
-
 [node name="DeleteButtons" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1797200330]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_stretch_ratio = 4.0
 theme_override_constants/separation = 32
 
-[node name="Button1" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/DeleteButtons" unique_id=1099902529]
-custom_minimum_size = Vector2(0, 64)
-layout_mode = 2
-size_flags_horizontal = 3
-text = "kit_save_slots_delete"
-
-[node name="FocusHandler" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/DeleteButtons/Button1" unique_id=1850604004 instance=ExtResource("4_dj346")]
-layout_mode = 0
-
-[node name="Button2" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/DeleteButtons" unique_id=1903358361]
-custom_minimum_size = Vector2(0, 64)
-layout_mode = 2
-size_flags_horizontal = 3
-text = "kit_save_slots_delete"
-
-[node name="FocusHandler" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/DeleteButtons/Button2" unique_id=1526730155 instance=ExtResource("4_dj346")]
-layout_mode = 0
-
-[node name="Button3" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/DeleteButtons" unique_id=735995827]
-custom_minimum_size = Vector2(0, 64)
-layout_mode = 2
-size_flags_horizontal = 3
-text = "kit_save_slots_delete"
-
-[node name="FocusHandler" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/DeleteButtons/Button3" unique_id=428062185 instance=ExtResource("4_dj346")]
-layout_mode = 0
-
-[node name="Button4" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/DeleteButtons" unique_id=1958231726]
-custom_minimum_size = Vector2(0, 64)
-layout_mode = 2
-size_flags_horizontal = 3
-text = "kit_save_slots_delete"
-
-[node name="FocusHandler" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/DeleteButtons/Button4" unique_id=1675022320 instance=ExtResource("4_dj346")]
-layout_mode = 0
-
 [node name="CloseButton" parent="CenterContainer/PanelContainer" unique_id=1689499063 instance=ExtResource("6_close")]
 layout_mode = 2
-
-[editable path="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/SlotButtons/SlotButton1"]

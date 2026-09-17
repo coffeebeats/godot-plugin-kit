@@ -6,7 +6,7 @@
 [resource]
 script = ExtResource("1_screen")
 scene_path = "uid://hbb2wxcb7sxf"
-dependency_scenes = ["uid://dkw2li5unhvv7"]
+dependency_scenes = ["uid://dkw2li5unhvv7", "uid://ddxpi3xey10gr"]
 close_actions = Array[StringName]([&"ui_cancel"])
 sound_enter = ExtResource("2_sound")
 sound_exit = ExtResource("2_sound")
