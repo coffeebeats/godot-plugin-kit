@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://dm7k3close1bt"]
+
+[ext_resource type="Texture2D" uid="uid://bbgn0o2diu8ws" path="res://ui/menu/button_close_texture_normal.svg" id="1_n2jtg"]
+[ext_resource type="PackedScene" uid="uid://11thq3wp16vi" path="res://ui/input/focus_handler.tscn" id="2_olnlp"]
+[ext_resource type="Script" uid="uid://cjdbjybleeh6q" path="res://addons/std/input/action_trigger.gd" id="3_trigger"]
+
+[node name="CloseButton" type="TextureButton" unique_id=941637216]
+custom_minimum_size = Vector2(64, 64)
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 8
+size_flags_vertical = 0
+focus_mode = 0
+texture_normal = ExtResource("1_n2jtg")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="FocusHandler" parent="." unique_id=1181933752 instance=ExtResource("2_olnlp")]
+layout_mode = 0
+
+[node name="StdInputActionTrigger" type="Node" parent="." unique_id=644336236]
+script = ExtResource("3_trigger")
+action = &"ui_cancel"

@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://cianp8qt5kl4i"]
+
+[ext_resource type="Script" uid="uid://d24v2e04wq3sn" path="res://ui/hud/indicator/indicator.gd" id="1_indicator"]
+
+[node name="HudIndicator" type="Control"]
+custom_minimum_size = Vector2(20, 16)
+offset_right = 20.0
+offset_bottom = 16.0
+mouse_filter = 2
+script = ExtResource("1_indicator")

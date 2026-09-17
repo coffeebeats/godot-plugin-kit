@@ -1,0 +1,80 @@
+[gd_scene format=3 uid="uid://dg8wa8rp672rb"]
+
+[ext_resource type="Script" uid="uid://vst8lxnn6k6u" path="res://ui/glyph/glyph.gd" id="1_t2ikv"]
+[ext_resource type="StyleBox" uid="uid://dcqpwm8om51xm" path="res://ui/glyph/glyph_label_stylebox.tres" id="2_lvgs8"]
+[ext_resource type="Resource" uid="uid://dyuvr6ililvtc" path="res://system/setting/controls/glyph_type_property.tres" id="3_jfinn"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_b5pxf"]
+
+[node name="Glyph" type="Control" unique_id=968371864 node_paths=PackedStringArray("label", "panel_container", "texture_rect")]
+custom_minimum_size = Vector2(64, 36)
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -19.5
+offset_right = 32.0
+offset_bottom = 19.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_t2ikv")
+origin_label_overrides = {
+"Backspace": "Back",
+"CapsLock": "Caps",
+"Command": "Cmd",
+"Delete": "Del",
+"Escape": "Esc",
+"Insert": "Ins",
+"Kp Enter": "Enter",
+"PageDown": "PgDn",
+"PageUp": "PgUp",
+"ScrollLock": "ScrLk",
+"Windows": "Win"
+}
+label_stylebox = ExtResource("2_lvgs8")
+label = NodePath("PanelContainer/MarginContainer/Label")
+panel_container = NodePath("PanelContainer")
+texture_rect = NodePath("TextureRect")
+device_type_override = ExtResource("3_jfinn")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1582557239]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+expand_mode = 3
+stretch_mode = 5
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=75395568]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_b5pxf")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=269267907]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer" unique_id=1099788311]
+layout_mode = 2
+size_flags_vertical = 1
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true

@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://duam2ndvsfv4n"]
+
+[ext_resource type="PackedScene" uid="uid://11thq3wp16vi" path="res://ui/input/focus_handler.tscn" id="4_v3lm1"]
+
+[node name="Prompt" type="Button" unique_id=570963603]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+action_mode = 0
+
+[node name="FocusHandler" parent="." unique_id=976075707 instance=ExtResource("4_v3lm1")]
+layout_mode = 0

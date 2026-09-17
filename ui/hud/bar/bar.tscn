@@ -1,0 +1,38 @@
+[gd_scene load_steps=3 format=3 uid="uid://bprbwmrvsdvp1"]
+
+[ext_resource type="Script" uid="uid://dh6mq7fab0jbc" path="res://ui/hud/bar/bar.gd" id="1_bar"]
+[ext_resource type="Resource" uid="uid://68v3glpoe4vq" path="res://ui/hud/bar/style_default.tres" id="2_style"]
+
+[node name="HudBar" type="Control"]
+custom_minimum_size = Vector2(48, 6)
+offset_right = 48.0
+offset_bottom = 6.0
+mouse_filter = 2
+script = ExtResource("1_bar")
+style = ExtResource("2_style")
+
+[node name="Ghost" type="ProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"hud_bar_ghost"
+max_value = 1.0
+value = 1.0
+show_percentage = false
+
+[node name="Fill" type="ProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"hud_bar"
+max_value = 1.0
+value = 1.0
+show_percentage = false

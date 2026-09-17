@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="KitFeelFlash" load_steps=2 format=3 uid="uid://cb3vfbq30ndl0"]
+
+[ext_resource type="Script" uid="uid://dxhwjnd05do25" path="res://ui/feel/flash.gd" id="1_flash"]
+
+[resource]
+script = ExtResource("1_flash")
+color = Color(1, 1, 1, 0.5)
+duration = 0.08
+rise = 0.3

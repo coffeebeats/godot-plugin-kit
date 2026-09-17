@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://dyiec01n3bxgf"]
+
+[ext_resource type="PackedScene" uid="uid://dg8wa8rp672rb" path="res://ui/glyph/glyph.tscn" id="1_4o3h4"]
+[ext_resource type="StyleBox" uid="uid://bp0s36ty6tyia" path="res://ui/glyph/action_stylebox.tres" id="1_8w7nx"]
+[ext_resource type="Script" uid="uid://b36kvw116mmnd" path="res://ui/glyph/action.gd" id="1_eu016"]
+[ext_resource type="Resource" uid="uid://cwxarrdtgknf3" path="res://ui/glyph/action_border_fade_in.tres" id="2_lmvm6"]
+[ext_resource type="Resource" uid="uid://q35clnd6xfgg" path="res://ui/glyph/action_border_fade_out.tres" id="3_4b0ty"]
+[ext_resource type="PackedScene" uid="uid://11thq3wp16vi" path="res://ui/input/focus_handler.tscn" id="4_mguvk"]
+
+[node name="InputActionPrompt" type="PanelContainer" unique_id=1902457773]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -97.0
+offset_top = -29.0
+offset_right = 97.0
+offset_bottom = 29.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = ExtResource("1_8w7nx")
+script = ExtResource("1_eu016")
+border_fade_in = ExtResource("2_lmvm6")
+border_fade_out = ExtResource("3_4b0ty")
+
+[node name="FocusHandler" parent="." unique_id=1438764810 instance=ExtResource("4_mguvk")]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1265623181]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=1490622133]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Glyph" parent="MarginContainer/HBoxContainer" unique_id=1470793934 instance=ExtResource("1_4o3h4")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 48)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+fallback_label = "--"
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer" unique_id=1078922171]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 6
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 1
+vertical_alignment = 1
