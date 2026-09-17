@@ -36,9 +36,9 @@ Each value the game owns is an export on a brick placed in `System`:
 | `system/setting/settings.tscn` | `menu_tabs` | The game's own settings menu tabs, keyed by their label's message ID. |
 | `system/setting/interface/font_scaling_observer.tscn` | `theme` | The font theme which the text scaling setting resizes. |
 | `system/save/saves.tscn` | `schema` | The game's save data, required. |
-| `system/save/saves.tscn` | `slot_count` | The number of save slots, one per slot in the save menu. |
+| `system/save/saves.tscn` | `slot_count` | The number of save slots, each shown in the save menu. |
 
-Two values are set from code instead, since neither is a resource an export can hold:
+Two values are set from code instead, since no export in `System` can reach or hold them:
 
 - `KitSystems.audio().screens`, the game's `StdScreenManager`, which ducks the mix under covering screens.
 - `KitPauseMenu.return_to_main_menu`, the game's way back to its main menu. The pause menu offers returning only once it is set.
