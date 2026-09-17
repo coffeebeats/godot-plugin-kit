@@ -10,6 +10,7 @@ extends Control
 
 const Bindings := preload("res://addons/std/input/godot/binding.gd")
 const Signals := preload("res://addons/std/event/signal.gd")
+const Locales := preload("../../../locale/locales.gd")
 const Screens := preload("../../../ui/menu/screens.gd")
 const Rebinder := preload("rebinder.gd")
 const RebinderScene := preload("rebinder.tscn")
@@ -89,7 +90,9 @@ static func start_rebinding(
 	_instance._player = player
 	_instance._device = device
 
-	Signals.connect_safe(slot.device_activated, _instance._on_device_activated)
+	# NOTE: The instance is reused across rebinds, so connect only if `stop` did not
+	# reach its disconnect, which it skips when the input slot has gone missing.
+	Signals.ensure_connected(slot.device_activated, _instance._on_device_activated)
 
 	screens.push(_instance.screen, _instance)
 
@@ -108,11 +111,6 @@ func stop(bound: bool = false) -> void:
 
 	set_process_input(false)
 
-	var slot := StdInputSlot.for_player(_player)
-	if not slot:
-		assert(false, "invalid state; missing input slot")
-		return
-
 	(
 		_logger
 		. debug(
@@ -124,7 +122,13 @@ func stop(bound: bool = false) -> void:
 		)
 	)
 
-	Signals.disconnect_safe(slot.device_activated, _on_device_activated)
+	# NOTE: A missing slot costs only the disconnect; the screen pops regardless. The
+	# rebinder defines no close action, so returning early would strand it on screen.
+	var slot := StdInputSlot.for_player(_player)
+	assert(slot is StdInputSlot, "invalid state; missing input slot")
+
+	if slot:
+		Signals.disconnect_safe(slot.device_activated, _on_device_activated)
 
 	_scope = null
 	_action_set = null
@@ -230,26 +234,39 @@ func _activate() -> void:
 	)
 
 
+## _split_placeholder splits a translated template around its `%s`, returning the text
+## before it and the text after. A template carrying no placeholder yields the whole
+## string and an empty remainder, so a partial translation degrades to plain text.
+static func _split_placeholder(template: String) -> PackedStringArray:
+	var parts := template.split("%s", true, 1)
+	return parts if parts.size() > 1 else PackedStringArray([template, ""])
+
+
 func _update_prompt() -> void:
 	_label_glyph.player_id = _player
 	_label_glyph.update()
 
-	_label_action.text = tr(MSGID_REBINDER_TITLE) % _action
-
-	var instructions_template := tr(
-		MSGID_REBINDER_INSTRUCTIONS,
-		(
-			MSGCTXT_REBINDER_KEYBOARD
-			if _device.device_type == DEVICE_TYPE_KEYBOARD
-			else MSGCTXT_REBINDER_GAMEPAD
-		),
+	# NOTE: Split rather than format the title, since '%' faults on a template with no
+	# placeholder, and name the action as the setting row does rather than by StringName.
+	var title := _split_placeholder(tr(MSGID_REBINDER_TITLE))
+	var action_set_name := _action_set.name if _action_set else &""
+	_label_action.text = (
+		title[0] + Locales.tr_action(action_set_name, _action) + title[1]
 	)
 
-	var parts := instructions_template.split("%s", true, 1)
-	assert(parts.size() == 2, "invalid state; unrecognized template")
+	var instructions := _split_placeholder(
+		tr(
+			MSGID_REBINDER_INSTRUCTIONS,
+			(
+				MSGCTXT_REBINDER_KEYBOARD
+				if _device.device_type == DEVICE_TYPE_KEYBOARD
+				else MSGCTXT_REBINDER_GAMEPAD
+			),
+		)
+	)
 
-	_label_instructions_pre.text = parts[0] if not parts.is_empty() else ""
-	_label_instructions_post.text = parts[1] if not parts.is_empty() else ""
+	_label_instructions_pre.text = instructions[0]
+	_label_instructions_post.text = instructions[1]
 
 
 # -- SIGNAL HANDLERS ----------------------------------------------------------------- #
