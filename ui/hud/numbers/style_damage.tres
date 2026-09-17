@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="KitHudNumberStyle" load_steps=5 format=3 uid="uid://cn7cud5h80i2f"]
+
+[ext_resource type="Script" uid="uid://dw7wvmob8p1dp" path="res://ui/hud/numbers/style.gd" id="1_style"]
+[ext_resource type="Script" uid="uid://biupfx6h42h8k" path="res://addons/std/tween/curve.gd" id="2_curve"]
+
+[sub_resource type="Resource" id="motion"]
+script = ExtResource("2_curve")
+ease_type = 1
+transition_type = 4
+
+[sub_resource type="Resource" id="fade"]
+script = ExtResource("2_curve")
+delay = 0.35
+ease_type = 0
+transition_type = 4
+
+[resource]
+script = ExtResource("1_style")
+format = "%d"
+theme_variation = &"hud_number"
+travel = Vector2(0, -40)
+spread_degrees = 40.0
+duration = 0.7
+motion = SubResource("motion")
+fade = SubResource("fade")
+punch = 0.0

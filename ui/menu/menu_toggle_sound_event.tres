@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="StdSoundEvent1D" format=3 uid="uid://c5bekd2nyjnp8"]
+
+[ext_resource type="Resource" uid="uid://dgt6hbipqsvc5" path="res://system/audio/bus/ui.tres" id="1_bus"]
+[ext_resource type="Script" uid="uid://xnjd1n7phkp3" path="res://addons/std/sound/event_1d.gd" id="2_script"]
+[ext_resource type="AudioStream" uid="uid://dc84n8rvrurk4" path="res://ui/menu/menu_toggle_sound.wav" id="3_stream"]
+
+[resource]
+script = ExtResource("2_script")
+stream = ExtResource("3_stream")
+bus = ExtResource("1_bus")

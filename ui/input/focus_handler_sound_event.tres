@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="StdSoundEvent1D" format=3 uid="uid://d1a5t1bwsv3qw"]
+
+[ext_resource type="Resource" uid="uid://dgt6hbipqsvc5" path="res://system/audio/bus/ui.tres" id="1_1pxhs"]
+[ext_resource type="Resource" uid="uid://qhsnu8axd0er" path="res://ui/input/focus_handler_sound_group.tres" id="2_303p0"]
+[ext_resource type="Script" uid="uid://d1xoiydhcd054" path="res://addons/std/sound/param.gd" id="3_os8he"]
+[ext_resource type="Script" uid="uid://xnjd1n7phkp3" path="res://addons/std/sound/event_1d.gd" id="4_dnwgo"]
+[ext_resource type="AudioStream" uid="uid://c0eyjy6wudp07" path="res://ui/input/focus_handler_sound.ogg" id="5_uxobq"]
+
+[resource]
+script = ExtResource("4_dnwgo")
+stream = ExtResource("5_uxobq")
+volume_db = -4.0
+bus = ExtResource("1_1pxhs")
+group = ExtResource("2_303p0")

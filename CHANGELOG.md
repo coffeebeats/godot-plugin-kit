@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.3 (2026-09-17)
+
+## What's Changed
+* feat: move 'Locales', 'Lifecycle' and the menu action sets into kit by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/7
+* feat: move the UI layer and the base map scenes into kit by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/8
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v0.1.2...v0.1.3
+
 ## 0.1.2 (2026-09-17)
 
 ## What's Changed
