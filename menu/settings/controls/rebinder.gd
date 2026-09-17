@@ -90,8 +90,8 @@ static func start_rebinding(
 	_instance._player = player
 	_instance._device = device
 
-	# NOTE: The instance is reused across rebinds, so connect only if `stop` did not
-	# reach its disconnect, which it skips when the input slot has gone missing.
+	# NOTE: The instance is reused across rebinds, so a prior `stop` may have left this
+	# connected.
 	Signals.ensure_connected(slot.device_activated, _instance._on_device_activated)
 
 	screens.push(_instance.screen, _instance)
@@ -122,8 +122,8 @@ func stop(bound: bool = false) -> void:
 		)
 	)
 
-	# NOTE: A missing slot costs only the disconnect; the screen pops regardless. The
-	# rebinder defines no close action, so returning early would strand it on screen.
+	# NOTE: The rebinder defines no close action, so the screen must pop even without a
+	# slot; only the disconnect depends on one.
 	var slot := StdInputSlot.for_player(_player)
 	assert(slot is StdInputSlot, "invalid state; missing input slot")
 
@@ -235,8 +235,10 @@ func _activate() -> void:
 
 
 ## _split_placeholder splits a translated template around its `%s`, returning the text
-## before it and the text after. A template carrying no placeholder yields the whole
-## string and an empty remainder, so a partial translation degrades to plain text.
+## before and after it. A template carrying no placeholder yields the whole string and
+## an empty remainder, so a partial translation degrades to plain text.
+##
+## NOTE: Formatting with `%` faults outright on a template missing its placeholder.
 static func _split_placeholder(template: String) -> PackedStringArray:
 	var parts := template.split("%s", true, 1)
 	return parts if parts.size() > 1 else PackedStringArray([template, ""])
@@ -246,8 +248,6 @@ func _update_prompt() -> void:
 	_label_glyph.player_id = _player
 	_label_glyph.update()
 
-	# NOTE: Split rather than format the title, since '%' faults on a template with no
-	# placeholder, and name the action as the setting row does rather than by StringName.
 	var title := _split_placeholder(tr(MSGID_REBINDER_TITLE))
 	var action_set_name := _action_set.name if _action_set else &""
 	_label_action.text = (

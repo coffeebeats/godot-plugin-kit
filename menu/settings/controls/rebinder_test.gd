@@ -1,6 +1,6 @@
 ##
-## Tests for the rebinder's prompt, which splits a translated template around the
-## placeholder its glyph replaces.
+## Tests for the rebinder's prompt, which must survive a translation that lost its
+## placeholder.
 ##
 
 extends GutTest
@@ -19,12 +19,12 @@ func test_split_placeholder_separates_the_text_around_the_placeholder() -> void:
 	# When: The template is split.
 	var parts := Rebinder._split_placeholder(template)
 
-	# Then: The text leading up to the glyph and the text following it are returned.
+	# Then: The text before and after the placeholder is returned.
 	assert_eq(parts, PackedStringArray(["Press any key now or ", " to cancel."]))
 
 
 func test_split_placeholder_keeps_a_template_which_carries_no_placeholder() -> void:
-	# Given: A template with no placeholder, as an untranslated message ID has.
+	# Given: A template with no placeholder, as an untranslated message ID.
 	var template := "kit_options_controls_rebinder_bind_or_exit"
 
 	# When: The template is split.
