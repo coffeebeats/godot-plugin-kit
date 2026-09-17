@@ -236,9 +236,10 @@ func _activate() -> void:
 
 ## _split_placeholder splits a translated template around its `%s`, returning the text
 ## before and after it. A template carrying no placeholder yields the whole string and
-## an empty remainder, so a partial translation degrades to plain text.
+## an empty remainder, leaving the glyph's neighbours to render what there is.
 ##
-## NOTE: Formatting with `%` faults outright on a template missing its placeholder.
+## NOTE: A `Control` cannot sit within a `Label`'s text, so the instructions span two
+## labels with the glyph between them; only a caller placing a node needs this.
 static func _split_placeholder(template: String) -> PackedStringArray:
 	var parts := template.split("%s", true, 1)
 	return parts if parts.size() > 1 else PackedStringArray([template, ""])
@@ -248,10 +249,11 @@ func _update_prompt() -> void:
 	_label_glyph.player_id = _player
 	_label_glyph.update()
 
-	var title := _split_placeholder(tr(MSGID_REBINDER_TITLE))
+	# NOTE: The title is one label, so format it; a template which lost its placeholder
+	# then reports an error and renders alone, rather than silently trailing the action.
 	var action_set_name := _action_set.name if _action_set else &""
 	_label_action.text = (
-		title[0] + Locales.tr_action(action_set_name, _action) + title[1]
+		tr(MSGID_REBINDER_TITLE) % Locales.tr_action(action_set_name, _action)
 	)
 
 	var instructions := _split_placeholder(
