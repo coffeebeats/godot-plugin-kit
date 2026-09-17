@@ -1,6 +1,4 @@
 ##
-## system/input/steam/observer.gd
-##
 ## SteamInputObserver is a `StdSettingsObserver` which handles swapping out input device
 ## components based on changes to Steam Input. This node only handles a single input
 ## slot, so multiple may be required for local multiplayer support.

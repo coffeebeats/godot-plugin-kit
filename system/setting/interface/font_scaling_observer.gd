@@ -1,6 +1,4 @@
 ##
-## system/setting/interface/font_scaling_observer.gd
-##
 ## FontScalingObserver is a `StdSettingsObserver` that handles scaling the default font
 ## size and the specified list of theme type variations.
 ##

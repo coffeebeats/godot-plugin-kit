@@ -1,6 +1,4 @@
 ##
-## platform/profile/config_writer.gd
-##
 ## ProfileConfigWriter is a `StdConfigWriterBinary` subclass that resolves the
 ## configured `path` relative to the current user profile's directory.
 ##

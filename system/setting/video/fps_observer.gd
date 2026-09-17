@@ -1,6 +1,4 @@
 ##
-## system/setting/video/fps_observer.gd
-##
 ## FpsObserver is a `StdSettingsObserver` that handles updating frame limit-related
 ## settings like Vsync and frame limit caps.
 ##

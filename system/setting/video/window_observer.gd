@@ -1,6 +1,4 @@
 ##
-## system/setting/video/window_observer.gd
-##
 ## WindowObserver is a `StdSettingsObserver` which handles changing the window mode and
 ## other window-related properties.
 ##

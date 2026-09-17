@@ -1,6 +1,4 @@
 ##
-## system/audio/audio.gd
-##
 ## SystemAudio is a sound event player which manages pools of audio player nodes, a
 ## music player, and mix snapshot handling for covered screens.
 ##

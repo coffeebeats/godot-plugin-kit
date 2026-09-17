@@ -1,6 +1,4 @@
 ##
-## system/setting/language_observer.gd
-##
 ## LanguageObserver is a `StdSettingsObserver` that handles updating the display
 ## language.
 ##

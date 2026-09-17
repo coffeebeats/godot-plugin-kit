@@ -1,6 +1,4 @@
 ##
-## system/setting/audio/volume/observer.gd
-##
 ## VolumeObserver is a `StdSettingsObserver` that applies the volume changes configured
 ## within a settings scope.
 ##

@@ -1,6 +1,4 @@
 ##
-## system/save/slot.gd
-##
 ## KitSaveSlot defines metadata about a single save slot.
 ##
 

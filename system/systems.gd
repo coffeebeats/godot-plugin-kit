@@ -1,6 +1,4 @@
 ##
-## system/systems.gd
-##
 ## KitSystems is a shim for the `System` autoload scene which allows accessing its
 ## components without directly referencing the autoloaded scene itself. This is a
 ## workaround for errors encountered when scripts referencing the `System` autoload are

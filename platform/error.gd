@@ -1,6 +1,4 @@
 ##
-## platform/error.gd
-##
 ## A canonical error descriptor for both pending errors (enqueued before the UI exists)
 ## and runtime errors. The game drains the queue and decides how to present them.
 ##

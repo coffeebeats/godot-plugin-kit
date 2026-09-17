@@ -1,6 +1,4 @@
 ##
-## platform/storefront/steam/steam_storefront.gd
-##
 ## This node initializes the `Steam` storefront integration.
 ##
 

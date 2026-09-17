@@ -1,6 +1,4 @@
 ##
-## system/debug/debug.gd
-##
 ## SystemDebug is a development-only bridge which lets an external process inspect and
 ## drive a running game. It reads line-delimited JSON commands from a loopback socket
 ## and answers with the scene tree, evaluated expressions and screenshots. Game code

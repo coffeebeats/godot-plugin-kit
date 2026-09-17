@@ -1,6 +1,4 @@
 ##
-## system/save/writer.gd
-##
 ## A node for reading/writing save data for the configured save slot. File system
 ## operations occur in a background thread, so both sync and async APIs are provided.
 ##

@@ -1,6 +1,4 @@
 ##
-## platform/profile/user_profile.gd
-##
 ## KitUserProfile contains information about the current/local user.
 ##
 

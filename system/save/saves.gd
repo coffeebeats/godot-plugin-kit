@@ -1,6 +1,4 @@
 ##
-## system/save/save.gd
-##
 ## SystemSave is a system for saving progress to `Config` files, suitable for small-to-
 ## medium sized games. Multiple slots are supported, though this implementation assumes
 ## a fixed (though configurable) limit.

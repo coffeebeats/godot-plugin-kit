@@ -1,6 +1,4 @@
 ##
-## system/input/input.gd
-##
 ## SystemInput is the global singleton scene for handling user input via action binding.
 ##
 

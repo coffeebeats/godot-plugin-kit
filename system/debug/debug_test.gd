@@ -1,6 +1,4 @@
 ##
-## system/debug/debug_test.gd
-##
 ## Unit tests for the debug bridge: the command registry game code touches, and the
 ## pure functions behind every reply - identifier extraction, node lookup, the scene
 ## tree description and JSON rendering.

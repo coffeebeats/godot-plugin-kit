@@ -1,7 +1,5 @@
 ##
-## project/main/logging.gd
-##
-## Sets up logging profiles for the applicatione.
+## Sets up logging profiles for the application.
 ##
 ## NOTE: This node should enter the scene tree before any loggers are used so that they
 ## are correctly configured before use.

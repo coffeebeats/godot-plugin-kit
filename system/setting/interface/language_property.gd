@@ -1,6 +1,4 @@
 ##
-## system/setting/interface/language_property.gd
-##
 ## LanguageProperty is a settings property which defines the target display language.
 ##
 

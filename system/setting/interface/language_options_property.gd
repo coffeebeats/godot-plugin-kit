@@ -1,6 +1,4 @@
 ##
-## system/setting/interface/language_options_property.gd
-##
 ## LanguageOptionsProperty is a read-only settings property that provides a list of
 ## languages the user can display the user interface in.
 ##

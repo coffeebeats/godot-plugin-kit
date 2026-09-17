@@ -1,6 +1,4 @@
 ##
-## platform/profile/steam/profile.gd
-##
 
 extends Node
 

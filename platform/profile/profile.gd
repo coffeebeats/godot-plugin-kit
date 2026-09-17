@@ -1,6 +1,4 @@
 ##
-## platform/profile/profile.gd
-##
 ## Profile is a `Platform` node which manages information about the user running the
 ## game application.
 ##

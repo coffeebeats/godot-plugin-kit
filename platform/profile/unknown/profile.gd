@@ -1,6 +1,4 @@
 ##
-## platform/profile/unknown/profile.gd
-##
 
 extends Node
 

@@ -1,6 +1,4 @@
 ##
-## system/setting/audio/device/observer.gd
-##
 ## AudioDeviceObserver is a `StdSettingsObserver` that handles changing the input and
 ## output devices.
 ##

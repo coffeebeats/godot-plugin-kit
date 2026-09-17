@@ -1,6 +1,4 @@
 ##
-## platform/platform.gd
-##
 ## Platform is an autoloaded singleton `Node` which serves as the root for all platform-
 ## related functionality (i.e. not game-specific).
 ##

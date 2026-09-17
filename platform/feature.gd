@@ -1,6 +1,4 @@
 ##
-## platform/feature.gd
-##
 ## A shared library for querying feature flags and platform metadata.
 ##
 ## NOTE: This 'Object' should *not* be instanced and/or added to the 'SceneTree'. It
