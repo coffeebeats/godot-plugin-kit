@@ -10,9 +10,7 @@ extends PanelContainer
 
 const Signals := preload("res://addons/std/event/signal.gd")
 const Screens := preload("../../ui/menu/screens.gd")
-const DeleteButtonScene := preload("delete_button.tscn")
 const SlotButton := preload("slot_button.gd")
-const SlotButtonScene := preload("slot_button.tscn")
 
 # -- CONFIGURATION ------------------------------------------------------------------- #
 
@@ -21,6 +19,12 @@ const SlotButtonScene := preload("slot_button.tscn")
 
 ## delete_failed_scene is the error dialog shown when erasing a save slot fails.
 @export var delete_failed_scene: PackedScene
+
+## slot_button_scene is the button shown per save slot, whose root is a `SlotButton`.
+@export var slot_button_scene: PackedScene
+
+## delete_button_scene is the button shown beneath each slot to erase it.
+@export var delete_button_scene: PackedScene
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
@@ -50,7 +54,7 @@ func _ready() -> void:
 	var saves := KitSystems.saves()
 
 	for slot in saves.slot_count:
-		var slot_button: SlotButton = SlotButtonScene.instantiate()
+		var slot_button: SlotButton = slot_button_scene.instantiate()
 		slot_button.slot = slot
 		slot_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
@@ -60,7 +64,7 @@ func _ready() -> void:
 		_slot_buttons.add_child(slot_button)
 		Signals.connect_safe(slot_button.pressed, _on_slot_button_pressed.bind(slot))
 
-		var delete_button: Button = DeleteButtonScene.instantiate()
+		var delete_button: Button = delete_button_scene.instantiate()
 		delete_button.disabled = (
 			saves.get_save_slot(slot).status == KitSaveSlot.STATUS_EMPTY
 		)

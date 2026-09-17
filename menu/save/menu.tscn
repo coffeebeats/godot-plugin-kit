@@ -5,6 +5,8 @@
 [ext_resource type="PackedScene" uid="uid://dm7k3close1bt" path="res://ui/menu/button_close.tscn" id="6_close"]
 [ext_resource type="PackedScene" uid="uid://dkw2li5unhvv7" path="res://menu/save/delete.tscn" id="7_delete"]
 [ext_resource type="PackedScene" uid="uid://ddxpi3xey10gr" path="res://menu/save/delete_failed.tscn" id="10_failed"]
+[ext_resource type="PackedScene" uid="uid://ig0aeexy2dcl" path="res://menu/save/slot_button.tscn" id="11_slot"]
+[ext_resource type="PackedScene" uid="uid://bskqdm3mqabu4" path="res://menu/save/delete_button.tscn" id="12_delete"]
 [ext_resource type="Script" uid="uid://dlrw0lhorb5uc" path="res://addons/std/input/loader.gd" id="8_loader"]
 [ext_resource type="Resource" uid="uid://ldk7k2w5uvks" path="res://system/input/actions/menu.tres" id="9_menu"]
 
@@ -42,6 +44,8 @@ theme_type_variation = &"panel_dialog"
 script = ExtResource("1_sihek")
 confirm_delete_scene = ExtResource("7_delete")
 delete_failed_scene = ExtResource("10_failed")
+slot_button_scene = ExtResource("11_slot")
+delete_button_scene = ExtResource("12_delete")
 
 [node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer" unique_id=1929183545]
 layout_mode = 2
