@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="StdSettingsPropertyBool" format=3 uid="uid://dejd17gr4508s"]
+
+[ext_resource type="Resource" uid="uid://mwqxsj0u3y8u" path="res://system/setting/user_settings_scope.tres" id="1_4mman"]
+[ext_resource type="Script" uid="uid://c3wbsp1i53ohf" path="res://addons/std/setting/property_bool.gd" id="1_6gw6j"]
+
+[resource]
+script = ExtResource("1_6gw6j")
+default = true
+category = &"audio"
+name = &"mute/background"
+scope = ExtResource("1_4mman")

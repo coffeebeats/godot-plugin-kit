@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="StdSettingsScope" format=3 uid="uid://c3ewqt86m1qfy"]
+
+[ext_resource type="Script" uid="uid://cfk8nhk0oi8b0" path="res://addons/std/setting/scope.gd" id="1_g1ril"]
+
+[resource]
+script = ExtResource("1_g1ril")

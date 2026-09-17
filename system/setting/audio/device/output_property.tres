@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="StdSettingsPropertyString" format=3 uid="uid://ccnpq1qb03igm"]
+
+[ext_resource type="Script" uid="uid://chuaetoo1pbgq" path="res://addons/std/setting/property_string.gd" id="1_0kfop"]
+[ext_resource type="Resource" uid="uid://mwqxsj0u3y8u" path="res://system/setting/user_settings_scope.tres" id="1_5rhqr"]
+
+[resource]
+script = ExtResource("1_0kfop")
+default = "Default"
+category = &"audio"
+name = &"device/output"
+scope = ExtResource("1_5rhqr")

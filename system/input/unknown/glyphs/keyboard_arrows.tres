@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="StdInputGlyphSetKeyboard" format=3 uid="uid://b44qdvqphojjq"]
+
+[ext_resource type="Script" uid="uid://hlx0eyayl8kx" path="res://addons/std/input/godot/glyph_set_keyboard.gd" id="1_0lsdi"]
+[ext_resource type="Texture2D" uid="uid://bs2yk443qpqe0" path="res://system/input/unknown/glyphs/keyboard/arrow_down.png" id="1_iu2x6"]
+[ext_resource type="Texture2D" uid="uid://moaipv61tgfp" path="res://system/input/unknown/glyphs/keyboard/arrow_left.png" id="2_0tsjx"]
+[ext_resource type="Texture2D" uid="uid://x8w8lrt3s2bp" path="res://system/input/unknown/glyphs/keyboard/arrow_right.png" id="3_4jrqp"]
+[ext_resource type="Texture2D" uid="uid://mcq0u5blyghx" path="res://system/input/unknown/glyphs/keyboard/arrow_up.png" id="4_v0hlb"]
+
+[resource]
+script = ExtResource("1_0lsdi")
+arrow_up = ExtResource("4_v0hlb")
+arrow_down = ExtResource("1_iu2x6")
+arrow_left = ExtResource("2_0tsjx")
+arrow_right = ExtResource("3_4jrqp")
+device_types = Array[int]([2])

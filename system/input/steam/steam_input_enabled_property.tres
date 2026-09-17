@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="StdSettingsPropertyBool" format=3 uid="uid://c48eqp48r1hp0"]
+
+[ext_resource type="Resource" uid="uid://cdtwq6ojt5vvn" path="res://system/input/scope.tres" id="1_gf0ol"]
+[ext_resource type="Script" uid="uid://c3wbsp1i53ohf" path="res://addons/std/setting/property_bool.gd" id="1_wfrdm"]
+
+[resource]
+script = ExtResource("1_wfrdm")
+category = &"steam"
+name = &"input_enabled"
+scope = ExtResource("1_gf0ol")

@@ -1,0 +1,45 @@
+[gd_resource type="Resource" script_class="StdInputGlyphSetJoy" format=3 uid="uid://b6swfasqq8m8i"]
+
+[ext_resource type="Script" uid="uid://dwegvnph8yf3c" path="res://addons/std/input/godot/glyph_set_joy.gd" id="1_6j68a"]
+[ext_resource type="Texture2D" uid="uid://bcfobf86fsu6q" path="res://system/input/unknown/glyphs/switch/zl.png" id="1_ipwnw"]
+[ext_resource type="Texture2D" uid="uid://cnjl3afoi4k27" path="res://system/input/unknown/glyphs/switch/a.png" id="1_na2oh"]
+[ext_resource type="Texture2D" uid="uid://dlbr5uewaobwh" path="res://system/input/unknown/glyphs/switch/zr.png" id="2_1qrox"]
+[ext_resource type="Texture2D" uid="uid://cu1vyt5nbcbi3" path="res://system/input/unknown/glyphs/switch/b.png" id="2_a00sv"]
+[ext_resource type="Texture2D" uid="uid://c4ygvhsb0tqtb" path="res://system/input/unknown/glyphs/switch/dpad_down.png" id="3_08nej"]
+[ext_resource type="Texture2D" uid="uid://cfju1lvatavqg" path="res://system/input/unknown/glyphs/switch/dpad_left.png" id="4_purxs"]
+[ext_resource type="Texture2D" uid="uid://wxxt12aoqoj6" path="res://system/input/unknown/glyphs/switch/dpad_right.png" id="5_uk68r"]
+[ext_resource type="Texture2D" uid="uid://d1j6qtvrr4hc2" path="res://system/input/unknown/glyphs/switch/dpad_up.png" id="6_k7i0a"]
+[ext_resource type="Texture2D" uid="uid://b3b1srypekbr4" path="res://system/input/unknown/glyphs/switch/l_stick.png" id="7_y060g"]
+[ext_resource type="Texture2D" uid="uid://dcharff8s8a2a" path="res://system/input/unknown/glyphs/switch/r_stick.png" id="8_togvw"]
+[ext_resource type="Texture2D" uid="uid://ctjemcbaq6ry4" path="res://system/input/unknown/glyphs/switch/l.png" id="9_su2db"]
+[ext_resource type="Texture2D" uid="uid://c6cufff5t35h3" path="res://system/input/unknown/glyphs/switch/r.png" id="10_vubpx"]
+[ext_resource type="Texture2D" uid="uid://bamnahlmja614" path="res://system/input/unknown/glyphs/switch/plus.png" id="11_sgkau"]
+[ext_resource type="Texture2D" uid="uid://dbie1xd72stuc" path="res://system/input/unknown/glyphs/switch/x.png" id="14_7u3p7"]
+[ext_resource type="Texture2D" uid="uid://s3mdlv46dsy1" path="res://system/input/unknown/glyphs/switch/y.png" id="15_31t52"]
+
+[resource]
+script = ExtResource("1_6j68a")
+stick_left_direction_up = ExtResource("7_y060g")
+stick_left_direction_down = ExtResource("7_y060g")
+stick_left_direction_left = ExtResource("7_y060g")
+stick_left_direction_right = ExtResource("7_y060g")
+stick_right_direction_up = ExtResource("8_togvw")
+stick_right_direction_down = ExtResource("8_togvw")
+stick_right_direction_left = ExtResource("8_togvw")
+stick_right_direction_right = ExtResource("8_togvw")
+button_a = ExtResource("1_na2oh")
+button_b = ExtResource("2_a00sv")
+button_x = ExtResource("14_7u3p7")
+button_y = ExtResource("15_31t52")
+button_start = ExtResource("11_sgkau")
+button_stick_left = ExtResource("7_y060g")
+button_stick_right = ExtResource("8_togvw")
+button_shoulder_left = ExtResource("9_su2db")
+button_shoulder_right = ExtResource("10_vubpx")
+button_dpad_up = ExtResource("6_k7i0a")
+button_dpad_down = ExtResource("3_08nej")
+button_dpad_left = ExtResource("4_purxs")
+button_dpad_right = ExtResource("5_uk68r")
+analog_trigger_left = ExtResource("1_ipwnw")
+analog_trigger_right = ExtResource("2_1qrox")
+device_types = Array[int]([7, 8, 9])
