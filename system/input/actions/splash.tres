@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="StdInputActionSet" format=3 uid="uid://dya1kttgcn4aq"]
+
+[ext_resource type="Script" uid="uid://cljg7byxqnq7d" path="res://addons/std/input/action_set.gd" id="1_splash"]
+
+[resource]
+script = ExtResource("1_splash")
+name = &"Splash"
+actions_digital = Array[StringName]([&"ui_accept", &"ui_cancel"])
+cursor_activates_kbm = 1
