@@ -61,7 +61,7 @@ enum Action {  # gdlint:ignore=class-definitions-order
 			set_process_unhandled_input(not Engine.is_editor_hint() and dismissable)
 
 ## primary_label is the locale key for the primary button.
-@export var primary_label: String = "alert_okay":
+@export var primary_label: String = "kit_alert_okay":
 	set(value):
 		primary_label = value
 		if is_node_ready():
@@ -69,19 +69,27 @@ enum Action {  # gdlint:ignore=class-definitions-order
 
 ## secondary_label is the locale key for the secondary button. Hidden
 ## when empty.
-@export var secondary_label: String = "alert_cancel":
+@export var secondary_label: String = "kit_alert_cancel":
 	set(value):
 		secondary_label = value
 		if is_node_ready():
 			_translate_buttons()
 
+# -- INITIALIZATION ------------------------------------------------------------------ #
+
+## _screens is the screen manager this dialog was pushed onto.
+var _screens: StdScreenManager = null
+
 # -- PUBLIC METHODS ------------------------------------------------------------------ #
 
 
-## open pushes this dialog onto the screen stack.
-func open() -> void:
+## open pushes this dialog onto `screens`, which pops it again once the user answers.
+func open(screens: StdScreenManager) -> void:
 	assert(screen is StdScreen, "invalid config; missing screen")
-	Main.screens().push(screen, self)
+	assert(screens is StdScreenManager, "invalid argument; missing screen manager")
+
+	_screens = screens
+	_screens.push(screen, self)
 
 
 # -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
@@ -157,10 +165,10 @@ func _translate_buttons() -> void:
 
 func _on_button_pressed(action: Action) -> void:
 	assert(
-		Main.screens().is_current(screen),
+		_screens.is_current(screen),
 		"invalid state; dialog screen is not topmost",
 	)
-	Main.screens().pop(action, true)
+	_screens.pop(action, true)
 
 
 func _on_screen_popped(result: Variant) -> void:

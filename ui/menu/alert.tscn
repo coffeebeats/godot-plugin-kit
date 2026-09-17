@@ -80,7 +80,7 @@ custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 theme_type_variation = &"button_dialog"
 action_mode = 1
-text = "alert_cancel"
+text = "kit_alert_cancel"
 
 [node name="FocusHandler" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer/Secondary" index="0" unique_id=976075707]
 use_as_anchor = true
@@ -92,7 +92,7 @@ custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 theme_type_variation = &"button_dialog"
 action_mode = 1
-text = "alert_okay"
+text = "kit_alert_okay"
 
 [node name="FocusHandler" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer/Primary" index="0" unique_id=976075707]
 use_as_anchor = true
