@@ -31,6 +31,11 @@ const GROUP_INPUT_SHIM := &"system/input:shim"
 
 # -- CONFIGURATION ------------------------------------------------------------------- #
 
+## action_sets are the game's action sets, which the settings menu's controls tab lists
+## for rebinding above kit's own. The settings menu loads at runtime, out of reach of
+## the scene placing this node, so it reads the value here.
+@export var action_sets: Array[StdInputActionSet] = []
+
 ## focused_sound_group is the sound group used for focused UI elements.
 @export var focused_sound_group: StdSoundGroup = null
 

@@ -28,6 +28,7 @@
 [ext_resource type="Resource" uid="uid://dp0wxxg20ablh" path="res://system/input/actions/menu_tabbed.tres" id="22_6tsaj"]
 [ext_resource type="Resource" uid="uid://bhsjw6b4deo8i" path="res://system/input/actions/menu_binding.tres" id="23_ahsqh"]
 [ext_resource type="Resource" uid="uid://bcsts082smqrp" path="res://system/input/actions/menu_options.tres" id="28_8eihr"]
+[ext_resource type="Script" uid="uid://cd8qg6bnar436" path="res://menu/settings/controls/controls.gd" id="29_ctrls"]
 
 [sub_resource type="Resource" id="Resource_pi47t"]
 script = ExtResource("6_bdd3f")
@@ -44,6 +45,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_type_variation = &"menu_body"
+script = ExtResource("29_ctrls")
+scope = ExtResource("21_dqueq")
 
 [node name="Godot" type="Node" parent="." unique_id=1067462580 node_paths=PackedStringArray("targets")]
 script = ExtResource("1_slt8e")
@@ -126,6 +129,7 @@ layout_mode = 2
 text = "OPEN"
 
 [node name="MenuControls" parent="." unique_id=1209626123 instance=ExtResource("19_ngc7g")]
+unique_name_in_owner = true
 layout_mode = 2
 action_set = ExtResource("20_h7kk8")
 scope = ExtResource("21_dqueq")
