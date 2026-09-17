@@ -10,6 +10,7 @@ extends Control
 
 const Bindings := preload("res://addons/std/input/godot/binding.gd")
 const Signals := preload("res://addons/std/event/signal.gd")
+const Screens := preload("../../../ui/menu/screens.gd")
 const Rebinder := preload("rebinder.gd")
 const RebinderScene := preload("rebinder.tscn")
 
@@ -54,8 +55,9 @@ var _scope: StdSettingsScope = null
 
 
 ## start_rebinding begins the rebinding process for the specified action and player,
-## pushing the rebinder screen onto the screen stack.
+## pushing the rebinder screen onto the given screen manager.
 static func start_rebinding(
+	screens: StdScreenManager,
 	scope: StdSettingsScope,
 	action_set: StdInputActionSet,
 	action: StringName,
@@ -64,6 +66,8 @@ static func start_rebinding(
 	),
 	player: int = 1,
 ) -> bool:
+	assert(screens is StdScreenManager, "invalid argument; missing screen manager")
+
 	var slot := StdInputSlot.for_player(player)
 	if not slot:
 		assert(false, "invalid state; missing input slot")
@@ -87,7 +91,7 @@ static func start_rebinding(
 
 	Signals.connect_safe(slot.device_activated, _instance._on_device_activated)
 
-	Main.screens().push(_instance.screen, _instance)
+	screens.push(_instance.screen, _instance)
 
 	return true
 
@@ -130,7 +134,7 @@ func stop(bound: bool = false) -> void:
 	_device = null
 	_player = -1
 
-	Main.screens().pop(bound)
+	Screens.find_manager(self).pop(bound)
 
 
 # -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #

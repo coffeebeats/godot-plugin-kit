@@ -8,6 +8,7 @@ extends Control
 # -- DEPENDENCIES -------------------------------------------------------------------- #
 
 const Signals := preload("res://addons/std/event/signal.gd")
+const Screens := preload("../../ui/menu/screens.gd")
 
 # -- CONFIGURATION ------------------------------------------------------------------- #
 
@@ -57,11 +58,11 @@ func _ready() -> void:
 
 
 func _on_options_pressed() -> void:
-	Main.screens().push(settings_screen)
+	Screens.find_manager(self).push(settings_screen)
 
 
 func _on_quit_pressed() -> void:
-	_confirm_quit.open(Main.screens())
+	_confirm_quit.open(Screens.find_manager(self))
 	var action: KitAlertDialog.Action = await _confirm_quit.closed
 	if action != KitAlertDialog.Action.PRIMARY:
 		return
@@ -72,15 +73,13 @@ func _on_quit_pressed() -> void:
 
 
 func _on_resume_pressed() -> void:
-	assert(
-		Main.screens().get_scene() == self,
-		"invalid state; this scene is not topmost",
-	)
-	Main.screens().pop()
+	var screens := Screens.find_manager(self)
+	assert(screens.get_scene() == self, "invalid state; this scene is not topmost")
+	screens.pop()
 
 
 func _on_return_pressed() -> void:
-	_confirm_return.open(Main.screens())
+	_confirm_return.open(Screens.find_manager(self))
 	var action: KitAlertDialog.Action = await _confirm_return.closed
 	if action != KitAlertDialog.Action.PRIMARY:
 		return

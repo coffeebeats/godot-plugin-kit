@@ -9,6 +9,7 @@ extends Control
 const Signals := preload("res://addons/std/event/signal.gd")
 const Bindings := preload("res://addons/std/input/godot/binding.gd")
 const Rebinder := preload("rebinder.gd")
+const Screens := preload("../../../ui/menu/screens.gd")
 
 # -- CONFIGURATION ------------------------------------------------------------------- #
 
@@ -99,5 +100,10 @@ func _on_bindings_changed(category: StringName, key: StringName) -> void:
 
 func _on_button_pressed() -> void:
 	Rebinder.start_rebinding(
-		scope, glyph.action_set, glyph.action, glyph.binding_index, glyph.player_id
+		Screens.find_manager(self),
+		scope,
+		glyph.action_set,
+		glyph.action,
+		glyph.binding_index,
+		glyph.player_id,
 	)

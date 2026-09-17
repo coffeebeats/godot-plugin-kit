@@ -8,6 +8,7 @@ extends PanelContainer
 # -- DEPENDENCIES -------------------------------------------------------------------- #
 
 const Signals := preload("res://addons/std/event/signal.gd")
+const Screens := preload("../../ui/menu/screens.gd")
 const SlotButton := preload("slot_button.gd")
 
 # -- CONFIGURATION ------------------------------------------------------------------- #
@@ -71,7 +72,7 @@ func _on_delete_button_pressed(
 	if saves.get_save_slot(slot).status == KitSaveSlot.STATUS_EMPTY:
 		return
 
-	_confirm_delete.open(Main.screens())
+	_confirm_delete.open(Screens.find_manager(self))
 	var action: KitAlertDialog.Action = await _confirm_delete.closed
 	if action == KitAlertDialog.Action.PRIMARY:
 		button.disabled = true
@@ -89,4 +90,4 @@ func _on_delete_button_pressed(
 
 
 func _on_slot_button_pressed(slot: int) -> void:
-	Main.screens().pop(slot)
+	Screens.find_manager(self).pop(slot)
