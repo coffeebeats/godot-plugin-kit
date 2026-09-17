@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.4 (2026-09-17)
+
+## What's Changed
+* feat: move the Godot splash screen into kit by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/11
+* feat: ship ready-to-use settings, save and pause menus by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/12
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v0.1.3...v0.1.4
+
 ## 0.1.3 (2026-09-17)
 
 ## What's Changed
