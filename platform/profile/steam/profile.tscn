@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://c5i75icaahl6v"]
+
+[ext_resource type="Script" uid="uid://bh5bmcos11md5" path="res://platform/profile/steam/profile.gd" id="1_xc0gc"]
+[ext_resource type="Script" uid="uid://b0s3tp2xjqc08" path="res://addons/std/statistic/store.gd" id="2_1dpfe"]
+
+[node name="Profile" type="Node" unique_id=274760344]
+script = ExtResource("1_xc0gc")
+
+[node name="StdStatisticStore" type="Node" parent="." unique_id=1777010208]
+script = ExtResource("2_1dpfe")

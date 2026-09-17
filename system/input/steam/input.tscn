@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://34h1c3iahd0p"]
+
+[ext_resource type="Script" uid="uid://bdy2r6wohyokl" path="res://system/input/steam/input.gd" id="1_q8m2t"]
+[ext_resource type="Script" uid="uid://cltki5qvy6lgy" path="res://system/input/steam/observer.gd" id="1_cx6kn"]
+[ext_resource type="PackedScene" uid="uid://cqt14not5nr5d" path="res://system/input/unknown/input.tscn" id="1_stiaj"]
+[ext_resource type="Resource" uid="uid://c48eqp48r1hp0" path="res://system/input/steam/steam_input_enabled_property.tres" id="2_4olke"]
+[ext_resource type="Script" uid="uid://bgdumcxwsm0p7" path="res://addons/std/input/steam/joypad_monitor.gd" id="3_kpuj4"]
+[ext_resource type="Script" uid="uid://bsay0if3dnmqr" path="res://addons/std/input/steam/device_actions.gd" id="4_l5spr"]
+[ext_resource type="Script" uid="uid://b4mni3fbbw33x" path="res://addons/std/input/steam/device_glyphs.gd" id="6_62q7k"]
+
+[node name="Input" type="Node" unique_id=2112835291 node_paths=PackedStringArray("device_actions")]
+script = ExtResource("1_q8m2t")
+device_actions = NodePath("Components/Actions")
+
+[node name="Godot" parent="." unique_id=1609587437 instance=ExtResource("1_stiaj")]
+
+[node name="Observers" type="Node" parent="." unique_id=1608678380]
+
+[node name="Player1" type="Node" parent="Observers" unique_id=1988843630 node_paths=PackedStringArray("slot", "godot_joypad_monitor", "godot_device_actions", "godot_device_glyphs", "godot_device_haptics", "steam_joypad_monitor", "steam_device_actions", "steam_device_glyphs", "steam_device_haptics")]
+script = ExtResource("1_cx6kn")
+slot = NodePath("../../Godot/InputSlots/Player1")
+steam_input_enabled_property = ExtResource("2_4olke")
+godot_joypad_monitor = NodePath("../../Godot/Godot/JoypadMonitor")
+godot_device_actions = NodePath("../../Godot/Godot/Components/Actions")
+godot_device_glyphs = NodePath("../../Godot/Godot/Components/Glyphs")
+godot_device_haptics = NodePath("../../Godot/Godot/Components/Haptics")
+steam_joypad_monitor = NodePath("../../JoypadMonitor")
+steam_device_actions = NodePath("../../Components/Actions")
+steam_device_glyphs = NodePath("../../Components/Glyphs")
+steam_device_haptics = NodePath("../../Godot/Godot/Components/Haptics")
+
+[node name="JoypadMonitor" type="Node" parent="." unique_id=1986027736]
+script = ExtResource("3_kpuj4")
+steam_input_enabled_property = ExtResource("2_4olke")
+
+[node name="Components" type="Node" parent="." unique_id=1229388222]
+
+[node name="Actions" type="Node" parent="Components" unique_id=1661953110 node_paths=PackedStringArray("joypad_monitor")]
+script = ExtResource("4_l5spr")
+joypad_monitor = NodePath("../../JoypadMonitor")
+steam_input_enabled_property = ExtResource("2_4olke")
+
+[node name="Glyphs" type="Node" parent="Components" unique_id=1199038074 node_paths=PackedStringArray("joypad_monitor")]
+script = ExtResource("6_62q7k")
+joypad_monitor = NodePath("../../JoypadMonitor")
+
+[editable path="Godot"]

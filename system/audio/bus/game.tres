@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="StdAudioBusStatic" format=3 uid="uid://d4bsd6yivk1nc"]
+
+[ext_resource type="Script" uid="uid://bplm5wcvhj6r2" path="res://addons/std/sound/bus_static.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+name = &"game"

@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="StdLogProfile" format=3 uid="uid://6l3ir8pgjdox"]
+
+[ext_resource type="Script" uid="uid://ddiy5b4sgb373" path="res://addons/std/logging/formatter_compact.gd" id="1_bt8s0"]
+[ext_resource type="Script" uid="uid://dj81vnu6k6a50" path="res://addons/std/logging/profile.gd" id="2_ao6g4"]
+[ext_resource type="Script" uid="uid://p7m3bed4l6o8" path="res://addons/std/logging/sink_godot.gd" id="3_vxbg1"]
+
+[sub_resource type="Resource" id="Resource_ao6g4"]
+script = ExtResource("1_bt8s0")
+metadata/_custom_type_script = "uid://ddiy5b4sgb373"
+
+[sub_resource type="Resource" id="Resource_bt8s0"]
+script = ExtResource("3_vxbg1")
+metadata/_custom_type_script = "uid://p7m3bed4l6o8"
+
+[resource]
+script = ExtResource("2_ao6g4")
+level_overrides = Dictionary[String, int]({
+"platform/": 2,
+"std/": 2,
+"system/": 2
+})
+formatter = SubResource("Resource_ao6g4")
+sink = SubResource("Resource_bt8s0")
+metadata/_custom_type_script = "uid://dj81vnu6k6a50"

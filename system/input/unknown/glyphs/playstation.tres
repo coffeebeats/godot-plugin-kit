@@ -1,0 +1,51 @@
+[gd_resource type="Resource" script_class="StdInputGlyphSetJoy" format=3 uid="uid://c2p72quwbedj7"]
+
+[ext_resource type="Script" uid="uid://dwegvnph8yf3c" path="res://addons/std/input/godot/glyph_set_joy.gd" id="1_owc4c"]
+[ext_resource type="Texture2D" uid="uid://bhb7cr71okgk6" path="res://system/input/unknown/glyphs/playstation/l2.png" id="1_rjmju"]
+[ext_resource type="Texture2D" uid="uid://b87wbkh83k6d1" path="res://system/input/unknown/glyphs/playstation/r2.png" id="2_8236s"]
+[ext_resource type="Texture2D" uid="uid://b1sm3xseq1r8e" path="res://system/input/unknown/glyphs/playstation/cross.png" id="3_lry24"]
+[ext_resource type="Texture2D" uid="uid://iht53qbx7aaa" path="res://system/input/unknown/glyphs/playstation/circle.png" id="4_58y2r"]
+[ext_resource type="Texture2D" uid="uid://bvawhgepl6xmf" path="res://system/input/unknown/glyphs/playstation/dpad_down.png" id="5_c3t2x"]
+[ext_resource type="Texture2D" uid="uid://cxeqve0my0sxf" path="res://system/input/unknown/glyphs/playstation/dpad_left.png" id="6_vta45"]
+[ext_resource type="Texture2D" uid="uid://26rvb133ehqg" path="res://system/input/unknown/glyphs/playstation/dpad_right.png" id="7_624ww"]
+[ext_resource type="Texture2D" uid="uid://hpgasgjduueo" path="res://system/input/unknown/glyphs/playstation/dpad_up.png" id="8_8b4d8"]
+[ext_resource type="Texture2D" uid="uid://dhxogwh76mvpe" path="res://system/input/unknown/glyphs/playstation/microphone.png" id="9_1a4t4"]
+[ext_resource type="Texture2D" uid="uid://be344tgggc5x4" path="res://system/input/unknown/glyphs/playstation/l1.png" id="10_uj3jn"]
+[ext_resource type="Texture2D" uid="uid://dxfhqx6hdsh0d" path="res://system/input/unknown/glyphs/playstation/r1.png" id="11_e72dc"]
+[ext_resource type="Texture2D" uid="uid://02pwp761osl7" path="res://system/input/unknown/glyphs/playstation/options.png" id="12_r3r0u"]
+[ext_resource type="Texture2D" uid="uid://dvrfhoaxs227b" path="res://system/input/unknown/glyphs/playstation/square.png" id="13_lcmnt"]
+[ext_resource type="Texture2D" uid="uid://dtfkh771kxyv" path="res://system/input/unknown/glyphs/playstation/l_stick_click.png" id="13_ppimd"]
+[ext_resource type="Texture2D" uid="uid://n11em6xwrmiu" path="res://system/input/unknown/glyphs/playstation/triangle.png" id="14_gaykc"]
+[ext_resource type="Texture2D" uid="uid://b8vpxxk1l8cc2" path="res://system/input/unknown/glyphs/playstation/r_stick_click.png" id="14_kt5lq"]
+[ext_resource type="Texture2D" uid="uid://d3je8xq1e5p3d" path="res://system/input/unknown/glyphs/playstation/touch_pad.png" id="15_uonpg"]
+[ext_resource type="Texture2D" uid="uid://c0d0atdqh4fie" path="res://system/input/unknown/glyphs/playstation/l_stick.png" id="16_yixr1"]
+[ext_resource type="Texture2D" uid="uid://dpojnqs308lrq" path="res://system/input/unknown/glyphs/playstation/r_stick.png" id="17_yb384"]
+
+[resource]
+script = ExtResource("1_owc4c")
+stick_left_direction_up = ExtResource("16_yixr1")
+stick_left_direction_down = ExtResource("16_yixr1")
+stick_left_direction_left = ExtResource("16_yixr1")
+stick_left_direction_right = ExtResource("16_yixr1")
+stick_right_direction_up = ExtResource("17_yb384")
+stick_right_direction_down = ExtResource("17_yb384")
+stick_right_direction_left = ExtResource("17_yb384")
+stick_right_direction_right = ExtResource("17_yb384")
+button_a = ExtResource("3_lry24")
+button_b = ExtResource("4_58y2r")
+button_x = ExtResource("13_lcmnt")
+button_y = ExtResource("14_gaykc")
+button_start = ExtResource("12_r3r0u")
+button_stick_left = ExtResource("13_ppimd")
+button_stick_right = ExtResource("14_kt5lq")
+button_shoulder_left = ExtResource("10_uj3jn")
+button_shoulder_right = ExtResource("11_e72dc")
+button_dpad_up = ExtResource("8_8b4d8")
+button_dpad_down = ExtResource("5_c3t2x")
+button_dpad_left = ExtResource("6_vta45")
+button_dpad_right = ExtResource("7_624ww")
+button_misc = ExtResource("9_1a4t4")
+button_touchpad = ExtResource("15_uonpg")
+analog_trigger_left = ExtResource("1_rjmju")
+analog_trigger_right = ExtResource("2_8236s")
+device_types = Array[int]([3, 4])

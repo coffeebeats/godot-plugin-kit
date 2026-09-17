@@ -1,0 +1,11 @@
+[gd_resource type="Resource" format=3 uid="uid://cfoust4ehw0d1"]
+
+[ext_resource type="Resource" uid="uid://c3ewqt86m1qfy" path="res://system/setting/project_settings_scope.tres" id="1_kh561"]
+[ext_resource type="Script" uid="uid://cvgcpvxyidgfw" path="res://system/setting/video/vsync_property.gd" id="2_ljecn"]
+
+[resource]
+script = ExtResource("2_ljecn")
+default = true
+category = &"display"
+name = &"window/vsync/vsync_mode"
+scope = ExtResource("1_kh561")

@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="StdLogProfile" format=3 uid="uid://b8jax3yxbr67j"]
+
+[ext_resource type="Script" uid="uid://dj81vnu6k6a50" path="res://addons/std/logging/profile.gd" id="1_3f0js"]
+[ext_resource type="Script" uid="uid://3gkwel787g5x" path="res://addons/std/logging/formatter_rich.gd" id="1_lcskv"]
+[ext_resource type="Script" uid="uid://p7m3bed4l6o8" path="res://addons/std/logging/sink_godot.gd" id="3_arwfh"]
+
+[sub_resource type="Resource" id="Resource_uwuok"]
+script = ExtResource("1_lcskv")
+color_name = Color(0.44705883, 0.44705883, 0.44705883, 1)
+color_context = Color(0.44705883, 0.44705883, 0.44705883, 1)
+bbcode = true
+metadata/_custom_type_script = "uid://3gkwel787g5x"
+
+[sub_resource type="Resource" id="Resource_srd2c"]
+script = ExtResource("3_arwfh")
+metadata/_custom_type_script = "uid://p7m3bed4l6o8"
+
+[resource]
+script = ExtResource("1_3f0js")
+level = 0
+level_overrides = Dictionary[String, int]({
+"platform/": 2,
+"std/": 2,
+"system/": 2
+})
+formatter = SubResource("Resource_uwuok")
+sink = SubResource("Resource_srd2c")
+metadata/_custom_type_script = "uid://dj81vnu6k6a50"

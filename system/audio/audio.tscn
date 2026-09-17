@@ -1,0 +1,75 @@
+[gd_scene format=3 uid="uid://0ngaobv7ydln"]
+
+[ext_resource type="Script" uid="uid://c5vcj0wbm2cuv" path="res://system/audio/audio.gd" id="1_k2ot4"]
+[ext_resource type="Script" uid="uid://jawae4cgr3ug" path="res://addons/std/sound/pool_1d.gd" id="2_rkmwc"]
+[ext_resource type="Script" uid="uid://dgdx1r08mvcut" path="res://addons/std/sound/pool_2d.gd" id="3_sjdwr"]
+[ext_resource type="Script" uid="uid://c5yniejk4ptja" path="res://addons/std/sound/music.gd" id="4_music"]
+[ext_resource type="Script" uid="uid://biupfx6h42h8k" path="res://addons/std/tween/curve.gd" id="5_curve"]
+[ext_resource type="Script" uid="uid://cqdcgvn5dcb7" path="res://addons/std/sound/mix_snapshot.gd" id="6_snapshot"]
+[ext_resource type="Script" uid="uid://wjhmi6aj2hkv" path="res://addons/std/sound/mix_snapshot_override.gd" id="7_override"]
+[ext_resource type="Script" uid="uid://uw3pn8gctfef" path="res://addons/std/sound/bus_effect.gd" id="8_bus_effect"]
+[ext_resource type="Script" uid="uid://dnmgfnjcj5cra" path="res://addons/std/sound/bus_effect_property.gd" id="8b_bus_effect_prop"]
+[ext_resource type="Resource" uid="uid://d4bsd6yivk1nc" path="res://system/audio/bus/game.tres" id="9_game_bus"]
+
+[sub_resource type="Resource" id="StdTweenCurve_music_fadein"]
+script = ExtResource("5_curve")
+duration = 2.0
+ease_type = 1
+transition_type = 2
+
+[sub_resource type="Resource" id="StdTweenCurve_music_fadeout"]
+script = ExtResource("5_curve")
+duration = 0.6
+ease_type = 1
+transition_type = 2
+
+[sub_resource type="AudioEffectLowPassFilter" id="AudioEffectLowPassFilter_covered"]
+cutoff_hz = 20500.0
+
+[sub_resource type="Resource" id="StdTweenCurve_covered"]
+script = ExtResource("5_curve")
+duration = 0.3
+ease_type = 1
+transition_type = 2
+
+[sub_resource type="Resource" id="StdSoundBusEffectProperty_covered"]
+script = ExtResource("8b_bus_effect_prop")
+property = &"cutoff_hz"
+value_on = 1400.0
+value_off = 20500.0
+transition_in = SubResource("StdTweenCurve_covered")
+transition_out = SubResource("StdTweenCurve_covered")
+
+[sub_resource type="Resource" id="StdSoundBusEffect_covered"]
+script = ExtResource("8_bus_effect")
+effect = SubResource("AudioEffectLowPassFilter_covered")
+properties = Array[ExtResource("8b_bus_effect_prop")]([SubResource("StdSoundBusEffectProperty_covered")])
+
+[sub_resource type="Resource" id="StdMixSnapshotOverride_covered"]
+script = ExtResource("7_override")
+bus = ExtResource("9_game_bus")
+bus_effect = SubResource("StdSoundBusEffect_covered")
+
+[sub_resource type="Resource" id="StdMixSnapshot_covered"]
+script = ExtResource("6_snapshot")
+overrides = Array[ExtResource("7_override")]([SubResource("StdMixSnapshotOverride_covered")])
+
+[node name="Audio" type="Node" unique_id=1647920501 node_paths=PackedStringArray("pool_1d", "pool_2d", "music_player")]
+script = ExtResource("1_k2ot4")
+pool_1d = NodePath("StdAudioStreamPlayerPool1D")
+pool_2d = NodePath("StdAudioStreamPlayerPool2D")
+music_player = NodePath("StdMusicPlayer")
+covered_snapshot = SubResource("StdMixSnapshot_covered")
+
+[node name="StdAudioStreamPlayerPool1D" type="Node" parent="." unique_id=1249368829]
+script = ExtResource("2_rkmwc")
+size = 16
+
+[node name="StdAudioStreamPlayerPool2D" type="Node" parent="." unique_id=278484702]
+script = ExtResource("3_sjdwr")
+size = 32
+
+[node name="StdMusicPlayer" type="Node" parent="."]
+script = ExtResource("4_music")
+fade_in = SubResource("StdTweenCurve_music_fadein")
+fade_out = SubResource("StdTweenCurve_music_fadeout")

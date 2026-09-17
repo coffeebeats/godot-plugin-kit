@@ -1,0 +1,49 @@
+[gd_resource type="Resource" script_class="StdInputGlyphSetJoy" format=3 uid="uid://c762oejwi8vb3"]
+
+[ext_resource type="Texture2D" uid="uid://o2sk63mdbgqm" path="res://system/input/unknown/glyphs/xbox/lt.png" id="1_hqbur"]
+[ext_resource type="Texture2D" uid="uid://c4ccmawnv2aos" path="res://system/input/unknown/glyphs/xbox/rt.png" id="2_3xapu"]
+[ext_resource type="Texture2D" uid="uid://b2vdj1070g82w" path="res://system/input/unknown/glyphs/xbox/a.png" id="3_u2uyu"]
+[ext_resource type="Texture2D" uid="uid://bs1yccqpatf1u" path="res://system/input/unknown/glyphs/xbox/b.png" id="4_g8x15"]
+[ext_resource type="Texture2D" uid="uid://toxq2u21crfx" path="res://system/input/unknown/glyphs/xbox/dpad_down.png" id="5_576in"]
+[ext_resource type="Texture2D" uid="uid://b7hb4idm5em7r" path="res://system/input/unknown/glyphs/xbox/dpad_left.png" id="6_w13dp"]
+[ext_resource type="Texture2D" uid="uid://cfsppy1kv3xse" path="res://system/input/unknown/glyphs/xbox/dpad_right.png" id="7_3wlhl"]
+[ext_resource type="Texture2D" uid="uid://b2qd5e3evwq5h" path="res://system/input/unknown/glyphs/xbox/dpad_up.png" id="8_3gh2x"]
+[ext_resource type="Texture2D" uid="uid://cylmdnnprksh8" path="res://system/input/unknown/glyphs/xbox/share.png" id="9_wvxc5"]
+[ext_resource type="Texture2D" uid="uid://cs83hsy3epofy" path="res://system/input/unknown/glyphs/xbox/lb.png" id="10_opwul"]
+[ext_resource type="Texture2D" uid="uid://dwmvxu28rli34" path="res://system/input/unknown/glyphs/xbox/rb.png" id="11_waq5a"]
+[ext_resource type="Texture2D" uid="uid://b665g2gkfn6h2" path="res://system/input/unknown/glyphs/xbox/menu.png" id="12_5jtqp"]
+[ext_resource type="Texture2D" uid="uid://b6avtoimxnbvq" path="res://system/input/unknown/glyphs/xbox/l_stick_click.png" id="13_o0u4k"]
+[ext_resource type="Texture2D" uid="uid://cmj05wt2sr1xs" path="res://system/input/unknown/glyphs/xbox/r_stick_click.png" id="14_wm25q"]
+[ext_resource type="Texture2D" uid="uid://b7p4suvqlu73x" path="res://system/input/unknown/glyphs/xbox/x.png" id="15_vuy1d"]
+[ext_resource type="Texture2D" uid="uid://cl4kfi7r3qwve" path="res://system/input/unknown/glyphs/xbox/y.png" id="16_m37b1"]
+[ext_resource type="Script" uid="uid://dwegvnph8yf3c" path="res://addons/std/input/godot/glyph_set_joy.gd" id="17_p3bob"]
+[ext_resource type="Texture2D" uid="uid://bxip8fryjqus7" path="res://system/input/unknown/glyphs/xbox/l_stick.png" id="18_qayur"]
+[ext_resource type="Texture2D" uid="uid://cyi6ihf0l0wwl" path="res://system/input/unknown/glyphs/xbox/r_stick.png" id="19_qjb2e"]
+
+[resource]
+script = ExtResource("17_p3bob")
+stick_left_direction_up = ExtResource("18_qayur")
+stick_left_direction_down = ExtResource("18_qayur")
+stick_left_direction_left = ExtResource("18_qayur")
+stick_left_direction_right = ExtResource("18_qayur")
+stick_right_direction_up = ExtResource("19_qjb2e")
+stick_right_direction_down = ExtResource("19_qjb2e")
+stick_right_direction_left = ExtResource("19_qjb2e")
+stick_right_direction_right = ExtResource("19_qjb2e")
+button_a = ExtResource("3_u2uyu")
+button_b = ExtResource("4_g8x15")
+button_x = ExtResource("15_vuy1d")
+button_y = ExtResource("16_m37b1")
+button_start = ExtResource("12_5jtqp")
+button_stick_left = ExtResource("13_o0u4k")
+button_stick_right = ExtResource("14_wm25q")
+button_shoulder_left = ExtResource("10_opwul")
+button_shoulder_right = ExtResource("11_waq5a")
+button_dpad_up = ExtResource("8_3gh2x")
+button_dpad_down = ExtResource("5_576in")
+button_dpad_left = ExtResource("6_w13dp")
+button_dpad_right = ExtResource("7_3wlhl")
+button_misc = ExtResource("9_wvxc5")
+analog_trigger_left = ExtResource("1_hqbur")
+analog_trigger_right = ExtResource("2_3xapu")
+device_types = Array[int]([1, 11, 12])

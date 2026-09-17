@@ -1,0 +1,110 @@
+[gd_scene format=3 uid="uid://cjb8nitks0be0"]
+
+[ext_resource type="Script" uid="uid://c0mqssj1w0y7g" path="res://addons/std/setting/repository.gd" id="2_0mjau"]
+[ext_resource type="Script" uid="uid://tksxuwjva5cm" path="res://addons/std/config/writer/project_settings.gd" id="3_72ti4"]
+[ext_resource type="Resource" uid="uid://c3ewqt86m1qfy" path="res://system/setting/project_settings_scope.tres" id="3_q5d07"]
+[ext_resource type="Resource" uid="uid://mwqxsj0u3y8u" path="res://system/setting/user_settings_scope.tres" id="4_pkd6u"]
+[ext_resource type="Script" uid="uid://buei4e05yx6mo" path="res://system/setting/audio/device/observer.gd" id="5_3q6ut"]
+[ext_resource type="Script" uid="uid://nyai4fsxk55t" path="res://platform/profile/writer.gd" id="5_7se31"]
+[ext_resource type="Resource" uid="uid://ccnpq1qb03igm" path="res://system/setting/audio/device/output_property.tres" id="6_tcob2"]
+[ext_resource type="Script" uid="uid://c1jlymlfyxjy6" path="res://system/setting/audio/mute/observer.gd" id="7_nt3tl"]
+[ext_resource type="Resource" uid="uid://dejd17gr4508s" path="res://system/setting/audio/mute/background_property.tres" id="8_fchdv"]
+[ext_resource type="Script" uid="uid://dpyr8fitawv50" path="res://system/setting/audio/volume/observer.gd" id="9_2opf3"]
+[ext_resource type="Resource" uid="uid://cg5lexk11pl7g" path="res://system/setting/audio/mute/global.tres" id="9_qp2op"]
+[ext_resource type="Resource" uid="uid://cdgwm6x2i52sn" path="res://system/setting/audio/volume/master_property.tres" id="10_edgrp"]
+[ext_resource type="Resource" uid="uid://c548qtehlfufq" path="res://system/setting/audio/volume/music_property.tres" id="11_1jdvh"]
+[ext_resource type="Resource" uid="uid://dxoybi2umepwu" path="res://system/setting/audio/volume/sound_effects_property.tres" id="12_hl0tw"]
+[ext_resource type="Resource" uid="uid://csu1osb4kni20" path="res://system/setting/audio/volume/voice_property.tres" id="13_luwqe"]
+[ext_resource type="Script" uid="uid://c6yuru5gx28yv" path="res://system/setting/video/fps_observer.gd" id="15_rqncv"]
+[ext_resource type="Resource" uid="uid://cfoust4ehw0d1" path="res://system/setting/video/vsync_property.tres" id="16_hkpcf"]
+[ext_resource type="Resource" uid="uid://bohv6x4sod6oh" path="res://system/setting/video/frame_limit_property.tres" id="17_s141t"]
+[ext_resource type="Script" uid="uid://c51ppu7oyr35c" path="res://system/setting/video/window_observer.gd" id="18_d4nyg"]
+[ext_resource type="Resource" uid="uid://bto0jfkd0pli7" path="res://system/setting/video/fullscreen.tres" id="19_sp5q8"]
+[ext_resource type="Resource" uid="uid://iw3u23yo0kyb" path="res://system/setting/video/borderless.tres" id="20_pmh6n"]
+[ext_resource type="Resource" uid="uid://62mhtqvh6wfn" path="res://system/setting/video/window_mode_property.tres" id="21_75euv"]
+[ext_resource type="Script" uid="uid://b1s0ajgclfpcn" path="res://system/setting/interface/language_observer.gd" id="24_5inwc"]
+[ext_resource type="Resource" uid="uid://723bxnvy4ipw" path="res://system/setting/interface/language_property.tres" id="25_3mnqu"]
+[ext_resource type="Resource" uid="uid://ci5jo2fctxlbt" path="res://system/setting/interface/language_options_property.tres" id="26_juwf4"]
+
+[node name="Settings" type="Node" unique_id=263457730]
+
+[node name="ProjectSettingsScope" type="Node" parent="." unique_id=1739494578 node_paths=PackedStringArray("writer")]
+script = ExtResource("2_0mjau")
+scope = ExtResource("3_q5d07")
+writer = NodePath("StdProjectSettingsConfigWriter")
+
+[node name="StdProjectSettingsConfigWriter" type="Node" parent="ProjectSettingsScope" unique_id=1932044016]
+script = ExtResource("3_72ti4")
+backup_count = 1
+metadata/_custom_type_script = "uid://tksxuwjva5cm"
+
+[node name="UserSettingsScope" type="Node" parent="." unique_id=1518754609 node_paths=PackedStringArray("writer")]
+script = ExtResource("2_0mjau")
+scope = ExtResource("4_pkd6u")
+writer = NodePath("ProfileConfigWriter")
+
+[node name="ProfileConfigWriter" type="Node" parent="UserSettingsScope" unique_id=1718324544]
+script = ExtResource("5_7se31")
+compression_mode = 0
+path = "settings.dat"
+backup_count = 1
+
+[node name="Observers" type="Node" parent="." unique_id=1597625148]
+
+[node name="Audio" type="Node" parent="Observers" unique_id=2020556870]
+
+[node name="SoundDevice" type="Node" parent="Observers/Audio" unique_id=1761083423]
+script = ExtResource("5_3q6ut")
+output_device = ExtResource("6_tcob2")
+
+[node name="Mute" type="Node" parent="Observers/Audio" unique_id=1606389061]
+script = ExtResource("7_nt3tl")
+background_property = ExtResource("8_fchdv")
+global_property = ExtResource("9_qp2op")
+
+[node name="Volume" type="Node" parent="Observers/Audio" unique_id=1100638547]
+
+[node name="Master" type="Node" parent="Observers/Audio/Volume" unique_id=1966514014]
+script = ExtResource("9_2opf3")
+bus = &"Master"
+property = ExtResource("10_edgrp")
+
+[node name="Music" type="Node" parent="Observers/Audio/Volume" unique_id=1990203540]
+script = ExtResource("9_2opf3")
+bus = &"music"
+property = ExtResource("11_1jdvh")
+
+[node name="SoundEffects" type="Node" parent="Observers/Audio/Volume" unique_id=1508808641]
+script = ExtResource("9_2opf3")
+bus = &"sound_effects"
+property = ExtResource("12_hl0tw")
+
+[node name="Voice" type="Node" parent="Observers/Audio/Volume" unique_id=258614105]
+script = ExtResource("9_2opf3")
+bus = &"voice"
+property = ExtResource("13_luwqe")
+
+[node name="UI" type="Node" parent="Observers/Audio/Volume"]
+script = ExtResource("9_2opf3")
+bus = &"ui"
+property = ExtResource("12_hl0tw")
+
+[node name="Video" type="Node" parent="Observers" unique_id=1937229921]
+
+[node name="FPS" type="Node" parent="Observers/Video" unique_id=1722014008]
+script = ExtResource("15_rqncv")
+vsync_property = ExtResource("16_hkpcf")
+frame_limit_property = ExtResource("17_s141t")
+
+[node name="WindowMode" type="Node" parent="Observers/Video" unique_id=973592453]
+script = ExtResource("18_d4nyg")
+fullscreen_property = ExtResource("19_sp5q8")
+borderless_property = ExtResource("20_pmh6n")
+window_mode_property = ExtResource("21_75euv")
+
+[node name="Interface" type="Node" parent="Observers" unique_id=806725068]
+
+[node name="LanguageObserver" type="Node" parent="Observers/Interface" unique_id=561636359]
+script = ExtResource("24_5inwc")
+language_property = ExtResource("25_3mnqu")
+language_options_property = ExtResource("26_juwf4")

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="StdSettingsPropertyInt" format=3 uid="uid://62mhtqvh6wfn"]
+
+[ext_resource type="Resource" uid="uid://c3ewqt86m1qfy" path="res://system/setting/project_settings_scope.tres" id="1_p43eb"]
+[ext_resource type="Script" uid="uid://b2noxvmquod74" path="res://addons/std/setting/property_int.gd" id="1_pn5ua"]
+
+[resource]
+script = ExtResource("1_pn5ua")
+default = 3
+category = &"display"
+name = &"window/size/mode"
+scope = ExtResource("1_p43eb")
