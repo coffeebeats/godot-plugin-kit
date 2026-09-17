@@ -99,11 +99,14 @@ func _on_bindings_changed(category: StringName, key: StringName) -> void:
 
 
 func _on_button_pressed() -> void:
-	Rebinder.start_rebinding(
-		Screens.find_manager(self),
-		scope,
-		glyph.action_set,
-		glyph.action,
-		glyph.binding_index,
-		glyph.player_id,
+	(
+		Rebinder
+		. start_rebinding(
+			Screens.find_manager(self),
+			scope,
+			glyph.action_set,
+			glyph.action,
+			glyph.binding_index,
+			glyph.player_id,
+		)
 	)
