@@ -2,6 +2,9 @@
 ## SettingsMenu is a full settings menu with the ability to read and write user/game
 ## preferences. Designed as a standalone Control pushed via StdScreenManager.
 ##
+## After kit's own tabs it shows the game's, read from the `Settings` system
+## component's `menu_tabs`.
+##
 
 extends Control
 
@@ -28,6 +31,8 @@ var _tab_switch_muted: bool = false
 
 func _enter_tree() -> void:
 	if not is_node_ready():
+		# NOTE: Tabs are added before `TabGroup._ready` builds a button per label.
+		_add_tabs(KitSystems.settings().menu_tabs)
 		return  # First enter; _ready() handles initial state.
 
 	# A re-entry pushes a cached instance, so reset to the default tab without its sound.
@@ -49,6 +54,20 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed(&"ui_tab_prev"):
 		_tab_group.select_previous()
 		get_viewport().set_input_as_handled()
+
+
+# -- PRIVATE METHODS ----------------------------------------------------------------- #
+
+
+## _add_tabs appends each tab, labeled by its key, after kit's own tabs.
+func _add_tabs(tabs: Dictionary[String, PackedScene]) -> void:
+	var tab_group: TabGroup = get_node(^"%TabGroup")
+	assert(tab_group.content is Node, "invalid state; missing tab contents")
+
+	for label in tabs:
+		tab_group.content.add_child(tabs[label].instantiate())
+
+	tab_group.tabs = tab_group.tabs + PackedStringArray(tabs.keys())
 
 
 # -- SIGNAL HANDLERS ----------------------------------------------------------------- #
