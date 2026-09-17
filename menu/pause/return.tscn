@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://cjsmesktoceke"]
+
+[ext_resource type="PackedScene" uid="uid://4brfq2tumt1o" path="res://ui/menu/alert.tscn" id="1_alert"]
+
+[node name="AlertDialog" instance=ExtResource("1_alert")]
+title = "kit_pause_return_title"
+message = "kit_pause_return_message"

@@ -103,3 +103,237 @@ msgstr "Input binding"
 msgctxt "actions_MenuBinding"
 msgid "ui_binding_stop"
 msgstr "Cancel binding"
+
+#. A button to open the options menu, located on the pause menu.
+msgid "kit_pause_options"
+msgstr "Options"
+
+#. A button to quit/exit the game, located on the pause menu.
+msgid "kit_pause_quit"
+msgstr "Quit"
+
+#. A button label to continue despite an error.
+msgctxt "alert"
+msgid "kit_alert_continue"
+msgstr "Continue"
+
+#. The title shown at the top of the pause menu.
+msgid "kit_pause_title"
+msgstr "Paused"
+
+#. A button to resume gameplay, located on the pause menu.
+msgid "kit_pause_resume"
+msgstr "Resume"
+
+#. A button to return to the main menu, located on the pause menu.
+msgid "kit_pause_return_to_menu"
+msgstr "Return to menu"
+
+#. The title of the confirmation dialog shown when quitting the game from the pause menu.
+msgid "kit_pause_quit_title"
+msgstr "Quit game"
+
+#. The message shown in the confirmation dialog when quitting the game.
+msgid "kit_pause_quit_message"
+msgstr "Are you sure you want to quit?"
+
+#. The title of the confirmation dialog shown when returning to the main menu from the pause menu.
+msgid "kit_pause_return_title"
+msgstr "Return to main menu"
+
+#. The message shown in the confirmation dialog when returning to the main menu.
+msgid "kit_pause_return_message"
+msgstr "Are you sure you want to return to the main menu?"
+
+#. Instructs the player to select which save slot to use.
+msgid "kit_save_slots_choose"
+msgstr "Choose a save slot — progress will be saved automatically"
+
+#. A label for the timestamp of when the particular save was last updated.
+msgid "kit_save_slots_last_updated"
+msgstr "Last updated:"
+
+#. A label displayed when a save slot is broken/unusable.
+msgid "kit_save_slots_broken"
+msgstr "Broken"
+
+#. A label displayed when a save slot is empty/available/has no save data.
+msgid "kit_save_slots_empty"
+msgstr "Empty"
+
+#. A button which the player can press to delete save data for a specific slot.
+msgid "kit_save_slots_delete"
+msgstr "Delete"
+
+#. The title of the confirmation dialog shown when deleting a save slot.
+msgid "kit_save_slots_delete_title"
+msgstr "Delete Save"
+
+#. The message shown in the confirmation dialog when deleting a save slot, warning the player that this action is permanent.
+msgid "kit_save_slots_delete_message"
+msgstr "Are you sure? This cannot be undone."
+
+#. A button label to delete something (e.g. a save slot).
+msgctxt "alert"
+msgid "kit_alert_delete"
+msgstr "Delete"
+
+#. The title of the error dialog shown when deleting a save slot fails.
+msgid "kit_error_delete_failed_title"
+msgstr "Delete Failed"
+
+#. The message shown when deleting a save slot fails.
+msgid "kit_error_delete_failed_message"
+msgstr "The save slot could not be deleted."
+
+#. A tab within the game's options menu containing sound-related settings.
+msgid "kit_options_sound"
+msgstr "Sound"
+
+#. A tab within the game's options menu containing settings for interacting with the game. This menu includes things like text size, changing the game's display language, etc.
+msgid "kit_options_interface"
+msgstr "Interface"
+
+#. A tab within the game's options menu containing graphics/video-related settings.
+msgid "kit_options_display"
+msgstr "Display"
+
+#. A tab within the game's options menu containing controls/input-related settings.
+msgid "kit_options_controls"
+msgstr "Controls"
+
+#. Used as a category name for a group of settings related to volume.
+msgid "kit_options_sound_volume"
+msgstr "Volume"
+
+#. Describes the global volume setting within the options menu.
+msgid "kit_options_sound_volume_master"
+msgstr "Global"
+
+#. Describes the sound effects volume setting within the options menu.
+msgid "kit_options_sound_volume_sound_effects"
+msgstr "Sound Effects"
+
+#. Describes the musics volume setting within the options menu.
+msgid "kit_options_sound_volume_music"
+msgstr "Music"
+
+#. Describes the spoken word volume setting within the options menu.
+msgid "kit_options_sound_volume_voice"
+msgstr "Voice"
+
+#. Used as a category name for a group of settings related to audio output.
+msgid "kit_options_sound_audio"
+msgstr "Audio"
+
+#. Describes the setting which changes the specific audio output device used by the game.
+msgid "kit_options_sound_audio_device"
+msgstr "Audio output device"
+
+#. Describes the setting which causes sound to be muted when the game is unfocused (i.e. when the user "tabs out" of the game).
+msgid "kit_options_sound_audio_bg_mute"
+msgstr "Mute in background"
+
+#. Used as a category name for a group of settings related to display language.
+msgid "kit_options_interface_language"
+msgstr "Language"
+
+#. Describes the setting which changes the display language of the game.
+msgid "kit_options_interface_language_display"
+msgstr "Display language"
+
+#. Used as a category name for a group of settings related to text display.
+msgid "kit_options_interface_text"
+msgstr "Text"
+
+#. Describes the setting which changes the size of the text.
+msgid "kit_options_interface_text_scaling"
+msgstr "Scale text size"
+
+#. Used as a category name for a group of settings related to graphics.
+msgid "kit_options_display_video"
+msgstr "Video"
+
+#. Describes the setting which toggles the size of the game between "windowed" and "fullscreen".
+msgid "kit_options_display_video_fullscreen"
+msgstr "Fullscreen"
+
+#. Describes the setting which removes the border around the game application window.
+msgid "kit_options_display_video_borderless"
+msgstr "Borderless"
+
+#. Describes the setting which adjusts the maximum number of frames drawn per second.
+msgid "kit_options_display_video_fps_limit"
+msgstr "Max frame limit"
+
+#. Describes the setting which adjusts whether the game's frames drawn per second are capped to the monitor's refresh rate.
+msgid "kit_options_display_video_vsync"
+msgstr "VSync"
+
+#. Used as a category name for gamepad settings.
+msgid "kit_options_controls_gamepad"
+msgstr "Gamepads"
+
+#. Describes the setting used to change which gamepad type a visual gamepad button icon uses.
+msgid "kit_options_controls_button_prompt"
+msgstr "Button prompts"
+
+#. Describes one possible option in the button prompt setting; allows the game to automatically pick the best option.
+msgctxt "button_prompt"
+msgid "kit_options_controls_button_prompt_auto"
+msgstr "Auto"
+
+#. Describes one possible option in the button prompt setting; fixes gamepad icons to use the keyboard and mouse style.
+msgctxt "button_prompt"
+msgid "kit_options_controls_button_prompt_kbm"
+msgstr "KB&M"
+
+#. Describes one possible option in the button prompt setting; fixes gamepad icons to use an Microsoft Xbox style.
+msgctxt "button_prompt"
+msgid "kit_options_controls_button_prompt_xbox"
+msgstr "Xbox"
+
+#. Describes one possible option in the button prompt setting; fixes gamepad icons to use a Sony PlayStation style.
+msgctxt "button_prompt"
+msgid "kit_options_controls_button_prompt_ps"
+msgstr "PlayStation"
+
+#. Describes one possible option in the button prompt setting; fixes gamepad icons to use a Nintendo Switch style.
+msgctxt "button_prompt"
+msgid "kit_options_controls_button_prompt_switch"
+msgstr "Switch"
+
+#. Describes one possible option in the button prompt setting; fixes gamepad icons to use a Valve Steam style.
+msgctxt "button_prompt"
+msgid "kit_options_controls_button_prompt_steam"
+msgstr "Steam"
+
+#. Describes the setting which disables controller vibration feedback.
+msgid "kit_options_controls_disable_vibration"
+msgstr "Disable vibration"
+
+#. Describes the setting which controls how intense controller vibration feedback is.
+msgid "kit_options_controls_vibration_strength"
+msgstr "Vibration strength"
+
+#. Used as a category name for a group of settings related to Steam Input. Steam Input is a software library/interface for the Steam game distribution platform.
+msgid "kit_options_controls_steam"
+msgstr "Steam Input"
+
+#. Describes a setting which adjusts the action-to-button bindings for a game controller.
+msgid "kit_options_controls_steam_configurator"
+msgstr "Controller layout"
+
+#. Instructs the user that they will be updating the controller binding for the specified action. Here, the '%s' placeholder will be replaced with the translated name of the game action.
+msgid "kit_options_controls_rebinder_title"
+msgstr "Bind “%s”"
+
+#. Instructs the user that they should now press the new keyboard button or exit the operation. Here, the '%s' placeholder will be replaced with an icon of the controller button to press.
+msgctxt "keyboard"
+msgid "kit_options_controls_rebinder_bind_or_exit"
+msgstr "Press any key now or %s to cancel."
+
+#. Instructs the user that they should now press the new keyboard button or exit the operation. Here, the '%s' placeholder will be replaced with an icon of the controller button to press.
+msgctxt "gamepad"
+msgid "kit_options_controls_rebinder_bind_or_exit"
+msgstr "Press any button now or %s to cancel."

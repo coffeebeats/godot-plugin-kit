@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://dii55pwtpi0w6"]
+
+[ext_resource type="PackedScene" uid="uid://4brfq2tumt1o" path="res://ui/menu/alert.tscn" id="1_alert"]
+
+[node name="AlertDialog" unique_id=402396653 instance=ExtResource("1_alert")]
+title = "kit_pause_quit_title"
+message = "kit_pause_quit_message"
+
+[node name="Title" parent="CenterContainer/Panel/MarginContainer/VBoxContainer" parent_id_path=PackedInt32Array(2033357153) index="0" unique_id=956283937]
+visible = true
+text = "kit_pause_quit_title"
+
+[node name="Message" parent="CenterContainer/Panel/MarginContainer/VBoxContainer" parent_id_path=PackedInt32Array(2033357153) index="1" unique_id=2122202452]
+visible = true
+text = "kit_pause_quit_message"
+
+[editable path="CenterContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer/Secondary"]
+[editable path="CenterContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer/Primary"]

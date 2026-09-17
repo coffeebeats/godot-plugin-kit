@@ -16,6 +16,7 @@ extends Object
 const InputSystem := preload("input/input.gd")
 const SavesSystem := preload("save/saves.gd")
 const AudioSystem := preload("audio/audio.gd")
+const SettingsSystem := preload("setting/settings.gd")
 
 # -- PUBLIC METHODS ------------------------------------------------------------------ #
 
@@ -33,6 +34,11 @@ static func input() -> InputSystem:
 ## saves returns the `Saves` system component.
 static func saves() -> SavesSystem:
 	return StdGroup.get_sole_member(SavesSystem.GROUP_SAVES_SHIM)
+
+
+## settings returns the `Settings` system component.
+static func settings() -> SettingsSystem:
+	return StdGroup.get_sole_member(SettingsSystem.GROUP_SETTINGS_SHIM)
 
 
 # -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #

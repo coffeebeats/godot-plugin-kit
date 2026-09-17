@@ -14,6 +14,57 @@ git submodule add -b dist https://github.com/coffeebeats/godot-plugin-kit addons
 
 Each release is a commit on `dist`, tagged `dist/vX.Y.Z`. Versions follow semantic versioning independently of Godot; raising the minimum Godot version is a major release.
 
+[`godot-project-template`](https://github.com/coffeebeats/godot-project-template) is a game built this way, and every step below is wired up there.
+
+### Register the autoloads
+
+Kit ships no autoloads. Register these three in `project.godot`:
+
+- `Platform`, a scene composing the `platform/` bricks. Kit's scripts reach it by this name.
+- `System`, a scene composing the `system/` bricks. The game's own values are set on its instances.
+- `Lifecycle`, the script `addons/kit/system/lifecycle.gd`. Kit's pause menu reaches it by this name, and a game saves its progress on `Lifecycle.shutdown_requested`.
+
+### Set the game's values
+
+Each value the game owns is an export on a brick placed in `System`:
+
+| Brick | Export | Value |
+| --- | --- | --- |
+| `system/input/input.tscn` | `action_sets` | The game's action sets, which the settings menu lists for rebinding. |
+| `system/input/input.tscn` | `steam_in_game_actions` | The game's Steam Input manifest, required on Steam. |
+| `system/input/input.tscn` | `focused_sound_group` | The sound played as focus moves between controls. |
+| `system/setting/settings.tscn` | `menu_tabs` | The game's own settings menu tabs, keyed by their label's message ID. |
+| `system/setting/interface/font_scaling_observer.tscn` | `theme` | The font theme which the text scaling setting resizes. |
+| `system/save/saves.tscn` | `schema` | The game's save data, required. |
+| `system/save/saves.tscn` | `slot_count` | The number of save slots, each shown in the save menu. |
+
+Two values are set from code instead, since no export in `System` can reach or hold them:
+
+- `KitSystems.audio().screens`, the game's `StdScreenManager`, which ducks the mix under covering screens.
+- `KitPauseMenu.return_to_main_menu`, the game's way back to its main menu. The pause menu offers returning only once it is set.
+
+### Use the menus
+
+Each menu is a finished screen, used in place:
+
+- **Settings:** push `menu/settings/screen.tres`, or list `menu/settings/pusher.tscn` in a screen's `attachment_scenes` to open it on `ui_toggle_menu`.
+- **Save slots:** push `menu/save/screen.tres` and await its `popped` signal, which carries the chosen slot's index.
+- **Pause:** list `menu/pause/pusher.tscn` in a gameplay screen's `attachment_scenes`.
+- **Splash:** push `ui/splash/godot_screen.tres`, whose scene emits `advanced` once it is done. `ui/splash/splash.gd` makes a splash of any scene.
+
+For a different layout, assemble a menu from the bricks it is made of: the settings tabs and their `group` and `setting` rows, the controls tab's `action_set` groups, the save menu's `slot_button`, and the dialogs in `ui/menu/`.
+
+### Configure the project
+
+Kit's bricks also read these project settings:
+
+| Setting | Requirement |
+| --- | --- |
+| `[input]` | Defines `ui_tab_next`, `ui_tab_prev`, `ui_binding_stop` and `ui_toggle_menu`, which kit's menus name and Godot does not define. |
+| `[audio] buses/default_bus_layout` | Defines the buses `Master`, `music`, `sound_effects`, `voice`, `ui` and `game`. |
+| `[gui] theme/custom` | Defines the type variations kit's scenes name: `button_dialog`, `button_menu`, `button_tab_selected`, `button_tab_unselected`, `hud_bar`, `hud_bar_ghost`, `hud_number`, `hud_number_crit`, `menu_body` and `panel_dialog`. |
+| `[internationalization] locale/translations` | Lists every `addons/kit/locale/*.mo`, after the game's own catalogue, so a message the game defines overrides kit's. |
+
 ## **Development**
 
 ### Setup

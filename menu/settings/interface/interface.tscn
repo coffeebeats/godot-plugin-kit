@@ -1,0 +1,59 @@
+[gd_scene format=3 uid="uid://jxtm7mh7fsc0"]
+
+[ext_resource type="PackedScene" uid="uid://bxxweem4spjs8" path="res://menu/settings/group.tscn" id="1_o8m7n"]
+[ext_resource type="PackedScene" uid="uid://utcvvr2uv6jr" path="res://ui/input/slider.tscn" id="2_81g61"]
+[ext_resource type="PackedScene" uid="uid://dyoqungyuv513" path="res://menu/settings/setting.tscn" id="2_a2kj5"]
+[ext_resource type="PackedScene" uid="uid://jqrnk34kfw5u" path="res://ui/input/option_button.tscn" id="3_hhi86"]
+[ext_resource type="Script" uid="uid://bvaa5ha0vagj3" path="res://addons/std/setting/controller_range.gd" id="4_be8bq"]
+[ext_resource type="Script" uid="uid://byvxmchr3un0u" path="res://addons/std/setting/controller_option_button_string.gd" id="4_c64ob"]
+[ext_resource type="Resource" uid="uid://723bxnvy4ipw" path="res://system/setting/interface/language_property.tres" id="5_6gc1x"]
+[ext_resource type="Resource" uid="uid://l6p88qy4dcsh" path="res://system/setting/interface/font_scaling_property.tres" id="5_217en"]
+[ext_resource type="Resource" uid="uid://ci5jo2fctxlbt" path="res://system/setting/interface/language_options_property.tres" id="6_gtfy5"]
+[ext_resource type="Resource" uid="uid://bwddtdeqspk25" path="res://menu/settings/interface/language_options_formatter.tres" id="7_2xg5l"]
+
+[node name="Interface" type="VBoxContainer" unique_id=12019047]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"menu_body"
+
+[node name="Language" parent="." unique_id=1777292867 instance=ExtResource("1_o8m7n")]
+layout_mode = 2
+label = "kit_options_interface_language"
+
+[node name="DisplayLanguage" parent="Language" unique_id=1312976655 instance=ExtResource("2_a2kj5")]
+layout_mode = 2
+label = "kit_options_interface_language_display"
+
+[node name="OptionButton" parent="Language/DisplayLanguage" unique_id=23357598 instance=ExtResource("3_hhi86")]
+layout_mode = 2
+
+[node name="FocusHandler" parent="Language/DisplayLanguage/OptionButton" index="1" unique_id=1558508030]
+use_as_anchor = true
+
+[node name="StdSettingsControllerOptionButtonString" type="Node" parent="Language/DisplayLanguage/OptionButton" unique_id=507781730]
+script = ExtResource("4_c64ob")
+property = ExtResource("5_6gc1x")
+options_property = ExtResource("6_gtfy5")
+formatter = ExtResource("7_2xg5l")
+
+[node name="Text" parent="." unique_id=1683449345 instance=ExtResource("1_o8m7n")]
+layout_mode = 2
+label = "kit_options_interface_text"
+
+[node name="TextScaling" parent="Text" unique_id=1267319990 instance=ExtResource("2_a2kj5")]
+layout_mode = 2
+label = "kit_options_interface_text_scaling"
+
+[node name="Slider" parent="Text/TextScaling" unique_id=1781153115 instance=ExtResource("2_81g61")]
+layout_mode = 2
+precision = 2
+
+[node name="StdSettingsControllerRange" type="Node" parent="Text/TextScaling/Slider" unique_id=1567329113]
+script = ExtResource("4_be8bq")
+property = ExtResource("5_217en")
+target = NodePath("../HSlider")
+
+[editable path="Language/DisplayLanguage/OptionButton"]

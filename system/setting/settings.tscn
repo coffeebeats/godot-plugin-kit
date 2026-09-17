@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://cjb8nitks0be0"]
 
+[ext_resource type="Script" uid="uid://cdsrfhdqjlnwl" path="res://system/setting/settings.gd" id="1_s3t7s"]
 [ext_resource type="Script" uid="uid://c0mqssj1w0y7g" path="res://addons/std/setting/repository.gd" id="2_0mjau"]
 [ext_resource type="Script" uid="uid://tksxuwjva5cm" path="res://addons/std/config/writer/project_settings.gd" id="3_72ti4"]
 [ext_resource type="Resource" uid="uid://c3ewqt86m1qfy" path="res://system/setting/project_settings_scope.tres" id="3_q5d07"]
@@ -27,6 +28,7 @@
 [ext_resource type="Resource" uid="uid://ci5jo2fctxlbt" path="res://system/setting/interface/language_options_property.tres" id="26_juwf4"]
 
 [node name="Settings" type="Node" unique_id=263457730]
+script = ExtResource("1_s3t7s")
 
 [node name="ProjectSettingsScope" type="Node" parent="." unique_id=1739494578 node_paths=PackedStringArray("writer")]
 script = ExtResource("2_0mjau")

@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://bskqdm3mqabu4"]
+
+[ext_resource type="PackedScene" uid="uid://11thq3wp16vi" path="res://ui/input/focus_handler.tscn" id="1_focus"]
+
+[node name="DeleteButton" type="Button"]
+custom_minimum_size = Vector2(0, 64)
+size_flags_horizontal = 3
+text = "kit_save_slots_delete"
+
+[node name="FocusHandler" parent="." instance=ExtResource("1_focus")]
+layout_mode = 0

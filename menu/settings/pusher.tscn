@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://cr8nl7mub0vy7"]
+
+[ext_resource type="Script" uid="uid://cvxispq3gfeu6" path="res://addons/std/screen/pusher.gd" id="1_pusher"]
+[ext_resource type="Resource" uid="uid://d2vp2eesnf5ng" path="res://menu/settings/screen.tres" id="2_screen"]
+
+[node name="SettingsPusher" type="Node"]
+script = ExtResource("1_pusher")
+screen = ExtResource("2_screen")
+push_actions = Array[StringName]([&"ui_toggle_menu"])
