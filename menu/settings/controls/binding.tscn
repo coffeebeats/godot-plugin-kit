@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://bdaxk1l73tb67"]
+
+[ext_resource type="PackedScene" uid="uid://dg8wa8rp672rb" path="res://ui/glyph/glyph.tscn" id="1_67jty"]
+[ext_resource type="Script" uid="uid://hna4on5363k4" path="res://menu/settings/controls/binding.gd" id="1_q4f6o"]
+[ext_resource type="PackedScene" uid="uid://duam2ndvsfv4n" path="res://ui/input/button.tscn" id="3_ffo6a"]
+
+[node name="Binding" type="Control" unique_id=1070955959 node_paths=PackedStringArray("glyph", "button")]
+custom_minimum_size = Vector2(128, 48)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_q4f6o")
+glyph = NodePath("CenterContainer/Glyph")
+button = NodePath("Prompt")
+
+[node name="Prompt" parent="." unique_id=2007393494 instance=ExtResource("3_ffo6a")]
+layout_mode = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=903804886]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Glyph" parent="CenterContainer" unique_id=1413248325 instance=ExtResource("1_67jty")]
+layout_mode = 2
+label_stylebox = null

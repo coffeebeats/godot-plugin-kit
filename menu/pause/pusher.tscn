@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://u6xwo0vi803h"]
+
+[ext_resource type="Script" uid="uid://cvxispq3gfeu6" path="res://addons/std/screen/pusher.gd" id="1_pusher"]
+[ext_resource type="Resource" uid="uid://c1085a5a4wxdt" path="res://menu/pause/screen.tres" id="2_screen"]
+
+[node name="PausePusher" type="Node"]
+script = ExtResource("1_pusher")
+screen = ExtResource("2_screen")
+push_actions = Array[StringName]([&"ui_toggle_menu"])

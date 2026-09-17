@@ -1,0 +1,6 @@
+[gd_resource type="Resource" format=3 uid="uid://c750nhjvglhky"]
+
+[ext_resource type="Script" uid="uid://dpslqbfno12hr" path="res://menu/settings/controls/button_prompt_option_formatter.gd" id="1_xyhvm"]
+
+[resource]
+script = ExtResource("1_xyhvm")

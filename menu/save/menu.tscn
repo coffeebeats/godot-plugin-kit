@@ -1,0 +1,139 @@
+[gd_scene format=3 uid="uid://hbb2wxcb7sxf"]
+
+[ext_resource type="Script" uid="uid://e65imwf654xt" path="res://menu/save/menu.gd" id="1_sihek"]
+[ext_resource type="PackedScene" uid="uid://ig0aeexy2dcl" path="res://menu/save/slot_button.tscn" id="3_842n5"]
+[ext_resource type="PackedScene" uid="uid://11thq3wp16vi" path="res://ui/input/focus_handler.tscn" id="4_dj346"]
+[ext_resource type="PackedScene" uid="uid://bbsvnrhcyccl5" path="res://ui/menu/scrim.tscn" id="5_scrim"]
+[ext_resource type="PackedScene" uid="uid://dm7k3close1bt" path="res://ui/menu/button_close.tscn" id="6_close"]
+[ext_resource type="PackedScene" uid="uid://dkw2li5unhvv7" path="res://menu/save/delete.tscn" id="7_delete"]
+[ext_resource type="Script" uid="uid://dlrw0lhorb5uc" path="res://addons/std/input/loader.gd" id="8_loader"]
+[ext_resource type="Resource" uid="uid://ldk7k2w5uvks" path="res://system/input/actions/menu.tres" id="9_menu"]
+
+[node name="SaveMenu" type="Control" unique_id=938619952]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="StdInputActionSetLoader" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("8_loader")
+action_set = ExtResource("9_menu")
+
+[node name="Scrim" parent="." unique_id=1622107886 instance=ExtResource("5_scrim")]
+layout_mode = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=183551620]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=1970037364]
+custom_minimum_size = Vector2(1152, 648)
+layout_mode = 2
+theme_type_variation = &"panel_dialog"
+script = ExtResource("1_sihek")
+confirm_delete_scene = ExtResource("7_delete")
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer" unique_id=1929183545]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer" unique_id=211689994]
+layout_mode = 2
+theme_override_constants/separation = 64
+
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=71393605]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+text = "kit_save_slots_choose"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SlotButtons" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=624993267]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 4.0
+theme_override_constants/separation = 32
+
+[node name="SlotButton1" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/SlotButtons" unique_id=1617259521 instance=ExtResource("3_842n5")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FocusHandler" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/SlotButtons/SlotButton1" index="0" unique_id=1405551856]
+use_as_anchor = true
+
+[node name="SlotButton2" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/SlotButtons" unique_id=1539022446 instance=ExtResource("3_842n5")]
+layout_mode = 2
+size_flags_horizontal = 3
+slot = 1
+
+[node name="SlotButton3" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/SlotButtons" unique_id=528857432 instance=ExtResource("3_842n5")]
+layout_mode = 2
+size_flags_horizontal = 3
+slot = 2
+
+[node name="SlotButton4" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/SlotButtons" unique_id=512214276 instance=ExtResource("3_842n5")]
+layout_mode = 2
+size_flags_horizontal = 3
+slot = 3
+
+[node name="DeleteButtons" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1797200330]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_stretch_ratio = 4.0
+theme_override_constants/separation = 32
+
+[node name="Button1" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/DeleteButtons" unique_id=1099902529]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "kit_save_slots_delete"
+
+[node name="FocusHandler" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/DeleteButtons/Button1" unique_id=1850604004 instance=ExtResource("4_dj346")]
+layout_mode = 0
+
+[node name="Button2" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/DeleteButtons" unique_id=1903358361]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "kit_save_slots_delete"
+
+[node name="FocusHandler" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/DeleteButtons/Button2" unique_id=1526730155 instance=ExtResource("4_dj346")]
+layout_mode = 0
+
+[node name="Button3" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/DeleteButtons" unique_id=735995827]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "kit_save_slots_delete"
+
+[node name="FocusHandler" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/DeleteButtons/Button3" unique_id=428062185 instance=ExtResource("4_dj346")]
+layout_mode = 0
+
+[node name="Button4" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/DeleteButtons" unique_id=1958231726]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "kit_save_slots_delete"
+
+[node name="FocusHandler" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/DeleteButtons/Button4" unique_id=1675022320 instance=ExtResource("4_dj346")]
+layout_mode = 0
+
+[node name="CloseButton" parent="CenterContainer/PanelContainer" unique_id=1689499063 instance=ExtResource("6_close")]
+layout_mode = 2
+
+[editable path="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/SlotButtons/SlotButton1"]

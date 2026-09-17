@@ -103,3 +103,237 @@ msgstr ""
 msgctxt "actions_MenuBinding"
 msgid "Cancel binding"
 msgstr ""
+
+#. A button to open the options menu, located on the pause menu.
+msgid "Options"
+msgstr "Optionen"
+
+#. A button to quit/exit the game, located on the pause menu.
+msgid "Quit"
+msgstr "Beenden"
+
+#. A button label to continue despite an error.
+msgctxt "alert"
+msgid "Continue"
+msgstr ""
+
+#. The title shown at the top of the pause menu.
+msgid "Paused"
+msgstr ""
+
+#. A button to resume gameplay, located on the pause menu.
+msgid "Resume"
+msgstr ""
+
+#. A button to return to the main menu, located on the pause menu.
+msgid "Return to menu"
+msgstr ""
+
+#. The title of the confirmation dialog shown when quitting the game from the pause menu.
+msgid "Quit game"
+msgstr "Spiel beenden"
+
+#. The message shown in the confirmation dialog when quitting the game.
+msgid "Are you sure you want to quit?"
+msgstr ""
+
+#. The title of the confirmation dialog shown when returning to the main menu from the pause menu.
+msgid "Return to main menu"
+msgstr ""
+
+#. The message shown in the confirmation dialog when returning to the main menu.
+msgid "Are you sure you want to return to the main menu?"
+msgstr ""
+
+#. Instructs the player to select which save slot to use.
+msgid "Choose a save slot — progress will be saved automatically"
+msgstr "Wähle einen speicherplatz – dein fortschritt wird automatisch gespeichert"
+
+#. A label for the timestamp of when the particular save was last updated.
+msgid "Last updated:"
+msgstr "Zuletzt aktualisiert:"
+
+#. A label displayed when a save slot is broken/unusable.
+msgid "Broken"
+msgstr "Gebrochen"
+
+#. A label displayed when a save slot is empty/available/has no save data.
+msgid "Empty"
+msgstr "Leer"
+
+#. A button which the player can press to delete save data for a specific slot.
+msgid "Delete"
+msgstr "Löschen"
+
+#. The title of the confirmation dialog shown when deleting a save slot.
+msgid "Delete Save"
+msgstr "Spielstand löschen"
+
+#. The message shown in the confirmation dialog when deleting a save slot, warning the player that this action is permanent.
+msgid "Are you sure? This cannot be undone."
+msgstr ""
+
+#. A button label to delete something (e.g. a save slot).
+msgctxt "alert"
+msgid "Delete"
+msgstr "Löschen"
+
+#. The title of the error dialog shown when deleting a save slot fails.
+msgid "Delete Failed"
+msgstr "Spielstand löschen"
+
+#. The message shown when deleting a save slot fails.
+msgid "The save slot could not be deleted."
+msgstr ""
+
+#. A tab within the game's options menu containing sound-related settings.
+msgid "Sound"
+msgstr ""
+
+#. A tab within the game's options menu containing settings for interacting with the game. This menu includes things like text size, changing the game's display language, etc.
+msgid "Interface"
+msgstr "Interface"
+
+#. A tab within the game's options menu containing graphics/video-related settings.
+msgid "Display"
+msgstr "Anzeige"
+
+#. A tab within the game's options menu containing controls/input-related settings.
+msgid "Controls"
+msgstr "Steuerung"
+
+#. Used as a category name for a group of settings related to volume.
+msgid "Volume"
+msgstr ""
+
+#. Describes the global volume setting within the options menu.
+msgid "Global"
+msgstr ""
+
+#. Describes the sound effects volume setting within the options menu.
+msgid "Sound Effects"
+msgstr ""
+
+#. Describes the musics volume setting within the options menu.
+msgid "Music"
+msgstr ""
+
+#. Describes the spoken word volume setting within the options menu.
+msgid "Voice"
+msgstr ""
+
+#. Used as a category name for a group of settings related to audio output.
+msgid "Audio"
+msgstr "Audio"
+
+#. Describes the setting which changes the specific audio output device used by the game.
+msgid "Audio output device"
+msgstr ""
+
+#. Describes the setting which causes sound to be muted when the game is unfocused (i.e. when the user "tabs out" of the game).
+msgid "Mute in background"
+msgstr ""
+
+#. Used as a category name for a group of settings related to display language.
+msgid "Language"
+msgstr "Sprache"
+
+#. Describes the setting which changes the display language of the game.
+msgid "Display language"
+msgstr "Anzeigesprache"
+
+#. Used as a category name for a group of settings related to text display.
+msgid "Text"
+msgstr "Text"
+
+#. Describes the setting which changes the size of the text.
+msgid "Scale text size"
+msgstr "Textgröße skalieren"
+
+#. Used as a category name for a group of settings related to graphics.
+msgid "Video"
+msgstr "Video"
+
+#. Describes the setting which toggles the size of the game between "windowed" and "fullscreen".
+msgid "Fullscreen"
+msgstr "Vollbildmodus"
+
+#. Describes the setting which removes the border around the game application window.
+msgid "Borderless"
+msgstr "Rahmenlos"
+
+#. Describes the setting which adjusts the maximum number of frames drawn per second.
+msgid "Max frame limit"
+msgstr ""
+
+#. Describes the setting which adjusts whether the game's frames drawn per second are capped to the monitor's refresh rate.
+msgid "VSync"
+msgstr "VSync"
+
+#. Used as a category name for gamepad settings.
+msgid "Gamepads"
+msgstr ""
+
+#. Describes the setting used to change which gamepad type a visual gamepad button icon uses.
+msgid "Button prompts"
+msgstr ""
+
+#. Describes one possible option in the button prompt setting; allows the game to automatically pick the best option.
+msgctxt "button_prompt"
+msgid "Auto"
+msgstr ""
+
+#. Describes one possible option in the button prompt setting; fixes gamepad icons to use the keyboard and mouse style.
+msgctxt "button_prompt"
+msgid "KB&M"
+msgstr ""
+
+#. Describes one possible option in the button prompt setting; fixes gamepad icons to use an Microsoft Xbox style.
+msgctxt "button_prompt"
+msgid "Xbox"
+msgstr ""
+
+#. Describes one possible option in the button prompt setting; fixes gamepad icons to use a Sony PlayStation style.
+msgctxt "button_prompt"
+msgid "PlayStation"
+msgstr ""
+
+#. Describes one possible option in the button prompt setting; fixes gamepad icons to use a Nintendo Switch style.
+msgctxt "button_prompt"
+msgid "Switch"
+msgstr ""
+
+#. Describes one possible option in the button prompt setting; fixes gamepad icons to use a Valve Steam style.
+msgctxt "button_prompt"
+msgid "Steam"
+msgstr ""
+
+#. Describes the setting which disables controller vibration feedback.
+msgid "Disable vibration"
+msgstr ""
+
+#. Describes the setting which controls how intense controller vibration feedback is.
+msgid "Vibration strength"
+msgstr ""
+
+#. Used as a category name for a group of settings related to Steam Input. Steam Input is a software library/interface for the Steam game distribution platform.
+msgid "Steam Input"
+msgstr ""
+
+#. Describes a setting which adjusts the action-to-button bindings for a game controller.
+msgid "Controller layout"
+msgstr ""
+
+#. Instructs the user that they will be updating the controller binding for the specified action. Here, the '%s' placeholder will be replaced with the translated name of the game action.
+msgid "Bind “%s”"
+msgstr ""
+
+#. Instructs the user that they should now press the new keyboard button or exit the operation. Here, the '%s' placeholder will be replaced with an icon of the controller button to press.
+msgctxt "keyboard"
+msgid "Press any key now or %s to cancel."
+msgstr ""
+
+#. Instructs the user that they should now press the new keyboard button or exit the operation. Here, the '%s' placeholder will be replaced with an icon of the controller button to press.
+msgctxt "gamepad"
+msgid "Press any button now or %s to cancel."
+msgstr ""
