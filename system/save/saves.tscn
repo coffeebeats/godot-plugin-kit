@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://bqrjkv5me2dp5"]
 
-[ext_resource type="Script" uid="uid://cwdhnh701t32s" path="res://system/save/saves.gd" id="1_5c4en"]
+[ext_resource type="Script" uid="uid://cwdhnh701t32s" path="res://addons/kit/system/save/saves.gd" id="1_5c4en"]
 [ext_resource type="Script" uid="uid://c0mqssj1w0y7g" path="res://addons/std/setting/repository.gd" id="2_v64up"]
-[ext_resource type="Resource" uid="uid://h35tjkpwu3h1" path="res://system/save/scope.tres" id="3_nt0ca"]
-[ext_resource type="Script" uid="uid://nyai4fsxk55t" path="res://platform/profile/writer.gd" id="5_cd8rj"]
-[ext_resource type="Script" uid="uid://cc0rikwesesck" path="res://system/save/writer.gd" id="5_pfhtx"]
+[ext_resource type="Resource" uid="uid://h35tjkpwu3h1" path="res://addons/kit/system/save/scope.tres" id="3_nt0ca"]
+[ext_resource type="Script" uid="uid://nyai4fsxk55t" path="res://addons/kit/platform/profile/writer.gd" id="5_cd8rj"]
+[ext_resource type="Script" uid="uid://cc0rikwesesck" path="res://addons/kit/system/save/writer.gd" id="5_pfhtx"]
 
 [node name="Saves" type="Node" unique_id=1647847758]
 script = ExtResource("1_5c4en")

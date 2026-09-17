@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://duc23xhqmudrj"]
 
-[ext_resource type="Script" uid="uid://c24b62ncc7mt" path="res://ui/hud/numbers/number.gd" id="1_number"]
+[ext_resource type="Script" uid="uid://c24b62ncc7mt" path="res://addons/kit/ui/hud/numbers/number.gd" id="1_number"]
 
 [node name="HudNumber" type="Label"]
 mouse_filter = 2

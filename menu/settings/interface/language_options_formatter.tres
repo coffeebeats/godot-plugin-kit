@@ -1,0 +1,6 @@
+[gd_resource type="Resource" format=3 uid="uid://bwddtdeqspk25"]
+
+[ext_resource type="Script" uid="uid://bnukehgfkt3j5" path="res://addons/kit/menu/settings/interface/language_option_formatter.gd" id="1_ublyi"]
+
+[resource]
+script = ExtResource("1_ublyi")

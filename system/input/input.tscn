@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://bexeoi21tf2v2"]
 
-[ext_resource type="Script" uid="uid://c53ct064cin6g" path="res://system/input/input.gd" id="1_sl0pi"]
-[ext_resource type="Resource" uid="uid://ci7xn7gttsuu2" path="res://platform/storefront/unknown/unknown_storefront_expression.tres" id="5_gdf77"]
-[ext_resource type="Resource" uid="uid://d14ioajw47mqw" path="res://platform/editor_expression.tres" id="6_xmapc"]
+[ext_resource type="Script" uid="uid://c53ct064cin6g" path="res://addons/kit/system/input/input.gd" id="1_sl0pi"]
+[ext_resource type="Resource" uid="uid://ci7xn7gttsuu2" path="res://addons/kit/platform/storefront/unknown/unknown_storefront_expression.tres" id="5_gdf77"]
+[ext_resource type="Resource" uid="uid://d14ioajw47mqw" path="res://addons/kit/platform/editor_expression.tres" id="6_xmapc"]
 [ext_resource type="Script" uid="uid://be11f4pqliry0" path="res://addons/std/condition/expression.gd" id="23_8ojx1"]
 [ext_resource type="Script" uid="uid://b48nei7xl0xrh" path="res://addons/std/condition/condition_loader.gd" id="24_hk8cf"]
-[ext_resource type="Resource" uid="uid://nggtxsyr5rs2" path="res://platform/storefront/steam/steam_storefront_expression.tres" id="24_o5jdq"]
+[ext_resource type="Resource" uid="uid://nggtxsyr5rs2" path="res://addons/kit/platform/storefront/steam/steam_storefront_expression.tres" id="24_o5jdq"]
 
 [node name="Input" type="Node" unique_id=1621058833]
 script = ExtResource("1_sl0pi")

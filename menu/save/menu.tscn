@@ -1,0 +1,83 @@
+[gd_scene format=3 uid="uid://hbb2wxcb7sxf"]
+
+[ext_resource type="Script" uid="uid://e65imwf654xt" path="res://addons/kit/menu/save/menu.gd" id="1_sihek"]
+[ext_resource type="PackedScene" uid="uid://bbsvnrhcyccl5" path="res://addons/kit/ui/menu/scrim.tscn" id="5_scrim"]
+[ext_resource type="PackedScene" uid="uid://dm7k3close1bt" path="res://addons/kit/ui/menu/button_close.tscn" id="6_close"]
+[ext_resource type="PackedScene" uid="uid://dkw2li5unhvv7" path="res://addons/kit/menu/save/delete.tscn" id="7_delete"]
+[ext_resource type="PackedScene" uid="uid://ddxpi3xey10gr" path="res://addons/kit/menu/save/delete_failed.tscn" id="10_failed"]
+[ext_resource type="PackedScene" uid="uid://ig0aeexy2dcl" path="res://addons/kit/menu/save/slot_button.tscn" id="11_slot"]
+[ext_resource type="PackedScene" uid="uid://bskqdm3mqabu4" path="res://addons/kit/menu/save/delete_button.tscn" id="12_delete"]
+[ext_resource type="Script" uid="uid://dlrw0lhorb5uc" path="res://addons/std/input/loader.gd" id="8_loader"]
+[ext_resource type="Resource" uid="uid://ldk7k2w5uvks" path="res://addons/kit/system/input/actions/menu.tres" id="9_menu"]
+
+[node name="SaveMenu" type="Control" unique_id=938619952]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="StdInputActionSetLoader" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("8_loader")
+action_set = ExtResource("9_menu")
+
+[node name="Scrim" parent="." unique_id=1622107886 instance=ExtResource("5_scrim")]
+layout_mode = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=183551620]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=1970037364]
+custom_minimum_size = Vector2(1152, 648)
+layout_mode = 2
+theme_type_variation = &"panel_dialog"
+script = ExtResource("1_sihek")
+confirm_delete_scene = ExtResource("7_delete")
+delete_failed_scene = ExtResource("10_failed")
+slot_button_scene = ExtResource("11_slot")
+delete_button_scene = ExtResource("12_delete")
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer" unique_id=1929183545]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer" unique_id=211689994]
+layout_mode = 2
+theme_override_constants/separation = 64
+
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=71393605]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+text = "kit_save_slots_choose"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SlotButtons" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=624993267]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 4.0
+theme_override_constants/separation = 32
+
+[node name="DeleteButtons" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1797200330]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_stretch_ratio = 4.0
+theme_override_constants/separation = 32
+
+[node name="CloseButton" parent="CenterContainer/PanelContainer" unique_id=1689499063 instance=ExtResource("6_close")]
+layout_mode = 2

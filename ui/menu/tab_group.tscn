@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ctabgr0up1scn"]
 
-[ext_resource type="Script" uid="uid://c2qvmwsoex4lp" path="res://ui/menu/tab_group.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://c2qvmwsoex4lp" path="res://addons/kit/ui/menu/tab_group.gd" id="1_script"]
 
 [node name="TabGroup" type="BoxContainer" unique_id=391087313]
 script = ExtResource("1_script")

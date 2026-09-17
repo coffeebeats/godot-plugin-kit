@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cj4555ox05li8"]
 
-[ext_resource type="Script" uid="uid://4d3xsub7eama" path="res://system/setting/interface/font_scaling_observer.gd" id="1_wat8y"]
-[ext_resource type="Resource" uid="uid://l6p88qy4dcsh" path="res://system/setting/interface/font_scaling_property.tres" id="2_4bdjm"]
+[ext_resource type="Script" uid="uid://4d3xsub7eama" path="res://addons/kit/system/setting/interface/font_scaling_observer.gd" id="1_wat8y"]
+[ext_resource type="Resource" uid="uid://l6p88qy4dcsh" path="res://addons/kit/system/setting/interface/font_scaling_property.tres" id="2_4bdjm"]
 [ext_resource type="Script" uid="uid://cb4hjlri0r3qn" path="res://addons/std/timer/debounce.gd" id="4_x3hxa"]
 
 [node name="FontScalingObserver" type="Node" unique_id=674423307 node_paths=PackedStringArray("debounce")]

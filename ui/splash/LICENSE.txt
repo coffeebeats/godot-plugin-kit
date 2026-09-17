@@ -1,0 +1,9 @@
+original-horizontal-light.svg is the Godot Engine logo, taken unchanged from Kenney's
+Godot SplashScreens (https://github.com/KenneyNL/Godot-SplashScreens), an adaptation
+of the original logo, which that repository credits and licenses as below.
+
+Godot Engine Logo
+Copyright (c) 2017 Andrea Calabró
+
+This work is licensed under the Creative Commons Attribution 4.0 International
+license (CC BY 4.0 International): https://creativecommons.org/licenses/by/4.0/

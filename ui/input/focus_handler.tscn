@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dtff031g8o7k0" path="res://addons/std/input/cursor_focus_handler.gd" id="1_ibi5b"]
 [ext_resource type="Script" uid="uid://dmq7enaxcax7c" path="res://addons/std/input/focus_audio_handler.gd" id="2_audio"]
-[ext_resource type="Resource" uid="uid://d1a5t1bwsv3qw" path="res://ui/input/focus_handler_sound_event.tres" id="3_sound"]
+[ext_resource type="Resource" uid="uid://d1a5t1bwsv3qw" path="res://addons/kit/ui/input/focus_handler_sound_event.tres" id="3_sound"]
 
 [node name="FocusHandler" type="Control" unique_id=644181207]
 layout_mode = 3

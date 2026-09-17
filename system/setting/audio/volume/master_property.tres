@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="StdSettingsPropertyFloatRange" format=3 uid="uid://cdgwm6x2i52sn"]
 
-[ext_resource type="Resource" uid="uid://mwqxsj0u3y8u" path="res://system/setting/user_settings_scope.tres" id="1_0c5wk"]
+[ext_resource type="Resource" uid="uid://mwqxsj0u3y8u" path="res://addons/kit/system/setting/user_settings_scope.tres" id="1_0c5wk"]
 [ext_resource type="Script" uid="uid://c8hnyl4q6x1we" path="res://addons/std/setting/property_float_range.gd" id="1_8ujk7"]
 
 [resource]

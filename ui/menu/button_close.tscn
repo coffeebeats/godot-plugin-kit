@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dm7k3close1bt"]
 
-[ext_resource type="Texture2D" uid="uid://bbgn0o2diu8ws" path="res://ui/menu/button_close_texture_normal.svg" id="1_n2jtg"]
-[ext_resource type="PackedScene" uid="uid://11thq3wp16vi" path="res://ui/input/focus_handler.tscn" id="2_olnlp"]
+[ext_resource type="Texture2D" uid="uid://bbgn0o2diu8ws" path="res://addons/kit/ui/menu/button_close_texture_normal.svg" id="1_n2jtg"]
+[ext_resource type="PackedScene" uid="uid://11thq3wp16vi" path="res://addons/kit/ui/input/focus_handler.tscn" id="2_olnlp"]
 [ext_resource type="Script" uid="uid://cjdbjybleeh6q" path="res://addons/std/input/action_trigger.gd" id="3_trigger"]
 
 [node name="CloseButton" type="TextureButton" unique_id=941637216]

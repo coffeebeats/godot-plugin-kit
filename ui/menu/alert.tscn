@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://4brfq2tumt1o"]
 
-[ext_resource type="Script" uid="uid://dp6o8d1i3y7t3" path="res://ui/menu/alert.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://dp6o8d1i3y7t3" path="res://addons/kit/ui/menu/alert.gd" id="1_script"]
 [ext_resource type="Script" uid="uid://b7ynn70doalds" path="res://addons/std/screen/screen.gd" id="2_screen"]
-[ext_resource type="PackedScene" uid="uid://bbsvnrhcyccl5" path="res://ui/menu/scrim.tscn" id="3_scrim"]
-[ext_resource type="PackedScene" uid="uid://duam2ndvsfv4n" path="res://ui/input/button.tscn" id="4_button"]
+[ext_resource type="PackedScene" uid="uid://bbsvnrhcyccl5" path="res://addons/kit/ui/menu/scrim.tscn" id="3_scrim"]
+[ext_resource type="PackedScene" uid="uid://duam2ndvsfv4n" path="res://addons/kit/ui/input/button.tscn" id="4_button"]
 [ext_resource type="Script" uid="uid://dlrw0lhorb5uc" path="res://addons/std/input/loader.gd" id="5_loader"]
-[ext_resource type="Resource" uid="uid://ldk7k2w5uvks" path="res://system/input/actions/menu.tres" id="6_menu"]
+[ext_resource type="Resource" uid="uid://ldk7k2w5uvks" path="res://addons/kit/system/input/actions/menu.tres" id="6_menu"]
 
 [sub_resource type="Resource" id="SubResource_screen"]
 resource_local_to_scene = true

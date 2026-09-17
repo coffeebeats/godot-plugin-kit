@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="StdInputActionSetLayer" format=3 uid="uid://bcsts082smqrp"]
 
-[ext_resource type="Resource" uid="uid://ldk7k2w5uvks" path="res://system/input/actions/menu.tres" id="1_o1u2k"]
+[ext_resource type="Resource" uid="uid://ldk7k2w5uvks" path="res://addons/kit/system/input/actions/menu.tres" id="1_o1u2k"]
 [ext_resource type="Script" uid="uid://dmvb2tblavngm" path="res://addons/std/input/action_set_layer.gd" id="1_wuq6f"]
 
 [resource]

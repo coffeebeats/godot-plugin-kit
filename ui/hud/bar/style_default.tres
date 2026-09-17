@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="KitHudBarStyle" load_steps=4 format=3 uid="uid://68v3glpoe4vq"]
 
-[ext_resource type="Script" uid="uid://dls3y4v37g18q" path="res://ui/hud/bar/style.gd" id="1_style"]
+[ext_resource type="Script" uid="uid://dls3y4v37g18q" path="res://addons/kit/ui/hud/bar/style.gd" id="1_style"]
 [ext_resource type="Script" uid="uid://biupfx6h42h8k" path="res://addons/std/tween/curve.gd" id="2_curve"]
 
 [sub_resource type="Resource" id="drain"]

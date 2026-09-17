@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="StdScreen" format=3 uid="uid://csn4p8wrtq2la"]
+
+[ext_resource type="Script" uid="uid://b7ynn70doalds" path="res://addons/std/screen/screen.gd" id="1_screen"]
+[ext_resource type="Resource" uid="uid://oxjlda1mnlo4" path="res://addons/kit/ui/splash/transition_fade.tres" id="2_fade"]
+
+[resource]
+script = ExtResource("1_screen")
+scene_path = "uid://dq7pygi1scovr"
+transition = ExtResource("2_fade")

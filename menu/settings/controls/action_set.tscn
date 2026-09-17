@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://nia5b07rjxi7"]
+
+[ext_resource type="PackedScene" uid="uid://bxxweem4spjs8" path="res://addons/kit/menu/settings/group.tscn" id="1_61w7n"]
+[ext_resource type="Script" uid="uid://daw6nj4n70xkl" path="res://addons/kit/menu/settings/controls/action_set.gd" id="2_vv7fq"]
+[ext_resource type="PackedScene" uid="uid://dkq868y2yu5r6" path="res://addons/kit/menu/settings/controls/reset.tscn" id="3_racla"]
+[ext_resource type="Resource" uid="uid://ccmnjg2p3cow0" path="res://addons/kit/system/input/unknown/bindings_scope.tres" id="4_ifr1x"]
+
+[node name="ActionSet" unique_id=218690206 instance=ExtResource("1_61w7n")]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -37.5
+offset_top = -245.0
+offset_right = 37.5
+offset_bottom = 245.0
+script = ExtResource("2_vv7fq")
+action_set = null
+scope = null
+player_id = 1
+
+[node name="Label" parent="Header" parent_id_path=PackedInt32Array(1020668401) index="0" unique_id=877942154]
+size_flags_horizontal = 2
+
+[node name="Reset" parent="Header" parent_id_path=PackedInt32Array(1020668401) index="1" unique_id=1018613221 instance=ExtResource("3_racla")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 8
+scope = ExtResource("4_ifr1x")

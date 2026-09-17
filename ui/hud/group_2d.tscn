@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://ba5yjytrpod03"]
 
-[ext_resource type="Script" uid="uid://8etsdw4552bh" path="res://ui/hud/group.gd" id="1_group"]
-[ext_resource type="Script" uid="uid://bqy620qm37s1n" path="res://ui/tracker/world_tracker_2d.gd" id="2_tracker"]
+[ext_resource type="Script" uid="uid://8etsdw4552bh" path="res://addons/kit/ui/hud/group.gd" id="1_group"]
+[ext_resource type="Script" uid="uid://bqy620qm37s1n" path="res://addons/kit/ui/tracker/world_tracker_2d.gd" id="2_tracker"]
 
 [node name="HudGroup" type="Control" node_paths=PackedStringArray("tracker")]
 mouse_filter = 2

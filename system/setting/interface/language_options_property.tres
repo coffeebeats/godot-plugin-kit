@@ -1,7 +1,7 @@
 [gd_resource type="Resource" format=3 uid="uid://ci5jo2fctxlbt"]
 
-[ext_resource type="Resource" uid="uid://mwqxsj0u3y8u" path="res://system/setting/user_settings_scope.tres" id="1_lpfak"]
-[ext_resource type="Script" uid="uid://bhkr1uk6hfv3p" path="res://system/setting/interface/language_options_property.gd" id="2_fht2t"]
+[ext_resource type="Resource" uid="uid://mwqxsj0u3y8u" path="res://addons/kit/system/setting/user_settings_scope.tres" id="1_lpfak"]
+[ext_resource type="Script" uid="uid://bhkr1uk6hfv3p" path="res://addons/kit/system/setting/interface/language_options_property.gd" id="2_fht2t"]
 
 [resource]
 script = ExtResource("2_fht2t")

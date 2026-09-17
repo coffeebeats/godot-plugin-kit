@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="KitFeelImpulse" load_steps=2 format=3 uid="uid://cawrfecr4d4fk"]
 
-[ext_resource type="Script" uid="uid://wgg21f4aenuu" path="res://ui/feel/impulse.gd" id="1_impulse"]
+[ext_resource type="Script" uid="uid://wgg21f4aenuu" path="res://addons/kit/ui/feel/impulse.gd" id="1_impulse"]
 
 [resource]
 script = ExtResource("1_impulse")

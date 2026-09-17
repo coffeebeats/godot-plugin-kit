@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="StdScreen" format=3 uid="uid://d2vp2eesnf5ng"]
+
+[ext_resource type="Script" uid="uid://b7ynn70doalds" path="res://addons/std/screen/screen.gd" id="1_screen"]
+[ext_resource type="Resource" uid="uid://c5bekd2nyjnp8" path="res://addons/kit/ui/menu/menu_toggle_sound_event.tres" id="2_sound"]
+
+[resource]
+script = ExtResource("1_screen")
+scene_path = "uid://cm4b566x6ped8"
+cache_instance = true
+dependency_scenes = ["uid://dm1yyvkqdxmqe"]
+close_actions = Array[StringName]([&"ui_cancel"])
+sound_enter = ExtResource("2_sound")
+sound_exit = ExtResource("2_sound")

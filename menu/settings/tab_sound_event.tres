@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="StdSoundEvent1D" format=3 uid="uid://bus0xmb3pu8xp"]
+
+[ext_resource type="Resource" uid="uid://dgt6hbipqsvc5" path="res://addons/kit/system/audio/bus/ui.tres" id="1_fwlsj"]
+[ext_resource type="Script" uid="uid://d1xoiydhcd054" path="res://addons/std/sound/param.gd" id="1_wff5v"]
+[ext_resource type="Script" uid="uid://xnjd1n7phkp3" path="res://addons/std/sound/event_1d.gd" id="2_gijhc"]
+[ext_resource type="AudioStream" uid="uid://wn2wr4y6lbgi" path="res://addons/kit/menu/settings/tab_sound.ogg" id="4_n6qk8"]
+
+[resource]
+script = ExtResource("2_gijhc")
+stream = ExtResource("4_n6qk8")
+bus = ExtResource("1_fwlsj")

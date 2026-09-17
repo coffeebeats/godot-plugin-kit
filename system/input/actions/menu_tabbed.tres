@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="StdInputActionSetLayer" format=3 uid="uid://dp0wxxg20ablh"]
 
 [ext_resource type="Script" uid="uid://dmvb2tblavngm" path="res://addons/std/input/action_set_layer.gd" id="1_2muka"]
-[ext_resource type="Resource" uid="uid://ldk7k2w5uvks" path="res://system/input/actions/menu.tres" id="1_km51u"]
+[ext_resource type="Resource" uid="uid://ldk7k2w5uvks" path="res://addons/kit/system/input/actions/menu.tres" id="1_km51u"]
 
 [resource]
 script = ExtResource("1_2muka")

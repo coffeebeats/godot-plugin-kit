@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://dg8wa8rp672rb"]
 
-[ext_resource type="Script" uid="uid://vst8lxnn6k6u" path="res://ui/glyph/glyph.gd" id="1_t2ikv"]
-[ext_resource type="StyleBox" uid="uid://dcqpwm8om51xm" path="res://ui/glyph/glyph_label_stylebox.tres" id="2_lvgs8"]
-[ext_resource type="Resource" uid="uid://dyuvr6ililvtc" path="res://system/setting/controls/glyph_type_property.tres" id="3_jfinn"]
+[ext_resource type="Script" uid="uid://vst8lxnn6k6u" path="res://addons/kit/ui/glyph/glyph.gd" id="1_t2ikv"]
+[ext_resource type="StyleBox" uid="uid://dcqpwm8om51xm" path="res://addons/kit/ui/glyph/glyph_label_stylebox.tres" id="2_lvgs8"]
+[ext_resource type="Resource" uid="uid://dyuvr6ililvtc" path="res://addons/kit/system/setting/controls/glyph_type_property.tres" id="3_jfinn"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_b5pxf"]
 

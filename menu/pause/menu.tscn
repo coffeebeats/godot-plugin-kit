@@ -1,0 +1,111 @@
+[gd_scene format=3 uid="uid://cpaus3m3nuscn"]
+
+[ext_resource type="Script" uid="uid://b1faoxa3amwtk" path="res://addons/kit/menu/pause/menu.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://bbsvnrhcyccl5" path="res://addons/kit/ui/menu/scrim.tscn" id="2_scrim"]
+[ext_resource type="PackedScene" uid="uid://11thq3wp16vi" path="res://addons/kit/ui/input/focus_handler.tscn" id="3_focus"]
+[ext_resource type="PackedScene" uid="uid://dm7k3close1bt" path="res://addons/kit/ui/menu/button_close.tscn" id="4_close"]
+[ext_resource type="Script" uid="uid://dlrw0lhorb5uc" path="res://addons/std/input/loader.gd" id="5_loader"]
+[ext_resource type="Resource" uid="uid://ldk7k2w5uvks" path="res://addons/kit/system/input/actions/menu.tres" id="6_menu"]
+[ext_resource type="Resource" uid="uid://bcsts082smqrp" path="res://addons/kit/system/input/actions/menu_options.tres" id="7_opts"]
+[ext_resource type="Resource" uid="uid://d2vp2eesnf5ng" path="res://addons/kit/menu/settings/screen.tres" id="8_settings"]
+[ext_resource type="Script" uid="uid://dmvb2tblavngm" path="res://addons/std/input/action_set_layer.gd" id="9_layer"]
+[ext_resource type="PackedScene" uid="uid://dii55pwtpi0w6" path="res://addons/kit/menu/pause/quit.tscn" id="10_quit"]
+[ext_resource type="PackedScene" uid="uid://cjsmesktoceke" path="res://addons/kit/menu/pause/return.tscn" id="11_return"]
+
+[node name="PauseMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+confirm_quit_scene = ExtResource("10_quit")
+confirm_return_scene = ExtResource("11_return")
+settings_screen = ExtResource("8_settings")
+
+[node name="StdInputActionSetLoader" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("5_loader")
+action_set = ExtResource("6_menu")
+action_set_layers = Array[ExtResource("9_layer")]([ExtResource("7_opts")])
+
+[node name="Scrim" parent="." instance=ExtResource("2_scrim")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(480, 0)
+layout_mode = 2
+theme_type_variation = &"panel_dialog"
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "kit_pause_title"
+horizontal_alignment = 1
+
+[node name="Resume" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"button_menu"
+text = "kit_pause_resume"
+
+[node name="FocusHandler" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Resume" instance=ExtResource("3_focus")]
+layout_mode = 0
+use_as_anchor = true
+
+[node name="Options" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"button_menu"
+text = "kit_pause_options"
+
+[node name="FocusHandler" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Options" instance=ExtResource("3_focus")]
+layout_mode = 0
+
+[node name="Return" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"button_menu"
+text = "kit_pause_return_to_menu"
+
+[node name="FocusHandler" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Return" instance=ExtResource("3_focus")]
+layout_mode = 0
+
+[node name="Quit" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"button_menu"
+text = "kit_pause_quit"
+
+[node name="FocusHandler" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Quit" instance=ExtResource("3_focus")]
+layout_mode = 0
+
+[node name="CloseButton" parent="CenterContainer/PanelContainer" instance=ExtResource("4_close")]
+layout_mode = 2

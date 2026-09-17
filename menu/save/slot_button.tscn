@@ -1,0 +1,68 @@
+[gd_scene format=3 uid="uid://ig0aeexy2dcl"]
+
+[ext_resource type="Script" uid="uid://dfu2yjcfp0tjd" path="res://addons/kit/menu/save/slot_button.gd" id="1_8gfwc"]
+[ext_resource type="PackedScene" uid="uid://11thq3wp16vi" path="res://addons/kit/ui/input/focus_handler.tscn" id="2_lulcq"]
+
+[node name="SlotButton" type="Button" unique_id=1385139209]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8gfwc")
+
+[node name="FocusHandler" parent="." unique_id=1405551856 instance=ExtResource("2_lulcq")]
+layout_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1415989997]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="Empty" type="Label" parent="MarginContainer" unique_id=358837228]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "kit_save_slots_empty"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Broken" type="Label" parent="MarginContainer" unique_id=1006397132]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "kit_save_slots_broken"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Contents" type="VBoxContainer" parent="MarginContainer" unique_id=1795079908]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Active" type="Label" parent="MarginContainer/Contents" unique_id=642953647]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "ACTIVE"
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Contents" unique_id=1257776682]
+layout_mode = 2
+size_flags_vertical = 6
+
+[node name="Header" type="Label" parent="MarginContainer/Contents/VBoxContainer" unique_id=1810665451]
+layout_mode = 2
+text = "kit_save_slots_last_updated"
+uppercase = true
+
+[node name="LastUpdated" type="Label" parent="MarginContainer/Contents/VBoxContainer" unique_id=859847422]
+unique_name_in_owner = true
+layout_mode = 2

@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bprbwmrvsdvp1"]
 
-[ext_resource type="Script" uid="uid://dh6mq7fab0jbc" path="res://ui/hud/bar/bar.gd" id="1_bar"]
-[ext_resource type="Resource" uid="uid://68v3glpoe4vq" path="res://ui/hud/bar/style_default.tres" id="2_style"]
+[ext_resource type="Script" uid="uid://dh6mq7fab0jbc" path="res://addons/kit/ui/hud/bar/bar.gd" id="1_bar"]
+[ext_resource type="Resource" uid="uid://68v3glpoe4vq" path="res://addons/kit/ui/hud/bar/style_default.tres" id="2_style"]
 
 [node name="HudBar" type="Control"]
 custom_minimum_size = Vector2(48, 6)

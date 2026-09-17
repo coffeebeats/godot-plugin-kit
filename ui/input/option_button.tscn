@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://jqrnk34kfw5u"]
 
-[ext_resource type="Script" uid="uid://dqu6rpexshtbj" path="res://ui/input/option_button.gd" id="1_1sudd"]
-[ext_resource type="PackedScene" uid="uid://11thq3wp16vi" path="res://ui/input/focus_handler.tscn" id="2_0ic2f"]
+[ext_resource type="Script" uid="uid://dqu6rpexshtbj" path="res://addons/kit/ui/input/option_button.gd" id="1_1sudd"]
+[ext_resource type="PackedScene" uid="uid://11thq3wp16vi" path="res://addons/kit/ui/input/focus_handler.tscn" id="2_0ic2f"]
 
 [node name="OptionButton" type="OptionButton" unique_id=134481412]
 script = ExtResource("1_1sudd")

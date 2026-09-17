@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://0ngaobv7ydln"]
 
-[ext_resource type="Script" uid="uid://c5vcj0wbm2cuv" path="res://system/audio/audio.gd" id="1_k2ot4"]
+[ext_resource type="Script" uid="uid://c5vcj0wbm2cuv" path="res://addons/kit/system/audio/audio.gd" id="1_k2ot4"]
 [ext_resource type="Script" uid="uid://jawae4cgr3ug" path="res://addons/std/sound/pool_1d.gd" id="2_rkmwc"]
 [ext_resource type="Script" uid="uid://dgdx1r08mvcut" path="res://addons/std/sound/pool_2d.gd" id="3_sjdwr"]
 [ext_resource type="Script" uid="uid://c5yniejk4ptja" path="res://addons/std/sound/music.gd" id="4_music"]
@@ -9,7 +9,7 @@
 [ext_resource type="Script" uid="uid://wjhmi6aj2hkv" path="res://addons/std/sound/mix_snapshot_override.gd" id="7_override"]
 [ext_resource type="Script" uid="uid://uw3pn8gctfef" path="res://addons/std/sound/bus_effect.gd" id="8_bus_effect"]
 [ext_resource type="Script" uid="uid://dnmgfnjcj5cra" path="res://addons/std/sound/bus_effect_property.gd" id="8b_bus_effect_prop"]
-[ext_resource type="Resource" uid="uid://d4bsd6yivk1nc" path="res://system/audio/bus/game.tres" id="9_game_bus"]
+[ext_resource type="Resource" uid="uid://d4bsd6yivk1nc" path="res://addons/kit/system/audio/bus/game.tres" id="9_game_bus"]
 
 [sub_resource type="Resource" id="StdTweenCurve_music_fadein"]
 script = ExtResource("5_curve")

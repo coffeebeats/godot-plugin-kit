@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://ddxpi3xey10gr"]
+
+[ext_resource type="PackedScene" uid="uid://4brfq2tumt1o" path="res://addons/kit/ui/menu/alert.tscn" id="1_alert"]
+
+[node name="AlertDialog" instance=ExtResource("1_alert")]
+title = "kit_error_delete_failed_title"
+message = "kit_error_delete_failed_message"
+dismissable = false
+primary_label = "kit_alert_continue"
+secondary_label = ""

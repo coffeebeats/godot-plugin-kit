@@ -1,10 +1,10 @@
 [gd_resource type="Resource" script_class="StdInputGlyphSetMouse" format=3 uid="uid://bip3qsb63vekp"]
 
 [ext_resource type="Script" uid="uid://ds1akfr002tmn" path="res://addons/std/input/godot/glyph_set_mouse.gd" id="1_5626b"]
-[ext_resource type="Texture2D" uid="uid://b3vx4nr7n8lc2" path="res://system/input/unknown/glyphs/mouse/left.png" id="1_lthm3"]
-[ext_resource type="Texture2D" uid="uid://0mcwmsu2sv3q" path="res://system/input/unknown/glyphs/mouse/middle.png" id="2_85lv3"]
-[ext_resource type="Texture2D" uid="uid://dyxa6iwcb70ff" path="res://system/input/unknown/glyphs/mouse/right.png" id="3_sdr28"]
-[ext_resource type="Texture2D" uid="uid://dmxjk26q1sbte" path="res://system/input/unknown/glyphs/mouse/simple.png" id="4_qjvqc"]
+[ext_resource type="Texture2D" uid="uid://b3vx4nr7n8lc2" path="res://addons/kit/system/input/unknown/glyphs/mouse/left.png" id="1_lthm3"]
+[ext_resource type="Texture2D" uid="uid://0mcwmsu2sv3q" path="res://addons/kit/system/input/unknown/glyphs/mouse/middle.png" id="2_85lv3"]
+[ext_resource type="Texture2D" uid="uid://dyxa6iwcb70ff" path="res://addons/kit/system/input/unknown/glyphs/mouse/right.png" id="3_sdr28"]
+[ext_resource type="Texture2D" uid="uid://dmxjk26q1sbte" path="res://addons/kit/system/input/unknown/glyphs/mouse/simple.png" id="4_qjvqc"]
 
 [resource]
 script = ExtResource("1_5626b")

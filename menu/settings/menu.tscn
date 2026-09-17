@@ -1,0 +1,141 @@
+[gd_scene format=3 uid="uid://cm4b566x6ped8"]
+
+[ext_resource type="Script" uid="uid://dsjja8jln6cnn" path="res://addons/kit/menu/settings/menu.gd" id="2_j2ecv"]
+[ext_resource type="Resource" uid="uid://ldk7k2w5uvks" path="res://addons/kit/system/input/actions/menu.tres" id="3_7ixv1"]
+[ext_resource type="Resource" uid="uid://bus0xmb3pu8xp" path="res://addons/kit/menu/settings/tab_sound_event.tres" id="3_gh6u1"]
+[ext_resource type="Script" uid="uid://dlrw0lhorb5uc" path="res://addons/std/input/loader.gd" id="3_m4kg3"]
+[ext_resource type="Resource" uid="uid://dp0wxxg20ablh" path="res://addons/kit/system/input/actions/menu_tabbed.tres" id="4_s0nl3"]
+[ext_resource type="PackedScene" uid="uid://dg8wa8rp672rb" path="res://addons/kit/ui/glyph/glyph.tscn" id="5_xbtwd"]
+[ext_resource type="PackedScene" uid="uid://dkt0y14cgygus" path="res://addons/kit/menu/settings/sound/sound.tscn" id="7_x3q0k"]
+[ext_resource type="PackedScene" uid="uid://jxtm7mh7fsc0" path="res://addons/kit/menu/settings/interface/interface.tscn" id="8_kkqby"]
+[ext_resource type="PackedScene" uid="uid://b4obsfsvns0ap" path="res://addons/kit/menu/settings/display/display.tscn" id="9_vwbdl"]
+[ext_resource type="PackedScene" uid="uid://bd5fo51o6asi2" path="res://addons/kit/menu/settings/controls/controls.tscn" id="10_46fy4"]
+[ext_resource type="PackedScene" uid="uid://bbsvnrhcyccl5" path="res://addons/kit/ui/menu/scrim.tscn" id="11_scrim"]
+[ext_resource type="PackedScene" uid="uid://dm7k3close1bt" path="res://addons/kit/ui/menu/button_close.tscn" id="12_close"]
+[ext_resource type="PackedScene" uid="uid://ctabgr0up1scn" path="res://addons/kit/ui/menu/tab_group.tscn" id="13_tabs"]
+[ext_resource type="Script" uid="uid://dmvb2tblavngm" path="res://addons/std/input/action_set_layer.gd" id="14_layer"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_w1p03"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dhy4h"]
+
+[node name="SettingsMenu" type="Control" unique_id=28127552]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_j2ecv")
+tab_switch_sound_event = ExtResource("3_gh6u1")
+
+[node name="Scrim" parent="." unique_id=722204747 instance=ExtResource("11_scrim")]
+layout_mode = 1
+
+[node name="StdInputActionSetLoader" type="Control" parent="." unique_id=212166736]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("3_m4kg3")
+action_set = ExtResource("3_7ixv1")
+action_set_layers = Array[ExtResource("14_layer")]([ExtResource("4_s0nl3")])
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=676371519]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=440196034]
+custom_minimum_size = Vector2(1440, 648)
+layout_mode = 2
+theme_type_variation = &"panel_dialog"
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer" unique_id=1526864236]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer" unique_id=590982558]
+custom_minimum_size = Vector2(810, 810)
+layout_mode = 2
+
+[node name="Header" type="PanelContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=604388048]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_w1p03")
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Header" unique_id=1306826654]
+layout_mode = 2
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Header/MarginContainer" unique_id=1574175642]
+layout_mode = 2
+
+[node name="GlyphTabPrev" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Header/MarginContainer/HBoxContainer" unique_id=1667473956 instance=ExtResource("5_xbtwd")]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_horizontal = 10
+hide_if_cursor_visible = true
+action_set = ExtResource("4_s0nl3")
+action = &"ui_tab_prev"
+
+[node name="TabGroup" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Header/MarginContainer/HBoxContainer" unique_id=891982953 node_paths=PackedStringArray("content") instance=ExtResource("13_tabs")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+tabs = ["kit_options_sound", "kit_options_interface", "kit_options_display", "kit_options_controls"]
+content = NodePath("../../../../Body/MarginContainer/ScrollContainer/TabContents")
+
+[node name="GlyphTabNext" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Header/MarginContainer/HBoxContainer" unique_id=1501074617 instance=ExtResource("5_xbtwd")]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_horizontal = 2
+hide_if_cursor_visible = true
+action_set = ExtResource("4_s0nl3")
+action = &"ui_tab_next"
+
+[node name="Body" type="PanelContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1489876437]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_dhy4h")
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Body" unique_id=1621647013]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Body/MarginContainer" unique_id=1791447208]
+layout_mode = 2
+follow_focus = true
+
+[node name="TabContents" type="MarginContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Body/MarginContainer/ScrollContainer" unique_id=770327130]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 2
+theme_override_constants/margin_left = 128
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 128
+theme_override_constants/margin_bottom = 16
+
+[node name="Sound" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Body/MarginContainer/ScrollContainer/TabContents" unique_id=1186792741 instance=ExtResource("7_x3q0k")]
+layout_mode = 2
+
+[node name="Interface" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Body/MarginContainer/ScrollContainer/TabContents" unique_id=1117852941 instance=ExtResource("8_kkqby")]
+visible = false
+layout_mode = 2
+
+[node name="Display" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Body/MarginContainer/ScrollContainer/TabContents" unique_id=272885017 instance=ExtResource("9_vwbdl")]
+visible = false
+layout_mode = 2
+
+[node name="Controls" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Body/MarginContainer/ScrollContainer/TabContents" unique_id=403269405 instance=ExtResource("10_46fy4")]
+visible = false
+layout_mode = 2
+
+[node name="CloseButton" parent="CenterContainer/PanelContainer" unique_id=833171423 instance=ExtResource("12_close")]
+layout_mode = 2

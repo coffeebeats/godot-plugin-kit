@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://utcvvr2uv6jr"]
 
-[ext_resource type="Script" uid="uid://invdsea0m26l" path="res://ui/input/slider.gd" id="1_7861e"]
-[ext_resource type="PackedScene" uid="uid://11thq3wp16vi" path="res://ui/input/focus_handler.tscn" id="2_5m6je"]
+[ext_resource type="Script" uid="uid://invdsea0m26l" path="res://addons/kit/ui/input/slider.gd" id="1_7861e"]
+[ext_resource type="PackedScene" uid="uid://11thq3wp16vi" path="res://addons/kit/ui/input/focus_handler.tscn" id="2_5m6je"]
 
 [node name="Slider" type="HBoxContainer" unique_id=808693403]
 anchors_preset = 15

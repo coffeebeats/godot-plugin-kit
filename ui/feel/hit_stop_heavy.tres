@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="KitFeelHitStop" load_steps=2 format=3 uid="uid://d4floj0edrx1"]
 
-[ext_resource type="Script" uid="uid://b625e6bo10erm" path="res://ui/feel/hit_stop.gd" id="1_hit_stop"]
+[ext_resource type="Script" uid="uid://b625e6bo10erm" path="res://addons/kit/ui/feel/hit_stop.gd" id="1_hit_stop"]
 
 [resource]
 script = ExtResource("1_hit_stop")

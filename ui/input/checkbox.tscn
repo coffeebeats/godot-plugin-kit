@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bq40qgckghub0"]
 
-[ext_resource type="PackedScene" uid="uid://11thq3wp16vi" path="res://ui/input/focus_handler.tscn" id="1_uik81"]
+[ext_resource type="PackedScene" uid="uid://11thq3wp16vi" path="res://addons/kit/ui/input/focus_handler.tscn" id="1_uik81"]
 
 [node name="Checkbox" type="CheckBox" unique_id=919079215]
 

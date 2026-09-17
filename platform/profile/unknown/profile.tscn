@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://lnq741pg6303"]
 
-[ext_resource type="Script" uid="uid://bqold33rv8336" path="res://platform/profile/unknown/profile.gd" id="1_7mws6"]
+[ext_resource type="Script" uid="uid://bqold33rv8336" path="res://addons/kit/platform/profile/unknown/profile.gd" id="1_7mws6"]
 
 [node name="Profile" type="Node" unique_id=291466101]
 script = ExtResource("1_7mws6")

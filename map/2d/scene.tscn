@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://rks01t2bwniu"]
 
-[ext_resource type="Script" uid="uid://dsj1jr8n62mau" path="res://map/2d/scene.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://dsj1jr8n62mau" path="res://addons/kit/map/2d/scene.gd" id="1_script"]
 [ext_resource type="Script" uid="uid://dlrw0lhorb5uc" path="res://addons/std/input/loader.gd" id="4_loader"]
-[ext_resource type="Script" uid="uid://dnrthqe7p8b3n" path="res://ui/hud/layer_2d.gd" id="8_hud"]
-[ext_resource type="Script" uid="uid://dnbvkthuyvfw2" path="res://ui/feel/feel_2d.gd" id="9_feel"]
+[ext_resource type="Script" uid="uid://dnrthqe7p8b3n" path="res://addons/kit/ui/hud/layer_2d.gd" id="8_hud"]
+[ext_resource type="Script" uid="uid://dnbvkthuyvfw2" path="res://addons/kit/ui/feel/feel_2d.gd" id="9_feel"]
 
 [node name="ProjectMap2D" type="Control" unique_id=180080882 node_paths=PackedStringArray("sub_viewport", "hud", "feel", "action_set_loader")]
 layout_mode = 3

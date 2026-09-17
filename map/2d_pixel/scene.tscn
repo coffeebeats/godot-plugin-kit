@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://qspx11jwjk1q"]
 
-[ext_resource type="Script" uid="uid://dfkxv8yvc2sqy" path="res://map/2d_pixel/scene.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://dfkxv8yvc2sqy" path="res://addons/kit/map/2d_pixel/scene.gd" id="1_script"]
 [ext_resource type="Script" uid="uid://dlrw0lhorb5uc" path="res://addons/std/input/loader.gd" id="4_loader"]
-[ext_resource type="Shader" uid="uid://bhvhbj1ty1k5k" path="res://map/2d_pixel/smooth_pixel.gdshader" id="8_shader"]
-[ext_resource type="Script" uid="uid://dnrthqe7p8b3n" path="res://ui/hud/layer_2d.gd" id="9_hud"]
-[ext_resource type="Script" uid="uid://dnbvkthuyvfw2" path="res://ui/feel/feel_2d.gd" id="10_feel"]
+[ext_resource type="Shader" uid="uid://bhvhbj1ty1k5k" path="res://addons/kit/map/2d_pixel/smooth_pixel.gdshader" id="8_shader"]
+[ext_resource type="Script" uid="uid://dnrthqe7p8b3n" path="res://addons/kit/ui/hud/layer_2d.gd" id="9_hud"]
+[ext_resource type="Script" uid="uid://dnbvkthuyvfw2" path="res://addons/kit/ui/feel/feel_2d.gd" id="10_feel"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1"]
 shader = ExtResource("8_shader")

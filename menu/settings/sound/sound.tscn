@@ -1,0 +1,109 @@
+[gd_scene format=3 uid="uid://dkt0y14cgygus"]
+
+[ext_resource type="PackedScene" uid="uid://bxxweem4spjs8" path="res://addons/kit/menu/settings/group.tscn" id="1_0oves"]
+[ext_resource type="PackedScene" uid="uid://dyoqungyuv513" path="res://addons/kit/menu/settings/setting.tscn" id="2_2qbby"]
+[ext_resource type="PackedScene" uid="uid://utcvvr2uv6jr" path="res://addons/kit/ui/input/slider.tscn" id="3_4ws2g"]
+[ext_resource type="Script" uid="uid://bvaa5ha0vagj3" path="res://addons/std/setting/controller_range.gd" id="4_d5xjp"]
+[ext_resource type="Resource" uid="uid://cdgwm6x2i52sn" path="res://addons/kit/system/setting/audio/volume/master_property.tres" id="5_x67ef"]
+[ext_resource type="Resource" uid="uid://dxoybi2umepwu" path="res://addons/kit/system/setting/audio/volume/sound_effects_property.tres" id="6_ixrhm"]
+[ext_resource type="Resource" uid="uid://c548qtehlfufq" path="res://addons/kit/system/setting/audio/volume/music_property.tres" id="7_xr1ma"]
+[ext_resource type="Resource" uid="uid://csu1osb4kni20" path="res://addons/kit/system/setting/audio/volume/voice_property.tres" id="8_64r0m"]
+[ext_resource type="PackedScene" uid="uid://jqrnk34kfw5u" path="res://addons/kit/ui/input/option_button.tscn" id="9_ydimy"]
+[ext_resource type="Script" uid="uid://byvxmchr3un0u" path="res://addons/std/setting/controller_option_button_string.gd" id="10_d3gqd"]
+[ext_resource type="Resource" uid="uid://ccnpq1qb03igm" path="res://addons/kit/system/setting/audio/device/output_property.tres" id="11_v3k5u"]
+[ext_resource type="Resource" uid="uid://tusikeeyjycn" path="res://addons/kit/system/setting/audio/device/output_options_property.tres" id="12_605fi"]
+[ext_resource type="PackedScene" uid="uid://bq40qgckghub0" path="res://addons/kit/ui/input/checkbox.tscn" id="13_ns2fj"]
+[ext_resource type="Script" uid="uid://sqle70s2tddg" path="res://addons/std/setting/controller_toggle_button.gd" id="14_t8p1b"]
+[ext_resource type="Resource" uid="uid://dejd17gr4508s" path="res://addons/kit/system/setting/audio/mute/background_property.tres" id="15_4hcov"]
+
+[node name="Sound" type="VBoxContainer" unique_id=1416931277]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"menu_body"
+
+[node name="Volume" parent="." unique_id=2056102013 instance=ExtResource("1_0oves")]
+layout_mode = 2
+label = "kit_options_sound_volume"
+
+[node name="Master" parent="Volume" unique_id=1625035758 instance=ExtResource("2_2qbby")]
+layout_mode = 2
+label = "kit_options_sound_volume_master"
+
+[node name="Slider" parent="Volume/Master" unique_id=601172387 instance=ExtResource("3_4ws2g")]
+layout_mode = 2
+
+[node name="FocusHandler" parent="Volume/Master/Slider/HSlider" parent_id_path=PackedInt32Array(601172387, 2127934768) index="0" unique_id=1272590389]
+use_as_anchor = true
+
+[node name="StdSettingsControllerRange" type="Node" parent="Volume/Master/Slider" unique_id=306349278]
+script = ExtResource("4_d5xjp")
+property = ExtResource("5_x67ef")
+target = NodePath("../HSlider")
+
+[node name="Effects" parent="Volume" unique_id=1804127411 instance=ExtResource("2_2qbby")]
+layout_mode = 2
+label = "kit_options_sound_volume_sound_effects"
+
+[node name="Slider" parent="Volume/Effects" unique_id=1678039406 instance=ExtResource("3_4ws2g")]
+layout_mode = 2
+
+[node name="StdSettingsControllerRange" type="Node" parent="Volume/Effects/Slider" unique_id=892800060]
+script = ExtResource("4_d5xjp")
+property = ExtResource("6_ixrhm")
+target = NodePath("../HSlider")
+
+[node name="Music" parent="Volume" unique_id=2105053374 instance=ExtResource("2_2qbby")]
+layout_mode = 2
+label = "kit_options_sound_volume_music"
+
+[node name="Slider" parent="Volume/Music" unique_id=772613256 instance=ExtResource("3_4ws2g")]
+layout_mode = 2
+
+[node name="StdSettingsControllerRange" type="Node" parent="Volume/Music/Slider" unique_id=879468867]
+script = ExtResource("4_d5xjp")
+property = ExtResource("7_xr1ma")
+target = NodePath("../HSlider")
+
+[node name="Voice" parent="Volume" unique_id=246727032 instance=ExtResource("2_2qbby")]
+layout_mode = 2
+label = "kit_options_sound_volume_voice"
+
+[node name="Slider" parent="Volume/Voice" unique_id=399833882 instance=ExtResource("3_4ws2g")]
+layout_mode = 2
+
+[node name="StdSettingsControllerRange" type="Node" parent="Volume/Voice/Slider" unique_id=1009648237]
+script = ExtResource("4_d5xjp")
+property = ExtResource("8_64r0m")
+target = NodePath("../HSlider")
+
+[node name="Audio" parent="." unique_id=1584487051 instance=ExtResource("1_0oves")]
+layout_mode = 2
+label = "kit_options_sound_audio"
+
+[node name="Device" parent="Audio" unique_id=623170942 instance=ExtResource("2_2qbby")]
+layout_mode = 2
+label = "kit_options_sound_audio_device"
+
+[node name="OptionButton" parent="Audio/Device" unique_id=1851021880 instance=ExtResource("9_ydimy")]
+layout_mode = 2
+
+[node name="StdSettingsControllerOptionButtonString" type="Node" parent="Audio/Device/OptionButton" unique_id=1701349227]
+script = ExtResource("10_d3gqd")
+property = ExtResource("11_v3k5u")
+options_property = ExtResource("12_605fi")
+
+[node name="MuteInBackground" parent="Audio" unique_id=1296594807 instance=ExtResource("2_2qbby")]
+layout_mode = 2
+label = "kit_options_sound_audio_bg_mute"
+
+[node name="Checkbox" parent="Audio/MuteInBackground" unique_id=144219392 instance=ExtResource("13_ns2fj")]
+layout_mode = 2
+
+[node name="StdSettingsControllerToggleButton" type="Node" parent="Audio/MuteInBackground/Checkbox" unique_id=1081447472]
+script = ExtResource("14_t8p1b")
+property = ExtResource("15_4hcov")
+
+[editable path="Volume/Master/Slider"]

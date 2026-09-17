@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="KitHudNumberStyle" load_steps=5 format=3 uid="uid://cn7cud5h80i2f"]
 
-[ext_resource type="Script" uid="uid://dw7wvmob8p1dp" path="res://ui/hud/numbers/style.gd" id="1_style"]
+[ext_resource type="Script" uid="uid://dw7wvmob8p1dp" path="res://addons/kit/ui/hud/numbers/style.gd" id="1_style"]
 [ext_resource type="Script" uid="uid://biupfx6h42h8k" path="res://addons/std/tween/curve.gd" id="2_curve"]
 
 [sub_resource type="Resource" id="motion"]

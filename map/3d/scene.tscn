@@ -1,12 +1,12 @@
 [gd_scene format=3 uid="uid://blrcra2221trg"]
 
-[ext_resource type="Script" uid="uid://dld1uw3phkfna" path="res://map/3d/scene.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://dld1uw3phkfna" path="res://addons/kit/map/3d/scene.gd" id="1_script"]
 [ext_resource type="Script" uid="uid://dlrw0lhorb5uc" path="res://addons/std/input/loader.gd" id="4_loader"]
-[ext_resource type="Script" uid="uid://cpj6sfb4r20rj" path="res://map/3d/viewport_observer.gd" id="8_observer"]
-[ext_resource type="Resource" uid="uid://cmr3sqdjir1ko" path="res://system/setting/video/render_scale_property.tres" id="9_render_scale"]
-[ext_resource type="Resource" uid="uid://isxidm2jgp8m" path="res://system/setting/video/msaa_3d_property.tres" id="10_msaa_3d"]
-[ext_resource type="Script" uid="uid://dllaqka540nal" path="res://ui/hud/layer_3d.gd" id="11_hud"]
-[ext_resource type="Script" uid="uid://c2qonhhbqw8en" path="res://ui/feel/feel_3d.gd" id="12_feel"]
+[ext_resource type="Script" uid="uid://cpj6sfb4r20rj" path="res://addons/kit/map/3d/viewport_observer.gd" id="8_observer"]
+[ext_resource type="Resource" uid="uid://cmr3sqdjir1ko" path="res://addons/kit/system/setting/video/render_scale_property.tres" id="9_render_scale"]
+[ext_resource type="Resource" uid="uid://isxidm2jgp8m" path="res://addons/kit/system/setting/video/msaa_3d_property.tres" id="10_msaa_3d"]
+[ext_resource type="Script" uid="uid://dllaqka540nal" path="res://addons/kit/ui/hud/layer_3d.gd" id="11_hud"]
+[ext_resource type="Script" uid="uid://c2qonhhbqw8en" path="res://addons/kit/ui/feel/feel_3d.gd" id="12_feel"]
 
 [node name="ProjectMap3D" type="Control" unique_id=1397359715 node_paths=PackedStringArray("sub_viewport", "hud", "feel", "action_set_loader")]
 layout_mode = 3

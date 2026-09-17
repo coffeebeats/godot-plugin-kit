@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="StdScreenTransitionFade" format=3 uid="uid://oxjlda1mnlo4"]
+
+[ext_resource type="Script" uid="uid://biupfx6h42h8k" path="res://addons/std/tween/curve.gd" id="1_curve"]
+[ext_resource type="Script" uid="uid://dtp4i5p0uy2l6" path="res://addons/std/screen/transitions/fade.gd" id="2_fade"]
+
+[sub_resource type="Resource" id="Resource_cover"]
+script = ExtResource("1_curve")
+duration = 1.8
+ease_type = 2
+transition_type = 7
+metadata/_custom_type_script = "uid://biupfx6h42h8k"
+
+[sub_resource type="Resource" id="Resource_reveal"]
+script = ExtResource("1_curve")
+duration = 1.0
+ease_type = 2
+transition_type = 4
+metadata/_custom_type_script = "uid://biupfx6h42h8k"
+
+[resource]
+script = ExtResource("2_fade")
+curve_cover = SubResource("Resource_cover")
+curve_reveal = SubResource("Resource_reveal")
+metadata/_custom_type_script = "uid://dtp4i5p0uy2l6"

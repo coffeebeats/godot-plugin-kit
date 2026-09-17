@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://qtuor42mtgs0"]
 
-[ext_resource type="Script" uid="uid://bobii31h241lg" path="res://ui/hud/numbers/numbers.gd" id="1_numbers"]
-[ext_resource type="Resource" uid="uid://cn7cud5h80i2f" path="res://ui/hud/numbers/style_damage.tres" id="2_style"]
+[ext_resource type="Script" uid="uid://bobii31h241lg" path="res://addons/kit/ui/hud/numbers/numbers.gd" id="1_numbers"]
+[ext_resource type="Resource" uid="uid://cn7cud5h80i2f" path="res://addons/kit/ui/hud/numbers/style_damage.tres" id="2_style"]
 
 [node name="HudNumbers" type="Control"]
 mouse_filter = 2

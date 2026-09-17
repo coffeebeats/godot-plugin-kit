@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://dyiec01n3bxgf"]
 
-[ext_resource type="PackedScene" uid="uid://dg8wa8rp672rb" path="res://ui/glyph/glyph.tscn" id="1_4o3h4"]
-[ext_resource type="StyleBox" uid="uid://bp0s36ty6tyia" path="res://ui/glyph/action_stylebox.tres" id="1_8w7nx"]
-[ext_resource type="Script" uid="uid://b36kvw116mmnd" path="res://ui/glyph/action.gd" id="1_eu016"]
-[ext_resource type="Resource" uid="uid://cwxarrdtgknf3" path="res://ui/glyph/action_border_fade_in.tres" id="2_lmvm6"]
-[ext_resource type="Resource" uid="uid://q35clnd6xfgg" path="res://ui/glyph/action_border_fade_out.tres" id="3_4b0ty"]
-[ext_resource type="PackedScene" uid="uid://11thq3wp16vi" path="res://ui/input/focus_handler.tscn" id="4_mguvk"]
+[ext_resource type="PackedScene" uid="uid://dg8wa8rp672rb" path="res://addons/kit/ui/glyph/glyph.tscn" id="1_4o3h4"]
+[ext_resource type="StyleBox" uid="uid://bp0s36ty6tyia" path="res://addons/kit/ui/glyph/action_stylebox.tres" id="1_8w7nx"]
+[ext_resource type="Script" uid="uid://b36kvw116mmnd" path="res://addons/kit/ui/glyph/action.gd" id="1_eu016"]
+[ext_resource type="Resource" uid="uid://cwxarrdtgknf3" path="res://addons/kit/ui/glyph/action_border_fade_in.tres" id="2_lmvm6"]
+[ext_resource type="Resource" uid="uid://q35clnd6xfgg" path="res://addons/kit/ui/glyph/action_border_fade_out.tres" id="3_4b0ty"]
+[ext_resource type="PackedScene" uid="uid://11thq3wp16vi" path="res://addons/kit/ui/input/focus_handler.tscn" id="4_mguvk"]
 
 [node name="InputActionPrompt" type="PanelContainer" unique_id=1902457773]
 anchors_preset = 8
