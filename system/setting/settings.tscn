@@ -22,7 +22,6 @@
 [ext_resource type="Resource" uid="uid://bto0jfkd0pli7" path="res://system/setting/video/fullscreen.tres" id="19_sp5q8"]
 [ext_resource type="Resource" uid="uid://iw3u23yo0kyb" path="res://system/setting/video/borderless.tres" id="20_pmh6n"]
 [ext_resource type="Resource" uid="uid://62mhtqvh6wfn" path="res://system/setting/video/window_mode_property.tres" id="21_75euv"]
-[ext_resource type="PackedScene" uid="uid://cj4555ox05li8" path="res://system/setting/interface/font_scaling_observer.tscn" id="23_hkn71"]
 [ext_resource type="Script" uid="uid://b1s0ajgclfpcn" path="res://system/setting/interface/language_observer.gd" id="24_5inwc"]
 [ext_resource type="Resource" uid="uid://723bxnvy4ipw" path="res://system/setting/interface/language_property.tres" id="25_3mnqu"]
 [ext_resource type="Resource" uid="uid://ci5jo2fctxlbt" path="res://system/setting/interface/language_options_property.tres" id="26_juwf4"]
@@ -104,8 +103,6 @@ borderless_property = ExtResource("20_pmh6n")
 window_mode_property = ExtResource("21_75euv")
 
 [node name="Interface" type="Node" parent="Observers" unique_id=806725068]
-
-[node name="FontScalingObserver" parent="Observers/Interface" unique_id=1736083344 instance=ExtResource("23_hkn71")]
 
 [node name="LanguageObserver" type="Node" parent="Observers/Interface" unique_id=561636359]
 script = ExtResource("24_5inwc")

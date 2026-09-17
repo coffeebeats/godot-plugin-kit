@@ -34,6 +34,10 @@ const GROUP_INPUT_SHIM := &"system/input:shim"
 ## focused_sound_group is the sound group used for focused UI elements.
 @export var focused_sound_group: StdSoundGroup = null
 
+## steam_in_game_actions is the game's Steam Input manifest. The Steam input scene loads
+## at runtime, out of reach of the scene placing this node, so it reads the value here.
+@export var steam_in_game_actions: StdInputSteamInGameActions = null
+
 ## ui_navigation_cooldown is a wait period after inputting a UI navigation action that
 ## must elapse prior to another one being accepted.
 @export var ui_navigation_cooldown: float = 0.08
@@ -79,8 +83,8 @@ func is_using_focus_ui_navigation() -> bool:
 ## is unmuted after the first focus change settles; a `process_frame` fallback
 ## guarantees cleanup if no focus change occurs (e.g. cursor mode).
 func mute_next_focus_sound() -> void:
+	# NOTE: The sound group is the game's to supply. With none there is nothing to mute.
 	if not focused_sound_group:
-		assert(false, "invalid config; missing focused sound group")
 		return
 
 	focused_sound_group.mute()
