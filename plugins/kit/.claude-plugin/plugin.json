@@ -1,0 +1,5 @@
+{
+  "name": "kit",
+  "description": "Adds settings, save fields, input actions, sounds, translations and HUD elements to a game built on kit, and drives a running game to check the result.",
+  "author": { "name": "coffeebeats" }
+}

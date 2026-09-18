@@ -8,6 +8,10 @@
 
 *.sh text eol=lf
 
+# NOTE: The plugin's entry points carry no extension, so they need naming outright. A
+# CRLF checkout would leave the shebang unusable.
+plugins/*/bin/* text eol=lf
+
 # -------------------------- Setting: Always Windows ------------------------- #
 # Files that will always have CRLF line endings on checkout.
 

@@ -31,6 +31,24 @@ jobs:
           manifest-file: .release-please/manifest.json
           token: ${{ secrets.RELEASE_PLEASE_TOKEN || github.token }}
 
+      # NOTE: The agent plugin is served from 'main' at this tag, so a consumer's
+      # '.claude/settings.json' follows the major line the way the workflows do.
+      - name: Publish major tag
+        if: steps.release.outputs.releases_created == 'true'
+        shell: bash
+        run: |
+          # See https://github.com/orgs/community/discussions/26560#discussioncomment-3531273
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+
+          # Delete existing tag
+          git tag -d v${{ steps.release.outputs.major }} || :
+          git push origin :v${{ steps.release.outputs.major }} || :
+
+          # Create new/updated major tag
+          git tag -a v${{ steps.release.outputs.major }} -m "chore: release v${{ steps.release.outputs.major }}"
+          git push origin v${{ steps.release.outputs.major }}
+
   # NOTE: A 'workflow_dispatch' run republishes the dispatched ref without a tag.
   publish:
     needs: ["release-please"]
@@ -77,6 +95,8 @@ jobs:
             tools
             **/*.po
             **/*.pot
+
+            plugins
 
   branch_protection:
     needs: ["release-please", "publish"]

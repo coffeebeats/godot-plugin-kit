@@ -1,0 +1,29 @@
+#!/bin/sh
+# plugins/kit/bin/godot-bridge
+#
+# Inspects and drives a Godot game that is already running, through kit's debug bridge.
+# Run it from the project root:
+#
+#   godot-bridge launch                      # start, and wait until the game is usable
+#   godot-bridge tree --path Main            # names, classes, visibility, control rects
+#   godot-bridge screenshot --out shot.png   # a real frame
+#   godot-bridge stop
+#
+# 'bridge/README.md' documents every command and the traps worth knowing.
+
+set -eu
+
+bridge="$(CDPATH='' cd -- "$(dirname -- "$0")/../bridge" && pwd)/bridge.py"
+
+if command -v python3 >/dev/null 2>&1; then
+  exec python3 "$bridge" "$@"
+fi
+
+# NOTE: The client needs an interpreter and nothing else, so it never wants the project's
+# own environment; '--no-project' keeps it out of a repository's lockfile.
+if command -v uv >/dev/null 2>&1; then
+  exec uv run --no-project python "$bridge" "$@"
+fi
+
+echo "godot-bridge: no 'python3' or 'uv' on PATH." >&2
+exit 1
