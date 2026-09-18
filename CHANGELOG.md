@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.6 (2026-09-18)
+
+## What's Changed
+* feat(claude): ship the game skills and the bridge as an agent plugin by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/19
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v0.1.5...v0.1.6
+
 ## 0.1.5 (2026-09-17)
 
 ## What's Changed
