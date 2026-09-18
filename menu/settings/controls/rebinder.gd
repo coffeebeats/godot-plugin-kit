@@ -10,6 +10,7 @@ extends Control
 
 const Bindings := preload("res://addons/std/input/godot/binding.gd")
 const Signals := preload("res://addons/std/event/signal.gd")
+const Locales := preload("../../../locale/locales.gd")
 const Screens := preload("../../../ui/menu/screens.gd")
 const Rebinder := preload("rebinder.gd")
 const RebinderScene := preload("rebinder.tscn")
@@ -89,7 +90,9 @@ static func start_rebinding(
 	_instance._player = player
 	_instance._device = device
 
-	Signals.connect_safe(slot.device_activated, _instance._on_device_activated)
+	# NOTE: The instance is reused across rebinds, so a prior `stop` may have left this
+	# connected.
+	Signals.ensure_connected(slot.device_activated, _instance._on_device_activated)
 
 	screens.push(_instance.screen, _instance)
 
@@ -108,11 +111,6 @@ func stop(bound: bool = false) -> void:
 
 	set_process_input(false)
 
-	var slot := StdInputSlot.for_player(_player)
-	if not slot:
-		assert(false, "invalid state; missing input slot")
-		return
-
 	(
 		_logger
 		. debug(
@@ -124,7 +122,13 @@ func stop(bound: bool = false) -> void:
 		)
 	)
 
-	Signals.disconnect_safe(slot.device_activated, _on_device_activated)
+	# NOTE: The rebinder defines no close action, so the screen must pop even without a
+	# slot; only the disconnect depends on one.
+	var slot := StdInputSlot.for_player(_player)
+	assert(slot is StdInputSlot, "invalid state; missing input slot")
+
+	if slot:
+		Signals.disconnect_safe(slot.device_activated, _on_device_activated)
 
 	_scope = null
 	_action_set = null
@@ -230,26 +234,41 @@ func _activate() -> void:
 	)
 
 
+## _split_placeholder splits a translated template around its `%s`, returning the text
+## before and after it. A template carrying no placeholder yields the whole string and
+## an empty remainder, leaving the glyph's neighbours to render what there is.
+##
+## NOTE: A `Control` cannot sit within a `Label`'s text, so the instructions span two
+## labels with the glyph between them; only a caller placing a node needs this.
+static func _split_placeholder(template: String) -> PackedStringArray:
+	var parts := template.split("%s", true, 1)
+	return parts if parts.size() > 1 else PackedStringArray([template, ""])
+
+
 func _update_prompt() -> void:
 	_label_glyph.player_id = _player
 	_label_glyph.update()
 
-	_label_action.text = tr(MSGID_REBINDER_TITLE) % _action
-
-	var instructions_template := tr(
-		MSGID_REBINDER_INSTRUCTIONS,
-		(
-			MSGCTXT_REBINDER_KEYBOARD
-			if _device.device_type == DEVICE_TYPE_KEYBOARD
-			else MSGCTXT_REBINDER_GAMEPAD
-		),
+	# NOTE: The title is one label, so format it; a template which lost its placeholder
+	# then reports an error and renders alone, rather than silently trailing the action.
+	var action_set_name := _action_set.name if _action_set else &""
+	_label_action.text = (
+		tr(MSGID_REBINDER_TITLE) % Locales.tr_action(action_set_name, _action)
 	)
 
-	var parts := instructions_template.split("%s", true, 1)
-	assert(parts.size() == 2, "invalid state; unrecognized template")
+	var instructions := _split_placeholder(
+		tr(
+			MSGID_REBINDER_INSTRUCTIONS,
+			(
+				MSGCTXT_REBINDER_KEYBOARD
+				if _device.device_type == DEVICE_TYPE_KEYBOARD
+				else MSGCTXT_REBINDER_GAMEPAD
+			),
+		)
+	)
 
-	_label_instructions_pre.text = parts[0] if not parts.is_empty() else ""
-	_label_instructions_post.text = parts[1] if not parts.is_empty() else ""
+	_label_instructions_pre.text = instructions[0]
+	_label_instructions_post.text = instructions[1]
 
 
 # -- SIGNAL HANDLERS ----------------------------------------------------------------- #
