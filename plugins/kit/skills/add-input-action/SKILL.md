@@ -94,11 +94,9 @@ Everything the game owns is reachable from `project.godot`; nothing below assume
    - `msgid "<action_name>"` — the key matches the action's StringName
    - `msgstr "<Display Name>"` — the English display name shown in controls settings
 
-7. **Regenerate the Steam Input manifest**, after the translations exist — it embeds a display name per locale, so regenerating first bakes in the raw msgid. Open the manifest resource in the editor and re-assign one of its exported properties; `@tool` setters are what write the file, and nothing watches the action sets it references, so editing a set never rewrites the manifest on its own.
+7. **Run `godot --import --headless`** to validate everything compiles. The action should appear automatically in the controls settings tab under its action set.
 
-   Then read the `.vdf` diff before committing it. It is generated, so the only change worth keeping is the one this skill asked for.
-
-8. **Run `godot --import --headless`** to validate everything compiles. The action should appear automatically in the controls settings tab under its action set.
+   This also rewrites the Steam Input manifest: the resource is `@tool`, and loading it under the editor assigns its exported properties, whose setters write the `.vdf`. Run it **after** the translations exist, because the manifest embeds a display name per locale and would otherwise bake in the raw msgid. Read the `.vdf` diff before committing — it is generated, so the only change worth keeping is the one this skill asked for.
 
 ## Binding collisions
 
