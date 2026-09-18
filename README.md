@@ -65,6 +65,46 @@ Kit's bricks also read these project settings:
 | `[gui] theme/custom` | Defines the type variations kit's scenes name: `button_dialog`, `button_menu`, `button_tab_selected`, `button_tab_unselected`, `hud_bar`, `hud_bar_ghost`, `hud_number`, `hud_number_crit`, `menu_body` and `panel_dialog`. |
 | `[internationalization] locale/translations` | Lists every `addons/kit/locale/*.mo`, after the game's own catalogue, so a message the game defines overrides kit's. |
 
+### Drive a running game
+
+`system/debug/debug.tscn` is a development-only bridge which lets an external process inspect and drive the game — the scene tree, an evaluated expression, a screenshot, or a command the running scene registered. It is what the `run-game` skill below talks to.
+
+Wire it under the game's `System` scene through an `StdConditionLoader` whose `expressions_allow` holds kit's `system/debug/debug_build_expression.tres`, so a release export never places the node. It then listens only when handed a port, either `--bridge-port <N>` after `--` or `GODOT_DEBUG_BRIDGE_PORT` for editor runs, and binds `127.0.0.1` and nothing else. An ordinary F5, a GUT run and a headless CI run open no socket at all.
+
+Game code registers its own commands with `Debug.register(&"<name>", <callable>)`, which is safe with no bridge present.
+
+## **Agent plugin**
+
+This repository is also a [Claude Code plugin marketplace](https://code.claude.com/docs/en/plugin-marketplaces) holding one plugin, [`kit`](./plugins/kit). Nothing is published anywhere; a repository references it by GitHub path. The plugin carries the skills that describe this addon:
+
+- `add-setting`, `add-save-field`, `add-input-action`, `add-sound` and `add-translation`, which extend a game built on kit. Each reads what the game owns out of its `project.godot` rather than assuming a layout.
+- `add-entity-hud` and `add-hud-element`, for the HUD.
+- `run-game`, and the `godot-bridge` it drives a live game with, through the debug bridge above.
+
+A repository enables the plugin in its `.claude/settings.json`, beside `godot-infra`'s:
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "godot-plugin-kit": {
+      "source": { "source": "github", "repo": "coffeebeats/godot-plugin-kit", "ref": "v0" },
+      "autoUpdate": true
+    }
+  },
+  "enabledPlugins": { "kit@godot-plugin-kit": true }
+}
+```
+
+Each machine installs it once, after trusting the repository folder:
+
+```sh
+claude plugin install kit@godot-plugin-kit --scope project
+```
+
+The plugin declares no `version`, so each commit is its version, and it follows the floating major tag: a release moves `v0`, and Claude Code picks the update up in the background. The skills and the gitlink therefore agree at the major, which is the level a skill's claims hold at.
+
+The marketplace is served from `main`, never from `dist`. `dist` carries the addon subtree for the engine to consume, and `package-addon` copies with a bare glob, so `.claude-plugin/` cannot reach it and `plugins/` is excluded by name.
+
 ## **Development**
 
 ### Setup
