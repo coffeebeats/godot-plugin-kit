@@ -15,3 +15,9 @@ package = false
 # NOTE: Pin `gdtoolkit` exactly. A minor release reformats the whole codebase, so a
 # bump has to be its own commit.
 dev = ["gdtoolkit==4.5.0", "ruff", "translate-toolkit>=3.16.0"]
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
