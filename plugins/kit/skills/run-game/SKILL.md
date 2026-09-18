@@ -68,4 +68,4 @@ If a check needs state no handler exposes, add a handler rather than building an
 
 ## The rest
 
-The plugin's `bridge/README.md` carries the gating detail, the engine behavior the bridge is shaped around, and the Windows-shell trap (MSYS rewrites an argument that looks like an absolute Unix path, so node paths are relative to `/root`). Read it when something behaves unexpectedly, not before.
+`${CLAUDE_SKILL_DIR}/../../bridge/README.md` carries the gating detail, the engine behavior the bridge is shaped around, and the Windows-shell trap (MSYS rewrites an argument that looks like an absolute Unix path, so node paths are relative to `/root`). Read it when something behaves unexpectedly, not before.

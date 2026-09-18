@@ -72,7 +72,7 @@ Four words: **layer** (the plane, one per map, already in every template), **anc
 - **A clamped group must size its root to its content.** The tracker insets the viewport edge by the host's half-extent, so a zero-sized root pins to the wrong place.
 - **Numbers are parented to the layer, not the group**, so they stay where they were spawned instead of riding the entity. That is deliberate; do not reparent them.
 - **Re-parenting an entity frees and rebuilds its group**, losing element state. Move the entity within one map rather than across.
-- Colors, fonts and box art are **theme type variations** (`hud_bar`, `hud_bar_ghost`, `hud_number`, `hud_number_crit` in the game's theme (`gui/theme/custom` in `project.godot`)). Timing, curves and motion are the element's **style `Resource`**. That line is where Godot itself draws it: the theme system expresses the first and cannot express the second.
+- Colors, fonts and box art are **theme type variations** — `hud_bar`, `hud_bar_ghost`, `hud_number` and `hud_number_crit`, in the game's theme at `gui/theme/custom`. Timing, curves and motion are the element's **style `Resource`**. That line is where Godot itself draws it: the theme system expresses the first and cannot express the second.
 
 ## Key reference files
 
