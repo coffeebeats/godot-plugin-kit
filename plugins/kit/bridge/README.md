@@ -24,8 +24,9 @@ interpreter, and none of this ever runs in CI.
 interpreter.
 
 Node paths for `tree --path` and `screenshot --node` are relative to `/root`, so it is
-`--path Main`, not `--path /root/Main`. The absolute form still works, but an MSYS shell
-mangles it before the tool sees it.
+`--path Main`, not `--path /root/Main`. Prefer the relative form everywhere: a
+POSIX-emulating shell on Windows rewrites a leading `/` into one of its own directories
+before the tool ever sees the argument.
 
 ### Gating
 
@@ -59,7 +60,7 @@ its own. `unregister` takes the handler because a screen transition has the inco
 scene in the tree before the outgoing one leaves it, and an unqualified erase would drop
 the handler its replacement had just registered.
 
-The template registers two: `app` from `project/main/main.gd` (current screen, stack
+A game built from the template registers two: `app` from its own `main.gd` (current screen, stack
 depth, save slot, and whether the app is settled and booted) and `map` from
 `KitMap`, which every inherited map gets for free.
 
@@ -143,12 +144,3 @@ compares against `app.screen`, which is the `StdScreen`'s `res://` path.
 it by printing `print_orphan_nodes` in an editor-feature build, so `logs` after a stop
 can end on `Stray Node: …`. That is the project's own shutdown diagnostic, not a failure
 of the run.
-
-### Driving it from a Windows shell
-
-MSYS rewrites an argument that looks like an absolute Unix path, so a typed
-`--path /root/Main` arrives as `C:/Program Files/Git/root/Main` and matches nothing.
-Node paths are therefore relative to `/root` (`--path Main`). `MSYS_NO_PATHCONV=1` is
-not the answer, since it also stops the conversion of `--out`, which does want it, and
-the screenshot is then written somewhere like `C:\c\msys64\tmp\...`.
-

@@ -47,7 +47,7 @@ Each of these returns a plausible wrong answer rather than an error.
 - **Nothing listens without a port.** The node is mounted by an `StdConditionLoader` on `OS.has_feature("debug")`, so a release export carries no bridge at all, and even a debug build opens no socket until it is handed `--bridge-port <N>` after `--` (or `GODOT_DEBUG_BRIDGE_PORT` for editor runs). `launch` does this for you; an F5, a GUT run and a headless CI run do not.
 - **"Settled" is not "booted".** Each splash screen is a genuine settled state. Wait for `app.booted`, which excludes splash and loading, or you will assert against a scene that is ignoring you.
 - **`Expression` resolves no autoloads, no global classes and no engine singletons.** `eval` binds the identifiers it recognises; a name it does not know fails with `Invalid named index`. `ResourceLoader` and `OS` read like built-ins and are not.
-- **Node paths are relative to `/root`** — `--path Main`, never `--path /root/Main`. An MSYS shell rewrites the absolute form into a Windows path before the tool sees it.
+- **Node paths are relative to `/root`** — `--path Main`, never `--path /root/Main`. A POSIX-emulating shell on Windows rewrites the absolute form into a Windows path before the tool sees it.
 - **A wait only counts what the game logged after that wait began**, and `launch` truncates the log. `logs` after a `stop` can end on `Stray Node: …`; that is the project's own shutdown diagnostic, not a failure.
 - **`Input.action_press` raises no event**, so nothing built on `_input` sees it. Fire actions with `StdInputEvent.trigger_action` — see the Pitfalls section of AGENTS.md.
 
@@ -68,4 +68,4 @@ If a check needs state no handler exposes, add a handler rather than building an
 
 ## The rest
 
-`${CLAUDE_SKILL_DIR}/../../bridge/README.md` carries the gating detail, the engine behavior the bridge is shaped around, and the Windows-shell trap (MSYS rewrites an argument that looks like an absolute Unix path, so node paths are relative to `/root`). Read it when something behaves unexpectedly, not before.
+`${CLAUDE_SKILL_DIR}/../../bridge/README.md` carries the gating detail and the engine behavior the bridge is shaped around. Read it when something behaves unexpectedly, not before.
