@@ -9,7 +9,6 @@
 [node name="Saves" type="Node" unique_id=1647847758]
 script = ExtResource("1_5c4en")
 slot_scope = ExtResource("3_nt0ca")
-slot_count = 5
 
 [node name="StdSettingsRepository" type="Node" parent="." unique_id=1550319949 node_paths=PackedStringArray("writer")]
 script = ExtResource("2_v64up")
