@@ -96,6 +96,8 @@ jobs:
             **/*.po
             **/*.pot
 
+            plugins
+
   branch_protection:
     needs: ["release-please", "publish"]
     if: always()
