@@ -14,6 +14,7 @@ Everything the game owns is reachable from `project.godot`; nothing below assume
 - **The system scene** — the `[autoload]` entry named `System`, holding the `Input`, `Settings` and `Saves` instances. `project/main/system.tscn` in a repository created from the template.
 - **The action-set directory** — the directory holding the `.tres` files that `action_sets` on the `Input` instance points at. Usually `project/input/actions/`.
 - **The catalogue** — the directory holding the first entry of `locale/translations` that is not under `addons/`. Usually `project/locale/`.
+- **The Steam Input manifest** — the resource `steam_in_game_actions` on the `Input` instance points at. It generates `game_actions_<app_id>.vdf` at the repository root, which is committed.
 
 ## Steps
 
@@ -59,6 +60,8 @@ Everything the game owns is reachable from `project.godot`; nothing below assume
 
    This is because `Locales.tr_action_set()` looks the name up under the `action_sets` context.
 
+   e. Register the set in the Steam Input manifest, or Steam players cannot bind it. Add an `StdInputActionSet` to the manifest's `action_sets`, and an `StdInputActionSetLayer` to its `action_set_layers` — the two arrays are exclusive, and a layer in the wrong one is written as a base set.
+
 4. **Add the action to the action set** `.tres` file. Actions are `StringName` values in one of three arrays:
 
    - `actions_digital` — boolean on/off actions (buttons, keys)
@@ -91,7 +94,11 @@ Everything the game owns is reachable from `project.godot`; nothing below assume
    - `msgid "<action_name>"` — the key matches the action's StringName
    - `msgstr "<Display Name>"` — the English display name shown in controls settings
 
-7. **Run `godot --import --headless`** to validate everything compiles. The action should appear automatically in the controls settings tab under its action set.
+7. **Regenerate the Steam Input manifest**, after the translations exist — it embeds a display name per locale, so regenerating first bakes in the raw msgid. Open the manifest resource in the editor and re-assign one of its exported properties; `@tool` setters are what write the file, and nothing watches the action sets it references, so editing a set never rewrites the manifest on its own.
+
+   Then read the `.vdf` diff before committing it. It is generated, so the only change worth keeping is the one this skill asked for.
+
+8. **Run `godot --import --headless`** to validate everything compiles. The action should appear automatically in the controls settings tab under its action set.
 
 ## Binding collisions
 
@@ -111,4 +118,6 @@ After adding a binding, check every action set that layers over the same origin,
 - the catalogue's `messages.pot` — `msgctxt "actions_*"` translation entries
 - the catalogue's `en_US.po` — corresponding English translations
 - `addons/kit/locale/locales.gd` — `tr_action()` and `tr_action_set()` resolution
+- the game's `steam_in_game_actions.tres` — the Steam Input manifest, and the `app_id` naming its `.vdf`
+- `addons/std/input/steam/in_game_actions.gd` — how the manifest is generated
 - `addons/std/input/action_set.gd` — `StdInputActionSet` class
