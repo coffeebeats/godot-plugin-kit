@@ -3,8 +3,8 @@
 ## pure functions behind every reply - identifier extraction, node lookup, the scene
 ## tree description and JSON rendering.
 ##
-## The socket itself is exercised by driving a real game through `tools/bridge.sh`; see
-## `tools/README.md`.
+## The socket itself is exercised by driving a real game through `godot-bridge`, which
+## kit's agent plugin ships.
 ##
 
 extends GutTest
