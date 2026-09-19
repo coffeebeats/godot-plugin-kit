@@ -1,10 +1,11 @@
 ##
-## SteamInGameActions is a resource which, given a set of `StdInputActionSet` resources,
-## generates a Steam Input actions manifest file. This works in the editor and is not
-## intended to be exported.
+## KitSteamInGameActions is the Steam Input manifest generator with display names
+## resolved through `Locales`, so a set or action is named as the controls tab names it
+## in every language the game loads. A game places one as a resource and generates the
+## manifest with `addons/std/input/steam/write_in_game_actions.gd`.
 ##
 
-@tool
+class_name KitSteamInGameActions
 extends StdInputSteamInGameActions
 
 # -- DEPENDENCIES -------------------------------------------------------------------- #
