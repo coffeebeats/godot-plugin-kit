@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0 (2026-09-19)
+
+## What's Changed
+* feat(premade): ship the platform and system assemblies by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/25
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v0.1.8...v1.0.0
+
 ## 0.1.8 (2026-09-19)
 
 ## What's Changed

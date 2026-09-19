@@ -20,19 +20,22 @@ Each release is a commit on `dist`, tagged `dist/vX.Y.Z`. Versions follow semant
 
 Kit ships no autoloads. Register these three in `project.godot`:
 
-- `Platform`, a scene composing the `platform/` bricks. Kit's scripts reach it by this name.
-- `System`, a scene composing the `system/` bricks. The game's own values are set on its instances.
+- `Platform`, a scene instancing the `platform/` scenes. Kit's scripts reach it by this name.
+- `System`, a scene instancing the `system/` scenes. The game's own values are set on its instances.
 - `Lifecycle`, the script `addons/kit/system/lifecycle.gd`. Kit's pause menu reaches it by this name, and a game saves its progress on `Lifecycle.shutdown_requested`.
+
+### Copy the assemblies
+
+`premade/platform.tscn` and `premade/system.tscn` are ready-made `Platform` and `System` scenes, each instancing every scene under its tree. Copy both into the game, give each copy a new `uid` in its header, and register the copies as the autoloads above. The game owns the copies from then on, while the scenes they instance keep arriving with the submodule. `platform.tscn` needs no changes. `system.tscn` leaves every export in the table below unset, so set the ones the game needs and delete the nodes it does not; `Saves` asserts until it has a `schema`. Instancing the scenes into autoloads of your own works just as well.
 
 ### Set the game's values
 
-Each value the game owns is an export on a brick placed in `System`:
+Each value the game owns is an export on a scene instanced in `System`:
 
-| Brick | Export | Value |
+| Scene | Export | Value |
 | --- | --- | --- |
 | `system/input/input.tscn` | `action_sets` | The game's action sets, which the settings menu lists for rebinding. |
 | `system/input/input.tscn` | `steam_in_game_actions` | The game's Steam Input manifest, required on Steam. |
-| `system/input/input.tscn` | `focused_sound_group` | The sound played as focus moves between controls. |
 | `system/setting/settings.tscn` | `menu_tabs` | The game's own settings menu tabs, keyed by their label's message ID. |
 | `system/setting/interface/font_scaling_observer.tscn` | `theme` | The font theme which the text scaling setting resizes. |
 | `system/save/saves.tscn` | `schema` | The game's save data, required. |
@@ -52,11 +55,11 @@ Each menu is a finished screen, used in place:
 - **Pause:** list `menu/pause/pusher.tscn` in a gameplay screen's `attachment_scenes`.
 - **Splash:** push `ui/splash/godot_screen.tres`, whose scene emits `advanced` once it is done. `ui/splash/splash.gd` makes a splash of any scene.
 
-For a different layout, assemble a menu from the bricks it is made of: the settings tabs and their `group` and `setting` rows, the controls tab's `action_set` groups, the save menu's `slot_button`, and the dialogs in `ui/menu/`.
+For a different layout, assemble a menu from the scenes it is made of: the settings tabs and their `group` and `setting` rows, the controls tab's `action_set` groups, the save menu's `slot_button`, and the dialogs in `ui/menu/`.
 
 ### Configure the project
 
-Kit's bricks also read these project settings:
+Kit's scenes also read these project settings:
 
 | Setting | Requirement |
 | --- | --- |
@@ -87,7 +90,7 @@ A repository enables the plugin in its `.claude/settings.json`, beside `godot-in
 {
   "extraKnownMarketplaces": {
     "godot-plugin-kit": {
-      "source": { "source": "github", "repo": "coffeebeats/godot-plugin-kit", "ref": "v0" },
+      "source": { "source": "github", "repo": "coffeebeats/godot-plugin-kit", "ref": "v1" },
       "autoUpdate": true
     }
   },
@@ -101,7 +104,7 @@ Each machine installs it once, after trusting the repository folder:
 claude plugin install kit@godot-plugin-kit --scope project
 ```
 
-The plugin declares no `version`, so each commit is its version, and it follows the floating major tag: a release moves `v0`, and Claude Code picks the update up in the background. The skills and the gitlink therefore agree at the major, which is the level a skill's claims hold at.
+The plugin declares no `version`, so each commit is its version, and it follows the floating major tag: a release moves `v1`, and Claude Code picks the update up in the background. The skills and the gitlink therefore agree at the major, which is the level a skill's claims hold at.
 
 The marketplace is served from `main`, never from `dist`. `dist` carries the addon subtree for the engine to consume, and `package-addon` copies with a bare glob, so `.claude-plugin/` cannot reach it and `plugins/` is excluded by name.
 
