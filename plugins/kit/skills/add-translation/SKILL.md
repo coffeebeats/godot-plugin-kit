@@ -9,7 +9,7 @@ Add a translatable string to the game. Only edit two files: `messages.pot` and `
 
 ## Find the catalogue
 
-`locale/translations` in `project.godot` lists every `.mo` the game loads. The game's catalogue is the directory holding the **first entry that is not under `addons/`** , usually `project/locale/`.
+`locale/translations` in `project.godot` lists every `.mo` the game loads. The game's catalogue is the directory holding the **first entry that is not under `addons/`**, usually `project/locale/`.
 
 ## Kit's strings
 
