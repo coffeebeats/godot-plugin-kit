@@ -1,6 +1,6 @@
 ##
-## Tests for `KitSteamInGameActions` against kit's own project: the scan finds kit's
-## sets, the loaded catalogues name the languages, and names resolve through `Locales`.
+## Tests for `KitSteamInGameActions` against kit's own project, whose sets the scan
+## finds, whose catalogues name the languages, and whose messages name the sets.
 ##
 
 extends GutTest
@@ -65,8 +65,8 @@ func test_generate_resolves_names_through_the_catalogues() -> void:
 
 
 func before_all() -> void:
-	# NOTE: Kit's project lists no catalogues, so the shipped ones are loaded here, as
-	# a game's `locale/translations` setting loads them.
+	# NOTE: Kit's project lists no catalogues, so this loads the shipped ones the way a
+	# game's `locale/translations` setting would.
 	for path in DirAccess.get_files_at("res://locale"):
 		if not path.ends_with(".mo"):
 			continue
