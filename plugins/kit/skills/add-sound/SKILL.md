@@ -9,7 +9,7 @@ Create a `StdSoundEvent` resource for an audio file, wire bus routing, and optio
 
 ## Steps
 
-The game's own bus resources sit under its source root — the directory holding the scene the `[autoload]` entry `System` names in `project.godot`, which is `project/` in a repository created from the template. Only the `ui` bus ships with kit.
+The game's own bus resources sit under its source root — the directory holding the scene the `[autoload]` entry `System` names in `project.godot`, usually `project/`. Only the `ui` bus ships with kit.
 
 1. **Read reference files** to understand existing patterns:
    - `addons/kit/ui/menu/menu_toggle_sound_event.tres` — simple UI sound (1D, ui bus)

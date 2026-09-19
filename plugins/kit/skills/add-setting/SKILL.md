@@ -18,7 +18,7 @@ Add a user-configurable setting to the project. This involves creating a setting
 
 ## Find the game's wiring
 
-- **The system scene** — the `[autoload]` entry named `System` in `project.godot`, holding the `Settings` instance and the game's observers. `project/main/system.tscn` in a repository created from the template, which also fixes the game's source root as `project/`.
+- **The system scene** — the `[autoload]` entry named `System` in `project.godot`, holding the `Settings` instance and the game's observers. Usually `project/main/system.tscn`, which also fixes the game's source root as `project/`.
 - **The game's settings tabs** — the scenes `menu_tabs` on that `Settings` instance points at, keyed by each tab label's msgid.
 
 ## Steps

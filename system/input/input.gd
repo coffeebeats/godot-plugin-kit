@@ -39,10 +39,6 @@ const GROUP_INPUT_SHIM := &"system/input:shim"
 ## focused_sound_group is the sound group used for focused UI elements.
 @export var focused_sound_group: StdSoundGroup = null
 
-## steam_in_game_actions is the game's Steam Input manifest. The Steam input scene loads
-## at runtime, out of reach of the scene placing this node, so it reads the value here.
-@export var steam_in_game_actions: StdInputSteamInGameActions = null
-
 ## ui_navigation_cooldown is a wait period after inputting a UI navigation action that
 ## must elapse prior to another one being accepted.
 @export var ui_navigation_cooldown: float = 0.08

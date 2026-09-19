@@ -9,7 +9,7 @@ Add a field to the save data system. The field can be added to an existing `StdC
 
 ## Find the game's schema
 
-The `[autoload]` entry named `System` in `project.godot` names the system scene — `project/main/system.tscn` in a repository created from the template, which also fixes the game's source root as `project/`. The `schema` property on its `Saves` instance points at the game's save schema resource, and **that resource's directory holds every config item below**: `project/save/` in the template, whose schema class is `ProjectSaveData`.
+The `[autoload]` entry named `System` in `project.godot` names the system scene, usually `project/main/system.tscn`, which also fixes the game's source root as `project/`. The `schema` property on its `Saves` instance points at the game's save schema resource, and **that resource's directory holds every config item below**, usually `project/save/`.
 
 ## Steps
 

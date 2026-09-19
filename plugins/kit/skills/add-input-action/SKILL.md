@@ -11,10 +11,10 @@ Add an input action to the game. The action is registered in an action set, give
 
 Everything the game owns is reachable from `project.godot`; nothing below assumes a fixed layout.
 
-- **The system scene** — the `[autoload]` entry named `System`, holding the `Input`, `Settings` and `Saves` instances. `project/main/system.tscn` in a repository created from the template.
+- **The system scene** — the `[autoload]` entry named `System`, holding the `Input`, `Settings` and `Saves` instances. Usually `project/main/system.tscn`.
 - **The action-set directory** — the directory holding the `.tres` files that `action_sets` on the `Input` instance points at. Usually `project/input/actions/`.
 - **The catalogue** — the directory holding the first entry of `locale/translations` that is not under `addons/`. Usually `project/locale/`.
-- **The Steam Input manifest** — the resource `steam_in_game_actions` on the `Input` instance points at, which generates the committed `game_actions_<app_id>.vdf` beside `project.godot`. A game not on Steam leaves it unset; skip every Steam step.
+- **The Steam Input manifest** — the game's `StdInputSteamInGameActions` resource, usually a `KitSteamInGameActions`, which `addons/std/input/steam/write_in_game_actions.gd` writes as `game_actions_<app_id>.vdf` beside `project.godot`. It lists every action set in the project by itself, so no step below registers one. A game not on Steam has none; skip every Steam step.
 
 ## Steps
 
@@ -68,9 +68,7 @@ Everything the game owns is reachable from `project.godot`; nothing below assume
 
    Add the action's `StringName` (e.g., `&"jump"`) to the correct array. If the array doesn't exist in the `.tres` file yet, add it under the `[resource]` section.
 
-5. **Register the set with Steam Input** if the manifest does not list it yet, whether the set is new or not. Steam activates a set through the handle its manifest entry creates, so a controller under Steam Input never receives an unlisted set's actions. Add an `StdInputActionSet` to the manifest's `action_sets` and an `StdInputActionSetLayer` to its `action_set_layers`, and list a layer's `parent` too. The arrays are exclusive: a layer placed in `action_sets` is written as a base set.
-
-6. **Add default bindings in `project.godot`** under the `[input]` section. Each action needs a block like:
+5. **Add default bindings in `project.godot`** under the `[input]` section. Each action needs a block like:
 
    ```
    <action_name>={
@@ -89,14 +87,14 @@ Everything the game owns is reachable from `project.godot`; nothing below assume
 
    Ask the user what default bindings they want if not specified.
 
-7. **Add translations** using the `add-translation` skill:
+6. **Add translations** using the `add-translation` skill:
    - Use `msgctxt "actions_<SetName>"` for the action's display name
    - `msgid "<action_name>"` — the key matches the action's StringName
    - `msgstr "<Display Name>"` — the English display name shown in controls settings
 
-8. **Run `godot --import --headless`** to validate everything compiles. The action should appear automatically in the controls settings tab under its action set.
+7. **Run `godot --import --headless`** to validate everything compiles. The action should appear automatically in the controls settings tab under its action set.
 
-   Import also regenerates the Steam Input manifest, whose setters write the `.vdf` whenever the editor loads it. Its display names come from the compiled `.mo` files, not the `.po` files `add-translation` edits, so on a Steam game run `godot-locale compile` first; otherwise the new action is written under its raw msgid. Commit the `.mo` files and the whole regenerated `.vdf`. A hunk this skill did not cause is a translation CI compiled after the manifest was last regenerated, and it is correct.
+   The Steam Input manifest is not committed. CI writes it from the committed `.mo` files when a Steam build exports and bundles it beside the executable. To see it locally, run `godot-locale compile` and then `godot --headless -s addons/std/input/steam/write_in_game_actions.gd`; copying the file into Steam's `controller_config` directory lets the Steam client use it.
 
 ## Naming
 
@@ -120,6 +118,6 @@ After adding a binding, check every action set that layers over the same origin,
 - the catalogue's `messages.pot` — `msgctxt "actions_*"` translation entries
 - the catalogue's `en_US.po` — corresponding English translations
 - `addons/kit/locale/locales.gd` — `tr_action()` and `tr_action_set()` resolution
-- the game's `steam_in_game_actions.tres` — the Steam Input manifest, and the `app_id` naming its `.vdf`
-- `addons/std/input/steam/in_game_actions.gd` — how the manifest is generated
+- the game's `steam_in_game_actions.tres` — the Steam Input manifest's `app_id`, naming its `.vdf`, and `locales`, overriding the derived languages
+- `addons/std/input/steam/in_game_actions.gd` — how the manifest is generated, and `write_in_game_actions.gd` beside it, which writes it
 - `addons/std/input/action_set.gd` — `StdInputActionSet` class

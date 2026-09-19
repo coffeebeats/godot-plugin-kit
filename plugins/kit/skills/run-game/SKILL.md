@@ -62,7 +62,7 @@ Debug.register(&"map", _get_debug_state)      # in _ready
 Debug.unregister(&"map", _get_debug_state)    # in _exit_tree, with the same handler
 ```
 
-Both are safe with no bridge present. A game built from the template registers `app` from its own `main.gd`, and `map` comes from `KitMap`, so every inherited map gets it free. `godot-bridge commands` lists what the running game has.
+Both are safe with no bridge present. A game typically registers `app` from its own `main.gd`, and `map` comes from `KitMap`, so every inherited map gets it free. `godot-bridge commands` lists what the running game has.
 
 If a check needs state no handler exposes, add a handler rather than building an elaborate `eval`.
 

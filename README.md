@@ -35,7 +35,6 @@ Each value the game owns is an export on a scene instanced in `System`:
 | Scene | Export | Value |
 | --- | --- | --- |
 | `system/input/input.tscn` | `action_sets` | The game's action sets, which the settings menu lists for rebinding. |
-| `system/input/input.tscn` | `steam_in_game_actions` | The game's Steam Input manifest, required on Steam. |
 | `system/setting/settings.tscn` | `menu_tabs` | The game's own settings menu tabs, keyed by their label's message ID. |
 | `system/setting/interface/font_scaling_observer.tscn` | `theme` | The font theme which the text scaling setting resizes. |
 | `system/save/saves.tscn` | `schema` | The game's save data, required. |
