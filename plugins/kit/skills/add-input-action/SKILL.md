@@ -98,6 +98,10 @@ Everything the game owns is reachable from `project.godot`; nothing below assume
 
    Import also regenerates the Steam Input manifest, whose setters write the `.vdf` whenever the editor loads it. Its display names come from the compiled `.mo` files, not the `.po` files `add-translation` edits, so on a Steam game run `godot-locale compile` first; otherwise the new action is written under its raw msgid. Commit the `.mo` files and the whole regenerated `.vdf`. A hunk this skill did not cause is a translation CI compiled after the manifest was last regenerated, and it is correct.
 
+## Naming
+
+Godot's InputMap is project-global, so an action's name is the game's whole namespace. Prefix a gameplay action with the feature or prototype it belongs to (`skirmish_attack`, not `attack`), and keep `ui_accept`, `ui_cancel` and `ui_toggle_menu` shared: kit's menus name them, and the pause attachment opens on `ui_toggle_menu`.
+
 ## Binding collisions
 
 An origin binds to at most one action, so an action added to a layer takes its key away from whatever held it before (`addons/std/input/godot/device_actions.gd:240`). Nothing reports this: the displaced action simply stops firing on that origin, and only on the screens that load the layer.
