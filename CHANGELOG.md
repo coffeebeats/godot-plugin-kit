@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.0 (2026-09-19)
+
+## What's Changed
+* feat(input): drop the Steam Input manifest from the input system by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/29
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v1.0.1...v1.1.0
+
 ## 1.0.1 (2026-09-19)
 
 ## What's Changed
