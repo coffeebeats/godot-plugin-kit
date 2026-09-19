@@ -105,7 +105,7 @@ claude plugin install kit@godot-plugin-kit --scope project
 
 The plugin declares no `version`, so each commit is its version, and it follows the floating major tag: a release moves `v1`, and Claude Code picks the update up in the background. The skills and the gitlink therefore agree at the major, which is the level a skill's claims hold at.
 
-The marketplace ref and the install are per machine and per repository path; the "Agent plugin" section of [godot-infra's README](https://github.com/coffeebeats/godot-infra#agent-plugin) says what to do when the skills go missing. A major release of this plugin moves the ref, so every machine re-adds the marketplace as `coffeebeats/godot-plugin-kit#v1`.
+The marketplace ref and the install are per machine and per repository path; the "Agent plugin" section of [godot-infra's README](https://github.com/coffeebeats/godot-infra#agent-plugin) says what to do when the skills go missing. A major release of this plugin moves the ref, so every machine re-adds the marketplace at the ref in the repository's `.claude/settings.json`.
 
 The marketplace is served from `main`, never from `dist`. `dist` carries the addon subtree for the engine to consume, and `package-addon` copies with a bare glob, so `.claude-plugin/` cannot reach it and `plugins/` is excluded by name.
 
