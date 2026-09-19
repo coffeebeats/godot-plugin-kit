@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.8 (2026-09-19)
+
+## What's Changed
+* fix(locale): fall back to the project's fallback locale for untranslated actions by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/23
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v0.1.7...v0.1.8
+
 ## 0.1.7 (2026-09-18)
 
 ## What's Changed
