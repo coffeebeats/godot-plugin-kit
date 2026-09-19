@@ -100,7 +100,7 @@ Everything the game owns is reachable from `project.godot`; nothing below assume
 
 ## Naming
 
-Godot's InputMap is project-global, so an action's name is the game's whole namespace. Prefix a gameplay action with the feature or prototype it belongs to (`skirmish_attack`, not `attack`), and keep `ui_accept`, `ui_cancel` and `ui_toggle_menu` shared: kit's menus name them, and the pause attachment opens on `ui_toggle_menu`.
+Godot's InputMap is project-global, so every action set shares one namespace. Prefix a gameplay action with its action set (`combat_attack`, not `attack`) so two sets never define the same name, and leave the `ui_*` actions to kit's menu sets, which name them directly.
 
 ## Binding collisions
 
