@@ -35,9 +35,10 @@ func test_generate_writes_a_section_per_loaded_catalogue() -> void:
 	var got := manifest.generate()
 
 	# Then: Every catalogue kit ships has a section, English and Ukrainian among them.
+	var localization := got.substr(got.find('\t"localization"'))
 	var sections := RegEx.create_from_string('(?m)^\t\t"([a-z]+)"$')
 	var languages := PackedStringArray()
-	for found in sections.search_all(got):
+	for found in sections.search_all(localization):
 		languages.append(found.get_string(1))
 
 	assert_eq(languages.size(), 13)
