@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.1 (2026-09-19)
+
+## What's Changed
+* chore(release): drop the 1.0.0 override by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/27
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v1.0.0...v1.0.1
+
 ## 1.0.0 (2026-09-19)
 
 ## What's Changed
