@@ -62,7 +62,7 @@ func test_tr_action_falls_back_to_the_fallback_locale_when_untranslated() -> voi
 	# Given: A catalogue for the requested locale without the action.
 	_add_catalogue(LOCALE, {})
 
-	# Given: A catalogue for English, the default fallback locale, with it.
+	# Given: A catalogue for English, the default fallback locale, holding the action.
 	_add_catalogue(&"en_US", {&"ui_accept": "Accept"})
 
 	# When: The action is translated.

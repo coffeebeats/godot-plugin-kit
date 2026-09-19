@@ -49,7 +49,7 @@ static func tr_action_set(action_set: StringName, locale: StringName = &"") -> S
 ## NOTE: This should be implemented within the engine; see
 ## https://github.com/godotengine/godot-proposals/issues/2378.
 static func tr_language(locale: StringName) -> String:
-	# NOTE: No fallback here, since the fallback catalogue names a different language.
+	# NOTE: This skips the fallback locale, whose catalogue names a different language.
 	var translated := _translate(MSGID_LANGUAGE, &"", locale)
 	match translated:
 		MSGID_LANGUAGE:
