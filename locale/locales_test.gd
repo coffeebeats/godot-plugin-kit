@@ -58,6 +58,20 @@ func test_tr_action_prefers_the_closer_locale_over_the_order_listed() -> void:
 	assert_eq(got, "Exact")
 
 
+func test_tr_action_falls_back_to_the_fallback_locale_when_untranslated() -> void:
+	# Given: A catalogue for the requested locale without the action.
+	_add_catalogue(LOCALE, {})
+
+	# Given: A catalogue for English, the default fallback locale, with it.
+	_add_catalogue(&"en_US", {&"ui_accept": "Accept"})
+
+	# When: The action is translated.
+	var got := Locales.tr_action(&"Menu", &"ui_accept", LOCALE)
+
+	# Then: The fallback locale's message is used.
+	assert_eq(got, "Accept")
+
+
 func test_tr_action_set_falls_back_to_the_set_name_when_untranslated() -> void:
 	# Given: A catalogue without the action set.
 	_add_catalogue(LOCALE, {})
@@ -67,6 +81,17 @@ func test_tr_action_set_falls_back_to_the_set_name_when_untranslated() -> void:
 
 	# Then: The action set's own name is used.
 	assert_eq(got, "Menu")
+
+
+func test_tr_language_ignores_the_fallback_locale() -> void:
+	# Given: A catalogue for English, the default fallback locale, naming its language.
+	_add_catalogue(&"en_US", {Locales.MSGID_LANGUAGE: "English"}, &"")
+
+	# When: A locale no catalogue names is translated.
+	var got := Locales.tr_language(LOCALE)
+
+	# Then: The locale itself is used rather than the fallback language's name.
+	assert_eq(got, str(LOCALE))
 
 
 # -- TEST HOOKS ---------------------------------------------------------------------- #
@@ -82,14 +107,16 @@ func after_each() -> void:
 # -- PRIVATE METHODS ----------------------------------------------------------------- #
 
 
-func _add_catalogue(locale: StringName, actions: Dictionary) -> void:
+func _add_catalogue(
+	locale: StringName,
+	messages: Dictionary,
+	ctx: StringName = Locales.MSGCTXT_ACTION_PREFIX + "Menu",
+) -> void:
 	var translation := Translation.new()
 	translation.locale = locale
 
-	for action in actions:
-		translation.add_message(
-			action, actions[action], Locales.MSGCTXT_ACTION_PREFIX + "Menu"
-		)
+	for msg in messages:
+		translation.add_message(msg, messages[msg], ctx)
 
 	TranslationServer.add_translation(translation)
 	_translations.append(translation)

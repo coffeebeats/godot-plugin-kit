@@ -21,21 +21,25 @@ const MSGID_LANGUAGE := &"locale_language"
 # -- PUBLIC METHODS ------------------------------------------------------------------ #
 
 
-## tr_action translates an input action. Provide `locale` to specify a locale other than
-## the one currently loaded.
+## tr_action translates an input action, falling back to the project's fallback locale
+## and then to the action's name. Provide `locale` to specify a locale other than the
+## one currently loaded.
 static func tr_action(
 	action_set: StringName,
 	action: StringName,
 	locale: StringName = &"",
 ) -> String:
-	var translated := _translate(action, MSGCTXT_ACTION_PREFIX + action_set, locale)
+	var translated := _translate_with_fallback(
+		action, MSGCTXT_ACTION_PREFIX + action_set, locale
+	)
 	return translated if translated else str(action)
 
 
-## tr_action_set translates an input action set. Provide `locale` to specify a locale
-## other than the one currently loaded.
+## tr_action_set translates an input action set, falling back to the project's fallback
+## locale and then to the set's name. Provide `locale` to specify a locale other than
+## the one currently loaded.
 static func tr_action_set(action_set: StringName, locale: StringName = &"") -> String:
-	var translated := _translate(action_set, MSGCTXT_ACTION_SET, locale)
+	var translated := _translate_with_fallback(action_set, MSGCTXT_ACTION_SET, locale)
 	return translated if translated else str(action_set)
 
 
@@ -45,6 +49,7 @@ static func tr_action_set(action_set: StringName, locale: StringName = &"") -> S
 ## NOTE: This should be implemented within the engine; see
 ## https://github.com/godotengine/godot-proposals/issues/2378.
 static func tr_language(locale: StringName) -> String:
+	# NOTE: No fallback here, since the fallback catalogue names a different language.
 	var translated := _translate(MSGID_LANGUAGE, &"", locale)
 	match translated:
 		MSGID_LANGUAGE:
@@ -80,6 +85,21 @@ static func _translate(msg: StringName, ctx: StringName, locale: StringName) -> 
 			best_score = score
 
 	return result
+
+
+## _translate_with_fallback returns the message `_translate` finds for `locale`, or else
+## the one it finds for the project's fallback locale, as the engine's `tr` does.
+static func _translate_with_fallback(
+	msg: StringName, ctx: StringName, locale: StringName
+) -> String:
+	var translated := _translate(msg, ctx, locale)
+	if translated:
+		return translated
+
+	var fallback: String = ProjectSettings.get_setting(
+		"internationalization/locale/fallback", "en"
+	)
+	return _translate(msg, ctx, fallback)
 
 
 # -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
