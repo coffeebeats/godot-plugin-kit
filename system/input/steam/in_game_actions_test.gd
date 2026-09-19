@@ -41,7 +41,7 @@ func test_generate_writes_a_section_per_loaded_catalogue() -> void:
 	for found in sections.search_all(localization):
 		languages.append(found.get_string(1))
 
-	assert_eq(languages.size(), 13)
+	assert_eq(languages.size(), _translations.size())
 	assert_has(languages, "english")
 	assert_has(languages, "ukrainian")
 
