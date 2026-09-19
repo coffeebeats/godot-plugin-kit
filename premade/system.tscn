@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://cnne5k3b5ieo8"]
+
+[ext_resource type="PackedScene" uid="uid://cjb8nitks0be0" path="res://system/setting/settings.tscn" id="1_8d1ab"]
+[ext_resource type="PackedScene" uid="uid://bexeoi21tf2v2" path="res://system/input/input.tscn" id="2_u77o4"]
+[ext_resource type="PackedScene" uid="uid://0ngaobv7ydln" path="res://system/audio/audio.tscn" id="3_fh0pe"]
+[ext_resource type="PackedScene" uid="uid://bqrjkv5me2dp5" path="res://system/save/saves.tscn" id="3_j3l3i"]
+[ext_resource type="Script" uid="uid://b48nei7xl0xrh" path="res://addons/std/condition/condition_loader.gd" id="4_ld0ne"]
+[ext_resource type="Script" uid="uid://be11f4pqliry0" path="res://addons/std/condition/expression.gd" id="5_x3prs"]
+[ext_resource type="Resource" uid="uid://cpq2onm572rax" path="res://system/debug/debug_build_expression.tres" id="6_dbg1f"]
+[ext_resource type="Resource" uid="uid://qhsnu8axd0er" path="res://ui/input/focus_handler_sound_group.tres" id="7_f0cus"]
+[ext_resource type="PackedScene" uid="uid://cj4555ox05li8" path="res://system/setting/interface/font_scaling_observer.tscn" id="9_f0nts"]
+
+[node name="System" type="Node" unique_id=754977886]
+process_mode = 3
+
+[node name="Input" parent="." unique_id=1658786168 instance=ExtResource("2_u77o4")]
+focused_sound_group = ExtResource("7_f0cus")
+
+[node name="Settings" parent="." unique_id=1575309999 instance=ExtResource("1_8d1ab")]
+
+[node name="FontScalingObserver" parent="." unique_id=25826901 instance=ExtResource("9_f0nts")]
+
+[node name="Audio" parent="." unique_id=1078063978 instance=ExtResource("3_fh0pe")]
+
+[node name="Saves" parent="." unique_id=2094713141 instance=ExtResource("3_j3l3i")]
+
+[node name="Debug" type="Node" parent="." unique_id=1904557320]
+script = ExtResource("4_ld0ne")
+scene = "uid://dqrnp70qbbb7y"
+expressions_allow = Array[ExtResource("5_x3prs")]([ExtResource("6_dbg1f")])
