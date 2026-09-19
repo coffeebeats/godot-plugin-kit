@@ -11,10 +11,10 @@ Add an input action to the game. The action is registered in an action set, give
 
 Everything the game owns is reachable from `project.godot`; nothing below assumes a fixed layout.
 
-- **The system scene** — the `[autoload]` entry named `System`, holding the `Input`, `Settings` and `Saves` instances. `project/main/system.tscn` in a repository created from the template.
+- **The system scene** — the `[autoload]` entry named `System`, holding the `Input`, `Settings` and `Saves` instances. Usually `project/main/system.tscn`.
 - **The action-set directory** — the directory holding the `.tres` files that `action_sets` on the `Input` instance points at. Usually `project/input/actions/`.
 - **The catalogue** — the directory holding the first entry of `locale/translations` that is not under `addons/`. Usually `project/locale/`.
-- **The Steam Input manifest** — the game's `StdInputSteamInGameActions` resource, a `KitSteamInGameActions` in a repository created from the template, which `addons/std/input/steam/write_in_game_actions.gd` writes as `game_actions_<app_id>.vdf` beside `project.godot`. It lists every action set in the project by itself, so no step below registers one. A game not on Steam has none; skip every Steam step.
+- **The Steam Input manifest** — the game's `StdInputSteamInGameActions` resource, usually a `KitSteamInGameActions`, which `addons/std/input/steam/write_in_game_actions.gd` writes as `game_actions_<app_id>.vdf` beside `project.godot`. It lists every action set in the project by itself, so no step below registers one. A game not on Steam has none; skip every Steam step.
 
 ## Steps
 

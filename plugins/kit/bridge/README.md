@@ -60,7 +60,7 @@ its own. `unregister` takes the handler because a screen transition has the inco
 scene in the tree before the outgoing one leaves it, and an unqualified erase would drop
 the handler its replacement had just registered.
 
-A game built from the template registers two: `app` from its own `main.gd` (current screen, stack
+A game typically registers two: `app` from its own `main.gd` (current screen, stack
 depth, save slot, and whether the app is settled and booted) and `map` from
 `KitMap`, which every inherited map gets for free.
 
