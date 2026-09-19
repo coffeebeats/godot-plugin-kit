@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.7 (2026-09-18)
+
+## What's Changed
+* docs(debug): point the bridge test's header at 'godot-bridge' by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/21
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v0.1.6...v0.1.7
+
 ## 0.1.6 (2026-09-18)
 
 ## What's Changed
