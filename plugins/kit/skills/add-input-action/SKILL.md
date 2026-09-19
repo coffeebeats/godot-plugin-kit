@@ -94,7 +94,7 @@ Everything the game owns is reachable from `project.godot`; nothing below assume
 
 7. **Run `godot --import --headless`** to validate everything compiles. The action should appear automatically in the controls settings tab under its action set.
 
-   The Steam Input manifest is not committed: CI writes it when the game exports, after compiling the catalogues, and bundles it beside the executable. To see it locally, run `godot-locale compile` and then `godot --headless -s addons/std/input/steam/write_in_game_actions.gd`; copying the file into Steam's `controller_config` directory lets the Steam client use it.
+   The Steam Input manifest is not committed. CI writes it from the committed `.mo` files when a Steam build exports and bundles it beside the executable. To see it locally, run `godot-locale compile` and then `godot --headless -s addons/std/input/steam/write_in_game_actions.gd`; copying the file into Steam's `controller_config` directory lets the Steam client use it.
 
 ## Naming
 
