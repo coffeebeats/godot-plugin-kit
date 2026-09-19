@@ -24,6 +24,10 @@ Kit ships no autoloads. Register these three in `project.godot`:
 - `System`, a scene composing the `system/` bricks. The game's own values are set on its instances.
 - `Lifecycle`, the script `addons/kit/system/lifecycle.gd`. Kit's pause menu reaches it by this name, and a game saves its progress on `Lifecycle.shutdown_requested`.
 
+### Copy the assemblies
+
+`premade/platform.tscn` and `premade/system.tscn` compose every brick the way the template does. Copy both into the game and register the copies; the game owns them from then on, and the bricks they instance keep arriving with the submodule. `platform.tscn` is complete as copied. `system.tscn` leaves every export in the table below unset, so set the ones the game needs and delete the nodes it does not. `Saves` asserts until it has a `schema`, and `focused_sound_group` already holds kit's own sound. Composing the bricks directly, without the copies, works too.
+
 ### Set the game's values
 
 Each value the game owns is an export on a brick placed in `System`:
@@ -32,7 +36,6 @@ Each value the game owns is an export on a brick placed in `System`:
 | --- | --- | --- |
 | `system/input/input.tscn` | `action_sets` | The game's action sets, which the settings menu lists for rebinding. |
 | `system/input/input.tscn` | `steam_in_game_actions` | The game's Steam Input manifest, required on Steam. |
-| `system/input/input.tscn` | `focused_sound_group` | The sound played as focus moves between controls. |
 | `system/setting/settings.tscn` | `menu_tabs` | The game's own settings menu tabs, keyed by their label's message ID. |
 | `system/setting/interface/font_scaling_observer.tscn` | `theme` | The font theme which the text scaling setting resizes. |
 | `system/save/saves.tscn` | `schema` | The game's save data, required. |
@@ -87,7 +90,7 @@ A repository enables the plugin in its `.claude/settings.json`, beside `godot-in
 {
   "extraKnownMarketplaces": {
     "godot-plugin-kit": {
-      "source": { "source": "github", "repo": "coffeebeats/godot-plugin-kit", "ref": "v0" },
+      "source": { "source": "github", "repo": "coffeebeats/godot-plugin-kit", "ref": "v1" },
       "autoUpdate": true
     }
   },
@@ -101,7 +104,7 @@ Each machine installs it once, after trusting the repository folder:
 claude plugin install kit@godot-plugin-kit --scope project
 ```
 
-The plugin declares no `version`, so each commit is its version, and it follows the floating major tag: a release moves `v0`, and Claude Code picks the update up in the background. The skills and the gitlink therefore agree at the major, which is the level a skill's claims hold at.
+The plugin declares no `version`, so each commit is its version, and it follows the floating major tag: a release moves `v1`, and Claude Code picks the update up in the background. The skills and the gitlink therefore agree at the major, which is the level a skill's claims hold at.
 
 The marketplace is served from `main`, never from `dist`. `dist` carries the addon subtree for the engine to consume, and `package-addon` copies with a bare glob, so `.claude-plugin/` cannot reach it and `plugins/` is excluded by name.
 
