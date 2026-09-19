@@ -26,7 +26,7 @@ Kit ships no autoloads. Register these three in `project.godot`:
 
 ### Copy the assemblies
 
-`premade/platform.tscn` and `premade/system.tscn` compose every brick the way the template does. Copy both into the game and register the copies; the game owns them from then on, and the bricks they instance keep arriving with the submodule. `platform.tscn` is complete as copied. `system.tscn` leaves every export in the table below unset, so set the ones the game needs and delete the nodes it does not. `Saves` asserts until it has a `schema`, and `focused_sound_group` already holds kit's own sound. Composing the bricks directly, without the copies, works too.
+`premade/platform.tscn` and `premade/system.tscn` compose every brick the way the template does. Copy both into the game, remove the `uid=` from each copy's header so the checker's `--fix` assigns its own, and register the copies; the game owns them from then on, and the bricks they instance keep arriving with the submodule. `platform.tscn` is complete as copied. `system.tscn` leaves every export in the table below unset, so set the ones the game needs and delete the nodes it does not. `Saves` asserts until it has a `schema`, and `focused_sound_group` already holds kit's own sound. Composing the bricks directly, without the copies, works too.
 
 ### Set the game's values
 
