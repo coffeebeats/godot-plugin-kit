@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.1 (2026-09-20)
+
+## What's Changed
+* chore(test): separate each given/when/then block with a blank line by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/36
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v1.2.0...v1.2.1
+
 ## 1.2.0 (2026-09-20)
 
 ## What's Changed
