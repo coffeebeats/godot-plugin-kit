@@ -34,11 +34,11 @@ before the tool ever sees the argument.
 
 Three independent gates, because the bridge evaluates arbitrary expressions on request:
 
-1. Nothing a game ships names any part of the bridge. It lives in
+1. Nothing a game ships depends on the bridge. It lives in
    `addons/kit/system/debug/editor/`, which a game excludes from its export presets
-   with `*/editor/*`, and the pack holds neither the script nor its scene. No call-in
-   point is left behind either. The bridge finds what to report by walking the tree
-   for a method name, so a reporting node carries a method and no dependency.
+   with `*/editor/*`, and the pack holds neither the script nor its scene. A reporting
+   node does ship its `_get_debug_state` method, but the method names nothing in that
+   directory, so no shipped file pins a bridge file into the pack.
 2. The game mounts it through an `StdConditionLoader` whose expression
    is `editor_run_expression.tres` (`OS.has_feature("editor")`), so only an editor run
    places the node. The same mechanism gates the Steam storefront in
@@ -64,9 +64,9 @@ func _get_debug_state() -> Dictionary:
 	return {&"trauma": _trauma, &"offset": _read_offset()}
 ```
 
-That is the whole contract. There is nothing to register, and the file names no part
-of the bridge, which is what lets a game exclude it outright. In a shipped build the
-method has no caller.
+That is the whole contract. There is nothing to register and nothing to import; the
+method name is all the two sides share, which is what lets a game exclude the bridge
+outright. In a shipped build the method has no caller.
 
 `state` walks the tree, calls the method on every node defining it, and keys each
 answer by that node's path. Two maps in one tree are therefore both reported, where a
