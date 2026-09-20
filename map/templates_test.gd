@@ -20,6 +20,7 @@ func test_template_2d_wires_its_layers() -> void:
 	# Given: The 2D template.
 	# When: It is instantiated, as `New Inherited Scene` does.
 	var map: KitMap2D = TEMPLATE_2D.instantiate()
+
 	# Then: Every node path export resolved, and to the dimension-matched type.
 	_assert_layers_are_wired(map, "KitHudLayer2D", "KitFeelLayer2D")
 
@@ -31,6 +32,7 @@ func test_template_2d_pixel_wires_its_layers() -> void:
 	# staying a standalone scene, so its wiring is a separate copy that can rot alone.
 	# When: It is instantiated.
 	var map: KitMapPixel2D = TEMPLATE_2D_PIXEL.instantiate()
+
 	# Then: Every node path export resolved, and to the dimension-matched type.
 	_assert_layers_are_wired(map, "KitHudLayer2D", "KitFeelLayer2D")
 
@@ -41,6 +43,7 @@ func test_template_3d_wires_its_layers() -> void:
 	# Given: The 3D template.
 	# When: It is instantiated.
 	var map: KitMap3D = TEMPLATE_3D.instantiate()
+
 	# Then: Every node path export resolved, and to the dimension-matched type.
 	_assert_layers_are_wired(map, "KitHudLayer3D", "KitFeelLayer3D")
 

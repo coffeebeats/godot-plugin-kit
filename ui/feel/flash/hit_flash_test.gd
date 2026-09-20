@@ -24,8 +24,10 @@ func test_flash_adopts_the_template_material_on_a_bare_parent() -> void:
 	var sprite := Sprite2D.new()
 	add_child_autofree(sprite)
 	assert_null(sprite.material)
+
 	# When: A hit flash is added under it.
 	_attach(sprite)
+
 	# Then: It is given the template's material, so a game gets a working flash with no
 	# setup at all.
 	assert_eq(sprite.material, FLASH_MATERIAL)
@@ -38,8 +40,10 @@ func test_flash_keeps_a_parents_own_shader() -> void:
 	own.shader = FLASH_MATERIAL.shader
 	sprite.material = own
 	add_child_autofree(sprite)
+
 	# When: A hit flash is added under it.
 	_attach(sprite)
+
 	# Then: Its material is left alone, since the game's shader carries the parameters.
 	assert_eq(sprite.material, own)
 
@@ -49,9 +53,11 @@ func test_flash_drives_the_instance_parameter() -> void:
 	var sprite := Sprite2D.new()
 	add_child_autofree(sprite)
 	var flash := _attach(sprite)
+
 	# When: The flash plays.
 	flash.play(_config)
 	await wait_process_frames(2)
+
 	# Then: The blend is driven per instance, so flashing this sprite leaves every other
 	# sprite sharing the material alone.
 	var amount: float = sprite.get_instance_shader_parameter(HIT_FLASH_2D.PARAM_AMOUNT)
@@ -63,10 +69,12 @@ func test_flash_returns_to_zero_when_it_finishes() -> void:
 	var sprite := Sprite2D.new()
 	add_child_autofree(sprite)
 	var flash := _attach(sprite)
+
 	# When: A short flash plays out.
 	_config.duration = 0.1
 	flash.play(_config)
 	await wait_seconds(0.3)
+
 	# Then: The sprite is back to its own colors.
 	var amount: float = sprite.get_instance_shader_parameter(HIT_FLASH_2D.PARAM_AMOUNT)
 	assert_almost_eq(amount, 0.0, 0.001)
@@ -77,10 +85,12 @@ func test_flash_disables_itself_on_a_non_shader_material() -> void:
 	var sprite := Sprite2D.new()
 	sprite.material = CanvasItemMaterial.new()
 	add_child_autofree(sprite)
+
 	# When: A hit flash is added and asked to play.
 	var flash := _attach(sprite)
 	flash.play(_config)
 	await wait_process_frames(2)
+
 	# Then: It goes quiet rather than driving a parameter nothing reads, having warned
 	# once when it adopted the parent.
 	assert_null(sprite.get_instance_shader_parameter(HIT_FLASH_2D.PARAM_AMOUNT))
@@ -142,8 +152,10 @@ func test_flash_warns_about_a_parent_it_cannot_drive() -> void:
 	var flash: Node = HIT_FLASH_2D.new()
 	var parent: Node = autofree(Node.new())
 	parent.add_child(flash)
+
 	# When: The editor asks for configuration warnings.
 	var warnings: PackedStringArray = flash._get_configuration_warnings()
+
 	# Then: It says so, since at runtime the assert is compiled out of a release build.
 	assert_eq(warnings.size(), 1)
 	assert_true("CanvasItem" in warnings[0])

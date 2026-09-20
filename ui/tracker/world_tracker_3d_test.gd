@@ -24,8 +24,10 @@ func test_positions_host_at_projection() -> void:
 	# Given: A target at world origin, on the camera's optical axis.
 	_target.global_position = Vector3.ZERO
 	_attach_tracker(_host)
+
 	# When: A frame is processed.
 	await wait_process_frames(1)
+
 	# Then: The host sits at the 3D projection of the target.
 	assert_eq(_host.global_position, _map.world_to_screen(_target.global_position))
 
@@ -36,9 +38,11 @@ func test_follows_target_movement() -> void:
 	_attach_tracker(_host)
 	await wait_process_frames(1)
 	var before := _host.global_position
+
 	# When: The target moves along world X.
 	_target.global_position = Vector3(1, 0, 0)
 	await wait_process_frames(1)
+
 	# Then: The host moves to a different finite position.
 	assert_ne(_host.global_position, before)
 	assert_true(_host.global_position.is_finite())
@@ -50,9 +54,11 @@ func test_no_op_when_behind_camera() -> void:
 	_attach_tracker(_host)
 	await wait_process_frames(1)
 	var last := _host.global_position
+
 	# When: The target moves behind the camera.
 	_target.global_position = Vector3(0, 0, 10)
 	await wait_process_frames(1)
+
 	# Then: The host stays put — a behind-camera target has no projection.
 	assert_eq(_host.global_position, last)
 
@@ -62,8 +68,10 @@ func test_clamped_host_pins_to_edge_when_behind_camera() -> void:
 	_target.global_position = Vector3(-100, 0, 10)
 	var tracker := _attach_tracker(_host)
 	tracker.clamped = true
+
 	# When: A frame is processed.
 	await wait_process_frames(1)
+
 	# Then: The host pins to the left edge at (0, 180), not freezing.
 	assert_eq(_host.global_position, Vector2(0, 180))
 

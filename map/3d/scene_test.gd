@@ -21,8 +21,10 @@ var _viewport: SubViewport = null
 func test_in_front_returns_finite() -> void:
 	# Given: A camera at (0, 0, 5) looking at the origin.
 	_install_camera(Vector3(0, 0, 5))
+
 	# When: The world origin is projected.
 	var screen := _map.world_to_screen(Vector3.ZERO)
+
 	# Then: The result is finite (i.e. not the INF sentinel).
 	assert_true(screen.is_finite(), "expected finite screen position; got %s" % screen)
 
@@ -30,8 +32,10 @@ func test_in_front_returns_finite() -> void:
 func test_centered_camera_projects_origin_to_viewport_center() -> void:
 	# Given: A camera at (0, 0, 5) looking at the origin (default rotation -> -Z).
 	_install_camera(Vector3(0, 0, 5))
+
 	# When: The world origin is projected.
 	var screen := _map.world_to_screen(Vector3.ZERO)
+
 	# Then: The result is the viewport center. Catches sign flips and axis swaps
 	# that `is_finite()` alone misses.
 	var center := Vector2(_viewport.size) / 2.0
@@ -41,8 +45,10 @@ func test_centered_camera_projects_origin_to_viewport_center() -> void:
 func test_behind_camera_returns_inf() -> void:
 	# Given: A camera at (0, 0, 5) looking down -Z.
 	_install_camera(Vector3(0, 0, 5))
+
 	# When: A position behind the camera (further +Z) is projected.
 	var screen := _map.world_to_screen(Vector3(0, 0, 10))
+
 	# Then: The result is `Vector2.INF`.
 	assert_false(screen.is_finite(), "expected INF for behind-camera position")
 
@@ -51,6 +57,7 @@ func test_no_camera_returns_inf() -> void:
 	# Given: A SubViewport with no Camera3D.
 	# When: A world position is projected.
 	var screen := _map.world_to_screen(Vector3.ZERO)
+
 	# Then: The result is `Vector2.INF`.
 	assert_false(screen.is_finite(), "expected INF when no camera is active")
 
@@ -58,8 +65,10 @@ func test_no_camera_returns_inf() -> void:
 func test_no_subviewport_returns_inf() -> void:
 	# Given: A map with no SubViewport reference.
 	_map.sub_viewport = null
+
 	# When: A world position is projected.
 	var screen := _map.world_to_screen(Vector3.ZERO)
+
 	# Then: The result is `Vector2.INF`.
 	assert_false(screen.is_finite(), "expected INF when sub_viewport is null")
 
@@ -71,10 +80,12 @@ func test_explicit_camera_arg_used() -> void:
 	explicit.current = false
 	_viewport.add_child(explicit)
 	explicit.global_transform = Transform3D(Basis(), Vector3(10, 0, 5))
+
 	# When: The world origin is projected through the explicit camera.
 	var screen_explicit := _map.world_to_screen(Vector3.ZERO, explicit)
 	# And: Through the active camera.
 	var screen_active := _map.world_to_screen(Vector3.ZERO, active)
+
 	# Then: Both are finite, and the explicit-camera projection differs (camera offset
 	# shifts the projected x-coordinate).
 	assert_true(screen_explicit.is_finite())
@@ -89,10 +100,12 @@ func test_explicit_camera_arg_used() -> void:
 func test_off_frustum_returns_finite() -> void:
 	# Given: A camera at (0, 0, 5) looking at the origin.
 	_install_camera(Vector3(0, 0, 5))
+
 	# When: A point well above the frustum (but still in front of the camera) is
 	# projected. Tests the documented contract that off-screen-indicator widgets get
 	# finite (clampable) coords rather than INF.
 	var screen := _map.world_to_screen(Vector3(0, 1000, 0))
+
 	# Then: The result is finite (off-screen, but not INF).
 	assert_true(
 		screen.is_finite(), "off-frustum-but-in-front should be finite; got %s" % screen
@@ -102,8 +115,10 @@ func test_off_frustum_returns_finite() -> void:
 func test_world_to_screen_direction_points_at_in_front_target() -> void:
 	# Given: A camera at (0, 0, 5) and a target to its right, level with it.
 	_install_camera(Vector3(0, 0, 5))
+
 	# When: The screen-space direction toward the target is computed.
 	var direction := _map.world_to_screen_direction(Vector3(100, 0, 0))
+
 	# Then: It points straight right (the target shares the camera's height).
 	assert_eq(direction, Vector2.RIGHT)
 
@@ -111,8 +126,10 @@ func test_world_to_screen_direction_points_at_in_front_target() -> void:
 func test_world_to_screen_direction_points_at_behind_camera_target() -> void:
 	# Given: A camera at (0, 0, 5) and a target behind it, to the right.
 	_install_camera(Vector3(0, 0, 5))
+
 	# When: The direction toward the behind-camera target is computed.
 	var direction := _map.world_to_screen_direction(Vector3(100, 0, 10))
+
 	# Then: It still resolves to a usable rightward bearing, not INF or ZERO.
 	assert_eq(direction, Vector2.RIGHT)
 
@@ -121,6 +138,7 @@ func test_world_to_screen_direction_no_camera_returns_zero() -> void:
 	# Given: A SubViewport with no Camera3D.
 	# When: A screen-space direction is requested.
 	var direction := _map.world_to_screen_direction(Vector3(100, 0, 0))
+
 	# Then: The result is the `Vector2.ZERO` sentinel.
 	assert_eq(direction, Vector2.ZERO)
 

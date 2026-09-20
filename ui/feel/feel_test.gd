@@ -28,9 +28,11 @@ var _viewport: SubViewport = null
 func test_impulse_moves_the_camera() -> void:
 	# Given: A camera at rest.
 	assert_eq(_camera.offset, Vector2.ZERO)
+
 	# When: An impulse lands.
 	_feel.impulse(IMPULSE_EXPLOSION)
 	await wait_process_frames(2)
+
 	# Then: The camera has been displaced.
 	assert_ne(_camera.offset, Vector2.ZERO)
 	assert_gt(_feel.get_trauma(), 0.0)
@@ -39,9 +41,11 @@ func test_impulse_moves_the_camera() -> void:
 func test_impulse_returns_the_camera_to_exactly_its_rest_offset() -> void:
 	# Given: A camera the game has offset for its own reasons, such as a look-ahead.
 	_camera.offset = Vector2(37.0, -11.0)
+
 	# When: An impulse lands and fully decays.
 	_feel.impulse(IMPULSE_HIT)
 	await wait_for_signal(_feel.impulse_finished, 5.0)
+
 	# Then: The camera is back at the value it had, to the bit, rather than at zero or
 	# at a fading remainder.
 	assert_eq(_camera.offset, Vector2(37.0, -11.0))
@@ -53,6 +57,7 @@ func test_impulse_is_framerate_independent() -> void:
 	var coarse := _drain_trauma(1.0 / 30.0, 6)
 	_feel.impulse(IMPULSE_EXPLOSION)
 	var fine := _drain_trauma(1.0 / 120.0, 24)
+
 	# When: Each has been stepped over the same elapsed time.
 	# Then: The trauma left is the same, so the shake does not run faster on a faster
 	# machine, which the common per-frame recipe gets wrong.
@@ -62,9 +67,11 @@ func test_impulse_is_framerate_independent() -> void:
 func test_impulse_leaves_roll_alone_by_default() -> void:
 	# Given: A camera with a rotation the game set.
 	_camera.rotation = 0.25
+
 	# When: An impulse with no roll lands.
 	_feel.impulse(IMPULSE_HIT)
 	await wait_process_frames(2)
+
 	# Then: The rotation is untouched, since rolling unasked fights a camera controller.
 	assert_eq(_camera.rotation, 0.25)
 
@@ -72,9 +79,11 @@ func test_impulse_leaves_roll_alone_by_default() -> void:
 func test_intensity_scales_the_shake() -> void:
 	# Given: A layer with shake turned off, the accessibility hook at its limit.
 	_feel.intensity = 0.0
+
 	# When: An impulse lands.
 	_feel.impulse(IMPULSE_EXPLOSION)
 	await wait_process_frames(2)
+
 	# Then: The camera never moves.
 	assert_eq(_camera.offset, Vector2.ZERO)
 
@@ -88,6 +97,7 @@ func test_kick_throws_the_camera_along_its_direction() -> void:
 	config.kick_decay = 1.0
 	_feel.impulse(config, Vector2.LEFT)
 	await wait_process_frames(2)
+
 	# Then: The camera is thrown that way, which is what makes a hit read as coming from
 	# somewhere rather than as generic rumble.
 	assert_lt(_camera.offset.x, -1.0)
@@ -100,9 +110,11 @@ func test_kick_decays_back_to_rest() -> void:
 	config.trauma = 0.0
 	config.kick_strength = 20.0
 	config.kick_decay = 30.0
+
 	# When: It lands and is allowed to settle.
 	_feel.impulse(config, Vector2.LEFT)
 	await wait_for_signal(_feel.impulse_finished, 5.0)
+
 	# Then: The camera is exactly back.
 	assert_eq(_camera.offset, Vector2.ZERO)
 
@@ -110,8 +122,10 @@ func test_kick_decays_back_to_rest() -> void:
 func test_hit_stop_scales_and_restores_time() -> void:
 	# Given: Normal time.
 	assert_eq(Engine.time_scale, 1.0)
+
 	# When: A hit-stop lands.
 	_feel.hit_stop(HIT_STOP_LIGHT)
+
 	# Then: Time is scaled down at once, and restored when it ends.
 	assert_lt(Engine.time_scale, 1.0)
 	assert_true(_feel.is_hit_stopped())
@@ -147,9 +161,11 @@ func test_hit_stop_takes_the_longest_deadline() -> void:
 func test_hit_stop_restores_the_scale_it_found() -> void:
 	# Given: A game already running fast-forward, as a catch-up driver would.
 	Engine.time_scale = 3.0
+
 	# When: A hit-stop lands and ends.
 	_feel.hit_stop(HIT_STOP_LIGHT)
 	await wait_for_signal(_feel.hit_stop_finished, 5.0)
+
 	# Then: The fast-forward is given back, rather than being reset to normal speed.
 	assert_eq(Engine.time_scale, 3.0)
 
@@ -199,8 +215,10 @@ func test_hit_stop_is_restored_when_the_layer_leaves() -> void:
 	# Given: A hit-stop in progress.
 	_feel.hit_stop(HIT_STOP_LIGHT)
 	assert_lt(Engine.time_scale, 1.0)
+
 	# When: The map is torn down mid-freeze, as a screen change would do.
 	_feel.get_parent().remove_child(_feel)
+
 	# Then: The whole game is not left in slow motion.
 	assert_eq(Engine.time_scale, 1.0)
 
@@ -211,8 +229,10 @@ func test_hit_stop_is_restored_when_the_layer_leaves() -> void:
 func test_layer_without_a_map_warns_in_the_editor() -> void:
 	# Given: A feel layer whose map was never wired, as a botched inherited scene has.
 	var layer := KitFeelLayer2D.new()
+
 	# When: The editor asks it for configuration warnings.
 	var warnings: PackedStringArray = layer._get_configuration_warnings()
+
 	# Then: It names the missing map. At runtime there is no camera to find and every
 	# call quietly does nothing.
 	assert_true("Missing property: 'map'" in warnings)
@@ -225,6 +245,7 @@ func test_flash_rises_and_returns_to_transparent() -> void:
 	var config := KitFeelFlash.new()
 	config.color = Color(1.0, 1.0, 1.0, 0.75)
 	config.duration = 0.12
+
 	# When: It plays.
 	_feel.flash(config)
 	var rect := _find_flash_rect()
@@ -240,8 +261,10 @@ func test_flash_covers_only_the_game_world() -> void:
 	# Given: A map whose world occupies part of the window, as a pixel-art map letterboxed
 	# inside a larger one does.
 	_container.position = Vector2(100.0, 50.0)
+
 	# When: A flash plays.
 	_feel.flash(preload("flash_white.tres"))
+
 	# Then: It covers the world's rect and not the letterbox around it.
 	var rect := _find_flash_rect()
 	assert_eq(rect.get_global_rect(), _map.get_screen_rect())

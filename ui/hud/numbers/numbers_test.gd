@@ -32,6 +32,7 @@ func test_pop_spawns_a_number_under_the_layer() -> void:
 	# Given: A numbers element in a mounted group.
 	# When: A value is popped.
 	_numbers.pop(12.0)
+
 	# Then: A number exists, parented to the layer rather than to the group, so it does
 	# not follow the entity that produced it.
 	var number := _find_number()
@@ -110,6 +111,7 @@ func test_number_frees_itself_when_it_finishes() -> void:
 	style.duration = 0.05
 	style.punch = 0.0
 	_numbers.style = style
+
 	# When: A value is popped and its life elapses.
 	_numbers.pop(1.0)
 	assert_eq(_find_numbers().size(), 1)

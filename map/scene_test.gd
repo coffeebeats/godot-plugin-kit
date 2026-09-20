@@ -19,6 +19,7 @@ func test_for_node_finds_the_map_from_inside_the_subviewport() -> void:
 	# Given: An entity in the game world.
 	var entity := Node2D.new()
 	_viewport.add_child(entity)
+
 	# When: It looks for its map.
 	# Then: It finds the one whose SubViewport it lives in.
 	assert_eq(KitMap.for_node(entity), _map)
@@ -45,6 +46,7 @@ func test_for_node_returns_null_outside_a_map() -> void:
 	# an entity in a headless simulation test looks like.
 	var loose := Node2D.new()
 	add_child_autofree(loose)
+
 	# When: It looks for a map.
 	# Then: There is none, and it is told so rather than erroring. This is what lets a
 	# `KitHudAnchor` go inert instead of failing.
@@ -54,6 +56,7 @@ func test_for_node_returns_null_outside_a_map() -> void:
 func test_for_node_returns_null_for_a_node_outside_the_tree() -> void:
 	# Given: A node that was never added to the tree.
 	var orphan: Node2D = autofree(Node2D.new())
+
 	# When: It looks for a map.
 	# Then: There is none, and no error is raised for the missing viewport.
 	assert_null(KitMap.for_node(orphan))
