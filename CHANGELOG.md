@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.0 (2026-09-20)
+
+## What's Changed
+* feat(debug): report state by walking the tree instead of registering handlers by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/33
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v1.1.1...v1.2.0
+
 ## 1.1.1 (2026-09-19)
 
 ## What's Changed
