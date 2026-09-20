@@ -68,6 +68,12 @@ That is the whole contract. There is nothing to register and nothing to import; 
 method name is all the two sides share, which is what lets a game exclude the bridge
 outright. In a shipped build the method has no caller.
 
+A reporter node in a group would be the other way to do this, and it cannot reach what
+is worth reporting. Most of that is private or computed, such as `is_hit_stopped()`, a
+hit-stop deadline minus the current time, or a HUD group's anchor path, so a separate
+node could only read it by making the parent's internals public. It would also put a
+scene reference in every reporting scene, which is the dependency the method avoids.
+
 `state` walks the tree, calls the method on every node defining it, and keys each
 answer by that node's path. Two maps in one tree are therefore both reported, where a
 registry keyed by name could hold only the last one to arrive. A node that leaves the
