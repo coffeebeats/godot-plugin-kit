@@ -5,7 +5,7 @@ user-invocable: true
 argument-hint: "[what to check]"
 ---
 
-Drive a live game through `godot-bridge`. Every subcommand talks to kit's debug bridge (`addons/kit/system/debug/debug.gd`) over loopback TCP.
+Drive a live game through `godot-bridge`. Every subcommand talks to kit's debug bridge (`addons/kit/system/debug/editor/bridge.gd`) over loopback TCP.
 
 `launch` runs the scene named by `run/main_scene` in `project.godot` unless `--scene` says otherwise.
 
@@ -24,13 +24,14 @@ The checker and GUT are faster and need no window, so reach for the bridge only 
 
 ```sh
 godot-bridge launch                      # start, and wait until past splash and loading
-godot-bridge status                      # frame, current screen, registered handlers
+godot-bridge status                      # frame, current screen, reporting nodes
 godot-bridge tree --path Main            # names, classes, visibility, control rects
 godot-bridge eval 'Main.screens().get_depth()'
-godot-bridge call app                    # a handler the running scene registered
+godot-bridge state                       # what every reporting node says
+godot-bridge state --filter Map          # one node, by name at any depth; repeatable
 godot-bridge screenshot --out shot.png   # a real frame; --node crops to one Control
 godot-bridge logs                        # what the game printed, errors included
-godot-bridge wait --for app.booted       # poll a handler; --equals takes JSON
+godot-bridge wait --for booted           # poll a field; --equals takes JSON
 godot-bridge stop
 ```
 
@@ -44,8 +45,8 @@ Read a screenshot back with the Read tool. It is a real captured frame, so it se
 
 Each of these returns a plausible wrong answer rather than an error.
 
-- **Nothing listens without a port.** The node is mounted by an `StdConditionLoader` on `OS.has_feature("debug")`, so a release export carries no bridge at all, and even a debug build opens no socket until it is handed `--bridge-port <N>` after `--` (or `GODOT_DEBUG_BRIDGE_PORT` for editor runs). `launch` does this for you; an F5, a GUT run and a headless CI run do not.
-- **"Settled" is not "booted".** Each splash screen is a genuine settled state. Wait for `app.booted`, which excludes splash and loading, or you will assert against a scene that is ignoring you.
+- **Nothing listens without a port.** The node is mounted by an `StdConditionLoader` on `OS.has_feature("editor")`, and the bridge is excluded from every export, so only an editor run has one at all — and it opens no socket until it is handed `--bridge-port <N>` after `--` (or `GODOT_DEBUG_BRIDGE_PORT` for editor runs). `launch` does this for you; an F5, a GUT run and a headless CI run do not. An exported build cannot be driven at all.
+- **"Settled" is not "booted".** Each splash screen is a genuine settled state. Wait for `booted`, which excludes splash and loading, or you will assert against a scene that is ignoring you.
 - **`Expression` resolves no autoloads, no global classes and no engine singletons.** `eval` binds the identifiers it recognises; a name it does not know fails with `Invalid named index`. `ResourceLoader` and `OS` read like built-ins and are not.
 - **Node paths are relative to `/root`** — `--path Main`, never `--path /root/Main`. A POSIX-emulating shell on Windows rewrites the absolute form into a Windows path before the tool sees it.
 - **A wait only counts what the game logged after that wait began**, and `launch` truncates the log. `logs` after a `stop` can end on `Stray Node: …`; that is the project's own shutdown diagnostic, not a failure.
@@ -53,18 +54,18 @@ Each of these returns a plausible wrong answer rather than an error.
 
 ## Reaching game state
 
-The bridge knows sockets, `Expression`, the tree and the viewport, and nothing about screens, maps or a simulation. Those register handlers:
+The bridge knows sockets, `Expression`, the tree and the viewport, and nothing about screens, maps or a simulation. A node becomes visible to `state` by defining one method:
 
 ```gdscript
-const Debug := preload("res://addons/kit/system/debug/debug.gd")
-
-Debug.register(&"map", _get_debug_state)      # in _ready
-Debug.unregister(&"map", _get_debug_state)    # in _exit_tree, with the same handler
+func _get_debug_state() -> Dictionary:
+	return {&"trauma": _trauma, &"offset": _read_offset()}
 ```
 
-Both are safe with no bridge present. A game typically registers `app` from its own `main.gd`, and `map` comes from `KitMap`, so every inherited map gets it free. `godot-bridge commands` lists what the running game has.
+Nothing is registered and the file names no part of the bridge, which is what lets a game exclude the bridge outright. `state` walks the tree and keys each answer by the reporting node's path, so two maps are both reported rather than one shadowing the other. `godot-bridge reporters` lists which nodes answer, without asking any of them for state.
 
-If a check needs state no handler exposes, add a handler rather than building an elaborate `eval`.
+`--filter` takes a glob over the whole node path and may be repeated, keeping the union. `*` crosses `/`; a filter with no wildcard and no `/` matches that node name at any depth. `wait --for [<node glob>:]<field>` polls one field out of those reports, and naming the node is needed only when two of them report the same field.
+
+`KitMap`, `KitFeelLayer` and `KitHudLayer` all report, so every inherited scene gets those free, and a game typically adds its own `main.gd`. If a check needs state no node reports, add the method to the node that owns the state rather than building an elaborate `eval`.
 
 ## The rest
 
