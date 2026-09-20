@@ -29,9 +29,11 @@ var _viewport: SubViewport = null
 func test_of_resolves_from_a_nested_element() -> void:
 	# Given: A group mounted on the layer.
 	var group := _layer.attach(_anchor)
+
 	# When: A node nested inside it looks for its layer.
 	var nested := Control.new()
 	group.add_child(nested)
+
 	# Then: It finds the layer it lives under.
 	assert_eq(KitHudLayer.of(nested), _layer)
 
@@ -47,6 +49,7 @@ func test_attach_mounts_the_group_under_the_layer() -> void:
 	# Given: An anchor with a group scene.
 	# When: It is attached.
 	var group := _layer.attach(_anchor)
+
 	# Then: The group is a child of the layer, and knows both of its collaborators.
 	assert_not_null(group)
 	assert_eq(group.get_parent(), _layer)
@@ -58,8 +61,10 @@ func test_attach_positions_the_group_at_the_projection() -> void:
 	# Given: A target at world (100, 50).
 	_target.global_position = Vector2(100, 50)
 	var group := _layer.attach(_anchor)
+
 	# When: A frame is processed, so the group's tracker runs.
 	await wait_process_frames(1)
+
 	# Then: The group sits at the projection, shifted by the tracker's offset.
 	var expected := _map.world_to_screen(Vector2(100, 50)) + group.tracker.offset
 	assert_almost_eq(group.global_position, expected, TOLERANCE)
@@ -70,6 +75,7 @@ func test_attach_wires_the_tracker_before_the_group_enters_the_tree() -> void:
 	# When: It is attached.
 	var group := _layer.attach(_anchor)
 	var tracker := group.tracker as KitWorldTracker2D
+
 	# Then: The tracker already has both, which is what its own `_ready` asserts on.
 	assert_eq(tracker.map, _map)
 	assert_eq(tracker.target, _target)
@@ -79,6 +85,7 @@ func test_attach_binds_elements_before_mounting_the_group() -> void:
 	# Given: An anchor with a group scene.
 	# When: It is attached.
 	var group := _layer.attach(_anchor)
+
 	# Then: Its elements were bound before it entered the tree. Binding afterwards would
 	# work for a runtime-spawned entity and silently leave every element null for one
 	# placed in a map scene at author time, because Godot readies the UI subtree after
@@ -89,8 +96,10 @@ func test_attach_binds_elements_before_mounting_the_group() -> void:
 func test_attach_twice_returns_the_same_group() -> void:
 	# Given: An anchor that has already been attached.
 	var first := _layer.attach(_anchor)
+
 	# When: It is attached again.
 	var second := _layer.attach(_anchor)
+
 	# Then: The same group comes back rather than a second one.
 	assert_eq(first, second)
 	assert_eq(_layer.get_child_count(), 1)
@@ -102,8 +111,10 @@ func test_attach_works_before_the_layer_is_ready() -> void:
 	var layer: KitHudLayer2D = autofree(KitHudLayer2D.new())
 	layer.map = _map
 	assert_false(layer.is_node_ready())
+
 	# When: An anchor is attached.
 	var group := layer.attach(_anchor)
+
 	# Then: The group is mounted and findable.
 	assert_not_null(group)
 	assert_eq(layer.get_group(_anchor), group)
@@ -112,9 +123,11 @@ func test_attach_works_before_the_layer_is_ready() -> void:
 func test_detach_frees_the_group() -> void:
 	# Given: A mounted group.
 	var group := _layer.attach(_anchor)
+
 	# When: The anchor is detached.
 	_layer.detach(_anchor)
 	await wait_process_frames(2)
+
 	# Then: The group is gone and no longer tracked.
 	assert_false(is_instance_valid(group))
 	assert_null(_layer.get_group(_anchor))
@@ -124,6 +137,7 @@ func test_detach_of_an_unattached_anchor_is_safe() -> void:
 	# Given: An anchor that was never attached.
 	# When: It is detached anyway.
 	_layer.detach(_anchor)
+
 	# Then: Nothing happens, and nothing errors.
 	assert_null(_layer.get_group(_anchor))
 
@@ -138,6 +152,7 @@ func test_get_screen_rect_matches_the_map() -> void:
 func test_project_world_matches_the_map() -> void:
 	# Given: A world position.
 	var world := Vector2(42, 84)
+
 	# When: The layer projects it.
 	# Then: It answers with the map's projection.
 	assert_almost_eq(
@@ -148,8 +163,10 @@ func test_project_world_matches_the_map() -> void:
 func test_layer_without_a_map_warns_in_the_editor() -> void:
 	# Given: A HUD layer whose map was never wired, as a botched inherited scene has.
 	var layer := KitHudLayer2D.new()
+
 	# When: The editor asks it for configuration warnings.
 	var warnings: PackedStringArray = layer._get_configuration_warnings()
+
 	# Then: It names the missing map. At runtime `project_world` answers a non-finite
 	# vector and every group is wired to a null map, with nothing said about either.
 	assert_true("Missing property: 'map'" in warnings)

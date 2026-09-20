@@ -27,8 +27,10 @@ func test_anchor_attaches_its_group_on_entering_the_tree() -> void:
 	# Given: An anchor configured with a group scene.
 	var anchor := KitHudAnchor2D.new()
 	anchor.group_scene = GROUP_2D
+
 	# When: It is added under an entity inside the map.
 	_target.add_child(anchor)
+
 	# Then: The group is mounted on the layer already, with no frame having passed. An
 	# entity reads `group` in its own `_ready`, which is later than this.
 	assert_not_null(anchor.group)
@@ -90,9 +92,11 @@ func test_anchor_frees_its_group_on_exiting_the_tree() -> void:
 	anchor.group_scene = GROUP_2D
 	_target.add_child(anchor)
 	var group := anchor.group
+
 	# When: The entity carrying it is freed.
 	_target.queue_free()
 	await wait_process_frames(2)
+
 	# Then: The group goes with it, leaving nothing behind on the layer.
 	assert_false(is_instance_valid(group))
 	assert_eq(_layer.get_child_count(), 0)
@@ -124,11 +128,13 @@ func test_anchor_follows_its_target_export_over_its_parent() -> void:
 	# Given: A marker offset from the entity.
 	var marker := Node2D.new()
 	_target.add_child(marker)
+
 	# When: An anchor names it as the target.
 	var anchor := KitHudAnchor2D.new()
 	anchor.group_scene = GROUP_2D
 	anchor.target = marker
 	_target.add_child(anchor)
+
 	# Then: The tracker follows the marker, not the anchor's parent.
 	var tracker := anchor.group.tracker as KitWorldTracker2D
 	assert_eq(tracker.target, marker)
@@ -139,10 +145,12 @@ func test_anchor_is_inert_outside_a_map() -> void:
 	# simulation test looks like.
 	var loose := Node2D.new()
 	add_child_autofree(loose)
+
 	# When: An anchor is added to it.
 	var anchor := KitHudAnchor2D.new()
 	anchor.group_scene = GROUP_2D
 	loose.add_child(anchor)
+
 	# Then: It mounts nothing and the entity stays usable.
 	assert_null(anchor.group)
 
@@ -153,6 +161,7 @@ func test_anchor_reports_its_world_position() -> void:
 	var anchor := KitHudAnchor2D.new()
 	anchor.group_scene = GROUP_2D
 	_target.add_child(anchor)
+
 	# When: The anchor is asked where its entity is.
 	# Then: It answers in world space, which is what a spawned element freezes.
 	assert_eq(anchor.get_world_position(), Vector2(12, 34))

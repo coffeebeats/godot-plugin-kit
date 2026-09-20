@@ -55,8 +55,10 @@ func test_arrow_points_toward_a_target_past_each_edge() -> void:
 func test_group_stays_visible_while_the_target_is_offscreen() -> void:
 	# Given: An indicator group, which does not hide with its target.
 	_target.global_position = Vector2(10000, 10000)
+
 	# When: A frame is processed.
 	await wait_process_frames(2)
+
 	# Then: The group is still drawn, clamped to the edge, and the arrow with it.
 	assert_true(_group.visible)
 	assert_true(_indicator.visible)
@@ -66,8 +68,10 @@ func test_group_stays_visible_while_the_target_is_offscreen() -> void:
 func test_arrow_hides_while_the_target_is_in_view() -> void:
 	# Given: An indicator group whose target is on screen.
 	_target.global_position = Vector2(100, 100)
+
 	# When: A frame is processed.
 	await wait_process_frames(2)
+
 	# Then: The arrow hides, since there is nothing to point at that cannot be seen.
 	assert_true(_group.is_target_in_view)
 	assert_false(_indicator.visible)
@@ -76,9 +80,11 @@ func test_arrow_hides_while_the_target_is_in_view() -> void:
 func test_arrow_keeps_its_pivot_centred_after_a_resize() -> void:
 	# Given: An arrow at its authored size.
 	assert_eq(_indicator.pivot_offset, _indicator.size / 2.0)
+
 	# When: A game gives it a size of its own.
 	_indicator.size = Vector2(40, 32)
 	await wait_process_frames(1)
+
 	# Then: The pivot has followed. `rotation` turns the arrow about this point, so a
 	# stale pivot swings it around a corner and it no longer points where it says.
 	assert_eq(_indicator.pivot_offset, Vector2(20, 16))
@@ -87,8 +93,10 @@ func test_arrow_keeps_its_pivot_centred_after_a_resize() -> void:
 func test_group_is_clamped_within_the_screen_rect() -> void:
 	# Given: A target far outside the viewport.
 	_target.global_position = Vector2(10000, 0)
+
 	# When: A frame is processed.
 	await wait_process_frames(2)
+
 	# Then: The group is pinned inside the screen rect rather than following the target
 	# off into space.
 	var screen_rect := _layer.get_screen_rect()

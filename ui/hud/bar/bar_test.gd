@@ -30,8 +30,10 @@ func test_a_bar_never_told_a_value_reads_full() -> void:
 func test_set_value_moves_the_fill_at_once() -> void:
 	# Given: A full bar.
 	_bar.set_value(10.0, 10.0)
+
 	# When: It takes damage.
 	_bar.set_value(6.0, 10.0)
+
 	# Then: The fill is already at the new value, with no animation to wait on.
 	assert_eq(_fill.value, 6.0)
 	assert_eq(_fill.max_value, 10.0)
@@ -40,8 +42,10 @@ func test_set_value_moves_the_fill_at_once() -> void:
 func test_ghost_holds_at_the_previous_value_after_a_loss() -> void:
 	# Given: A full bar.
 	_bar.set_value(10.0, 10.0)
+
 	# When: It takes damage.
 	_bar.set_value(6.0, 10.0)
+
 	# Then: The ghost stays behind, which is what reads as the damage taken.
 	assert_eq(_ghost.value, 10.0)
 
@@ -50,9 +54,11 @@ func test_ghost_drains_to_the_value() -> void:
 	# Given: A bar whose style drains immediately, so the test does not wait on timing.
 	_bar.style = _make_instant_style()
 	_bar.set_value(10.0, 10.0)
+
 	# When: It takes damage and the drain runs.
 	_bar.set_value(6.0, 10.0)
 	await wait_process_frames(2)
+
 	# Then: The ghost has caught up with the fill.
 	assert_almost_eq(_ghost.value, 6.0, 0.001)
 
@@ -62,8 +68,10 @@ func test_ghost_snaps_on_a_gain() -> void:
 	_bar.set_value(10.0, 10.0)
 	_bar.set_value(4.0, 10.0)
 	assert_eq(_ghost.value, 10.0)
+
 	# When: The value goes back up.
 	_bar.set_value(8.0, 10.0)
+
 	# Then: The ghost snaps to it rather than draining down through it.
 	assert_eq(_ghost.value, 8.0)
 
@@ -72,8 +80,10 @@ func test_repeated_damage_extends_one_trail() -> void:
 	# Given: A bar that has taken damage and is holding a ghost at full.
 	_bar.set_value(10.0, 10.0)
 	_bar.set_value(7.0, 10.0)
+
 	# When: It is hit again before the ghost drains.
 	_bar.set_value(3.0, 10.0)
+
 	# Then: The ghost still shows the original value, so the two hits read as one trail
 	# rather than restarting.
 	assert_eq(_ghost.value, 10.0)
@@ -84,9 +94,11 @@ func test_value_set_before_ready_is_applied() -> void:
 	# Given: A bar that is not yet in the tree, which is what a group looks like between
 	# instantiation and mounting.
 	var bar: KitHudBar = BAR.instantiate()
+
 	# When: A value is set and the bar then enters the tree.
 	bar.set_value(3.0, 12.0)
 	add_child_autofree(bar)
+
 	# Then: The value is there, rather than silently lost.
 	var fill: ProgressBar = bar.get_node("Fill")
 	assert_eq(fill.value, 3.0)
@@ -100,8 +112,10 @@ func test_hide_at_full_hides_an_undamaged_bar() -> void:
 	var style := _make_instant_style()
 	style.hide_at_full = true
 	_bar.style = style
+
 	# When: It is at full.
 	_bar.set_value(10.0, 10.0)
+
 	# Then: It is hidden, and shows again once damaged.
 	assert_false(_bar.visible)
 
@@ -113,6 +127,7 @@ func test_value_is_clamped_to_the_maximum() -> void:
 	# Given: A bar.
 	# When: A value beyond the maximum is set.
 	_bar.set_value(50.0, 10.0)
+
 	# Then: It is clamped, so the fill cannot overrun its own bar.
 	assert_eq(_bar.get_value(), 10.0)
 

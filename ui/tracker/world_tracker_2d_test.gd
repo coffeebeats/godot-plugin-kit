@@ -23,8 +23,10 @@ func test_positions_host_at_projection() -> void:
 	# Given: A target at world (10, 20).
 	_target.global_position = Vector2(10, 20)
 	_attach_tracker(_host)
+
 	# When: A frame is processed.
 	await wait_process_frames(1)
+
 	# Then: The host sits at the 2D projection of the target.
 	assert_eq(_host.global_position, _map.world_to_screen(_target.global_position))
 
@@ -35,9 +37,11 @@ func test_follows_target_movement() -> void:
 	_attach_tracker(_host)
 	await wait_process_frames(1)
 	var before := _host.global_position
+
 	# When: The target moves by (20, 0).
 	_target.global_position = Vector2(70, 50)
 	await wait_process_frames(1)
+
 	# Then: The host shifts by the same amount.
 	assert_eq(_host.global_position - before, Vector2(20, 0))
 
@@ -48,9 +52,11 @@ func test_follows_camera_pan() -> void:
 	_attach_tracker(_host)
 	await wait_process_frames(1)
 	var before := _host.global_position
+
 	# When: The canvas_transform shifts, simulating a camera pan.
 	_viewport.canvas_transform = Transform2D(0.0, Vector2(-30, 0))
 	await wait_process_frames(1)
+
 	# Then: The host shifts by the same amount.
 	assert_eq(_host.global_position - before, Vector2(-30, 0))
 

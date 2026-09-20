@@ -32,8 +32,10 @@ func test_group_is_visible_while_its_target_is_in_view() -> void:
 	# Given: A target inside the viewport.
 	_target.global_position = Vector2(100, 100)
 	var group := _layer.attach(_anchor)
+
 	# When: A frame is processed.
 	await wait_process_frames(1)
+
 	# Then: The group shows.
 	assert_true(group.visible)
 
@@ -44,9 +46,11 @@ func test_group_hides_when_its_target_leaves_the_view() -> void:
 	var group := _layer.attach(_anchor)
 	await wait_process_frames(1)
 	assert_true(group.visible)
+
 	# When: The target moves off-screen.
 	_target.global_position = OFFSCREEN
 	await wait_process_frames(1)
+
 	# Then: The group hides, so it never draws in the letterbox.
 	assert_false(group.visible)
 
@@ -56,9 +60,11 @@ func test_group_stays_visible_offscreen_when_hiding_is_off() -> void:
 	var group := _layer.attach(_anchor)
 	group.hide_offscreen = false
 	group.visible = true
+
 	# When: The target moves off-screen.
 	_target.global_position = OFFSCREEN
 	await wait_process_frames(1)
+
 	# Then: It keeps drawing, clamped at the edge by its tracker.
 	assert_true(group.visible)
 
@@ -66,8 +72,10 @@ func test_group_stays_visible_offscreen_when_hiding_is_off() -> void:
 func test_group_starts_hidden_so_it_never_flashes() -> void:
 	# Given: A target that spawns off-screen.
 	_target.global_position = OFFSCREEN
+
 	# When: Its group is attached, before any frame has run.
 	var group := _layer.attach(_anchor)
+
 	# Then: The group is already hidden, rather than showing for one frame at the wrong
 	# position and then correcting.
 	assert_false(group.visible)
@@ -106,8 +114,10 @@ func test_group_hides_when_hiding_is_turned_on_offscreen() -> void:
 	_target.global_position = OFFSCREEN
 	await wait_process_frames(2)
 	assert_true(group.visible)
+
 	# When: Hiding is turned back on.
 	group.hide_offscreen = true
+
 	# Then: It hides at once, rather than staying visible until the entity next crosses
 	# the edge, which for a stationary entity is never.
 	assert_false(group.visible)
@@ -117,9 +127,11 @@ func test_make_world_origin_holds_the_world_point_it_froze() -> void:
 	# Given: A group whose entity sits at a known world position.
 	_target.global_position = Vector2(100, 50)
 	var group := _layer.attach(_anchor)
+
 	# When: An origin is taken, and the entity then moves away.
 	var origin := group.make_world_origin()
 	_target.global_position = Vector2(300, 200)
+
 	# Then: It still answers where the entity was, projected as it is now, which is what
 	# keeps a floating number over the spot it came from.
 	assert_true(origin.is_valid())
@@ -132,6 +144,7 @@ func test_project_target_follows_the_entity() -> void:
 	# Given: A group whose entity moves.
 	var group := _layer.attach(_anchor)
 	_target.global_position = Vector2(300, 200)
+
 	# When: The target is projected.
 	# Then: It answers the entity's live, unclamped position, which is what an arrow
 	# pinned to the viewport edge points along.
@@ -143,8 +156,10 @@ func test_project_target_follows_the_entity() -> void:
 func test_group_without_a_tracker_warns_in_the_editor() -> void:
 	# Given: A group scene authored without a tracker.
 	var group := KitHudGroup.new()
+
 	# When: The editor asks it for configuration warnings.
 	var warnings: PackedStringArray = group._get_configuration_warnings()
+
 	# Then: It names the missing tracker, since nothing at runtime would say so.
 	assert_true("Missing property: 'tracker'" in warnings)
 
