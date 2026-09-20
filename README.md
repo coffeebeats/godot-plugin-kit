@@ -69,11 +69,11 @@ Kit's scenes also read these project settings:
 
 ### Drive a running game
 
-`system/debug/debug.tscn` is a development-only bridge which lets an external process inspect and drive the game — the scene tree, an evaluated expression, a screenshot, or a command the running scene registered. It is what the `run-game` skill below talks to.
+`system/debug/editor/bridge.tscn` is a development-only bridge which lets an external process inspect and drive the game — the scene tree, an evaluated expression, a screenshot, or the state the running scene's nodes report. It is what the `run-game` skill below talks to.
 
-Wire it under the game's `System` scene through an `StdConditionLoader` whose `expressions_allow` holds kit's `system/debug/debug_build_expression.tres`, so a release export never places the node. It then listens only when handed a port, either `--bridge-port <N>` after `--` or `GODOT_DEBUG_BRIDGE_PORT` for editor runs, and binds `127.0.0.1` and nothing else. An ordinary F5, a GUT run and a headless CI run open no socket at all.
+Wire it under the game's `System` scene through an `StdConditionLoader` whose `expressions_allow` holds kit's `system/debug/editor_run_expression.tres`, which allows it only in an editor run. The bridge lives in `system/debug/editor/`, so a game that excludes `*/editor/*` from its export presets ships none of it, and nothing a game ships names any part of it. It then listens only when handed a port, either `--bridge-port <N>` after `--` or `GODOT_DEBUG_BRIDGE_PORT` for editor runs, and binds `127.0.0.1` and nothing else. An ordinary F5, a GUT run and a headless CI run open no socket at all.
 
-Game code registers its own commands with `Debug.register(&"<name>", <callable>)`, which is safe with no bridge present.
+Game code becomes visible to it by defining `_get_debug_state() -> Dictionary` on a node; the bridge finds it by walking the tree, so the method needs no registration, and in a shipped build it has no caller.
 
 ## **Agent plugin**
 

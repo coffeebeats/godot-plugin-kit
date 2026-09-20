@@ -84,8 +84,9 @@ func _load_custom_translations() -> void:
 			logger.warn("Ignoring duplicate custom translation file.")
 			continue
 
-		var current := TranslationServer.get_translation_object(locale)
-		if current and locale in TranslationServer.get_loaded_locales():
+		# NOTE: Only an exact match is replaced. A translation that merely serves this
+		# locale as a fallback is left loaded for the locale it is actually for.
+		for current: Translation in TranslationServer.find_translations(locale, true):
 			logger.debug("Overwriting existing translation with custom file.")
 			TranslationServer.remove_translation(current)
 

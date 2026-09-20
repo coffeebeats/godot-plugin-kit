@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://dqrnp70qbbb7y"]
-
-[ext_resource type="Script" uid="uid://d0qhaajpe0bnf" path="res://addons/kit/system/debug/debug.gd" id="1_debug"]
-
-[node name="Bridge" type="Node"]
-script = ExtResource("1_debug")

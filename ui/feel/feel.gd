@@ -44,10 +44,6 @@ signal hit_stop_finished
 ## flash_finished is emitted when the full-screen flash has faded out.
 signal flash_finished
 
-# -- DEPENDENCIES -------------------------------------------------------------------- #
-
-const Debug := preload("../../system/debug/debug.gd")
-
 # -- DEFINITIONS --------------------------------------------------------------------- #
 
 ## KICK_EPSILON is the displacement below which a decaying kick is treated as spent.
@@ -172,8 +168,6 @@ func _exit_tree() -> void:
 	if Engine.is_editor_hint():
 		return
 
-	Debug.unregister(&"feel", _get_debug_state)
-
 	# NOTE: A hit-stop outliving its map would leave the whole game in slow motion, so
 	# the time scale is restored here as well as at the deadline.
 	_end_hit_stop()
@@ -216,8 +210,6 @@ func _process(delta: float) -> void:
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
-
-	Debug.register(&"feel", _get_debug_state)
 
 	resized.connect(_resize_flash_rect)
 
@@ -284,8 +276,10 @@ func _ensure_flash_rect() -> ColorRect:
 	return _flash_rect
 
 
-## _get_debug_state reports the layer's live state to the debug bridge, so a change can
-## be checked without a human watching the window.
+## _get_debug_state reports the layer's live state to the debug bridge, so a change
+## can be checked without a human watching the window.
+##
+## NOTE: Nothing in a shipped build calls this; the bridge finds it by method name.
 func _get_debug_state() -> Dictionary:
 	return {
 		&"trauma": _trauma,

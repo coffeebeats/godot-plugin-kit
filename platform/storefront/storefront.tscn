@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://b48nei7xl0xrh" path="res://addons/std/condition/condition_loader.gd" id="1_0neaf"]
 [ext_resource type="Script" uid="uid://be11f4pqliry0" path="res://addons/std/condition/expression.gd" id="2_elne7"]
-[ext_resource type="Resource" uid="uid://nggtxsyr5rs2" path="res://addons/kit/platform/storefront/steam/steam_storefront_expression.tres" id="3_loaae"]
+[ext_resource type="Resource" uid="uid://nggtxsyr5rs2" path="res://addons/kit/platform/storefront/steam_storefront_expression.tres" id="3_loaae"]
 
 [node name="Storefront" type="Node" unique_id=1573060488]
 

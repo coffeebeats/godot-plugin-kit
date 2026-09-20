@@ -47,15 +47,11 @@ func _get_configuration_warnings() -> PackedStringArray:
 
 
 func _ready() -> void:
-	# NOTE: Apply resolution *before* `super()` so the `SubViewport` is sized correctly
-	# even if the base's save-data check fails and redirects to menu.
 	_apply_resolution()
 
 	var container := _get_container()
 	if container:
 		_shader_material = container.material as ShaderMaterial
-
-	super()
 
 	resized.connect(_update_container_scale)
 

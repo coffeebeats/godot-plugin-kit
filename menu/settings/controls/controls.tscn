@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" uid="uid://c2rgi1407ider" path="res://addons/std/condition/condition_target.gd" id="1_slt8e"]
 [ext_resource type="Script" uid="uid://be11f4pqliry0" path="res://addons/std/condition/expression.gd" id="2_xiafk"]
-[ext_resource type="Resource" uid="uid://ci7xn7gttsuu2" path="res://addons/kit/platform/storefront/unknown/unknown_storefront_expression.tres" id="3_6rqrp"]
+[ext_resource type="Resource" uid="uid://ci7xn7gttsuu2" path="res://addons/kit/platform/storefront/unknown_storefront_expression.tres" id="3_6rqrp"]
 [ext_resource type="Resource" uid="uid://d14ioajw47mqw" path="res://addons/kit/platform/editor_expression.tres" id="4_7dyaq"]
-[ext_resource type="Resource" uid="uid://c48eqp48r1hp0" path="res://addons/kit/system/input/steam/steam_input_enabled_property.tres" id="5_73sma"]
+[ext_resource type="Resource" uid="uid://c48eqp48r1hp0" path="res://addons/kit/system/input/steam_input_enabled_property.tres" id="5_73sma"]
 [ext_resource type="Script" uid="uid://d0x6ukvhyecfa" path="res://addons/std/condition/expression_settings_property.gd" id="6_bdd3f"]
 [ext_resource type="Script" uid="uid://by4sy628i7ctt" path="res://addons/std/condition/condition_parent.gd" id="7_i8vxq"]
 [ext_resource type="Script" uid="uid://dku463rh57jqb" path="res://addons/kit/menu/settings/controls/configurator.gd" id="9_d7lqc"]
