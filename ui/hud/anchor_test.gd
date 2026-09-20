@@ -42,7 +42,6 @@ func test_anchor_mounts_a_ready_group_for_an_author_time_entity() -> void:
 	# with enemies placed in the editor, and the child order means the world subtree is
 	# made ready before the UI subtree is.
 	var map: KitMap2D = partial_double(KitMap2D).new()
-	stub(map, "_ready").to_do_nothing()
 	map.set_anchors_preset(Control.PRESET_FULL_RECT)
 
 	var container := SubViewportContainer.new()
@@ -170,7 +169,6 @@ func before_each() -> void:
 	add_child_autofree(_root)
 
 	_map = partial_double(KitMap2D).new()
-	stub(_map, "_ready").to_do_nothing()
 	_map.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_root.add_child(_map)
 
