@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bqrjkv5me2dp5" path="res://system/save/saves.tscn" id="3_j3l3i"]
 [ext_resource type="Script" uid="uid://b48nei7xl0xrh" path="res://addons/std/condition/condition_loader.gd" id="4_ld0ne"]
 [ext_resource type="Script" uid="uid://be11f4pqliry0" path="res://addons/std/condition/expression.gd" id="5_x3prs"]
-[ext_resource type="Resource" uid="uid://cpq2onm572rax" path="res://system/debug/debug_build_expression.tres" id="6_dbg1f"]
+[ext_resource type="Resource" uid="uid://cpq2onm572rax" path="res://system/debug/editor_run_expression.tres" id="6_dbg1f"]
 [ext_resource type="Resource" uid="uid://qhsnu8axd0er" path="res://ui/input/focus_handler_sound_group.tres" id="7_f0cus"]
 [ext_resource type="PackedScene" uid="uid://cj4555ox05li8" path="res://system/setting/interface/font_scaling_observer.tscn" id="9_f0nts"]
 

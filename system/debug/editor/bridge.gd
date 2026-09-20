@@ -1,19 +1,15 @@
 ##
-## SystemDebug is a development-only bridge which lets an external process inspect and
-## drive a running game. It reads line-delimited JSON commands from a loopback socket
-## and answers with the scene tree, evaluated expressions and screenshots. Game code
-## extends the command set by registering handlers, so the bridge stays ignorant of
-## whatever it is inspecting.
+## SystemDebugBridge is a development-only bridge which lets an external process
+## inspect and drive a running game. It reads line-delimited JSON from a loopback
+## socket and answers with the scene tree, expressions, screenshots and node state.
 ##
-## NOTE: Place `debug.tscn` behind `debug_build_expression.tres`, so a release export
-## carries none of it. It listens only when given a port.
+## NOTE: This file is in `editor/`, which an export excludes, and nothing a game ships
+## names anything in here. The bridge listens only when given a port.
 ##
 
 extends Node
 
 # -- DEFINITIONS --------------------------------------------------------------------- #
-
-const GROUP_DEBUG_SHIM := &"system/debug:shim"
 
 ## ADDRESS is the only interface the bridge binds to. A debug build evaluates arbitrary
 ## expressions on request, so the socket must never leave the machine.
@@ -28,6 +24,11 @@ const ARGUMENT_PORT := "--bridge-port"
 ## setting that cannot be committed.
 const ENV_PORT := "GODOT_DEBUG_BRIDGE_PORT"
 
+## METHOD_DEBUG_STATE is the method a node defines to report its state. It takes no
+## arguments and returns a `Dictionary`, and the bridge calls it by name, so a
+## reporting node needs no reference to this file.
+const METHOD_DEBUG_STATE := &"_get_debug_state"
+
 ## TREE_DEPTH is how many levels of children a `tree` command returns by default.
 const TREE_DEPTH: int = 3
 
@@ -40,10 +41,14 @@ const TIMEOUT_COMMAND: float = 5.0
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
+## _mounted is the bridge currently in the tree, which catches a second one. A static
+## variable rather than a group, since a group would be a name a game could use to
+## reach the bridge.
+static var _mounted: Node = null
+
 var _buffer: String = ""
 var _busy: bool = false
 var _classes: Dictionary = {}
-var _handlers: Dictionary = {}
 var _logger := StdLogger.create(&"system/debug")
 var _peer: StreamPeerTCP = null
 var _pending: Array[Dictionary] = []
@@ -53,69 +58,61 @@ var _server: TCPServer = null
 # -- PUBLIC METHODS ------------------------------------------------------------------ #
 
 
-## instance returns the active bridge, or `null` when one is not present. Absence is the
-## normal case, since the bridge is only placed in the scene in a debug build.
-static func instance() -> Node:
-	if StdGroup.is_empty(GROUP_DEBUG_SHIM):
-		return null
+## collect_state returns the state of every node reporting one, keyed by the node's
+## path and ordered by the tree. A node matching none of `filters` is left out; an
+## empty `filters` keeps every one.
+##
+## NOTE: A node answering with anything but a `Dictionary` is logged and skipped, so
+## one mistaken reporter cannot empty the whole reply.
+func collect_state(filters: PackedStringArray = PackedStringArray()) -> Dictionary:
+	var out := {}
 
-	return StdGroup.get_sole_member(GROUP_DEBUG_SHIM)
+	for node in find_reporters():
+		var path := String(node.get_path())
+		if not _matches(path, filters):
+			continue
 
+		var state: Variant = node.call(METHOD_DEBUG_STATE)
+		if not state is Dictionary:
+			var returned := {&"node": path, &"type": type_string(typeof(state))}
+			_logger.warn("Ignoring node reporting no dictionary.", returned)
+			continue
 
-## list_commands returns the names of the registered command handlers, sorted.
-func list_commands() -> PackedStringArray:
-	var out := PackedStringArray()
-	for command: StringName in _handlers:
-		out.append(String(command))
-
-	out.sort()
+		out[path] = state
 
 	return out
 
 
-## register adds a command handler under `command`, replacing any handler already
-## there. The handler is called with the command's arguments, or with none if it takes
-## none, and must return a JSON-encodable value.
-##
-## NOTE: This is safe to call when no bridge is present, so a call site needs no feature
-## check of its own.
-static func register(command: StringName, handler: Callable) -> void:
-	assert(command != &"", "invalid argument: missing command")
-	assert(handler.is_valid(), "invalid argument: missing handler")
+## find_reporters returns every node in the tree defining `METHOD_DEBUG_STATE`, in tree
+## order. Nothing registers; a node is found because it answers to the method.
+func find_reporters() -> Array[Node]:
+	var out: Array[Node] = []
+	_collect_reporters(get_tree().root, out)
 
-	var bridge := instance()
-	if not bridge:
-		return
-
-	bridge._handlers[command] = handler
+	return out
 
 
-## unregister removes the command handler under `command`. When `handler` is provided
-## the entry is only removed if it is still the registered one.
-##
-## NOTE: Pass the handler when unregistering from `_exit_tree`, where the incoming scene
-## is already in the tree and an unqualified erase would drop the handler it registered.
-static func unregister(command: StringName, handler: Callable = Callable()) -> void:
-	var bridge := instance()
-	if not bridge:
-		return
+## list_reporters returns the paths of the nodes reporting state, in tree order. It is
+## the cheap half of `collect_state`, since no node is asked for its state.
+func list_reporters() -> PackedStringArray:
+	var out := PackedStringArray()
+	for node in find_reporters():
+		out.append(String(node.get_path()))
 
-	if handler.is_valid() and bridge._handlers.get(command) != handler:
-		return
-
-	bridge._handlers.erase(command)
+	return out
 
 
 # -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
 
 
 func _enter_tree() -> void:
-	assert(StdGroup.is_empty(GROUP_DEBUG_SHIM), "invalid state; duplicate node found")
-	StdGroup.with_id(GROUP_DEBUG_SHIM).add_member(self)
+	assert(not _mounted, "invalid state; duplicate node found")
+	_mounted = self
 
 
 func _exit_tree() -> void:
-	StdGroup.with_id(GROUP_DEBUG_SHIM).remove_member(self)
+	if _mounted == self:
+		_mounted = null
 
 	_peer = null
 
@@ -173,6 +170,16 @@ func _ready() -> void:
 # -- PRIVATE METHODS ----------------------------------------------------------------- #
 
 
+## _collect_reporters appends `node` and its descendants which report state to `out`,
+## in tree order.
+func _collect_reporters(node: Node, out: Array[Node]) -> void:
+	if node.has_method(METHOD_DEBUG_STATE):
+		out.append(node)
+
+	for child in node.get_children():
+		_collect_reporters(child, out)
+
+
 ## _describe renders a node as a dictionary, recursing until `depth` is exhausted.
 func _describe(node: Node, depth: int) -> Dictionary:
 	var out := {&"name": String(node.name), &"class": node.get_class()}
@@ -186,8 +193,10 @@ func _describe(node: Node, depth: int) -> Dictionary:
 		out[&"rect"] = (node as Control).get_global_rect()
 	elif node is CanvasItem:
 		out[&"visible"] = (node as CanvasItem).visible
-	elif node is Node3D:
-		out[&"position"] = (node as Node3D).global_position
+	elif node.get(&"global_position") != null:
+		# NOTE: This reaches the 3D case by property rather than by type, which also
+		# covers whatever else a game hangs a global position on.
+		out[&"position"] = node.get(&"global_position")
 
 	var count := node.get_child_count()
 	if count < 1:
@@ -225,6 +234,25 @@ func _fail(message: String) -> void:
 	_send({&"ok": false, &"error": message})
 
 
+## _filters reads the `filter` argument, which a client may send as one glob or as an
+## array of them. Anything else, an absent argument included, filters nothing.
+func _filters(value: Variant) -> PackedStringArray:
+	var out := PackedStringArray()
+
+	if value is String or value is StringName:
+		if String(value) != "":
+			out.append(String(value))
+
+		return out
+
+	if value is Array:
+		for entry: Variant in value:
+			if (entry is String or entry is StringName) and String(entry) != "":
+				out.append(String(entry))
+
+	return out
+
+
 ## _global_classes returns a map from global class name to script path, built once.
 func _global_classes() -> Dictionary:
 	if _classes.is_empty():
@@ -241,14 +269,14 @@ func _handle(request: Dictionary) -> void:
 	match StringName(request.get("cmd", "")):
 		&"status":
 			_reply(_status())
-		&"commands":
-			_reply(list_commands())
+		&"reporters":
+			_reply(list_reporters())
 		&"tree":
 			_on_tree(args)
 		&"eval":
 			_on_eval(args)
-		&"call":
-			_on_call(args)
+		&"state":
+			_on_state(args)
 		&"screenshot":
 			await _on_screenshot(args)
 		&"quit":
@@ -269,6 +297,26 @@ func _identifiers(source: String) -> PackedStringArray:
 			out.append(identifier)
 
 	return out
+
+
+## _matches reports whether a node's path satisfies any of `filters`. An empty
+## `filters` is satisfied by everything.
+##
+## NOTE: A filter is a glob over the whole path where `*` crosses `/`; one with no
+## wildcard and no `/` matches that node name at any depth.
+func _matches(path: String, filters: PackedStringArray) -> bool:
+	if filters.is_empty():
+		return true
+
+	for filter in filters:
+		var pattern := filter
+		if not ("*" in pattern or "?" in pattern or "/" in pattern):
+			pattern = "*/" + pattern
+
+		if path.match(pattern):
+			return true
+
+	return false
 
 
 ## _node returns the node a client-supplied path names, or `null` when there is none.
@@ -292,27 +340,6 @@ func _node(path: String) -> Node:
 		return root
 
 	return root.get_node_or_null(NodePath(relative))
-
-
-## _on_call invokes a registered command handler.
-func _on_call(args: Dictionary) -> void:
-	var command := StringName(args.get("name", ""))
-
-	if not _handlers.has(command):
-		_fail("unknown handler: %s (registered: %s)" % [command, list_commands()])
-		return
-
-	var handler: Callable = _handlers[command]
-	if not handler.is_valid():
-		_handlers.erase(command)
-		_fail("stale handler: %s" % command)
-		return
-
-	if handler.get_argument_count() < 1:
-		_reply(handler.call())
-		return
-
-	_reply(handler.call(args.get("args", {})))
 
 
 ## _on_eval evaluates an expression against the running game.
@@ -402,6 +429,18 @@ func _on_screenshot(args: Dictionary) -> void:
 		return
 
 	_reply({&"path": path, &"size": image.get_size()})
+
+
+## _on_state answers with the state of every node reporting one, narrowed by `filter`.
+func _on_state(args: Dictionary) -> void:
+	var filters := _filters(args.get("filter", []))
+
+	var state := collect_state(filters)
+	if state.is_empty() and not filters.is_empty():
+		_fail("no node matched: %s (reporting: %s)" % [filters, list_reporters()])
+		return
+
+	_reply(state)
 
 
 ## _on_tree answers with a description of part of the scene tree.
@@ -510,7 +549,7 @@ func _status() -> Dictionary:
 		&"frame": Engine.get_process_frames(),
 		&"ticks_msec": Time.get_ticks_msec(),
 		&"scene": scene.scene_file_path if scene else "",
-		&"commands": list_commands(),
+		&"reporters": list_reporters(),
 	}
 
 
