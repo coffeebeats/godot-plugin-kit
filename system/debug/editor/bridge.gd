@@ -217,9 +217,8 @@ func _describe(node: Node, depth: int) -> Dictionary:
 
 ## _drain handles the next pending request, if the bridge is not already busy with one.
 ##
-## TODO: `_busy` has two owners, the watchdog at a timeout and the awaited command on a
-## late resume, so a command that comes back late can release the bridge while a newer
-## one runs. Replace the flag with a generation counter, or serialize per connection.
+## TODO(#34): A command that resumes after its own timeout can release `_busy` while a
+## newer one is running.
 func _drain() -> void:
 	if _busy or _pending.is_empty():
 		return
