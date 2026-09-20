@@ -37,14 +37,14 @@ func test_anchor_attaches_its_group_on_entering_the_tree() -> void:
 
 
 func test_anchor_mounts_a_ready_group_for_an_author_time_entity() -> void:
-	# Given: A whole map built before it enters the tree, its entity inside the
-	# SubViewport and its HUD layer in a later subtree. This is the shape of a map scene
-	# with enemies placed in the editor, and the child order means the world subtree is
-	# made ready before the UI subtree is.
+	# Given: A map built whole before it enters the tree.
+	#
+	# NOTE: This is the shape of a map scene with enemies placed in the editor, where
+	# the child order makes the world subtree ready before the UI subtree.
 	var map: KitMap2D = partial_double(KitMap2D).new()
-	stub(map, "_ready").to_do_nothing()
 	map.set_anchors_preset(Control.PRESET_FULL_RECT)
 
+	# Given: A SubViewport holding the world.
 	var container := SubViewportContainer.new()
 	container.size = Vector2(640, 360)
 	map.add_child(container)
@@ -54,6 +54,7 @@ func test_anchor_mounts_a_ready_group_for_an_author_time_entity() -> void:
 	container.add_child(viewport)
 	map.sub_viewport = viewport
 
+	# Given: An entity inside that viewport, carrying an anchor.
 	var target := Node2D.new()
 	viewport.add_child(target)
 
@@ -61,6 +62,7 @@ func test_anchor_mounts_a_ready_group_for_an_author_time_entity() -> void:
 	anchor.group_scene = GROUP_2D
 	target.add_child(anchor)
 
+	# Given: The HUD layer in a later subtree than the world.
 	var ui := Control.new()
 	map.add_child(ui)
 
@@ -72,10 +74,11 @@ func test_anchor_mounts_a_ready_group_for_an_author_time_entity() -> void:
 	# When: The map enters the tree in one go.
 	_root.add_child(map)
 
-	# Then: The group is not merely mounted but *ready*, so the entity reading its
-	# elements in its own `_ready` finds them resolved. Attaching only on entering the
-	# tree left the group unready here, and the failure was a null element rather than a
-	# missing group, which is why it is worth a test of its own.
+	# Then: The group is mounted and already ready.
+	#
+	# NOTE: An entity reading its elements in its own `_ready` needs them resolved.
+	# Attaching only on entering the tree left the group unready, and the failure
+	# surfaced as a null element rather than a missing group.
 	assert_not_null(anchor.group)
 	assert_true(anchor.group.is_node_ready())
 	assert_eq(anchor.group.get_parent(), layer)
@@ -170,7 +173,6 @@ func before_each() -> void:
 	add_child_autofree(_root)
 
 	_map = partial_double(KitMap2D).new()
-	stub(_map, "_ready").to_do_nothing()
 	_map.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_root.add_child(_map)
 

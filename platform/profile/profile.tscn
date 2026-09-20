@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://58wcyocyg8g" path="res://platform/profile/profile.gd" id="1_4xmpt"]
 [ext_resource type="Script" uid="uid://b48nei7xl0xrh" path="res://addons/std/condition/condition_loader.gd" id="2_jm2x5"]
 [ext_resource type="Script" uid="uid://be11f4pqliry0" path="res://addons/std/condition/expression.gd" id="3_a6mj4"]
-[ext_resource type="Resource" uid="uid://ci7xn7gttsuu2" path="res://platform/storefront/unknown/unknown_storefront_expression.tres" id="4_2uyrr"]
-[ext_resource type="Resource" uid="uid://nggtxsyr5rs2" path="res://platform/storefront/steam/steam_storefront_expression.tres" id="5_ro34c"]
+[ext_resource type="Resource" uid="uid://ci7xn7gttsuu2" path="res://platform/storefront/unknown_storefront_expression.tres" id="4_2uyrr"]
+[ext_resource type="Resource" uid="uid://nggtxsyr5rs2" path="res://platform/storefront/steam_storefront_expression.tres" id="5_ro34c"]
 [ext_resource type="Resource" uid="uid://d14ioajw47mqw" path="res://platform/editor_expression.tres" id="5_vicgj"]
 
 [node name="Profile" type="Node" unique_id=1944493155]

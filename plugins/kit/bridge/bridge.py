@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""bridge.py drives a running game through kit's `system/debug/debug.gd`.
+"""bridge.py drives a running game through kit's `system/debug/editor/bridge.gd`.
 
 Requires only the standard library. Run it through `godot-bridge`, which supplies the
 interpreter; `bridge/README.md` documents the commands.
@@ -246,15 +246,54 @@ def matches(value, expected):
         return value == expected
 
 
+def split_target(target):
+    """split_target splits `[<glob>:]<field>` into the node filter and the dotted field.
+
+    NOTE: The glob is optional because a field is usually reported by one node only, and
+    naming that node adds nothing. It is there for when two report the same field.
+    """
+    node, sep, field = target.rpartition(":")
+    if not sep:
+        node, field = "", target
+
+    if not field:
+        raise BridgeError("--for takes [<node glob>:]<field>, e.g. booted or Map:scene")
+
+    return node, field.split(".")
+
+
+def field_in_state(state, node, field):
+    """field_in_state returns the one value `field` has across the reporting nodes.
+
+    It raises when several nodes report the field, since a wait that silently picked one
+    of them would pass or hang for reasons the caller cannot see.
+    """
+    found = {}
+    for path, reported in state.items():
+        value = field_of(reported, field)
+        if value is not None:
+            found[path] = value
+
+    if not found:
+        where = f" under {node}" if node else ""
+        raise BridgeError(f"no node reports {'.'.join(field)}{where}")
+
+    if len(found) > 1:
+        raise BridgeError(
+            f"{'.'.join(field)} is reported by {len(found)} nodes "
+            f"({', '.join(sorted(found))}); narrow it with <node glob>:<field>"
+        )
+
+    return next(iter(found.items()))
+
+
 def wait_for(port, target, expected, timeout, offset=None):
-    """wait_for polls a registered command until one of its fields matches, or gives up.
+    """wait_for polls the game's reported state until a field matches, or gives up.
 
     NOTE: Only what the game logged from `offset` onward counts as that failure, since
     the log outlives the command which wrote it.
     """
-    name, _, field = target.partition(".")
-    if not field:
-        raise BridgeError("--for takes <command>.<field>, e.g. app.booted")
+    node, field = split_target(target)
 
     if offset is None:
         offset = log_size(port)
@@ -268,12 +307,14 @@ def wait_for(port, target, expected, timeout, offset=None):
             raise BridgeError(f"the game reported an error: {failure}")
 
         try:
-            result = request(port, "call", {"name": name}, timeout=5.0)
-            value = field_of(result, field.split("."))
+            state = request(
+                port, "state", {"filter": [node] if node else []}, timeout=5.0
+            )
+            path, value = field_in_state(state, node, field)
             if matches(value, expected):
-                return result
+                return state
 
-            last = f"{name}.{field} is {value!r}"
+            last = f"{path} reports {'.'.join(field)} as {value!r}"
         except BridgeError as err:
             last = str(err)
 
@@ -317,7 +358,7 @@ def launch(args):
 
     state = wait_for(args.port, args.until, args.equals, args.timeout, offset=0)
 
-    return {"pid": process.pid, "log": log_path(args.port), args.until: state}
+    return {"pid": process.pid, "log": log_path(args.port), "state": state}
 
 
 def main(argv=None):
@@ -335,14 +376,16 @@ def main(argv=None):
     parser_launch = commands.add_parser("launch", help="start the game and wait for it")
     parser_launch.add_argument("--scene", help="scene to run instead of the main scene")
     parser_launch.add_argument("--no-wait", action="store_true", help="do not wait")
-    parser_launch.add_argument("--until", default="app.booted", help="what to wait for")
+    parser_launch.add_argument("--until", default="booted", help="what to wait for")
     parser_launch.add_argument("--equals", help="value to match (default: true)")
     parser_launch.add_argument("--timeout", type=float, default=60.0)
     parser_launch.add_argument("rest", nargs="*", help="extra arguments for the game")
 
     commands.add_parser("stop", help="shut the game down")
     commands.add_parser("status", help="print the bridge's summary")
-    commands.add_parser("commands", help="list the handlers the game registered")
+    commands.add_parser(
+        "reporters", help="list the nodes reporting state, without asking for it"
+    )
 
     parser_tree = commands.add_parser("tree", help="dump part of the scene tree")
     parser_tree.add_argument(
@@ -350,9 +393,18 @@ def main(argv=None):
     )
     parser_tree.add_argument("--depth", type=int, default=3)
 
-    parser_call = commands.add_parser("call", help="invoke a registered handler")
-    parser_call.add_argument("name")
-    parser_call.add_argument("--args", default="{}", help="arguments, as JSON")
+    parser_state = commands.add_parser(
+        "state", help="report what the game's nodes say about themselves"
+    )
+    parser_state.add_argument(
+        "--filter",
+        action="append",
+        metavar="GLOB",
+        help=(
+            "keep only nodes whose path matches; a bare name matches at any depth, "
+            "and repeating the flag keeps the union"
+        ),
+    )
 
     parser_eval = commands.add_parser("eval", help="evaluate an expression")
     parser_eval.add_argument("expr")
@@ -365,8 +417,8 @@ def main(argv=None):
     parser_logs.add_argument("--lines", type=int, default=40)
     parser_logs.add_argument("--all", action="store_true", help="do not filter noise")
 
-    parser_wait = commands.add_parser("wait", help="poll until a handler reports ready")
-    parser_wait.add_argument("--for", dest="target", default="app.booted")
+    parser_wait = commands.add_parser("wait", help="poll until a node reports ready")
+    parser_wait.add_argument("--for", dest="target", default="booted")
     parser_wait.add_argument("--equals", help="value to match (default: true)")
     parser_wait.add_argument("--timeout", type=float, default=60.0)
 
@@ -389,10 +441,8 @@ def main(argv=None):
     if args.command == "tree":
         return request(args.port, "tree", {"path": args.path, "depth": args.depth})
 
-    if args.command == "call":
-        return request(
-            args.port, "call", {"name": args.name, "args": json.loads(args.args)}
-        )
+    if args.command == "state":
+        return request(args.port, "state", {"filter": args.filter or []})
 
     if args.command == "eval":
         return request(args.port, "eval", {"expr": args.expr})

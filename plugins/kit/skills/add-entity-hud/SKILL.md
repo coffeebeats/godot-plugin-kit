@@ -65,7 +65,7 @@ Four words: **layer** (the plane, one per map, already in every template), **anc
 
    `offset`, `clamped` and `viewport_margin` all belong to the group's `KitWorldTracker`, beside the layout they affect.
 
-6. **Verify.** Run the checker and GUT (see AGENTS.md Commands). If the entity is placed in a map scene at author time rather than spawned, that is the ordering path from step 2 — confirm it on a live game with the `run-game` skill, where `godot-bridge call hud` reports every mounted group, its screen position, and each element's rect.
+6. **Verify.** Run the checker and GUT (see AGENTS.md Commands). If the entity is placed in a map scene at author time rather than spawned, that is the ordering path from step 2 — confirm it on a live game with the `run-game` skill, where `godot-bridge state --filter Hud` reports every mounted group, its screen position, and each element's rect.
 
 ## Gotchas
 

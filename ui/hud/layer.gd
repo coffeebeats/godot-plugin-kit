@@ -24,10 +24,6 @@
 class_name KitHudLayer
 extends Control
 
-# -- DEPENDENCIES -------------------------------------------------------------------- #
-
-const Debug := preload("../../system/debug/debug.gd")
-
 # -- DEFINITIONS --------------------------------------------------------------------- #
 
 ## DEBUG_ELEMENT_DEPTH is how many levels of a group's children the debug report walks.
@@ -144,23 +140,6 @@ func project_world(_world_position: Variant) -> Vector2:
 	return Vector2.INF
 
 
-# -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
-
-
-func _exit_tree() -> void:
-	if Engine.is_editor_hint():
-		return
-
-	Debug.unregister(&"hud", _get_debug_state)
-
-
-func _ready() -> void:
-	if Engine.is_editor_hint():
-		return
-
-	Debug.register(&"hud", _get_debug_state)
-
-
 # -- PRIVATE METHODS (OVERRIDES) ----------------------------------------------------- #
 
 
@@ -208,8 +187,10 @@ func _describe_elements(node: Node, depth: int) -> Array:
 	return out
 
 
-## _get_debug_state reports every mounted group to the debug bridge, so `call hud`
-## answers what is on screen without a human looking at the window.
+## _get_debug_state reports every mounted group to the debug bridge, which answers
+## what is on screen without a human looking at the window.
+##
+## NOTE: Nothing in a shipped build calls this; the bridge finds it by method name.
 func _get_debug_state() -> Dictionary:
 	var groups := []
 

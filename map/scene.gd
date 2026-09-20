@@ -28,10 +28,6 @@
 class_name KitMap
 extends Control
 
-# -- DEPENDENCIES -------------------------------------------------------------------- #
-
-const Debug := preload("../system/debug/debug.gd")
-
 # -- CONFIGURATION ------------------------------------------------------------------- #
 
 ## sub_viewport is a `SubViewport` that renders the game world at a specific resolution.
@@ -84,8 +80,6 @@ func _exit_tree() -> void:
 	if Engine.is_editor_hint():
 		return
 
-	Debug.unregister(&"map", _get_debug_state)
-
 	# NOTE: Godot #100755 - null `world_2d` to prevent crash when changing scenes while
 	# a `SubViewport` shares the main viewport's `World2D`.
 	if sub_viewport and sub_viewport.world_2d == get_viewport().world_2d:
@@ -113,13 +107,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		warnings.append("Missing property: 'action_set'")
 
 	return warnings
-
-
-func _ready() -> void:
-	if Engine.is_editor_hint():
-		return
-
-	Debug.register(&"map", _get_debug_state)
 
 
 # -- PUBLIC METHODS ------------------------------------------------------------------ #
@@ -176,7 +163,9 @@ func viewport_to_screen(p: Vector2) -> Vector2:
 
 
 ## _get_debug_state reports the map's view state to the debug bridge. Every map
-## inherits this, so an inherited scene answers `call map` with no wiring of its own.
+## inherits it, so an inherited scene is reported with no wiring of its own.
+##
+## NOTE: Nothing in a shipped build calls this; the bridge finds it by method name.
 func _get_debug_state() -> Dictionary:
 	var out := {
 		&"scene": scene_file_path,

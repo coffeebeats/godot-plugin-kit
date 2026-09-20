@@ -42,7 +42,7 @@ Before starting, check that a stock element with a different style resource does
 
 6. **Write the test** as `project/ui/hud/<element>/<element>_test.gd`, in the fixture shape of kit's `bar_test.gd` — map double, `SubViewportContainer`, `SubViewport`, a later `UI` sibling holding the layer. Cover the API, the pre-`_ready` call from step 2, and whatever the style resource is supposed to change.
 
-7. **Verify.** `gdformat --check`, `gdlint`, `godot-check`, then GUT (see AGENTS.md Commands). For anything whose point is how it looks or moves, confirm it on a live game with the `run-game` skill; `godot-bridge call hud` reports every element's class, rect and visibility.
+7. **Verify.** `gdformat --check`, `gdlint`, `godot-check`, then GUT (see AGENTS.md Commands). For anything whose point is how it looks or moves, confirm it on a live game with the `run-game` skill; `godot-bridge state --filter Hud` reports every element's class, rect and visibility.
 
 8. **List the element** in the stock-element table of the `add-entity-hud` skill, so the next session placing a HUD finds it without reading the directory. `AGENTS.md` names no elements and does not change.
 

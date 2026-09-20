@@ -6,13 +6,15 @@ what the scene tree looks like right now, and what the game just logged.
 
 ```sh
 godot-bridge launch                       # start the game, wait until it is usable
-godot-bridge status                       # frame, current scene, registered commands
+godot-bridge status                       # frame, current scene, reporting nodes
 godot-bridge tree --path Main             # names, classes, visibility, control rects
 godot-bridge eval 'Main.screens().get_depth()'
-godot-bridge call app                     # a handler the running scene registered
+godot-bridge state                        # what every reporting node says
+godot-bridge state --filter Map           # one node, by name at any depth
+godot-bridge reporters                    # which nodes report, without asking
 godot-bridge screenshot --out shot.png    # or --node <path> to crop to one control
 godot-bridge logs                         # what the game printed
-godot-bridge wait --for app.booted        # poll until a handler reports ready
+godot-bridge wait --for booted            # poll until a node reports ready
 godot-bridge stop
 ```
 
@@ -30,43 +32,67 @@ before the tool ever sees the argument.
 
 ### Gating
 
-Two independent gates, because the bridge evaluates arbitrary expressions on request:
+Three independent gates, because the bridge evaluates arbitrary expressions on request:
 
-1. The game mounts it through an `StdConditionLoader` whose expression
-   is `debug_build_expression.tres` (`OS.has_feature("debug")`), so a release export
-   never places the node. The same mechanism gates the Steam storefront in
-   `addons/kit/platform/storefront/storefront.tscn`.
-2. The node listens only when handed a port, either `--bridge-port <N>` after `--` or
+1. Nothing a game ships depends on the bridge. It lives in
+   `addons/kit/system/debug/editor/`, which a game excludes from its export presets
+   with `*/editor/*`, and the pack holds neither the script nor its scene. A reporting
+   node does ship its `_get_debug_state` method, but the method names nothing in that
+   directory, so no shipped file pins a bridge file into the pack.
+2. The game mounts it through an `StdConditionLoader` whose expression
+   is `editor_run_expression.tres` (`OS.has_feature("editor")`), so only an editor run
+   places the node. The same mechanism gates the Steam storefront in
+   `addons/kit/platform/storefront/storefront.tscn`. The loader names its scene by uid
+   and loads it on demand, which is why excluding the file costs a game nothing.
+3. The node listens only when handed a port, either `--bridge-port <N>` after `--` or
    `GODOT_DEBUG_BRIDGE_PORT` for editor runs, where run arguments are a per-machine
    editor setting that cannot be committed. An ordinary F5, a GUT run and a headless CI
    run therefore open no socket.
 
-It binds `127.0.0.1` and nothing else.
+It binds `127.0.0.1` and nothing else. The first two gates are also why `godot-bridge`
+drives a project through the editor binary rather than an exported build: an export has
+no bridge to talk to.
 
-### The command hook
+### Reporting state
 
 The bridge knows sockets, JSON, `Expression`, the scene tree and the viewport. It knows
-nothing about screens, maps or a simulation; those register handlers on it:
+nothing about screens, maps or a simulation. A node that wants to be visible to `state`
+defines one method:
 
 ```gdscript
-const Debug := preload("res://addons/kit/system/debug/debug.gd")
-
-Debug.register(&"map", _get_debug_state)              # in _ready
-Debug.unregister(&"map", _get_debug_state)            # in _exit_tree
+func _get_debug_state() -> Dictionary:
+	return {&"trauma": _trauma, &"offset": _read_offset()}
 ```
 
-Both calls are safe when no bridge is present, so a call site needs no feature check of
-its own. `unregister` takes the handler because a screen transition has the incoming
-scene in the tree before the outgoing one leaves it, and an unqualified erase would drop
-the handler its replacement had just registered.
+That is the whole contract. There is nothing to register and nothing to import; the
+method name is all the two sides share, which is what lets a game exclude the bridge
+outright. In a shipped build the method has no caller.
 
-A game typically registers two: `app` from its own `main.gd` (current screen, stack
-depth, save slot, and whether the app is settled and booted) and `map` from
-`KitMap`, which every inherited map gets for free.
+A reporter node in a group would be the other way to do this, and it cannot reach what
+is worth reporting. Most of that is private or computed, such as `is_hit_stopped()`, a
+hit-stop deadline minus the current time, or a HUD group's anchor path, so a separate
+node could only read it by making the parent's internals public. It would also put a
+scene reference in every reporting scene, which is the dependency the method avoids.
 
-`wait` polls one of these handlers from the client rather than evaluating a predicate in
-the engine, which keeps the bridge simple and lets a failure in the game's log end the
-wait early.
+`state` walks the tree, calls the method on every node defining it, and keys each
+answer by that node's path. Two maps in one tree are therefore both reported, where a
+registry keyed by name could hold only the last one to arrive. A node that leaves the
+tree stops being reported, with nothing to clean up.
+
+`--filter` narrows the walk and may be repeated, keeping the union. A filter is a glob
+over the node's whole path, where `*` crosses `/` as it does everywhere else in the
+engine; one holding no wildcard and no `/` is taken for a node name at any depth, so
+`--filter Map` works without knowing where the map sits.
+
+`KitMap`, `KitFeelLayer` and `KitHudLayer` all report, which every inherited scene
+gets for free, and a game typically adds its own `main.gd` (current screen, stack
+depth, save slot, and whether the app is settled and booted).
+
+`wait --for [<node glob>:]<field>` polls those reports from the client rather than
+evaluating a predicate in the engine, which keeps the bridge simple and lets a failure
+in the game's log end the wait early. The node half is optional, and needed only when
+two nodes report the same field; a wait that matched several is an error rather than a
+silent pick.
 
 ### Engine behavior the bridge is shaped around
 

@@ -160,7 +160,6 @@ func test_layer_without_a_map_warns_in_the_editor() -> void:
 func test_attach_positions_the_group_at_the_projection_in_3d() -> void:
 	# Given: A 3D map with a camera, a layer, and a target in front of the camera.
 	var map: KitMap3D = partial_double(KitMap3D).new()
-	stub(map, "_ready").to_do_nothing()
 	map.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_root.add_child(map)
 
@@ -216,7 +215,6 @@ func before_each() -> void:
 	add_child_autofree(_root)
 
 	_map = partial_double(KitMap2D).new()
-	stub(_map, "_ready").to_do_nothing()
 	_map.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_root.add_child(_map)
 
