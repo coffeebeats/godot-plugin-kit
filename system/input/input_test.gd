@@ -38,7 +38,7 @@ func test_input_ready_without_cursor_fails_module() -> void:
 	add_child_autofree(input)
 
 	# Then: Its module failed.
-	assert_false(KitModule.is_loaded(SystemInput.MODULE_ID))
+	assert_eq(KitModule.get_status(SystemInput.MODULE_ID), KitModule.Status.FAILED)
 
 	# Then: The failure is logged.
 	assert_push_error("Kit module failed to load.")

@@ -31,7 +31,7 @@ func test_storefront_ready_with_every_loader_blocked_fails_module() -> void:
 	add_child_autofree(storefront)
 
 	# Then: Its module failed.
-	assert_false(KitModule.is_loaded(Storefront.MODULE_ID))
+	assert_eq(KitModule.get_status(Storefront.MODULE_ID), KitModule.Status.FAILED)
 
 	# Then: The failure is logged.
 	assert_push_error("Kit module failed to load.")
@@ -48,7 +48,7 @@ func test_storefront_ready_with_unscripted_implementation_fails_module() -> void
 	add_child_autofree(storefront)
 
 	# Then: Its module failed.
-	assert_false(KitModule.is_loaded(Storefront.MODULE_ID))
+	assert_eq(KitModule.get_status(Storefront.MODULE_ID), KitModule.Status.FAILED)
 
 	# Then: The failure is logged.
 	assert_push_error("Kit module failed to load.")

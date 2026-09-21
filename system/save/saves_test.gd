@@ -49,7 +49,7 @@ func test_saves_ready_without_schema_fails_module() -> void:
 	add_child_autofree(saves)
 
 	# Then: Its module failed.
-	assert_false(KitModule.is_loaded(SystemSave.MODULE_ID))
+	assert_eq(KitModule.get_status(SystemSave.MODULE_ID), KitModule.Status.FAILED)
 
 	# Then: The failure is logged.
 	assert_push_error("Kit module failed to load.")

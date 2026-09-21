@@ -54,7 +54,7 @@ func test_profile_ready_with_every_loader_blocked_fails_module() -> void:
 	add_child_autofree(profile)
 
 	# Then: Its module failed.
-	assert_false(KitModule.is_loaded(Profile.MODULE_ID))
+	assert_eq(KitModule.get_status(Profile.MODULE_ID), KitModule.Status.FAILED)
 
 	# Then: The failure is logged.
 	assert_push_error("Kit module failed to load.")
@@ -74,7 +74,7 @@ func test_profile_ready_with_empty_implementation_fails_module() -> void:
 	add_child_autofree(profile)
 
 	# Then: Its module failed without a profile.
-	assert_false(KitModule.is_loaded(Profile.MODULE_ID))
+	assert_eq(KitModule.get_status(Profile.MODULE_ID), KitModule.Status.FAILED)
 	assert_null(profile.get_user_profile())
 
 	# Then: The failure is logged.
@@ -89,7 +89,7 @@ func test_profile_ready_without_storefront_fails_module() -> void:
 	add_child_autofree(profile)
 
 	# Then: Its module failed.
-	assert_false(KitModule.is_loaded(Profile.MODULE_ID))
+	assert_eq(KitModule.get_status(Profile.MODULE_ID), KitModule.Status.FAILED)
 
 	# Then: The failure is logged.
 	assert_push_error("Kit module failed to load.")
