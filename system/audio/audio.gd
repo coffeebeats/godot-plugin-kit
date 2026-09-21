@@ -1,15 +1,27 @@
 ##
-## SystemAudio is a sound event player which manages pools of audio player nodes, a
-## music player, and mix snapshot handling for covered screens.
+## SystemAudio is the game's audio system. It plays sound events through its
+## `StdSoundEventPlayer`, plays background music, and ducks the mix under covered
+## screens.
 ##
 
-extends StdSoundEventPlayer
+extends KitModule
+
+# -- DEPENDENCIES -------------------------------------------------------------------- #
+
+const Signals := preload("res://addons/std/event/signal.gd")
 
 # -- DEFINITIONS --------------------------------------------------------------------- #
 
 const GROUP_AUDIO_SHIM := &"system/audio:shim"
 
+## MODULE_ID is the ID the audio system registers under as a `KitModule`.
+const MODULE_ID := &"audio"
+
 # -- CONFIGURATION ------------------------------------------------------------------- #
+
+## sound_player is the node which plays the game's sound events from pools of audio
+## players.
+@export var sound_player: StdSoundEventPlayer = null
 
 ## music_player is the music player node for managing background music playback.
 @export var music_player: StdMusicPlayer = null
@@ -48,20 +60,37 @@ func music() -> StdMusicPlayer:
 	return music_player
 
 
+## play plays the provided sound event through `sound_player`. Returns null if every
+## audio player is busy with a sound of equal or higher priority.
+func play(event: StdSoundEvent, fade_curve: StdTweenCurve = null) -> StdSoundInstance:
+	return sound_player.play(event, fade_curve)
+
+
 # -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
 
 
 func _enter_tree() -> void:
-	super._enter_tree()
-
 	assert(StdGroup.is_empty(GROUP_AUDIO_SHIM), "invalid state; duplicate node found")
 	StdGroup.with_id(GROUP_AUDIO_SHIM).add_member(self)
 
 
 func _exit_tree() -> void:
-	super._exit_tree()
-
 	StdGroup.with_id(GROUP_AUDIO_SHIM).remove_member(self)
+
+
+func _ready() -> void:
+	if not sound_player is StdSoundEventPlayer or not music_player is StdMusicPlayer:
+		_report_failed("missing a sound player or music player")
+		return
+
+	_report_loaded()
+
+
+# -- PRIVATE METHODS (OVERRIDES) ----------------------------------------------------- #
+
+
+func _get_module_id() -> StringName:
+	return MODULE_ID
 
 
 # -- SIGNAL HANDLERS ----------------------------------------------------------------- #

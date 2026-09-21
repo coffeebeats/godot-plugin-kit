@@ -17,7 +17,6 @@ config/icon="res://icon.svg"
 [autoload]
 
 Lifecycle="*res://system/lifecycle.gd"
-Platform="*res://premade/platform.tscn"
 
 [debug]
 

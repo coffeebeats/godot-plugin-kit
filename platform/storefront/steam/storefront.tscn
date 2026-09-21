@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://b4m43lixcajnq"]
+
+[ext_resource type="Script" uid="uid://cxx6p1ae3tsok" path="res://platform/storefront/steam/storefront.gd" id="1_xb4eh"]
+
+[node name="Storefront" type="Node" unique_id=1186732667]
+script = ExtResource("1_xb4eh")

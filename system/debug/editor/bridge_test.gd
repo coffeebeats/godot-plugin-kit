@@ -180,7 +180,7 @@ func test_debug_identifiers_collects_each_name_once() -> void:
 
 func test_debug_resolve_finds_what_expression_cannot() -> void:
 	# Then: An autoload, an engine singleton and a global class each resolve.
-	assert_true(_bridge._resolve("Platform") is Node)
+	assert_true(_bridge._resolve("Lifecycle") is Node)
 	assert_not_null(_bridge._resolve("ResourceLoader"))
 	assert_true(_bridge._resolve("KitSystems") is Script)
 
@@ -192,12 +192,12 @@ func test_debug_resolve_with_an_unknown_name_returns_null() -> void:
 
 func test_debug_node_accepts_every_form_of_the_same_path() -> void:
 	# Given: An autoload the caller may name three ways.
-	var expected := _bridge.get_tree().root.get_node_or_null(^"Platform")
+	var expected := _bridge.get_tree().root.get_node_or_null(^"Lifecycle")
 
 	# Then: The absolute, root-prefixed and bare forms all find it.
-	assert_eq(_bridge._node("/root/Platform"), expected)
-	assert_eq(_bridge._node("root/Platform"), expected)
-	assert_eq(_bridge._node("Platform"), expected)
+	assert_eq(_bridge._node("/root/Lifecycle"), expected)
+	assert_eq(_bridge._node("root/Lifecycle"), expected)
+	assert_eq(_bridge._node("Lifecycle"), expected)
 
 
 func test_debug_node_with_no_path_returns_the_root() -> void:

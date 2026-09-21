@@ -20,13 +20,15 @@ Each release is a commit on `dist`, tagged `dist/vX.Y.Z`. Versions follow semant
 
 Kit ships no autoloads. Register these three in `project.godot`:
 
-- `Platform`, a scene instancing the `platform/` scenes. Kit's scripts reach it by this name.
+- `Platform`, a scene instancing the `platform/` scenes.
 - `System`, a scene instancing the `system/` scenes. The game's own values are set on its instances.
 - `Lifecycle`, the script `addons/kit/system/lifecycle.gd`. Kit's pause menu reaches it by this name, and a game saves its progress on `Lifecycle.shutdown_requested`.
 
+Register `Platform` before `System`: the modules in `System` require the profile, and fail to load if it has not loaded first.
+
 ### Copy the assemblies
 
-`premade/platform.tscn` and `premade/system.tscn` are ready-made `Platform` and `System` scenes, each instancing every scene under its tree. Copy both into the game, give each copy a new `uid` in its header, and register the copies as the autoloads above. The game owns the copies from then on, while the scenes they instance keep arriving with the submodule. `platform.tscn` needs no changes. `system.tscn` leaves every export in the table below unset, so set the ones the game needs and delete the nodes it does not; `Saves` asserts until it has a `schema`. Instancing the scenes into autoloads of your own works just as well.
+`premade/platform.tscn` and `premade/system.tscn` are ready-made `Platform` and `System` scenes, each instancing every scene under its tree. Copy both into the game, give each copy a new `uid` in its header, and register the copies as the autoloads above. The game owns the copies from then on, while the scenes they instance keep arriving with the submodule. `platform.tscn` needs no changes. `system.tscn` leaves every export in the table below unset, so set the ones the game needs and delete the nodes it does not; `Saves` fails to load until it has a `schema`. Instancing the scenes into autoloads of your own works just as well.
 
 ### Set the game's values
 
@@ -44,6 +46,18 @@ Two values are set from code instead, since no export in `System` can reach or h
 
 - `KitSystems.audio().screens`, the game's `StdScreenManager`, which ducks the mix under covering screens.
 - `KitPauseMenu.return_to_main_menu`, the game's way back to its main menu. The pause menu offers returning only once it is set.
+
+### Check that the modules loaded
+
+The scenes the game depends on to boot are modules: `storefront` and `profile` in `Platform`, and `input`, `settings`, `audio` and `saves` in `System`. Each extends `KitModule` and reports once whether it loaded, logging `Loaded kit module. module=<id>` at `INFO` when it does — one line per module, which a boot check can require.
+
+A module fails when it finds no implementation or more than one, when its configuration is missing, when a module it requires has not loaded by the time its `_ready` runs, or when its `_ready` returns without reporting, as one cut short by a script error does. It logs `Kit module failed to load.` and nothing more, because only the game knows which modules it can run without. A module reports only on its own code, so a storefront whose client is not running raises its own error and still loads.
+
+Check the modules from the main scene's `_ready`, once the autoloads are ready. `KitModule.get_module_ids()` lists every module that registered, and `KitModule.get_status(id)` says whether one is loading, loaded or failed. A game that needs every module can enqueue a critical `KitError` with its own title and message for the first failure, and let its boot drain show it. Code that uses a single module checks it with `KitModule.is_loaded(id)`.
+
+`saves` loads its slots on a worker thread and reports once they finish, so it is usually still loading when the main scene checks. Before showing anything that reads the save slots, check `are_slots_loaded()` and otherwise wait for `slots_loaded`.
+
+The game's own nodes become modules the same way: extend `KitModule`, override `_get_module_id` and, if the module requires others, `_get_module_requires`, then call `_report_loaded()` or `_report_failed(reason)` once by the end of `_ready`. A module that finishes loading later, as `saves` does, overrides `_is_module_async` to return `true` and reports when it is done. A node that must extend another class can own a child of that class instead, as the audio system owns its `StdSoundEventPlayer`. When a module's implementation varies by build, give the implementations a base script that joins a group, and have the node that registered look the implementation up there before it reports. A scene whose script failed to load is still added to the tree, but it never joins the group.
 
 ### Use the menus
 

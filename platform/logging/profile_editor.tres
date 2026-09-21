@@ -19,9 +19,9 @@ metadata/_custom_type_script = "uid://p7m3bed4l6o8"
 script = ExtResource("1_3f0js")
 level = 0
 level_overrides = Dictionary[String, int]({
-"platform/": 2,
-"std/": 2,
-"system/": 2
+"platform/": 1,
+"std/": 1,
+"system/": 1
 })
 formatter = SubResource("Resource_uwuok")
 sink = SubResource("Resource_srd2c")

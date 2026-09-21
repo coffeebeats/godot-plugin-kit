@@ -1,8 +1,9 @@
 ##
-## This node initializes the `Steam` storefront integration.
+## The storefront implementation for Steam. It starts the Steam API and reports its own
+## failure to start to the player.
 ##
 
-extends Node
+extends "../provider.gd"
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
 

@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://b6i55o1itaflh"]
+
+[ext_resource type="Script" uid="uid://b0yr1e3nran7l" path="res://platform/storefront/unknown/storefront.gd" id="1_7kq2d"]
+
+[node name="Storefront" type="Node" unique_id=1212176645]
+script = ExtResource("1_7kq2d")
