@@ -1,7 +1,7 @@
 ##
 ## KitModule is the base class for a node the game depends on to boot correctly. It
-## registers on entering the scene tree and must then report once whether it loaded. A
-## failure is only logged, since the game decides which modules it cannot run without.
+## registers on entering the scene tree and must report whether it loaded by the end of
+## `_ready`. A failure is only logged, since the game decides which modules it needs.
 ##
 ## NOTE: It registers from `_notification`, which Godot calls on every script in the
 ## hierarchy, so a subclass overriding `_enter_tree` need not call `super`.
@@ -62,6 +62,11 @@ func _notification(what: int) -> void:
 		NOTIFICATION_POST_ENTER_TREE:
 			if _module_status == Status.LOADING:
 				_check_module_requires()
+		NOTIFICATION_READY:
+			# NOTE: Godot sends this after the subclass's `_ready` returns, including one
+			# which a script error cut short.
+			if _module_status == Status.LOADING and not _is_module_async():
+				_report_failed("did not report by the end of _ready")
 		NOTIFICATION_PREDELETE:
 			_unregister_module()
 
@@ -80,6 +85,13 @@ func _get_module_id() -> StringName:
 ## this one's `_ready` runs. The module fails if any has not.
 func _get_module_requires() -> Array[StringName]:
 	return []
+
+
+## _is_module_async returns whether this module reports after its `_ready` returns, as
+## one which loads in the background does. Any other module which has not reported by
+## then fails.
+func _is_module_async() -> bool:
+	return false
 
 
 ## _report_failed marks this module as failed to load and logs the reason. A module that

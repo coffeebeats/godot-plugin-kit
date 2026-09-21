@@ -7,8 +7,9 @@ extends GutTest
 # -- DEFINITIONS --------------------------------------------------------------------- #
 
 
-## ExampleModule is a module whose ID and requirements each test sets. It overrides
-## `_enter_tree` without calling `super`, as kit's own modules do.
+## ExampleModule is a module whose ID and requirements each test sets, and which reports
+## when the test says. It overrides `_enter_tree` without calling `super`, as kit's own
+## modules do.
 class ExampleModule:
 	extends KitModule
 
@@ -33,6 +34,18 @@ class ExampleModule:
 
 	func _get_module_requires() -> Array[StringName]:
 		return requires
+
+	func _is_module_async() -> bool:
+		return true
+
+
+## SilentModule is a module which must report by the end of its `_ready`, and never
+## does.
+class SilentModule:
+	extends ExampleModule
+
+	func _is_module_async() -> bool:
+		return false
 
 
 ## NotifyingModule is a module whose `_notification` calls `super`, so Godot runs the
@@ -163,6 +176,34 @@ func test_module_report_failed_after_loading_is_ignored() -> void:
 	# Then: Its first report stands.
 	assert_true(KitModule.is_loaded(&"test_settled"))
 	assert_push_error_count(0)
+
+
+func test_module_report_loaded_before_entering_tree_is_rejected() -> void:
+	# Given: A module outside the scene tree.
+	var module: ExampleModule = autofree(ExampleModule.new(&"test_early_report"))
+
+	# When: It reports that it loaded.
+	module.report_loaded()
+
+	# When: It then enters the scene tree.
+	add_child(module)
+
+	# Then: It is still loading.
+	assert_eq(KitModule.get_status(&"test_early_report"), KitModule.Status.LOADING)
+
+	# Then: The early report is logged.
+	assert_push_error("Kit module reported without registering.")
+
+
+func test_module_ready_without_report_fails_module() -> void:
+	# When: A module which must report from its `_ready` enters the tree and never does.
+	add_child_autofree(SilentModule.new(&"test_silent"))
+
+	# Then: It failed.
+	assert_eq(KitModule.get_status(&"test_silent"), KitModule.Status.FAILED)
+
+	# Then: The failure is logged.
+	assert_push_error("Kit module failed to load.")
 
 
 func test_module_report_loaded_marks_module_loaded() -> void:

@@ -454,6 +454,10 @@ func _get_module_requires() -> Array[StringName]:
 	return [Profile.MODULE_ID]
 
 
+func _is_module_async() -> bool:
+	return true
+
+
 # -- PRIVATE METHODS ----------------------------------------------------------------- #
 
 
