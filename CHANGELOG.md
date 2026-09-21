@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.1 (2026-09-21)
+
+## What's Changed
+* chore(addons): bump `std` to v6.1.2 by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/42
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v1.3.0...v1.3.1
+
 ## 1.3.0 (2026-09-21)
 
 ## What's Changed
