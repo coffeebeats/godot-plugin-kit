@@ -4,7 +4,7 @@
 ## screens.
 ##
 
-extends Node
+extends KitModule
 
 # -- DEPENDENCIES -------------------------------------------------------------------- #
 
@@ -73,8 +73,6 @@ func _enter_tree() -> void:
 	assert(StdGroup.is_empty(GROUP_AUDIO_SHIM), "invalid state; duplicate node found")
 	StdGroup.with_id(GROUP_AUDIO_SHIM).add_member(self)
 
-	KitModules.register(self, MODULE_ID)
-
 
 func _exit_tree() -> void:
 	StdGroup.with_id(GROUP_AUDIO_SHIM).remove_member(self)
@@ -82,10 +80,17 @@ func _exit_tree() -> void:
 
 func _ready() -> void:
 	if not sound_player is StdSoundEventPlayer:
-		KitModules.report_failed(MODULE_ID, "missing a sound player")
+		_report_failed("missing a sound player")
 		return
 
-	KitModules.report_loaded(MODULE_ID)
+	_report_loaded()
+
+
+# -- PRIVATE METHODS (OVERRIDES) ----------------------------------------------------- #
+
+
+func _get_module_id() -> StringName:
+	return MODULE_ID
 
 
 # -- SIGNAL HANDLERS ----------------------------------------------------------------- #

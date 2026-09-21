@@ -55,9 +55,12 @@ static func is_settled() -> bool:
 	return true
 
 
-## register declares a module, which must then report whether it loaded. A module calls
-## it from its `_enter_tree`, and is forgotten once `node` exits the scene tree. Each ID
-## in `requires` names a module which must have loaded by the time this one reports.
+## register declares a module, which must then report whether it loaded, and forgets
+## it once `node` exits the scene tree. Each ID in `requires` names a module which must
+## have loaded by the time this one reports.
+##
+## NOTE: `KitModule` calls this on entering the scene tree; only a node that must extend
+## another class calls it itself, from its `_enter_tree`.
 static func register(
 	node: Node, id: StringName, requires: Array[StringName] = []
 ) -> void:

@@ -7,7 +7,7 @@
 ## thread.
 ##
 
-extends Node
+extends KitModule
 
 # -- SIGNALS ------------------------------------------------------------------------- #
 
@@ -430,8 +430,6 @@ func _enter_tree() -> void:
 	assert(StdGroup.is_empty(GROUP_SAVES_SHIM), "invalid state; duplicate node found")
 	StdGroup.with_id(GROUP_SAVES_SHIM).add_member(self)
 
-	KitModules.register(self, MODULE_ID, [Profile.MODULE_ID])
-
 
 func _exit_tree() -> void:
 	StdGroup.with_id(GROUP_SAVES_SHIM).remove_member(self)
@@ -439,10 +437,21 @@ func _exit_tree() -> void:
 
 func _ready() -> void:
 	if not schema is StdSaveData or not slot_scope is StdSettingsScope:
-		KitModules.report_failed(MODULE_ID, "missing a save schema or slot scope")
+		_report_failed("missing a save schema or slot scope")
 		return
 
 	_load_all_slots()
+
+
+# -- PRIVATE METHODS (OVERRIDES) ----------------------------------------------------- #
+
+
+func _get_module_id() -> StringName:
+	return MODULE_ID
+
+
+func _get_module_requires() -> Array[StringName]:
+	return [Profile.MODULE_ID]
 
 
 # -- PRIVATE METHODS ----------------------------------------------------------------- #
@@ -510,4 +519,4 @@ func _load_all_slots() -> void:
 
 	slots_loaded.emit()
 
-	KitModules.report_loaded(MODULE_ID)
+	_report_loaded()

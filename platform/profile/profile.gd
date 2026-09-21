@@ -3,7 +3,7 @@
 ## game application. The implementation for the build's storefront supplies the profile.
 ##
 
-extends Node
+extends KitModule
 
 # -- DEPENDENCIES -------------------------------------------------------------------- #
 
@@ -32,22 +32,29 @@ func get_user_profile() -> KitUserProfile:
 # -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
 
 
-func _enter_tree() -> void:
-	KitModules.register(self, MODULE_ID, [Storefront.MODULE_ID])
-
-
 func _ready() -> void:
 	if StdGroup.is_empty(Provider.GROUP_PROFILE_PROVIDER):
-		KitModules.report_failed(MODULE_ID, "no implementation loaded")
+		_report_failed("no implementation loaded")
 		return
 
 	var provider: Provider = StdGroup.get_sole_member(Provider.GROUP_PROFILE_PROVIDER)
 
 	_profile = provider.create_user_profile()
 	if not _profile:
-		KitModules.report_failed(MODULE_ID, "implementation supplied no profile")
+		_report_failed("implementation supplied no profile")
 		return
 
 	_logger.debug("Set profile for platform.", {&"profile": _profile.id})
 
-	KitModules.report_loaded(MODULE_ID)
+	_report_loaded()
+
+
+# -- PRIVATE METHODS (OVERRIDES) ----------------------------------------------------- #
+
+
+func _get_module_id() -> StringName:
+	return MODULE_ID
+
+
+func _get_module_requires() -> Array[StringName]:
+	return [Storefront.MODULE_ID]

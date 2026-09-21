@@ -4,7 +4,7 @@
 ## `GROUP_STOREFRONT_PROVIDER`.
 ##
 
-extends Node
+extends KitModule
 
 # -- DEPENDENCIES -------------------------------------------------------------------- #
 
@@ -18,13 +18,16 @@ const MODULE_ID := &"storefront"
 # -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
 
 
-func _enter_tree() -> void:
-	KitModules.register(self, MODULE_ID)
-
-
 func _ready() -> void:
 	if StdGroup.is_empty(Provider.GROUP_STOREFRONT_PROVIDER):
-		KitModules.report_failed(MODULE_ID, "no implementation loaded")
+		_report_failed("no implementation loaded")
 		return
 
-	KitModules.report_loaded(MODULE_ID)
+	_report_loaded()
+
+
+# -- PRIVATE METHODS (OVERRIDES) ----------------------------------------------------- #
+
+
+func _get_module_id() -> StringName:
+	return MODULE_ID

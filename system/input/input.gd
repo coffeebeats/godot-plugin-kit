@@ -2,7 +2,7 @@
 ## SystemInput is the global singleton scene for handling user input via action binding.
 ##
 
-extends Node
+extends KitModule
 
 # -- SIGNALS ------------------------------------------------------------------------- #
 
@@ -135,8 +135,6 @@ func _enter_tree() -> void:
 	assert(StdGroup.is_empty(GROUP_INPUT_SHIM), "invalid state; duplicate node found")
 	StdGroup.with_id(GROUP_INPUT_SHIM).add_member(self)
 
-	KitModules.register(self, MODULE_ID, [Profile.MODULE_ID])
-
 	set_process(false)
 
 
@@ -177,7 +175,7 @@ func _ready() -> void:
 		StdGroup.is_empty(StdInputCursor.GROUP_INPUT_CURSOR)
 		or StdInputSlot.all().is_empty()
 	):
-		KitModules.report_failed(MODULE_ID, "missing an input cursor or input slot")
+		_report_failed("missing an input cursor or input slot")
 		return
 
 	_cursor = StdGroup.get_sole_member(StdInputCursor.GROUP_INPUT_CURSOR)
@@ -189,4 +187,15 @@ func _ready() -> void:
 	)
 	Signals.connect_safe(_cursor.focus_root_changed, focus_root_changed.emit)
 
-	KitModules.report_loaded(MODULE_ID)
+	_report_loaded()
+
+
+# -- PRIVATE METHODS (OVERRIDES) ----------------------------------------------------- #
+
+
+func _get_module_id() -> StringName:
+	return MODULE_ID
+
+
+func _get_module_requires() -> Array[StringName]:
+	return [Profile.MODULE_ID]

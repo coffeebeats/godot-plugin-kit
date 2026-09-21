@@ -3,7 +3,7 @@
 ## the observers which apply them, and the game's own tabs in the settings menu.
 ##
 
-extends Node
+extends KitModule
 
 # -- DEPENDENCIES -------------------------------------------------------------------- #
 
@@ -32,12 +32,21 @@ func _enter_tree() -> void:
 	)
 	StdGroup.with_id(GROUP_SETTINGS_SHIM).add_member(self)
 
-	KitModules.register(self, MODULE_ID, [Profile.MODULE_ID])
-
 
 func _exit_tree() -> void:
 	StdGroup.with_id(GROUP_SETTINGS_SHIM).remove_member(self)
 
 
 func _ready() -> void:
-	KitModules.report_loaded(MODULE_ID)
+	_report_loaded()
+
+
+# -- PRIVATE METHODS (OVERRIDES) ----------------------------------------------------- #
+
+
+func _get_module_id() -> StringName:
+	return MODULE_ID
+
+
+func _get_module_requires() -> Array[StringName]:
+	return [Profile.MODULE_ID]
