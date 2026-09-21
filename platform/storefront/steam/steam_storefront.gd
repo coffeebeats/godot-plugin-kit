@@ -7,6 +7,7 @@ extends Node
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
 var _is_initialized: bool = false
+var _logger := StdLogger.create(&"platform/storefront/steam")
 
 # -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
 
@@ -25,18 +26,12 @@ func _enter_tree() -> void:
 		process_mode = Node.PROCESS_MODE_ALWAYS
 		set_process(true)
 
-		print(
-			"platform/storefront/steam/steam.gd[",
-			get_instance_id(),
-			"]: successfully initialized Steam",
-		)
+		_logger.info("Initialized Steam.")
 
 		return
 
-	print(
-		"platform/storefront/steam/steam.gd[",
-		get_instance_id(),
-		"]: failed to start Steam: %d: %s" % [response.status, response.verbal],
+	_logger.error(
+		"Failed to start Steam (%d: %s)." % [response.status, response.verbal]
 	)
 
 	var error := (
