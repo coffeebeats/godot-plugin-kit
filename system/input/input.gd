@@ -173,9 +173,9 @@ func _process(delta: float) -> void:
 func _ready() -> void:
 	if (
 		StdGroup.is_empty(StdInputCursor.GROUP_INPUT_CURSOR)
-		or StdInputSlot.all().is_empty()
+		or not StdInputSlot.for_player(1)
 	):
-		_report_failed("missing an input cursor or input slot")
+		_report_failed("missing an input cursor or the first player's input slot")
 		return
 
 	_cursor = StdGroup.get_sole_member(StdInputCursor.GROUP_INPUT_CURSOR)

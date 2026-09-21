@@ -517,6 +517,6 @@ func _load_all_slots() -> void:
 		if not activate_slot(last_active_slot):
 			assert(false, "failed to activate slot")
 
-	slots_loaded.emit()
-
 	_report_loaded()
+
+	slots_loaded.emit()

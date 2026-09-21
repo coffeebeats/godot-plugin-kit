@@ -79,8 +79,8 @@ func _exit_tree() -> void:
 
 
 func _ready() -> void:
-	if not sound_player is StdSoundEventPlayer:
-		_report_failed("missing a sound player")
+	if not sound_player is StdSoundEventPlayer or not music_player is StdMusicPlayer:
+		_report_failed("missing a sound player or music player")
 		return
 
 	_report_loaded()
