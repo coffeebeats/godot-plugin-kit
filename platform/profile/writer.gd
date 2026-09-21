@@ -5,6 +5,10 @@
 
 extends StdConfigWriterBinary
 
+# -- DEPENDENCIES -------------------------------------------------------------------- #
+
+const Profile := preload("profile.gd")
+
 # -- PRIVATE METHODS (OVERRIDES) ----------------------------------------------------- #
 
 
@@ -15,7 +19,7 @@ func _get_filepath() -> String:
 		assert(false, "invalid config; expected relative path")
 		return ""
 
-	var profile := Platform.get_user_profile()
+	var profile := Profile.find_user_profile()
 	if not profile:
 		return ""
 

@@ -20,7 +20,7 @@ Each release is a commit on `dist`, tagged `dist/vX.Y.Z`. Versions follow semant
 
 Kit ships no autoloads. Register these three in `project.godot`:
 
-- `Platform`, a scene instancing the `platform/` scenes. Kit's scripts reach it by this name.
+- `Platform`, a scene instancing the `platform/` scenes.
 - `System`, a scene instancing the `system/` scenes. The game's own values are set on its instances.
 - `Lifecycle`, the script `addons/kit/system/lifecycle.gd`. Kit's pause menu reaches it by this name, and a game saves its progress on `Lifecycle.shutdown_requested`.
 

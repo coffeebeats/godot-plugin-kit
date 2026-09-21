@@ -1,6 +1,5 @@
 ##
-## Unit tests for `KitModule`. Each test registers modules under its own ID, since kit
-## autoloads `Platform`, whose modules stay registered for the whole run.
+## Unit tests for `KitModule`.
 ##
 
 extends GutTest
@@ -46,18 +45,6 @@ class NotifyingModule:
 
 
 # -- TEST METHODS -------------------------------------------------------------------- #
-
-
-func test_module_platform_autoload_loads_storefront_and_profile() -> void:
-	# Given: The autoloaded `Platform`, whose loaders placed each implementation.
-
-	# When: Its modules are queried.
-	var storefront := KitModule.is_loaded(&"storefront")
-	var profile := KitModule.is_loaded(&"profile")
-
-	# Then: Both loaded, the profile after the storefront it requires.
-	assert_true(storefront)
-	assert_true(profile)
 
 
 func test_module_register_twice_fails_module() -> void:
