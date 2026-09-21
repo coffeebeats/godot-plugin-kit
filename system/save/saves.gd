@@ -433,7 +433,7 @@ func _exit_tree() -> void:
 
 func _ready() -> void:
 	if not schema is StdSaveData:
-		push_error("invalid config; missing schema")
+		_logger.error("Invalid config; missing schema.")
 
 	assert(schema is StdSaveData, "invalid config; missing schema")
 	assert(slot_scope is StdSettingsScope, "invalid config; missing settings scope")
