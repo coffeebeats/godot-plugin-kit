@@ -1,8 +1,13 @@
 ##
-## This node initializes the `Steam` storefront integration.
+## The storefront implementation for Steam. It starts the Steam API, reports a failure
+## to the player itself, and announces itself to the `Storefront` node either way.
 ##
 
 extends Node
+
+# -- DEPENDENCIES -------------------------------------------------------------------- #
+
+const Storefront := preload("../storefront.gd")
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
@@ -54,3 +59,10 @@ func _exit_tree() -> void:
 
 func _process(_delta: float) -> void:
 	Steam.run_callbacks()
+
+
+func _ready() -> void:
+	var storefront: Storefront = StdGroup.get_sole_member(
+		Storefront.GROUP_STOREFRONT_SHIM
+	)
+	storefront.set_implementation(self)
