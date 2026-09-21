@@ -12,7 +12,7 @@ const Storefront := preload("../storefront/storefront.gd")
 
 # -- DEFINITIONS --------------------------------------------------------------------- #
 
-## MODULE_ID identifies the profile to `KitModules`.
+## MODULE_ID identifies the profile as a `KitModule`.
 const MODULE_ID := &"profile"
 
 # -- INITIALIZATION ------------------------------------------------------------------ #

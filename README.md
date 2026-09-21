@@ -49,13 +49,13 @@ Two values are set from code instead, since no export in `System` can reach or h
 
 ### Check that the modules loaded
 
-The scenes the game depends on to boot are modules: `storefront` and `profile` in `Platform`, and `input`, `settings`, `audio` and `saves` in `System`. Each registers with `KitModules` and reports once whether it loaded, logging `Loaded kit module. module=<id>` at `INFO` when it does — one line per module, which a boot check can require.
+The scenes the game depends on to boot are modules: `storefront` and `profile` in `Platform`, and `input`, `settings`, `audio` and `saves` in `System`. Each extends `KitModule` and reports once whether it loaded, logging `Loaded kit module. module=<id>` at `INFO` when it does — one line per module, which a boot check can require.
 
 A module fails when its implementation never loads, when its configuration is missing, or when a module it requires has not loaded by the time it reports. It logs `Kit module failed to load.` and enqueues a critical `KitError`, so a game that drains `KitError.drain_pending()` at boot and quits on a critical error already handles it. A module reports only on its own code, so a storefront whose client is not running raises its own error and still loads.
 
-`saves` loads its slots on a worker thread and reports once they finish, after the autoloads are ready. Await `KitModules.wait()` before showing anything that reads the save slots; it returns `OK` once every module has settled, or `FAILED` if one did not, and `KitModules.is_settled()` says whether waiting is needed at all.
+`saves` loads its slots on a worker thread and reports once they finish, after the autoloads are ready. Await `KitModule.wait()` before showing anything that reads the save slots. It returns `OK` once every module in the scene tree has settled, or `FAILED` if one did not, and returns at once when none is still loading.
 
-The game's own nodes become modules the same way: extend `KitModule`, override `_get_module_id` and, if the module requires others, `_get_module_requires`, then call `_report_loaded()` or `_report_failed(reason)` once. A node that must extend another class calls `KitModules.register` from its `_enter_tree` and reports through `KitModules` instead. When a module's implementation varies by build, give the implementations a base script that joins a group, and have the node that registered look the implementation up there before it reports. A scene whose script failed to load is still added to the tree, but it never joins the group.
+The game's own nodes become modules the same way: extend `KitModule`, override `_get_module_id` and, if the module requires others, `_get_module_requires`, then call `_report_loaded()` or `_report_failed(reason)` once. A node that must extend another class can own a child of that class instead, as the audio system owns its `StdSoundEventPlayer`. When a module's implementation varies by build, give the implementations a base script that joins a group, and have the node that registered look the implementation up there before it reports. A scene whose script failed to load is still added to the tree, but it never joins the group.
 
 ### Use the menus
 

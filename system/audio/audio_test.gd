@@ -19,7 +19,7 @@ func test_audio_ready_loads_module() -> void:
 	add_child_autofree(audio)
 
 	# Then: Its module loaded.
-	assert_true(KitModules.is_loaded(&"audio"))
+	assert_true(KitModule.is_loaded(&"audio"))
 
 
 func test_audio_ready_places_sound_player_for_std() -> void:

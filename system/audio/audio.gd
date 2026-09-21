@@ -14,7 +14,7 @@ const Signals := preload("res://addons/std/event/signal.gd")
 
 const GROUP_AUDIO_SHIM := &"system/audio:shim"
 
-## MODULE_ID identifies the audio system to `KitModules`.
+## MODULE_ID identifies the audio system as a `KitModule`.
 const MODULE_ID := &"audio"
 
 # -- CONFIGURATION ------------------------------------------------------------------- #

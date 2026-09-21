@@ -41,7 +41,7 @@ const SaveFileWriter := preload("writer.gd")
 
 const GROUP_SAVES_SHIM := &"system/saves:shim"
 
-## MODULE_ID identifies the save system to `KitModules`.
+## MODULE_ID identifies the save system as a `KitModule`.
 const MODULE_ID := &"saves"
 
 const CATEGORY_SLOT_DATA := &"__slots__"

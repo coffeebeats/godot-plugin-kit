@@ -30,7 +30,7 @@ const Profile := preload("../../platform/profile/profile.gd")
 
 const GROUP_INPUT_SHIM := &"system/input:shim"
 
-## MODULE_ID identifies the input system to `KitModules`.
+## MODULE_ID identifies the input system as a `KitModule`.
 const MODULE_ID := &"input"
 
 # -- CONFIGURATION ------------------------------------------------------------------- #

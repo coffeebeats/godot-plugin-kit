@@ -13,7 +13,7 @@ const Profile := preload("../../platform/profile/profile.gd")
 
 const GROUP_SETTINGS_SHIM := &"system/setting:shim"
 
-## MODULE_ID identifies the settings system to `KitModules`.
+## MODULE_ID identifies the settings system as a `KitModule`.
 const MODULE_ID := &"settings"
 
 # -- CONFIGURATION ------------------------------------------------------------------- #
