@@ -14,8 +14,6 @@ var _logger := StdLogger.create(&"platform/storefront/steam")
 
 
 func _enter_tree() -> void:
-	super._enter_tree()
-
 	set_process(false)
 
 	# NOTE: No need to call 'Steam.restartAppIfNecessary', as it should be handled by
@@ -49,8 +47,6 @@ func _enter_tree() -> void:
 
 
 func _exit_tree() -> void:
-	super._exit_tree()
-
 	if not _is_initialized:
 		return
 

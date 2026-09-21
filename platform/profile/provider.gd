@@ -3,6 +3,9 @@
 ## profile of the user running the game. It joins `GROUP_PROFILE_PROVIDER`, which a
 ## scene whose script failed to load never does.
 ##
+## NOTE: It joins from `_notification`, so an implementation overriding `_enter_tree`
+## need not call `super`.
+##
 
 extends Node
 
@@ -22,9 +25,9 @@ func create_user_profile() -> KitUserProfile:
 # -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
 
 
-func _enter_tree() -> void:
-	StdGroup.with_id(GROUP_PROFILE_PROVIDER).add_member(self)
-
-
-func _exit_tree() -> void:
-	StdGroup.with_id(GROUP_PROFILE_PROVIDER).remove_member(self)
+func _notification(what: int) -> void:
+	match what:
+		NOTIFICATION_ENTER_TREE:
+			StdGroup.with_id(GROUP_PROFILE_PROVIDER).add_member(self)
+		NOTIFICATION_EXIT_TREE:
+			StdGroup.with_id(GROUP_PROFILE_PROVIDER).remove_member(self)
