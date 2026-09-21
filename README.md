@@ -24,9 +24,11 @@ Kit ships no autoloads. Register these three in `project.godot`:
 - `System`, a scene instancing the `system/` scenes. The game's own values are set on its instances.
 - `Lifecycle`, the script `addons/kit/system/lifecycle.gd`. Kit's pause menu reaches it by this name, and a game saves its progress on `Lifecycle.shutdown_requested`.
 
+Register `Platform` before `System`: the modules in `System` require the profile, and fail to load if it has not loaded first.
+
 ### Copy the assemblies
 
-`premade/platform.tscn` and `premade/system.tscn` are ready-made `Platform` and `System` scenes, each instancing every scene under its tree. Copy both into the game, give each copy a new `uid` in its header, and register the copies as the autoloads above. The game owns the copies from then on, while the scenes they instance keep arriving with the submodule. `platform.tscn` needs no changes. `system.tscn` leaves every export in the table below unset, so set the ones the game needs and delete the nodes it does not; `Saves` asserts until it has a `schema`. Instancing the scenes into autoloads of your own works just as well.
+`premade/platform.tscn` and `premade/system.tscn` are ready-made `Platform` and `System` scenes, each instancing every scene under its tree. Copy both into the game, give each copy a new `uid` in its header, and register the copies as the autoloads above. The game owns the copies from then on, while the scenes they instance keep arriving with the submodule. `platform.tscn` needs no changes. `system.tscn` leaves every export in the table below unset, so set the ones the game needs and delete the nodes it does not; `Saves` fails to load until it has a `schema`. Instancing the scenes into autoloads of your own works just as well.
 
 ### Set the game's values
 
@@ -44,6 +46,16 @@ Two values are set from code instead, since no export in `System` can reach or h
 
 - `KitSystems.audio().screens`, the game's `StdScreenManager`, which ducks the mix under covering screens.
 - `KitPauseMenu.return_to_main_menu`, the game's way back to its main menu. The pause menu offers returning only once it is set.
+
+### Check that the modules loaded
+
+The scenes the game depends on to boot are modules: `storefront` and `profile` in `Platform`, and `input`, `settings`, `audio` and `saves` in `System`. Each registers with `KitModules` and reports once whether it loaded, logging `Loaded kit module. module=<id>` at `INFO` when it does — one line per module, which a boot check can require.
+
+A module fails when its implementation never loads, when its configuration is missing, or when a module it requires has not loaded by the time it reports. It logs `Kit module failed to load.` and enqueues a critical `KitError`, so a game that drains `KitError.drain_pending()` at boot and quits on a critical error already handles it. A module reports only on its own code, so a storefront whose client is not running raises its own error and still loads.
+
+`saves` loads its slots on a worker thread and reports once they finish, after the autoloads are ready. Await `KitModules.wait()` before showing anything that reads the save slots; it returns `OK` once every module has settled, or `FAILED` if one did not, and `KitModules.is_settled()` says whether waiting is needed at all.
+
+The game's own nodes become modules the same way: `KitModules.register(self, &"<id>", [<required ids>])` in `_enter_tree`, then `KitModules.report_loaded(&"<id>")` or `KitModules.report_failed(&"<id>", "<reason>")` once. When a module's implementation varies by build, have the implementation announce itself to the node that registered, and report from there, since a scene whose script failed to load is still added to the tree.
 
 ### Use the menus
 
