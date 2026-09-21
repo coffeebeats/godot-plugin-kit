@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.0 (2026-09-21)
+
+## What's Changed
+* feat(modules): report whether each module loaded through a `KitModule` base class by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/40
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v1.2.2...v1.3.0
+
 ## 1.2.2 (2026-09-21)
 
 ## What's Changed
