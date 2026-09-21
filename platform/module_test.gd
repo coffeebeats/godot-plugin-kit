@@ -55,10 +55,10 @@ func test_module_register_twice_fails_module() -> void:
 	_add_module(&"test_twice")
 
 	# Then: The module failed.
-	assert_false(KitModule.is_loaded(&"test_twice"))
+	assert_eq(KitModule.get_status(&"test_twice"), KitModule.Status.FAILED)
 
-	# Then: The player is told.
-	_assert_failure_reported()
+	# Then: The failure is logged.
+	assert_push_error("Kit module failed to load.")
 
 
 func test_module_notification_calling_super_registers_once() -> void:
@@ -73,7 +73,6 @@ func test_module_notification_calling_super_registers_once() -> void:
 
 	# Then: It loaded, rather than failing as registered twice.
 	assert_true(KitModule.is_loaded(&"test_notifying"))
-	assert_eq(KitError.drain_pending().size(), 0)
 
 
 func test_module_reentering_tree_keeps_status() -> void:
@@ -89,21 +88,6 @@ func test_module_reentering_tree_keeps_status() -> void:
 
 	# Then: It is still loaded, without failing as registered twice.
 	assert_true(KitModule.is_loaded(&"test_reentering"))
-	assert_eq(KitError.drain_pending().size(), 0)
-
-	# Then: Waiting returns without error.
-	assert_eq(await _wait_for_modules(), OK)
-
-
-func test_module_leaving_tree_while_loading_does_not_hold_up_waiting() -> void:
-	# Given: A module in the scene tree which has not reported.
-	var module := _add_module(&"test_leaving")
-
-	# When: It leaves the scene tree.
-	remove_child(module)
-
-	# Then: Waiting returns without error.
-	assert_eq(await _wait_for_modules(), OK)
 
 
 func test_module_freeing_forgets_module() -> void:
@@ -115,22 +99,57 @@ func test_module_freeing_forgets_module() -> void:
 	# When: It is freed.
 	module.free()
 
-	# Then: It is no longer loaded.
+	# Then: It is no longer registered.
+	assert_does_not_have(KitModule.get_module_ids(), &"test_freed")
 	assert_false(KitModule.is_loaded(&"test_freed"))
 
 
-func test_module_report_failed_enqueues_critical_error() -> void:
+func test_module_get_module_ids_returns_ids_in_registration_order() -> void:
+	# Given: Two modules which entered the scene tree one after the other.
+	_add_module(&"test_first")
+	_add_module(&"test_second")
+
+	# When: The registered IDs are read.
+	var ids := KitModule.get_module_ids()
+
+	# Then: Both are listed, in the order they registered.
+	assert_eq(ids, [&"test_first", &"test_second"] as Array[StringName])
+
+
+func test_module_get_status_while_loading_returns_loading() -> void:
+	# Given: A module in the scene tree which has not reported.
+	_add_module(&"test_pending")
+
+	# When: Its status is read.
+	var status := KitModule.get_status(&"test_pending")
+
+	# Then: It is still loading.
+	assert_eq(status, KitModule.Status.LOADING)
+
+
+func test_module_get_status_without_module_returns_failed() -> void:
+	# When: The status of an ID no module registered under is read.
+	var status := KitModule.get_status(&"test_unknown")
+
+	# Then: It reads as failed.
+	assert_eq(status, KitModule.Status.FAILED)
+
+
+func test_module_report_failed_logs_without_enqueuing_error() -> void:
 	# Given: A module in the scene tree.
 	var module := _add_module(&"test_failed")
 
 	# When: It reports that it failed to load.
 	module.report_failed("a reason")
 
-	# Then: It did not load.
-	assert_false(KitModule.is_loaded(&"test_failed"))
+	# Then: It failed.
+	assert_eq(KitModule.get_status(&"test_failed"), KitModule.Status.FAILED)
 
-	# Then: The player is told.
-	_assert_failure_reported()
+	# Then: The failure is logged.
+	assert_push_error("Kit module failed to load.")
+
+	# Then: Nothing reaches the player, since the game decides what a failure means.
+	assert_eq(KitError.drain_pending().size(), 0)
 
 
 func test_module_report_failed_after_loading_is_ignored() -> void:
@@ -143,7 +162,7 @@ func test_module_report_failed_after_loading_is_ignored() -> void:
 
 	# Then: Its first report stands.
 	assert_true(KitModule.is_loaded(&"test_settled"))
-	assert_eq(KitError.drain_pending().size(), 0)
+	assert_push_error_count(0)
 
 
 func test_module_report_loaded_marks_module_loaded() -> void:
@@ -156,25 +175,20 @@ func test_module_report_loaded_marks_module_loaded() -> void:
 	# Then: It is loaded.
 	assert_true(KitModule.is_loaded(&"test_loaded"))
 
-	# Then: Nothing is enqueued.
-	assert_eq(KitError.drain_pending().size(), 0)
-
 
 func test_module_ready_with_failed_requirement_fails_module() -> void:
 	# Given: A module which failed to load.
 	var broken := _add_module(&"test_broken")
 	broken.report_failed("a reason")
-	assert_push_error("Kit module failed to load.")
-	KitError.drain_pending()
 
 	# When: A second module requiring it enters the scene tree.
 	_add_module(&"test_dependent", [&"test_broken"])
 
 	# Then: The dependent failed too.
-	assert_false(KitModule.is_loaded(&"test_dependent"))
+	assert_eq(KitModule.get_status(&"test_dependent"), KitModule.Status.FAILED)
 
-	# Then: The player is told.
-	_assert_failure_reported()
+	# Then: Both failures are logged.
+	assert_push_error_count(2)
 
 
 func test_module_report_loaded_with_loaded_requirement_loads_module() -> void:
@@ -197,10 +211,10 @@ func test_module_ready_with_missing_requirement_fails_module() -> void:
 	_add_module(&"test_orphan", [&"test_absent"])
 
 	# Then: It failed.
-	assert_false(KitModule.is_loaded(&"test_orphan"))
+	assert_eq(KitModule.get_status(&"test_orphan"), KitModule.Status.FAILED)
 
-	# Then: The player is told.
-	_assert_failure_reported()
+	# Then: The failure is logged.
+	assert_push_error("Kit module failed to load.")
 
 
 func test_module_ready_before_requirement_loads_fails_module() -> void:
@@ -217,46 +231,16 @@ func test_module_ready_before_requirement_loads_fails_module() -> void:
 	early.report_loaded()
 
 	# Then: The dependent failed.
-	assert_false(KitModule.is_loaded(&"test_early"))
+	assert_eq(KitModule.get_status(&"test_early"), KitModule.Status.FAILED)
 
-	# Then: The player is told once.
-	_assert_failure_reported()
-
-
-func test_module_wait_returns_failed_when_a_module_failed() -> void:
-	# Given: A module which failed to load.
-	var module := _add_module(&"test_wait_failed")
-	module.report_failed("a reason")
-
-	# When: The caller waits for every module.
-	var err: Error = await _wait_for_modules()
-
-	# Then: Waiting reports the failure.
-	assert_eq(err, FAILED)
-	assert_push_error("Kit module failed to load.")
-
-
-func test_module_wait_returns_once_a_loading_module_loads() -> void:
-	# Given: A module which will load on the next frame.
-	var module := _add_module(&"test_wait_loading")
-	get_tree().process_frame.connect(module.report_loaded, CONNECT_ONE_SHOT)
-
-	# When: The caller waits for every module.
-	var err: Error = await _wait_for_modules()
-
-	# Then: Waiting returns once the module loaded, without error.
-	assert_eq(err, OK)
-	assert_true(KitModule.is_loaded(&"test_wait_loading"))
+	# Then: The failure is logged once.
+	assert_push_error_count(1)
 
 
 # -- TEST HOOKS ---------------------------------------------------------------------- #
 
 
 func before_each() -> void:
-	KitError.drain_pending()
-
-
-func after_each() -> void:
 	KitError.drain_pending()
 
 
@@ -267,31 +251,3 @@ func after_each() -> void:
 ## frees it once the test ends.
 func _add_module(id: StringName, requires: Array[StringName] = []) -> ExampleModule:
 	return add_child_autofree(ExampleModule.new(id, requires))
-
-
-## _assert_failure_reported asserts that a module's failure was logged and enqueued as a
-## single critical error.
-##
-## NOTE: The logged line carries no context, because the editor's logging profile hands
-## `push_error` the bare message.
-func _assert_failure_reported() -> void:
-	assert_push_error("Kit module failed to load.")
-
-	var errors := KitError.drain_pending()
-
-	assert_eq(errors.size(), 1)
-	assert_eq(errors[0].severity, KitError.Severity.CRITICAL)
-	assert_eq(errors[0].message, "kit_error_module_failed_message")
-
-
-## _wait_for_modules returns what waiting on every module returns, or `ERR_TIMEOUT` if
-## waiting has not returned within a second.
-func _wait_for_modules() -> Error:
-	var result := [ERR_TIMEOUT]
-
-	var waiter := func() -> void: result[0] = await KitModule.wait()
-	waiter.call()
-
-	await wait_until(func() -> bool: return result[0] != ERR_TIMEOUT, 1.0)
-
-	return result[0]

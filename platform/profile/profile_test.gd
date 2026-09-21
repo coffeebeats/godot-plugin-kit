@@ -56,9 +56,8 @@ func test_profile_ready_with_every_loader_blocked_fails_module() -> void:
 	# Then: Its module failed.
 	assert_false(KitModule.is_loaded(Profile.MODULE_ID))
 
-	# Then: The player is told.
+	# Then: The failure is logged.
 	assert_push_error("Kit module failed to load.")
-	assert_eq(KitError.drain_pending().size(), 1)
 
 
 func test_profile_ready_with_empty_implementation_fails_module() -> void:
@@ -78,9 +77,8 @@ func test_profile_ready_with_empty_implementation_fails_module() -> void:
 	assert_false(KitModule.is_loaded(Profile.MODULE_ID))
 	assert_null(profile.get_user_profile())
 
-	# Then: The player is told.
+	# Then: The failure is logged.
 	assert_push_error("Kit module failed to load.")
-	assert_eq(KitError.drain_pending().size(), 1)
 
 
 func test_profile_ready_without_storefront_fails_module() -> void:
@@ -93,9 +91,8 @@ func test_profile_ready_without_storefront_fails_module() -> void:
 	# Then: Its module failed.
 	assert_false(KitModule.is_loaded(Profile.MODULE_ID))
 
-	# Then: The player is told.
+	# Then: The failure is logged.
 	assert_push_error("Kit module failed to load.")
-	assert_eq(KitError.drain_pending().size(), 1)
 
 
 func test_profile_find_user_profile_returns_loaded_profile() -> void:
@@ -120,17 +117,6 @@ func test_profile_find_user_profile_without_profile_returns_null() -> void:
 
 	# Then: There is none.
 	assert_null(found)
-
-
-# -- TEST HOOKS ---------------------------------------------------------------------- #
-
-
-func before_each() -> void:
-	KitError.drain_pending()
-
-
-func after_each() -> void:
-	KitError.drain_pending()
 
 
 # -- PRIVATE METHODS ----------------------------------------------------------------- #

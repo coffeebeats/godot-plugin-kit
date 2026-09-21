@@ -1,7 +1,7 @@
 ##
 ## KitModule is the base class for a node the game depends on to boot correctly. It
-## registers on entering the scene tree and must then report once whether it loaded; a
-## failure is logged and enqueued as a critical `KitError`.
+## registers on entering the scene tree and must then report once whether it loaded. A
+## failure is only logged, since the game decides which modules it cannot run without.
 ##
 ## NOTE: It registers from `_notification`, which Godot calls on every script in the
 ## hierarchy, so a subclass overriding `_enter_tree` need not call `super`.
@@ -32,27 +32,24 @@ var _module_status: Status = Status.LOADING
 # -- PUBLIC METHODS ------------------------------------------------------------------ #
 
 
+## get_module_ids returns the IDs of every registered module, in the order they
+## registered.
+static func get_module_ids() -> Array[StringName]:
+	var ids: Array[StringName] = []
+	ids.assign(_module_registry.keys())
+	return ids
+
+
+## get_status returns the status of the module with the given ID. An ID no module has
+## registered under reads as failed.
+static func get_status(id: StringName) -> Status:
+	var module: KitModule = _module_registry.get(id)
+	return module._module_status if module else Status.FAILED
+
+
 ## is_loaded returns whether the module with the given ID registered and loaded.
 static func is_loaded(id: StringName) -> bool:
-	var module: KitModule = _module_registry.get(id)
-	return module != null and module._module_status == Status.LOADED
-
-
-## wait returns once every module in the scene tree has finished loading, with `OK` if
-## all of them loaded or `FAILED` if any did not.
-static func wait() -> Error:
-	var tree := Engine.get_main_loop() as SceneTree
-
-	# NOTE: Polling rather than awaiting each module's outcome means a module that
-	# leaves the scene tree mid-wait cannot strand the caller.
-	while not _is_every_module_settled():
-		await tree.process_frame
-
-	for module in _module_registry.values():
-		if module.is_inside_tree() and module._module_status == Status.FAILED:
-			return FAILED
-
-	return OK
+	return get_status(id) == Status.LOADED
 
 
 # -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
@@ -85,8 +82,8 @@ func _get_module_requires() -> Array[StringName]:
 	return []
 
 
-## _report_failed marks this module as failed to load, logs the reason, and enqueues a
-## critical `KitError`. A module that already settled is left as it is.
+## _report_failed marks this module as failed to load and logs the reason. A module that
+## already settled is left as it is.
 func _report_failed(reason: String) -> void:
 	if _module_status != Status.LOADING:
 		return
@@ -132,24 +129,6 @@ static func _fail_module(id: StringName, reason: String) -> void:
 	_module_logger.error(
 		"Kit module failed to load.", {&"module": id, &"reason": reason}
 	)
-
-	var error := (
-		KitError
-		. new(
-			"kit_error_platform_init_title",
-			"kit_error_module_failed_message",
-			KitError.Severity.CRITICAL,
-		)
-	)
-	KitError.enqueue(error)
-
-
-static func _is_every_module_settled() -> bool:
-	for module in _module_registry.values():
-		if module.is_inside_tree() and module._module_status == Status.LOADING:
-			return false
-
-	return true
 
 
 func _register_module() -> void:

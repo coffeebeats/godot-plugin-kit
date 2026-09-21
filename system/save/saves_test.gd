@@ -51,17 +51,5 @@ func test_saves_ready_without_schema_fails_module() -> void:
 	# Then: Its module failed.
 	assert_false(KitModule.is_loaded(SystemSave.MODULE_ID))
 
-	# Then: The player is told.
+	# Then: The failure is logged.
 	assert_push_error("Kit module failed to load.")
-	assert_eq(KitError.drain_pending().size(), 1)
-
-
-# -- TEST HOOKS ---------------------------------------------------------------------- #
-
-
-func before_each() -> void:
-	KitError.drain_pending()
-
-
-func after_each() -> void:
-	KitError.drain_pending()
