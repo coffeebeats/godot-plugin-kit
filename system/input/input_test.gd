@@ -28,6 +28,9 @@ func test_input_ready_with_implementation_loads_module() -> void:
 
 
 func test_input_ready_without_cursor_fails_module() -> void:
+	# Given: A platform whose profile loaded.
+	add_child_autofree(PlatformScene.instantiate())
+
 	# Given: The input system without an implementation, which places the cursor.
 	var input := SystemInput.new()
 

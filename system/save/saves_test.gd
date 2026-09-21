@@ -39,6 +39,9 @@ func test_saves_ready_with_schema_loads_module_before_slots_loaded() -> void:
 
 
 func test_saves_ready_without_schema_fails_module() -> void:
+	# Given: A platform whose profile loaded.
+	add_child_autofree(PlatformScene.instantiate())
+
 	# Given: The save scene, which leaves the game's schema unset.
 	var saves := SavesScene.instantiate()
 

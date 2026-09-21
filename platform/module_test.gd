@@ -160,18 +160,15 @@ func test_module_report_loaded_marks_module_loaded() -> void:
 	assert_eq(KitError.drain_pending().size(), 0)
 
 
-func test_module_report_loaded_with_failed_requirement_fails_module() -> void:
+func test_module_ready_with_failed_requirement_fails_module() -> void:
 	# Given: A module which failed to load.
 	var broken := _add_module(&"test_broken")
 	broken.report_failed("a reason")
 	assert_push_error("Kit module failed to load.")
 	KitError.drain_pending()
 
-	# Given: A second module requiring it.
-	var dependent := _add_module(&"test_dependent", [&"test_broken"])
-
-	# When: The dependent reports that it loaded.
-	dependent.report_loaded()
+	# When: A second module requiring it enters the scene tree.
+	_add_module(&"test_dependent", [&"test_broken"])
 
 	# Then: The dependent failed too.
 	assert_false(KitModule.is_loaded(&"test_dependent"))
@@ -195,17 +192,34 @@ func test_module_report_loaded_with_loaded_requirement_loads_module() -> void:
 	assert_true(KitModule.is_loaded(&"test_upper"))
 
 
-func test_module_report_loaded_with_missing_requirement_fails_module() -> void:
-	# Given: A module requiring one which never registered.
-	var module := _add_module(&"test_orphan", [&"test_absent"])
-
-	# When: It reports that it loaded.
-	module.report_loaded()
+func test_module_ready_with_missing_requirement_fails_module() -> void:
+	# When: A module requiring one which never registered enters the scene tree.
+	_add_module(&"test_orphan", [&"test_absent"])
 
 	# Then: It failed.
 	assert_false(KitModule.is_loaded(&"test_orphan"))
 
 	# Then: The player is told.
+	_assert_failure_reported()
+
+
+func test_module_ready_before_requirement_loads_fails_module() -> void:
+	# Given: A module in the scene tree which has not loaded yet.
+	var late := _add_module(&"test_late")
+
+	# Given: A module requiring it, which starts before the requirement loads.
+	var early := _add_module(&"test_early", [&"test_late"])
+
+	# When: The requirement loads.
+	late.report_loaded()
+
+	# When: The dependent reports that it loaded.
+	early.report_loaded()
+
+	# Then: The dependent failed, since it started without its requirement.
+	assert_false(KitModule.is_loaded(&"test_early"))
+
+	# Then: The player is told once.
 	_assert_failure_reported()
 
 

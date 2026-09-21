@@ -51,7 +51,7 @@ Two values are set from code instead, since no export in `System` can reach or h
 
 The scenes the game depends on to boot are modules: `storefront` and `profile` in `Platform`, and `input`, `settings`, `audio` and `saves` in `System`. Each extends `KitModule` and reports once whether it loaded, logging `Loaded kit module. module=<id>` at `INFO` when it does — one line per module, which a boot check can require.
 
-A module fails when its implementation never loads, when its configuration is missing, or when a module it requires has not loaded by the time it reports. It logs `Kit module failed to load.` and enqueues a critical `KitError`, so a game that drains `KitError.drain_pending()` at boot and quits on a critical error already handles it. A module reports only on its own code, so a storefront whose client is not running raises its own error and still loads.
+A module fails when its implementation never loads, when its configuration is missing, or when a module it requires has not loaded by the time its `_ready` runs. It logs `Kit module failed to load.` and enqueues a critical `KitError`, so a game that drains `KitError.drain_pending()` at boot and quits on a critical error already handles it. A module reports only on its own code, so a storefront whose client is not running raises its own error and still loads.
 
 `saves` loads its slots on a worker thread and reports once they finish, after the autoloads are ready. Await `KitModule.wait()` before showing anything that reads the save slots. It returns `OK` once every module in the scene tree has settled, or `FAILED` if one did not, and returns at once when none is still loading.
 

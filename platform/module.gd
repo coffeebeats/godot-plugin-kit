@@ -62,6 +62,9 @@ func _notification(what: int) -> void:
 	match what:
 		NOTIFICATION_ENTER_TREE:
 			_register_module()
+		NOTIFICATION_POST_ENTER_TREE:
+			if _module_status == Status.LOADING:
+				_check_module_requires()
 		NOTIFICATION_PREDELETE:
 			_unregister_module()
 
@@ -76,8 +79,8 @@ func _get_module_id() -> StringName:
 	return &""
 
 
-## _get_module_requires returns the IDs of the modules which must load before this one
-## reports.
+## _get_module_requires returns the IDs of the modules which must have loaded before
+## this one's `_ready` runs. The module fails if any has not.
 func _get_module_requires() -> Array[StringName]:
 	return []
 
@@ -106,14 +109,23 @@ func _report_loaded() -> void:
 		)
 		return
 
-	for requirement in _get_module_requires():
-		if not is_loaded(requirement):
-			_report_failed("requires '%s', which has not loaded" % requirement)
-			return
+	if not _check_module_requires():
+		return
 
 	_module_status = Status.LOADED
 
 	_module_logger.info("Loaded kit module.", {&"module": id})
+
+
+func _check_module_requires() -> bool:
+	# NOTE: This also runs just before `_ready`, so a module which starts work there and
+	# reports once it finishes cannot pass on a requirement which loaded in between.
+	for requirement in _get_module_requires():
+		if not is_loaded(requirement):
+			_report_failed("requires '%s', which has not loaded" % requirement)
+			return false
+
+	return true
 
 
 static func _fail_module(id: StringName, reason: String) -> void:
