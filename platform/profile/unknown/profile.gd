@@ -1,8 +1,4 @@
-extends Node
-
-# -- DEPENDENCIES -------------------------------------------------------------------- #
-
-const Profile := preload("../profile.gd")
+extends "../provider.gd"
 
 # -- PUBLIC METHODS ------------------------------------------------------------------ #
 
@@ -17,9 +13,6 @@ static func create_default_user_profile() -> KitUserProfile:
 	return user_profile
 
 
-# -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
-
-
-func _ready() -> void:
-	var profile: Profile = StdGroup.get_sole_member(Profile.GROUP_PROFILE_SHIM)
-	profile.set_user_profile(create_default_user_profile())
+## create_user_profile returns the default profile.
+func create_user_profile() -> KitUserProfile:
+	return create_default_user_profile()

@@ -1,13 +1,9 @@
 ##
-## The storefront implementation for Steam. It starts the Steam API, reports a failure
-## to the player itself, and announces itself to the `Storefront` node either way.
+## The storefront implementation for Steam. It starts the Steam API and reports its own
+## failure to start to the player.
 ##
 
-extends Node
-
-# -- DEPENDENCIES -------------------------------------------------------------------- #
-
-const Storefront := preload("../storefront.gd")
+extends "../provider.gd"
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
@@ -18,6 +14,8 @@ var _logger := StdLogger.create(&"platform/storefront/steam")
 
 
 func _enter_tree() -> void:
+	super._enter_tree()
+
 	set_process(false)
 
 	# NOTE: No need to call 'Steam.restartAppIfNecessary', as it should be handled by
@@ -51,6 +49,8 @@ func _enter_tree() -> void:
 
 
 func _exit_tree() -> void:
+	super._exit_tree()
+
 	if not _is_initialized:
 		return
 
@@ -59,10 +59,3 @@ func _exit_tree() -> void:
 
 func _process(_delta: float) -> void:
 	Steam.run_callbacks()
-
-
-func _ready() -> void:
-	var storefront: Storefront = StdGroup.get_sole_member(
-		Storefront.GROUP_STOREFRONT_SHIM
-	)
-	storefront.set_implementation(self)

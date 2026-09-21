@@ -1,22 +1,15 @@
-extends Node
+extends "../provider.gd"
 
 # -- DEPENDENCIES -------------------------------------------------------------------- #
 
-const Profile := preload("../profile.gd")
 const UnknownProfile := preload("../unknown/profile.gd")
 
-# -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
+# -- PUBLIC METHODS ------------------------------------------------------------------ #
 
 
-func _ready() -> void:
-	var profile: Profile = StdGroup.get_sole_member(Profile.GROUP_PROFILE_SHIM)
-	profile.set_user_profile(_create_user_profile())
-
-
-# -- PRIVATE METHODS ----------------------------------------------------------------- #
-
-
-func _create_user_profile() -> KitUserProfile:
+## create_user_profile returns the signed-in Steam user's profile, or the default
+## profile if Steam has no user.
+func create_user_profile() -> KitUserProfile:
 	var user_profile := KitUserProfile.new()
 
 	var steam_id := Steam.getSteamID()

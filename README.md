@@ -55,7 +55,7 @@ A module fails when its implementation never loads, when its configuration is mi
 
 `saves` loads its slots on a worker thread and reports once they finish, after the autoloads are ready. Await `KitModules.wait()` before showing anything that reads the save slots; it returns `OK` once every module has settled, or `FAILED` if one did not, and `KitModules.is_settled()` says whether waiting is needed at all.
 
-The game's own nodes become modules the same way: `KitModules.register(self, &"<id>", [<required ids>])` in `_enter_tree`, then `KitModules.report_loaded(&"<id>")` or `KitModules.report_failed(&"<id>", "<reason>")` once. When a module's implementation varies by build, have the implementation announce itself to the node that registered, and report from there, since a scene whose script failed to load is still added to the tree.
+The game's own nodes become modules the same way: `KitModules.register(self, &"<id>", [<required ids>])` in `_enter_tree`, then `KitModules.report_loaded(&"<id>")` or `KitModules.report_failed(&"<id>", "<reason>")` once. When a module's implementation varies by build, give the implementations a base script that joins a group, and have the node that registered look the implementation up there before it reports. A scene whose script failed to load is still added to the tree, but it never joins the group.
 
 ### Use the menus
 
