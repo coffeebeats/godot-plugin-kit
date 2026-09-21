@@ -26,7 +26,15 @@ msgid "Startup Error"
 msgstr ""
 
 #. The message shown when Steam fails to initialize, advising the player to check that Steam is running.
-msgid "Steam could not be initialized. Please make sure Steam is running and restart the game."
+msgid ""
+"Steam could not be initialized. Please make sure Steam is running and "
+"restart the game."
+msgstr ""
+
+#. The message shown when one of the game's required components failed to load, advising the player to reinstall the game.
+msgid ""
+"The game is missing a required component and could not start. Please "
+"reinstall the game."
 msgstr ""
 
 #. Used as a category name for a group of input actions related to menu navigation.
@@ -147,7 +155,8 @@ msgstr ""
 
 #. Instructs the player to select which save slot to use.
 msgid "Choose a save slot — progress will be saved automatically"
-msgstr "Wähle einen speicherplatz – dein fortschritt wird automatisch gespeichert"
+msgstr ""
+"Wähle einen speicherplatz – dein fortschritt wird automatisch gespeichert"
 
 #. A label for the timestamp of when the particular save was last updated.
 msgid "Last updated:"
