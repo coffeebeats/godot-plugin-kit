@@ -56,6 +56,10 @@ extends Control
 ## tree, such as the game's in-game options.
 @export var action_set_layers: Array[StdInputActionSetLayer] = []
 
+# -- INITIALIZATION ------------------------------------------------------------------ #
+
+var _logger := StdLogger.create(&"map/scene")
+
 # -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
 
 
@@ -69,7 +73,7 @@ func _enter_tree() -> void:
 		return
 
 	if not action_set:
-		push_error("invalid config; missing action set")
+		_logger.error("Invalid config; missing action set.")
 
 	# NOTE: The loader loads as it enters the tree, which is after its parent does.
 	action_set_loader.action_set = action_set
