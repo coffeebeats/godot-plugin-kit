@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.2 (2026-09-21)
+
+## What's Changed
+* fix: log through `StdLogger` rather than the engine's output functions by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/38
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v1.2.1...v1.2.2
+
 ## 1.2.1 (2026-09-20)
 
 ## What's Changed
