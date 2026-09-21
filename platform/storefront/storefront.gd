@@ -12,7 +12,7 @@ const Provider := preload("provider.gd")
 
 # -- DEFINITIONS --------------------------------------------------------------------- #
 
-## MODULE_ID identifies the storefront as a `KitModule`.
+## MODULE_ID is the ID the storefront registers under as a `KitModule`.
 const MODULE_ID := &"storefront"
 
 # -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #

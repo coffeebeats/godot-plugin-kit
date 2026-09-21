@@ -31,7 +31,7 @@ func test_input_ready_without_cursor_fails_module() -> void:
 	# Given: A platform whose profile loaded.
 	add_child_autofree(PlatformScene.instantiate())
 
-	# Given: The input system without an implementation, which places the cursor.
+	# Given: The input system alone, without the implementation that places its cursor.
 	var input := SystemInput.new()
 
 	# When: It enters the scene tree.

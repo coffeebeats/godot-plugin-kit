@@ -24,7 +24,7 @@ func test_storefront_ready_with_implementation_loads_module() -> void:
 
 
 func test_storefront_ready_with_every_loader_blocked_fails_module() -> void:
-	# Given: The storefront scene with its loaders blocked by a misspelled feature.
+	# Given: The storefront scene with every loader blocked, as by a misspelled feature.
 	var storefront := _instantiate_blocked()
 
 	# When: It enters the scene tree.

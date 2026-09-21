@@ -47,7 +47,7 @@ func test_profile_ready_with_every_loader_blocked_fails_module() -> void:
 	# Given: A storefront which loaded.
 	add_child_autofree(StorefrontScene.instantiate())
 
-	# Given: The profile scene with its loaders blocked by a misspelled feature.
+	# Given: The profile scene with every loader blocked, as by a misspelled feature.
 	var profile := _instantiate_blocked()
 
 	# When: It enters the scene tree.

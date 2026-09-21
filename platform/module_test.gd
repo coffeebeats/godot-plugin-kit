@@ -216,7 +216,7 @@ func test_module_ready_before_requirement_loads_fails_module() -> void:
 	# When: The dependent reports that it loaded.
 	early.report_loaded()
 
-	# Then: The dependent failed, since it started without its requirement.
+	# Then: The dependent failed.
 	assert_false(KitModule.is_loaded(&"test_early"))
 
 	# Then: The player is told once.

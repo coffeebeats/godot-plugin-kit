@@ -14,7 +14,7 @@ const Storefront := preload("../storefront/storefront.gd")
 
 const GROUP_PROFILE_SHIM := &"platform/profile:shim"
 
-## MODULE_ID identifies the profile as a `KitModule`.
+## MODULE_ID is the ID the profile registers under as a `KitModule`.
 const MODULE_ID := &"profile"
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
@@ -28,8 +28,8 @@ var _profile: KitUserProfile = null
 ## find_user_profile returns the profile of the user running the game, or null if no
 ## `Profile` is in the scene tree or it holds no profile.
 ##
-## NOTE: Kit's scripts call this rather than naming the `Platform` autoload, which fails
-## to parse wherever that autoload is missing or has not loaded yet.
+## NOTE: Kit's scripts call this rather than naming the `Platform` autoload, since a
+## script naming it fails to parse wherever that autoload is missing or not yet loaded.
 static func find_user_profile() -> KitUserProfile:
 	if StdGroup.is_empty(GROUP_PROFILE_SHIM):
 		return null

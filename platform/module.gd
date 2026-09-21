@@ -21,8 +21,8 @@ enum Status { LOADING, LOADED, FAILED }
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
-# NOTE: Private members carry a `_module` prefix, since a subclass may not redeclare a
-# parent's variable and silently overrides a parent's method.
+# NOTE: Private members carry a `_module` prefix. GDScript rejects a subclass variable
+# that redeclares a parent's, and a subclass method silently replaces a parent's.
 static var _module_logger := StdLogger.create(&"platform/module")
 static var _module_registry: Dictionary[StringName, KitModule] = {}
 
