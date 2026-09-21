@@ -14,11 +14,7 @@ metadata/_custom_type_script = "uid://p7m3bed4l6o8"
 
 [resource]
 script = ExtResource("2_ao6g4")
-level_overrides = Dictionary[String, int]({
-"platform/": 2,
-"std/": 2,
-"system/": 2
-})
+level = 1
 formatter = SubResource("Resource_ao6g4")
 sink = SubResource("Resource_bt8s0")
 metadata/_custom_type_script = "uid://dj81vnu6k6a50"

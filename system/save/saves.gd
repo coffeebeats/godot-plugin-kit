@@ -7,7 +7,7 @@
 ## thread.
 ##
 
-extends Node
+extends KitModule
 
 # -- SIGNALS ------------------------------------------------------------------------- #
 
@@ -34,11 +34,15 @@ signal slots_loaded
 const Config := preload("res://addons/std/config/config.gd")
 const FilePath := preload("res://addons/std/file/path.gd")
 const Signals := preload("res://addons/std/event/signal.gd")
+const Profile := preload("../../platform/profile/profile.gd")
 const SaveFileWriter := preload("writer.gd")
 
 # -- DEFINITIONS --------------------------------------------------------------------- #
 
 const GROUP_SAVES_SHIM := &"system/saves:shim"
+
+## MODULE_ID is the ID the save system registers under as a `KitModule`.
+const MODULE_ID := &"saves"
 
 const CATEGORY_SLOT_DATA := &"__slots__"
 const KEY_ACTIVE_SLOT := &"active"
@@ -432,13 +436,26 @@ func _exit_tree() -> void:
 
 
 func _ready() -> void:
-	if not schema is StdSaveData:
-		_logger.error("Invalid config; missing schema.")
-
-	assert(schema is StdSaveData, "invalid config; missing schema")
-	assert(slot_scope is StdSettingsScope, "invalid config; missing settings scope")
+	if not schema is StdSaveData or not slot_scope is StdSettingsScope:
+		_report_failed("missing a save schema or slot scope")
+		return
 
 	_load_all_slots()
+
+
+# -- PRIVATE METHODS (OVERRIDES) ----------------------------------------------------- #
+
+
+func _get_module_id() -> StringName:
+	return MODULE_ID
+
+
+func _get_module_requires() -> Array[StringName]:
+	return [Profile.MODULE_ID]
+
+
+func _is_module_async() -> bool:
+	return true
 
 
 # -- PRIVATE METHODS ----------------------------------------------------------------- #
@@ -503,5 +520,7 @@ func _load_all_slots() -> void:
 	):
 		if not activate_slot(last_active_slot):
 			assert(false, "failed to activate slot")
+
+	_report_loaded()
 
 	slots_loaded.emit()

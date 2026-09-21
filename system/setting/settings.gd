@@ -3,11 +3,18 @@
 ## the observers which apply them, and the game's own tabs in the settings menu.
 ##
 
-extends Node
+extends KitModule
+
+# -- DEPENDENCIES -------------------------------------------------------------------- #
+
+const Profile := preload("../../platform/profile/profile.gd")
 
 # -- DEFINITIONS --------------------------------------------------------------------- #
 
 const GROUP_SETTINGS_SHIM := &"system/setting:shim"
+
+## MODULE_ID is the ID the settings system registers under as a `KitModule`.
+const MODULE_ID := &"settings"
 
 # -- CONFIGURATION ------------------------------------------------------------------- #
 
@@ -28,3 +35,18 @@ func _enter_tree() -> void:
 
 func _exit_tree() -> void:
 	StdGroup.with_id(GROUP_SETTINGS_SHIM).remove_member(self)
+
+
+func _ready() -> void:
+	_report_loaded()
+
+
+# -- PRIVATE METHODS (OVERRIDES) ----------------------------------------------------- #
+
+
+func _get_module_id() -> StringName:
+	return MODULE_ID
+
+
+func _get_module_requires() -> Array[StringName]:
+	return [Profile.MODULE_ID]

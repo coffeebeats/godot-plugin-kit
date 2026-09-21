@@ -2,7 +2,7 @@
 ## SystemInput is the global singleton scene for handling user input via action binding.
 ##
 
-extends Node
+extends KitModule
 
 # -- SIGNALS ------------------------------------------------------------------------- #
 
@@ -24,10 +24,14 @@ signal focus_root_changed(root: Control)
 @warning_ignore("SHADOWED_GLOBAL_IDENTIFIER")
 const StdInputDevice := preload("res://addons/std/input/device.gd")
 const Signals := preload("res://addons/std/event/signal.gd")
+const Profile := preload("../../platform/profile/profile.gd")
 
 # -- DEFINITIONS --------------------------------------------------------------------- #
 
 const GROUP_INPUT_SHIM := &"system/input:shim"
+
+## MODULE_ID is the ID the input system registers under as a `KitModule`.
+const MODULE_ID := &"input"
 
 # -- CONFIGURATION ------------------------------------------------------------------- #
 
@@ -167,8 +171,16 @@ func _process(delta: float) -> void:
 
 
 func _ready() -> void:
-	_cursor = StdGroup.get_sole_member(StdInputCursor.GROUP_INPUT_CURSOR)
-	assert(_cursor is StdInputCursor, "invalid state; missing input cursor")
+	var cursors := StdGroup.with_id(StdInputCursor.GROUP_INPUT_CURSOR).list_members()
+	if cursors.size() != 1:
+		_report_failed("found %d input cursors, expected 1" % cursors.size())
+		return
+
+	if not StdInputSlot.for_player(1):
+		_report_failed("missing the first player's input slot")
+		return
+
+	_cursor = cursors[0]
 
 	# Forward the `StdInputCursor` events.
 	Signals.connect_safe(_cursor.about_to_grab_focus, about_to_grab_focus.emit)
@@ -176,3 +188,16 @@ func _ready() -> void:
 		_cursor.cursor_visibility_changed, cursor_visibility_changed.emit
 	)
 	Signals.connect_safe(_cursor.focus_root_changed, focus_root_changed.emit)
+
+	_report_loaded()
+
+
+# -- PRIVATE METHODS (OVERRIDES) ----------------------------------------------------- #
+
+
+func _get_module_id() -> StringName:
+	return MODULE_ID
+
+
+func _get_module_requires() -> Array[StringName]:
+	return [Profile.MODULE_ID]

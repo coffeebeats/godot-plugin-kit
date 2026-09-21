@@ -1,17 +1,4 @@
-extends Node
-
-# -- DEPENDENCIES -------------------------------------------------------------------- #
-
-const Profile := preload("../profile.gd")
-
-# -- CONFIGURATION ------------------------------------------------------------------- #
-
-## profile is the node path to the `Profile`-typed platform node.
-@export var profile: NodePath = "../.."
-
-# -- INITIALIZATION ------------------------------------------------------------------ #
-
-@onready var _profile: Profile = get_node(profile)
+extends "../provider.gd"
 
 # -- PUBLIC METHODS ------------------------------------------------------------------ #
 
@@ -26,17 +13,6 @@ static func create_default_user_profile() -> KitUserProfile:
 	return user_profile
 
 
-# -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
-
-
-func _ready() -> void:
-	assert(_profile is Profile, "invalid state; missing profile")
-
-	_profile.set_user_profile(_create_user_profile())
-
-
-# -- PRIVATE METHODS ----------------------------------------------------------------- #
-
-
-func _create_user_profile() -> KitUserProfile:
+## create_user_profile returns the default profile.
+func create_user_profile() -> KitUserProfile:
 	return create_default_user_profile()

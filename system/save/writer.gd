@@ -5,6 +5,10 @@
 
 extends StdSaveFile
 
+# -- DEPENDENCIES -------------------------------------------------------------------- #
+
+const Profile := preload("../../platform/profile/profile.gd")
+
 # -- CONFIGURATION ------------------------------------------------------------------- #
 
 ## slot is the save slot which will be used to determine the save file's path. This must
@@ -30,7 +34,7 @@ static func get_save_directory(index: int) -> String:
 	if OS.has_feature("editor") and _save_root_override:
 		return _save_root_override.path_join(str(index))
 
-	var profile := Platform.get_user_profile()
+	var profile := Profile.find_user_profile()
 	if not profile:
 		assert(false, "invalid state; missing profile")
 		return ""

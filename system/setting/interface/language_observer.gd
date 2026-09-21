@@ -57,11 +57,14 @@ func _handle_value_change(property: StdSettingsProperty, value: Variant) -> void
 
 
 func _load_custom_translations() -> void:
-	var path_dir := ProjectSettings.globalize_path("user://locale")
-	var logger := _logger.with({&"directory": path_dir})
+	var path_user := "user://locale"
+	var path_dir := ProjectSettings.globalize_path(path_user)
+
+	# NOTE: The global path contains the OS user's name, so logs carry the virtual one.
+	var logger := _logger.with({&"directory": path_user})
 
 	if not DirAccess.dir_exists_absolute(path_dir):
-		logger.info("Custom locale directory doesn't exist; skipping locale import.")
+		logger.debug("Custom locale directory doesn't exist; skipping locale import.")
 		return
 
 	# NOTE: Because the file names are sorted alphabetically, `.mo` files will always be
