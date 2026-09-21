@@ -34,11 +34,15 @@ signal slots_loaded
 const Config := preload("res://addons/std/config/config.gd")
 const FilePath := preload("res://addons/std/file/path.gd")
 const Signals := preload("res://addons/std/event/signal.gd")
+const Profile := preload("../../platform/profile/profile.gd")
 const SaveFileWriter := preload("writer.gd")
 
 # -- DEFINITIONS --------------------------------------------------------------------- #
 
 const GROUP_SAVES_SHIM := &"system/saves:shim"
+
+## MODULE_ID identifies the save system to `KitModules`.
+const MODULE_ID := &"saves"
 
 const CATEGORY_SLOT_DATA := &"__slots__"
 const KEY_ACTIVE_SLOT := &"active"
@@ -426,17 +430,17 @@ func _enter_tree() -> void:
 	assert(StdGroup.is_empty(GROUP_SAVES_SHIM), "invalid state; duplicate node found")
 	StdGroup.with_id(GROUP_SAVES_SHIM).add_member(self)
 
+	KitModules.register(self, MODULE_ID, [Profile.MODULE_ID])
+
 
 func _exit_tree() -> void:
 	StdGroup.with_id(GROUP_SAVES_SHIM).remove_member(self)
 
 
 func _ready() -> void:
-	if not schema is StdSaveData:
-		_logger.error("Invalid config; missing schema.")
-
-	assert(schema is StdSaveData, "invalid config; missing schema")
-	assert(slot_scope is StdSettingsScope, "invalid config; missing settings scope")
+	if not schema is StdSaveData or not slot_scope is StdSettingsScope:
+		KitModules.report_failed(MODULE_ID, "missing a save schema or slot scope")
+		return
 
 	_load_all_slots()
 
@@ -505,3 +509,5 @@ func _load_all_slots() -> void:
 			assert(false, "failed to activate slot")
 
 	slots_loaded.emit()
+
+	KitModules.report_loaded(MODULE_ID)

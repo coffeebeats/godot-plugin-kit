@@ -24,10 +24,14 @@ signal focus_root_changed(root: Control)
 @warning_ignore("SHADOWED_GLOBAL_IDENTIFIER")
 const StdInputDevice := preload("res://addons/std/input/device.gd")
 const Signals := preload("res://addons/std/event/signal.gd")
+const Profile := preload("../../platform/profile/profile.gd")
 
 # -- DEFINITIONS --------------------------------------------------------------------- #
 
 const GROUP_INPUT_SHIM := &"system/input:shim"
+
+## MODULE_ID identifies the input system to `KitModules`.
+const MODULE_ID := &"input"
 
 # -- CONFIGURATION ------------------------------------------------------------------- #
 
@@ -131,6 +135,8 @@ func _enter_tree() -> void:
 	assert(StdGroup.is_empty(GROUP_INPUT_SHIM), "invalid state; duplicate node found")
 	StdGroup.with_id(GROUP_INPUT_SHIM).add_member(self)
 
+	KitModules.register(self, MODULE_ID, [Profile.MODULE_ID])
+
 	set_process(false)
 
 
@@ -167,8 +173,14 @@ func _process(delta: float) -> void:
 
 
 func _ready() -> void:
+	if (
+		StdGroup.is_empty(StdInputCursor.GROUP_INPUT_CURSOR)
+		or StdInputSlot.all().is_empty()
+	):
+		KitModules.report_failed(MODULE_ID, "missing an input cursor or input slot")
+		return
+
 	_cursor = StdGroup.get_sole_member(StdInputCursor.GROUP_INPUT_CURSOR)
-	assert(_cursor is StdInputCursor, "invalid state; missing input cursor")
 
 	# Forward the `StdInputCursor` events.
 	Signals.connect_safe(_cursor.about_to_grab_focus, about_to_grab_focus.emit)
@@ -176,3 +188,5 @@ func _ready() -> void:
 		_cursor.cursor_visibility_changed, cursor_visibility_changed.emit
 	)
 	Signals.connect_safe(_cursor.focus_root_changed, focus_root_changed.emit)
+
+	KitModules.report_loaded(MODULE_ID)

@@ -9,6 +9,9 @@ extends StdSoundEventPlayer
 
 const GROUP_AUDIO_SHIM := &"system/audio:shim"
 
+## MODULE_ID identifies the audio system to `KitModules`.
+const MODULE_ID := &"audio"
+
 # -- CONFIGURATION ------------------------------------------------------------------- #
 
 ## music_player is the music player node for managing background music playback.
@@ -57,11 +60,17 @@ func _enter_tree() -> void:
 	assert(StdGroup.is_empty(GROUP_AUDIO_SHIM), "invalid state; duplicate node found")
 	StdGroup.with_id(GROUP_AUDIO_SHIM).add_member(self)
 
+	KitModules.register(self, MODULE_ID)
+
 
 func _exit_tree() -> void:
 	super._exit_tree()
 
 	StdGroup.with_id(GROUP_AUDIO_SHIM).remove_member(self)
+
+
+func _ready() -> void:
+	KitModules.report_loaded(MODULE_ID)
 
 
 # -- SIGNAL HANDLERS ----------------------------------------------------------------- #

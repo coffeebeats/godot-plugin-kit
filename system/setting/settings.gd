@@ -5,9 +5,16 @@
 
 extends Node
 
+# -- DEPENDENCIES -------------------------------------------------------------------- #
+
+const Profile := preload("../../platform/profile/profile.gd")
+
 # -- DEFINITIONS --------------------------------------------------------------------- #
 
 const GROUP_SETTINGS_SHIM := &"system/setting:shim"
+
+## MODULE_ID identifies the settings system to `KitModules`.
+const MODULE_ID := &"settings"
 
 # -- CONFIGURATION ------------------------------------------------------------------- #
 
@@ -25,6 +32,12 @@ func _enter_tree() -> void:
 	)
 	StdGroup.with_id(GROUP_SETTINGS_SHIM).add_member(self)
 
+	KitModules.register(self, MODULE_ID, [Profile.MODULE_ID])
+
 
 func _exit_tree() -> void:
 	StdGroup.with_id(GROUP_SETTINGS_SHIM).remove_member(self)
+
+
+func _ready() -> void:
+	KitModules.report_loaded(MODULE_ID)
