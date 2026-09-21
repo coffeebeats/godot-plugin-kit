@@ -27,4 +27,4 @@ func set_user_profile(profile: KitUserProfile) -> void:
 
 	_profile = profile
 
-	_logger.info("Set profile for platform.", {&"profile": profile.id})
+	_logger.debug("Set profile for platform.", {&"profile": profile.id})
