@@ -81,6 +81,27 @@ func test_profile_ready_with_empty_implementation_fails_module() -> void:
 	assert_push_error("Kit module failed to load.")
 
 
+func test_profile_ready_with_two_implementations_fails_module() -> void:
+	# Given: A storefront which loaded.
+	add_child_autofree(StorefrontScene.instantiate())
+
+	# Given: The profile scene, whose loader places the editor's implementation.
+	var profile: Profile = ProfileScene.instantiate()
+
+	# Given: A second implementation, as when a build sets two storefront features.
+	profile.add_child(UnknownProfile.new())
+
+	# When: It enters the scene tree.
+	add_child_autofree(profile)
+
+	# Then: Its module failed without a profile.
+	assert_eq(KitModule.get_status(Profile.MODULE_ID), KitModule.Status.FAILED)
+	assert_null(profile.get_user_profile())
+
+	# Then: The failure is logged.
+	assert_push_error("Kit module failed to load.")
+
+
 func test_profile_ready_without_storefront_fails_module() -> void:
 	# Given: The profile scene, with no storefront loaded before it.
 	var profile := ProfileScene.instantiate()
@@ -107,6 +128,24 @@ func test_profile_find_user_profile_returns_loaded_profile() -> void:
 
 	# Then: It is the loaded profile.
 	assert_same(found, profile.get_user_profile())
+
+
+func test_profile_find_user_profile_with_two_profiles_returns_null() -> void:
+	# Given: A storefront which loaded.
+	add_child_autofree(StorefrontScene.instantiate())
+
+	# Given: Two profiles in the scene tree.
+	add_child_autofree(ProfileScene.instantiate())
+	add_child_autofree(ProfileScene.instantiate())
+
+	# When: The user's profile is looked up.
+	var found := Profile.find_user_profile()
+
+	# Then: There is none, since neither can be told apart as the user's.
+	assert_null(found)
+
+	# Then: The second profile's duplicate registration is logged.
+	assert_push_error("Kit module failed to load.")
 
 
 func test_profile_find_user_profile_without_profile_returns_null() -> void:

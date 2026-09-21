@@ -6,6 +6,7 @@ extends GutTest
 
 # -- DEPENDENCIES -------------------------------------------------------------------- #
 
+const Provider := preload("provider.gd")
 const Storefront := preload("storefront.gd")
 const StorefrontScene := preload("storefront.tscn")
 
@@ -43,6 +44,23 @@ func test_storefront_ready_with_unscripted_implementation_fails_module() -> void
 
 	# Given: An implementation whose script failed to load, which leaves a bare node.
 	storefront.add_child(Node.new())
+
+	# When: It enters the scene tree.
+	add_child_autofree(storefront)
+
+	# Then: Its module failed.
+	assert_eq(KitModule.get_status(Storefront.MODULE_ID), KitModule.Status.FAILED)
+
+	# Then: The failure is logged.
+	assert_push_error("Kit module failed to load.")
+
+
+func test_storefront_ready_with_two_implementations_fails_module() -> void:
+	# Given: The storefront scene, whose loader places the editor's implementation.
+	var storefront := StorefrontScene.instantiate()
+
+	# Given: A second implementation, as when a build sets two storefront features.
+	storefront.add_child(Provider.new())
 
 	# When: It enters the scene tree.
 	add_child_autofree(storefront)

@@ -25,16 +25,17 @@ var _profile: KitUserProfile = null
 # -- PUBLIC METHODS ------------------------------------------------------------------ #
 
 
-## find_user_profile returns the profile of the user running the game, or null if no
-## `Profile` is in the scene tree or it holds no profile.
+## find_user_profile returns the profile of the user running the game, or null unless
+## exactly one `Profile` is in the scene tree and it holds a profile.
 ##
 ## NOTE: Kit's scripts call this rather than naming the `Platform` autoload, since a
 ## script naming it fails to parse wherever that autoload is missing or not yet loaded.
 static func find_user_profile() -> KitUserProfile:
-	if StdGroup.is_empty(GROUP_PROFILE_SHIM):
+	var profiles := StdGroup.with_id(GROUP_PROFILE_SHIM).list_members()
+	if profiles.size() != 1:
 		return null
 
-	return StdGroup.get_sole_member(GROUP_PROFILE_SHIM).get_user_profile()
+	return profiles[0].get_user_profile()
 
 
 ## get_user_profile returns information about the profile currently running the game
@@ -55,11 +56,12 @@ func _exit_tree() -> void:
 
 
 func _ready() -> void:
-	if StdGroup.is_empty(Provider.GROUP_PROFILE_PROVIDER):
-		_report_failed("no implementation loaded")
+	var providers := StdGroup.with_id(Provider.GROUP_PROFILE_PROVIDER).list_members()
+	if providers.size() != 1:
+		_report_failed("found %d implementations, expected 1" % providers.size())
 		return
 
-	var provider: Provider = StdGroup.get_sole_member(Provider.GROUP_PROFILE_PROVIDER)
+	var provider: Provider = providers[0]
 
 	_profile = provider.create_user_profile()
 	if not _profile:

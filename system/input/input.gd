@@ -171,14 +171,16 @@ func _process(delta: float) -> void:
 
 
 func _ready() -> void:
-	if (
-		StdGroup.is_empty(StdInputCursor.GROUP_INPUT_CURSOR)
-		or not StdInputSlot.for_player(1)
-	):
-		_report_failed("missing an input cursor or the first player's input slot")
+	var cursors := StdGroup.with_id(StdInputCursor.GROUP_INPUT_CURSOR).list_members()
+	if cursors.size() != 1:
+		_report_failed("found %d input cursors, expected 1" % cursors.size())
 		return
 
-	_cursor = StdGroup.get_sole_member(StdInputCursor.GROUP_INPUT_CURSOR)
+	if not StdInputSlot.for_player(1):
+		_report_failed("missing the first player's input slot")
+		return
+
+	_cursor = cursors[0]
 
 	# Forward the `StdInputCursor` events.
 	Signals.connect_safe(_cursor.about_to_grab_focus, about_to_grab_focus.emit)

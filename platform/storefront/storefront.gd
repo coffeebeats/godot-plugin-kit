@@ -1,6 +1,6 @@
 ##
 ## Storefront is a `Platform` node which owns the game's storefront integration. It
-## loads once the implementation for the build's storefront has joined
+## loads once exactly one implementation, the one for the build's storefront, has joined
 ## `GROUP_STOREFRONT_PROVIDER`.
 ##
 
@@ -19,8 +19,9 @@ const MODULE_ID := &"storefront"
 
 
 func _ready() -> void:
-	if StdGroup.is_empty(Provider.GROUP_STOREFRONT_PROVIDER):
-		_report_failed("no implementation loaded")
+	var providers := StdGroup.with_id(Provider.GROUP_STOREFRONT_PROVIDER).list_members()
+	if providers.size() != 1:
+		_report_failed("found %d implementations, expected 1" % providers.size())
 		return
 
 	_report_loaded()
