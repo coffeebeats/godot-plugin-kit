@@ -29,10 +29,6 @@ msgstr "Startup Error"
 msgid "kit_error_platform_init_steam_message"
 msgstr "Steam could not be initialized. Please make sure Steam is running and restart the game."
 
-#. The message shown when one of the game's required components failed to load, advising the player to reinstall the game.
-msgid "kit_error_module_failed_message"
-msgstr "The game is missing a required component and could not start. Please reinstall the game."
-
 #. Used as a category name for a group of input actions related to menu navigation.
 msgctxt "action_sets"
 msgid "Menu"

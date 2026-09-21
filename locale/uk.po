@@ -31,12 +31,6 @@ msgid ""
 "restart the game."
 msgstr ""
 
-#. The message shown when one of the game's required components failed to load, advising the player to reinstall the game.
-msgid ""
-"The game is missing a required component and could not start. Please "
-"reinstall the game."
-msgstr ""
-
 #. Used as a category name for a group of input actions related to menu navigation.
 msgctxt "action_sets"
 msgid "Menus"
