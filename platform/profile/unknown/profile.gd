@@ -4,15 +4,6 @@ extends Node
 
 const Profile := preload("../profile.gd")
 
-# -- CONFIGURATION ------------------------------------------------------------------- #
-
-## profile is the node path to the `Profile`-typed platform node.
-@export var profile: NodePath = "../.."
-
-# -- INITIALIZATION ------------------------------------------------------------------ #
-
-@onready var _profile: Profile = get_node(profile)
-
 # -- PUBLIC METHODS ------------------------------------------------------------------ #
 
 
@@ -30,13 +21,5 @@ static func create_default_user_profile() -> KitUserProfile:
 
 
 func _ready() -> void:
-	assert(_profile is Profile, "invalid state; missing profile")
-
-	_profile.set_user_profile(_create_user_profile())
-
-
-# -- PRIVATE METHODS ----------------------------------------------------------------- #
-
-
-func _create_user_profile() -> KitUserProfile:
-	return create_default_user_profile()
+	var profile: Profile = StdGroup.get_sole_member(Profile.GROUP_PROFILE_SHIM)
+	profile.set_user_profile(create_default_user_profile())

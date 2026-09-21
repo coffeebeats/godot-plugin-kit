@@ -18,9 +18,4 @@ const Profile := preload("profile/profile.gd")
 
 ## get_user_profile returns the current/local user running the game application.
 func get_user_profile() -> KitUserProfile:
-	var profile := _profile.get_user_profile()
-	if not profile:
-		assert(false, "invalid state; missing profile")
-		return null
-
-	return profile
+	return _profile.get_user_profile()

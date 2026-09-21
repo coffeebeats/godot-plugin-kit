@@ -8,6 +8,18 @@ extends GutTest
 # -- TEST METHODS -------------------------------------------------------------------- #
 
 
+func test_modules_platform_autoload_loads_storefront_and_profile() -> void:
+	# Given: The autoloaded `Platform`, whose loaders placed each implementation.
+
+	# When: Its modules are queried.
+	var storefront := KitModules.is_loaded(&"storefront")
+	var profile := KitModules.is_loaded(&"profile")
+
+	# Then: Both loaded, the profile after the storefront it requires.
+	assert_true(storefront)
+	assert_true(profile)
+
+
 func test_modules_register_twice_fails_module() -> void:
 	# Given: A registered module.
 	KitModules.register(add_child_autofree(Node.new()), &"test_twice")
