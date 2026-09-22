@@ -16,7 +16,7 @@ const UnknownProfile := preload("profile/unknown/profile.gd")
 
 
 func test_platform_ready_loads_storefront_and_profile() -> void:
-	# Given: The platform scene, whose loaders place the editor's implementations.
+	# Given: The platform scene, whose loaders place the default implementations.
 	var platform: Platform = PlatformScene.instantiate()
 
 	# When: It enters the scene tree.

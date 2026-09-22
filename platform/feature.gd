@@ -37,7 +37,6 @@ const FEATURE_WINDOWS := &"windows"
 ## contract that file must match.
 const FEATURE_STOREFRONT_GOG := &"storefront:gog"
 const FEATURE_STOREFRONT_STEAM := &"storefront:steam"
-const FEATURE_STOREFRONT_UNKNOWN := &"storefront:unknown"
 
 # -- PUBLIC METHODS ------------------------------------------------------------------ #
 
@@ -74,7 +73,8 @@ static func is_windows_platform() -> bool:
 	return OS.has_feature(FEATURE_WINDOWS)
 
 
-## get_storefront returns the 'Storefront' targeted by the current game build.
+## get_storefront returns the 'Storefront' targeted by the current game build, or
+## `UNKNOWN` when the build declares no storefront feature.
 static func get_storefront() -> Storefront:
 	if is_steam_storefront_enabled():
 		assert(not is_gog_storefront_enabled(), "cannot enable multiple storefronts")

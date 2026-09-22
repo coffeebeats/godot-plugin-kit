@@ -14,7 +14,7 @@ const StorefrontScene := preload("storefront.tscn")
 
 
 func test_storefront_ready_with_implementation_loads_module() -> void:
-	# Given: The storefront scene, whose loader places the editor's implementation.
+	# Given: The storefront scene, whose loader places the default implementation.
 	var storefront := StorefrontScene.instantiate()
 
 	# When: It enters the scene tree.
@@ -25,7 +25,7 @@ func test_storefront_ready_with_implementation_loads_module() -> void:
 
 
 func test_storefront_ready_with_every_loader_blocked_fails_module() -> void:
-	# Given: The storefront scene with every loader blocked, as by a misspelled feature.
+	# Given: The storefront scene with every loader blocked, as in a GOG build.
 	var storefront := _instantiate_blocked()
 
 	# When: It enters the scene tree.
@@ -56,7 +56,7 @@ func test_storefront_ready_with_unscripted_implementation_fails_module() -> void
 
 
 func test_storefront_ready_with_two_implementations_fails_module() -> void:
-	# Given: The storefront scene, whose loader places the editor's implementation.
+	# Given: The storefront scene, whose loader places the default implementation.
 	var storefront := StorefrontScene.instantiate()
 
 	# Given: A second implementation, as when a build sets two storefront features.

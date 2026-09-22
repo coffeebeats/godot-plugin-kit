@@ -17,7 +17,7 @@ func test_input_ready_with_implementation_loads_module() -> void:
 	# Given: A platform whose profile loaded.
 	add_child_autofree(PlatformScene.instantiate())
 
-	# Given: The input scene, whose loader places the editor's implementation.
+	# Given: The input scene, whose loader places the default implementation.
 	var input := SystemInputScene.instantiate()
 
 	# When: It enters the scene tree.
