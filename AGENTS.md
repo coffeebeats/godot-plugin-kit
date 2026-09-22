@@ -14,6 +14,9 @@ uv run gdlint .
 # Run all tests
 godot --headless -s addons/gut/gut_cmdln.gd -gdir="res://" -ginclude_subdirs -gprefix="" -gsuffix="_test.gd" -gexit
 
+# Run the Python tests, which cover the plugin's bridge
+python -m unittest discover -s plugins/kit/bridge -p "*_test.py"
+
 # Check project files for problems a normal load does not surface (settings in
 # `.gdcheckrc`). From the `godot` agent plugin: on Claude's PATH, and elsewhere
 # through that plugin's `godot-check` skill.
@@ -55,6 +58,8 @@ Report progress with a status getter paired with a signal, as `is_node_ready()` 
 ## Testing
 
 Tests use GUT. Test files end in `_test.gd` and live beside the code they test, and test cases are named `test_<subject>_<scenario>_<expectation>`. Annotate each logical atom with its own one-line `# Given:`, `# When:` or `# Then:` comment. Where kit ships a scene, test through that scene rather than a hand-built copy.
+
+The plugin's Python follows the same rules through the standard library's `unittest`, so a `_test.py` sits beside the module it covers. CI lints Python but runs no test, so run them by hand before pushing.
 
 ## Commits
 
