@@ -15,11 +15,13 @@ uv run gdlint .
 godot --headless -s addons/gut/gut_cmdln.gd -gdir="res://" -ginclude_subdirs -gprefix="" -gsuffix="_test.gd" -gexit
 
 # Check project files for problems a normal load does not surface (settings in
-# `.gdcheckrc`). From the `godot` agent plugin, so on Claude's PATH only.
+# `.gdcheckrc`). From the `godot` agent plugin: on Claude's PATH, and elsewhere
+# through that plugin's `godot-check` skill.
 godot-check
 
 # Regenerate and check the translations after editing `locale/messages.pot` or
-# `locale/en_US.po`, the only two catalogue files edited by hand
+# `locale/en_US.po`, the only two catalogue files edited by hand. From the same
+# plugin: on Claude's PATH, and elsewhere through its `godot-locale` skill.
 LOCALE_DIR=locale godot-locale update
 LOCALE_DIR=locale godot-locale validate
 ```
