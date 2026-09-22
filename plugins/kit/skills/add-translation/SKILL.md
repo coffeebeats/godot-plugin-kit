@@ -19,7 +19,7 @@ When a kit update adds a language, append its `addons/kit/locale/<lang>.mo` to `
 
 ## Prerequisites
 
-Steps 4–5 run `godot-locale`, which the `godot` plugin from `godot-infra` puts on `PATH`. It needs `msgfmt` and `msgmerge` from `gettext`, and `uv`, which fetches `poswap` for it. If any is missing, stop and point the user at the README's setup section rather than guessing at an install command.
+Steps 4–5 run `godot-locale`, from the `godot` plugin in `godot-infra`. Claude Code puts it on `PATH`; elsewhere that plugin's `godot-locale` skill carries the form to run it by. It needs `msgfmt` and `msgmerge` from `gettext`, and `uv`, which fetches `poswap` for it. If any is missing, stop and point the user at the README's setup section rather than guessing at an install command.
 
 ## Translation file format
 

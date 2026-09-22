@@ -35,11 +35,18 @@ godot-bridge wait --for booted           # poll a field; --equals takes JSON
 godot-bridge stop
 ```
 
+`godot-bridge` is on `PATH` in Claude Code, which puts this plugin's `bin/` there. Where
+it is not, run the bridge itself, at a path relative to this skill's directory:
+
+```sh
+python3 ../../bridge/bridge.py launch
+```
+
 `launch --scene <path>` runs one scene instead of the main scene; `--until` / `--equals` / `--timeout` change what its built-in wait accepts. `--port` (default 9080) goes **before** the subcommand and selects the instance, so several games can run at once.
 
 Always `stop` when finished. A game left running holds the port, and the next `launch` has to reap it.
 
-Read a screenshot back with the Read tool. It is a real captured frame, so it settles what the window actually shows.
+View the screenshot it writes. It is a real captured frame, so it settles what the window actually shows.
 
 ## Traps
 
@@ -69,4 +76,4 @@ Nothing is registered and the file names no part of the bridge, which is what le
 
 ## The rest
 
-`${CLAUDE_SKILL_DIR}/../../bridge/README.md` carries the gating detail and the engine behavior the bridge is shaped around. Read it when something behaves unexpectedly, not before.
+`../../bridge/README.md`, relative to this skill's directory, carries the gating detail and the engine behavior the bridge is shaped around. Read it when something behaves unexpectedly, not before.
