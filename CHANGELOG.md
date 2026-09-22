@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.3 (2026-09-22)
+
+## What's Changed
+* fix(storefront): start Steam under the game's app ID instead of app 1 by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/46
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v1.3.2...v1.3.3
+
 ## 1.3.2 (2026-09-22)
 
 ## What's Changed
