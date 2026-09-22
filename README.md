@@ -47,6 +47,8 @@ Two values are set from code instead, since no export in `System` can reach or h
 - `KitSystems.audio().screens`, the game's `StdScreenManager`, which ducks the mix under covering screens.
 - `KitPauseMenu.return_to_main_menu`, the game's way back to its main menu. The pause menu offers returning only once it is set.
 
+A build tagged `storefront:steam` loads the Steam storefront, profile and input, and every other build loads the default ones. An export preset sets the tag in `custom_features`, and an editor run in *Debug > Customize Run Instances*.
+
 ### Check that the modules loaded
 
 The scenes the game depends on to boot are modules: `storefront` and `profile` in `Platform`, and `input`, `settings`, `audio` and `saves` in `System`. Each extends `KitModule` and reports once whether it loaded, logging `Loaded kit module. module=<id>` at `INFO` when it does — one line per module, which a boot check can require.
