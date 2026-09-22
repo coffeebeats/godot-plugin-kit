@@ -50,8 +50,6 @@ Kit is never the top level of a game, since a game calls into all of it, so kit 
 
 Report progress with a status getter paired with a signal, as `is_node_ready()` pairs with `ready` and the save system's `are_slots_loaded()` with `slots_loaded`, and let the game check the getter before awaiting the signal, since a signal that already fired won't fire again. GDScript has no static signals, and a signal on an object held in a `static var` crashes the engine at exit while a lambda is connected to it, so a static API offers only getters.
 
-The `await`s already in `saves`, the pause and save menus, the alert dialog and the debug bridge predate this rule, so don't copy them.
-
 ## Testing
 
 Tests use GUT. Test files end in `_test.gd` and live beside the code they test, and test cases are named `test_<subject>_<scenario>_<expectation>`. Annotate each logical atom with its own one-line `# Given:`, `# When:` or `# Then:` comment. Where kit ships a scene, test through that scene rather than a hand-built copy.
