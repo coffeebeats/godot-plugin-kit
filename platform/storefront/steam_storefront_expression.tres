@@ -1,7 +1,7 @@
-[gd_resource type="Resource" script_class="StdConditionExpressionFeature" format=3 uid="uid://nggtxsyr5rs2"]
+[gd_resource type="Resource" format=3 uid="uid://nggtxsyr5rs2"]
 
-[ext_resource type="Script" uid="uid://b1xngsryv6oxp" path="res://addons/std/condition/expression_feature.gd" id="1_py1ba"]
+[ext_resource type="Script" uid="uid://2igw3tfl7kjy" path="res://addons/kit/platform/storefront/expression.gd" id="1_py1ba"]
 
 [resource]
 script = ExtResource("1_py1ba")
-feature = &"storefront:steam"
+storefront = 2

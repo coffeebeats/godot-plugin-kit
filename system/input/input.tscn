@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://c53ct064cin6g" path="res://addons/kit/system/input/input.gd" id="1_sl0pi"]
 [ext_resource type="Resource" uid="uid://ci7xn7gttsuu2" path="res://addons/kit/platform/storefront/unknown_storefront_expression.tres" id="5_gdf77"]
-[ext_resource type="Resource" uid="uid://d14ioajw47mqw" path="res://addons/kit/platform/editor_expression.tres" id="6_xmapc"]
 [ext_resource type="Script" uid="uid://be11f4pqliry0" path="res://addons/std/condition/expression.gd" id="23_8ojx1"]
 [ext_resource type="Script" uid="uid://b48nei7xl0xrh" path="res://addons/std/condition/condition_loader.gd" id="24_hk8cf"]
 [ext_resource type="Resource" uid="uid://nggtxsyr5rs2" path="res://addons/kit/platform/storefront/steam_storefront_expression.tres" id="24_o5jdq"]
@@ -13,7 +12,7 @@ script = ExtResource("1_sl0pi")
 [node name="IfGodot" type="Node" parent="." unique_id=1140435662]
 script = ExtResource("24_hk8cf")
 scene = "uid://cqt14not5nr5d"
-expressions_allow = Array[ExtResource("23_8ojx1")]([ExtResource("5_gdf77"), ExtResource("6_xmapc")])
+expressions_allow = Array[ExtResource("23_8ojx1")]([ExtResource("5_gdf77")])
 
 [node name="IfSteam" type="Node" parent="." unique_id=925887390]
 script = ExtResource("24_hk8cf")
