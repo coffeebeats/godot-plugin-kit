@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.3.4 (2026-09-22)
+
+## What's Changed
+* fix(storefront): pick each module's implementation from the build's storefront by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/48
+* fix(input): default `get_active_device` and `get_input_slot` to the first player by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/49
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v1.3.3...v1.3.4
+
 ## 1.3.3 (2026-09-22)
 
 ## What's Changed
