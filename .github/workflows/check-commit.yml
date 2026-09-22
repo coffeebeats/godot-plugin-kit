@@ -18,9 +18,23 @@ jobs:
       locale-dir: locale
     secrets: inherit
 
+  test-python:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          enable-cache: true
+
+      - name: Run the plugin's Python tests
+        run: uv run python -m unittest discover -s plugins/kit/bridge -p "*_test.py"
+
   # NOTE: This job name is required by the branch ruleset.
   branch_protection:
-    needs: [check]
+    needs: [check, test-python]
     if: ${{ always() }}
 
     runs-on: ubuntu-latest
