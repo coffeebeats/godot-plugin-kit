@@ -32,8 +32,13 @@ NOISE = re.compile(
     r"|^   at: clear "
 )
 
-# A line matching this in the game's log means the run is not worth waiting on.
-FAILURE = re.compile(r"^(SCRIPT ERROR|USER SCRIPT ERROR|ERROR):")
+# A line matching this in the game's log means the run is not worth waiting on. Only
+# GDScript's own prefixes qualify. A bare `ERROR:` comes from the engine's C++ core,
+# which reports the environment as readily as the game — an unwritable `user://`, an
+# unreadable certificate store — and a sandboxed harness makes those certain on a run
+# that is otherwise fine. An engine error that does stall the boot still surfaces, in
+# the log `wait_for` prints when it times out.
+FAILURE = re.compile(r"^(SCRIPT ERROR|USER SCRIPT ERROR):")
 
 
 class BridgeError(Exception):
@@ -320,7 +325,15 @@ def wait_for(port, target, expected, timeout, offset=None):
 
         time.sleep(0.2)
 
-    raise BridgeError(f"timed out after {timeout:.0f}s waiting for {target} ({last})")
+    timed_out = f"timed out after {timeout:.0f}s waiting for {target} ({last})"
+
+    # NOTE: An engine error is not a failure on its own, so a boot it does stall ends
+    # here rather than at `log_failure`. The tail is what names it.
+    tail = read_log(port, lines=10, offset=offset)
+    if tail:
+        timed_out += "\nthe game logged:\n" + "\n".join(tail)
+
+    raise BridgeError(timed_out)
 
 
 def launch(args):

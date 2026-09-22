@@ -152,10 +152,17 @@ the bridge mounts and a crash. `logs` tails it through the same noise filter as 
 during boot reports
 
 ```text
-bridge: the game reported an error: ERROR: Node not found: "NoSuchNode" (relative to "/root/Main").
+bridge: the game reported an error: SCRIPT ERROR: Invalid access to property or key 'missing' on a base object of type 'Node'.
 ```
 
 in a couple of seconds rather than timing out sixty seconds later.
+
+Only GDScript's own prefixes count. A bare `ERROR:` is the engine's C++ core, which
+reports the environment as readily as the game — an unwritable `user://`, an unreadable
+certificate store — and a sandboxed harness makes those certain on a run that is
+otherwise healthy, so counting them failed every `launch` under one while the game ran
+fine. An engine error that does stall the boot still surfaces: the wait prints the log's
+tail when it times out.
 
 A wait only counts what the game logged after that wait began. The log outlives the
 command that wrote to it, so scanning it whole let one stale line, such as a screenshot
