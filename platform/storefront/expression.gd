@@ -1,8 +1,6 @@
 ##
 ## An `StdConditionExpression` which allows its nodes in a build targeting the
-## configured storefront, as `KitFeature.get_storefront` reports it. A build with no
-## storefront feature targets `UNKNOWN`, so exactly one storefront's expression allows
-## in any build.
+## configured storefront, as `KitFeature.get_storefront` reports it.
 ##
 
 extends StdConditionExpression

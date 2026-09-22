@@ -34,7 +34,7 @@ const FEATURE_WINDOWS := &"windows"
 
 ## FEATURE_STOREFRONT_* name the storefront a build targets. A preset declares one
 ## through `custom_features`, which no constant can reach, so the spelling here is the
-## contract that file must match. A build declaring none targets `Storefront.UNKNOWN`.
+## contract that file must match.
 const FEATURE_STOREFRONT_GOG := &"storefront:gog"
 const FEATURE_STOREFRONT_STEAM := &"storefront:steam"
 
@@ -73,8 +73,8 @@ static func is_windows_platform() -> bool:
 	return OS.has_feature(FEATURE_WINDOWS)
 
 
-## get_storefront returns the 'Storefront' targeted by the current game build, which is
-## `UNKNOWN` for a build declaring no storefront feature, the editor included.
+## get_storefront returns the 'Storefront' targeted by the current game build, or
+## `UNKNOWN` when the build declares no storefront feature.
 static func get_storefront() -> Storefront:
 	if is_steam_storefront_enabled():
 		assert(not is_gog_storefront_enabled(), "cannot enable multiple storefronts")
