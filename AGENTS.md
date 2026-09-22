@@ -20,7 +20,8 @@ godot --headless -s addons/gut/gut_cmdln.gd -gdir="res://" -ginclude_subdirs -gp
 godot-check
 
 # Regenerate and check the translations after editing `locale/messages.pot` or
-# `locale/en_US.po`, the only two catalogue files edited by hand
+# `locale/en_US.po`, the only two catalogue files edited by hand. From the same
+# plugin: on Claude's PATH, and elsewhere through its `godot-locale` skill.
 LOCALE_DIR=locale godot-locale update
 LOCALE_DIR=locale godot-locale validate
 ```
