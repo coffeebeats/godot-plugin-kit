@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.2 (2026-09-22)
+
+## What's Changed
+* chore(claude): add an AGENTS.md with kit's conventions by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/44
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v1.3.1...v1.3.2
+
 ## 1.3.1 (2026-09-21)
 
 ## What's Changed
