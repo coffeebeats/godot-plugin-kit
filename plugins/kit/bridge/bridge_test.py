@@ -1,5 +1,6 @@
 """Tests for how the bridge decides a run is not worth waiting on."""
 
+import os
 import tempfile
 import time
 import unittest
@@ -216,6 +217,27 @@ class ReapTest(StateTestCase):
         ):
             # When: The game is stopped.
             bridge.reap(self.port)
+
+        # Then: No pid is left to misreport a later game.
+        self.assertIsNone(bridge.read_pid(self.port))
+
+    def test_reap_running_game_stops_its_tree(self):
+        # Given: A recorded game still running, whose pid may name a version shim.
+        self.write_pid(4242)
+
+        with (
+            mock.patch.object(bridge, "is_game_process", return_value=True),
+            mock.patch.object(bridge.subprocess, "run") as run,
+            mock.patch.object(bridge.os, "killpg", create=True) as killpg,
+        ):
+            # When: The game is stopped.
+            bridge.reap(self.port)
+
+        # Then: The engine the pid spawned is stopped along with it.
+        if os.name == "nt":
+            self.assertIn("/T", run.call_args.args[0])
+        else:
+            killpg.assert_called_once_with(4242, 15)
 
         # Then: No pid is left to misreport a later game.
         self.assertIsNone(bridge.read_pid(self.port))

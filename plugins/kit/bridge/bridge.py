@@ -212,14 +212,18 @@ def reap(port):
             "game started from the editor, or pass a different --port"
         )
 
+    # NOTE: The pid can name a version manager's shim rather than the engine it spawned,
+    # so the whole tree is stopped; `launch` makes the game a process group for that.
     if is_game_process(pid):
         if os.name == "nt":
             subprocess.run(
-                ["taskkill", "/PID", str(pid), "/F"], capture_output=True, timeout=10
+                ["taskkill", "/PID", str(pid), "/T", "/F"],
+                capture_output=True,
+                timeout=10,
             )
         else:
             with contextlib.suppress(OSError):
-                os.kill(pid, 15)
+                os.killpg(pid, 15)
 
         time.sleep(1.0)
     elif not port_is_free(port):

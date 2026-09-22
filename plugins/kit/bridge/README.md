@@ -126,8 +126,10 @@ it lives in `project/` and not in kit.
 `Already in use` (`ERR_ALREADY_IN_USE`, error 22) and the new instance runs on with no
 bridge. `launch` reaps first with a graceful `quit` over the port, then stops the pid it
 recorded for that port once that pid still names a Godot process, since pids are
-recycled; that also stops a recorded game that never opened its port. A port held by an
-editor-launched game is reported as that rather than killed.
+recycled; that also stops a recorded game that never opened its port. It stops the pid's
+whole tree, since a version manager's `godot` is often a shim that runs the engine as
+its child. A port held by an editor-launched game is reported as that rather than
+killed.
 
 **`StdLogSinkGodot` drops the context dictionary for warnings and errors.** It hands
 `push_warning` the message alone, so anything the reader needs has to be in the message
