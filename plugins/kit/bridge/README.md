@@ -157,12 +157,18 @@ bridge: the game reported an error: SCRIPT ERROR: Invalid access to property or 
 
 in a couple of seconds rather than timing out sixty seconds later.
 
-Only GDScript's own prefixes count. A bare `ERROR:` is the engine's C++ core, which
-reports the environment as readily as the game — an unwritable `user://`, an unreadable
-certificate store — and a sandboxed harness makes those certain on a run that is
-otherwise healthy, so counting them failed every `launch` under one while the game ran
-fine. An engine error that does stall the boot still surfaces: the wait prints the log's
-tail when it times out.
+Only `SCRIPT ERROR` and `SHADER ERROR` count. The engine labels an error `ERROR`,
+`WARNING`, `SCRIPT ERROR` or `SHADER ERROR` and nothing else, and `push_error`, which the
+project's logger calls to report one, prints the bare `ERROR:`. That label names the game
+and the machine under it alike, and a sandboxed harness guarantees a run's worth of the
+machine — an unwritable `user://`, an unreadable certificate store. Counting it failed
+every `launch` under one while the game ran fine.
+
+A game that dies is caught by its exit instead, which needs no pattern and catches a crash
+that logged nothing at all. `launch` holds the process handle and sees the exit at once;
+`wait` has only the port, so it asks the OS every couple of seconds. A game that survives
+its own error still has to reach what the wait is for, and every way of giving up prints
+the log's tail, so the line explaining a stall is in the message either way.
 
 A wait only counts what the game logged after that wait began. The log outlives the
 command that wrote to it, so scanning it whole let one stale line, such as a screenshot

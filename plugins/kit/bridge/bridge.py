@@ -32,13 +32,15 @@ NOISE = re.compile(
     r"|^   at: clear "
 )
 
-# A line matching this in the game's log means the run is not worth waiting on. Only
-# GDScript's own prefixes qualify. A bare `ERROR:` comes from the engine's C++ core,
-# which reports the environment as readily as the game — an unwritable `user://`, an
-# unreadable certificate store — and a sandboxed harness makes those certain on a run
-# that is otherwise fine. An engine error that does stall the boot still surfaces, in
-# the log `wait_for` prints when it times out.
-FAILURE = re.compile(r"^(SCRIPT ERROR|USER SCRIPT ERROR):")
+# A line matching this in the game's log means the run is not worth waiting on.
+#
+# The engine labels an error `ERROR`, `WARNING`, `SCRIPT ERROR` or `SHADER ERROR` and
+# nothing else (`core/io/logger.cpp`), and `push_error`, which the project's own logger
+# calls to report one, prints the bare `ERROR:`. That label cannot say whether the game
+# or the machine under it failed, and a sandboxed harness guarantees a run's worth of
+# the machine. So only the two labels naming broken code count here. A game that dies is
+# caught by its exit, and one that survives its own error still has to reach `booted`.
+FAILURE = re.compile(r"^(SCRIPT ERROR|SHADER ERROR):")
 
 
 class BridgeError(Exception):
@@ -85,6 +87,15 @@ def log_path(port):
 def pid_path(port):
     """pid_path returns the file recording the pid of the game holding the port."""
     return os.path.join(state_dir(port), "game.pid")
+
+
+def read_pid(port):
+    """read_pid returns the pid recorded for the port, or None if there is none."""
+    try:
+        with open(pid_path(port), encoding="utf-8") as handle:
+            return int(handle.read().strip())
+    except (OSError, ValueError):
+        return None
 
 
 def request(port, cmd, args=None, timeout=10.0):
@@ -192,16 +203,14 @@ def reap(port):
     except BridgeError:
         pass
 
-    try:
-        with open(pid_path(port), encoding="utf-8") as handle:
-            pid = int(handle.read().strip())
-    except (OSError, ValueError) as err:
+    pid = read_pid(port)
+    if pid is None:
         if port_is_free(port):
             return
         raise BridgeError(
             f"port {port} is held by a process this script did not start; close the "
             "game started from the editor, or pass a different --port"
-        ) from err
+        )
 
     if not is_game_process(pid):
         if port_is_free(port):
@@ -292,8 +301,46 @@ def field_in_state(state, node, field):
     return next(iter(found.items()))
 
 
-def wait_for(port, target, expected, timeout, offset=None):
+def log_tail(port, offset, lines=10):
+    """log_tail returns the end of the game's log, phrased to append to an error.
+
+    NOTE: The log is what names a failure the patterns do not, so every way of giving up
+    on a game carries it.
+    """
+    tail = read_log(port, lines=lines, offset=offset)
+    if not tail:
+        return ""
+
+    return "\nthe game logged:\n" + "\n".join(tail)
+
+
+# How long to leave between liveness checks that cost a process spawn.
+LIVENESS_INTERVAL = 2.0
+
+
+def game_is_gone(port, process, checked_at):
+    """game_is_gone returns whether the game has exited, and when it was last asked.
+
+    NOTE: `process` is exact and free, so `launch` passes the handle it already holds.
+    A caller which only has the port pays for `tasklist` or `ps`, so it asks rarely.
+    """
+    if process is not None:
+        return process.poll() is not None, checked_at
+
+    now = time.time()
+    if now - checked_at < LIVENESS_INTERVAL:
+        return False, checked_at
+
+    pid = read_pid(port)
+
+    return pid is not None and not is_game_process(pid), now
+
+
+def wait_for(port, target, expected, timeout, offset=None, process=None):
     """wait_for polls the game's reported state until a field matches, or gives up.
+
+    Gives up when the game exits, when it logs a broken script or shader, or when
+    `timeout` seconds pass; every one of those reports the log's tail.
 
     NOTE: Only what the game logged from `offset` onward counts as that failure, since
     the log outlives the command which wrote it.
@@ -305,11 +352,21 @@ def wait_for(port, target, expected, timeout, offset=None):
 
     deadline = time.time() + timeout
     last = "no response yet"
+    checked_at = time.time()
 
     while time.time() < deadline:
         failure = log_failure(port, offset)
         if failure:
             raise BridgeError(f"the game reported an error: {failure}")
+
+        # NOTE: A bare `ERROR:` names the game and the machine alike, so the exit is
+        # what separates a dead run from a noisy one, and it catches a crash that logged
+        # no line at all. Without it a dead game is noticed only once `timeout` ends.
+        gone, checked_at = game_is_gone(port, process, checked_at)
+        if gone:
+            raise BridgeError(
+                f"the game exited before {target}" + log_tail(port, offset)
+            )
 
         try:
             state = request(
@@ -325,15 +382,10 @@ def wait_for(port, target, expected, timeout, offset=None):
 
         time.sleep(0.2)
 
-    timed_out = f"timed out after {timeout:.0f}s waiting for {target} ({last})"
-
-    # NOTE: An engine error is not a failure on its own, so a boot it does stall ends
-    # here rather than at `log_failure`. The tail is what names it.
-    tail = read_log(port, lines=10, offset=offset)
-    if tail:
-        timed_out += "\nthe game logged:\n" + "\n".join(tail)
-
-    raise BridgeError(timed_out)
+    raise BridgeError(
+        f"timed out after {timeout:.0f}s waiting for {target} ({last})"
+        + log_tail(port, offset)
+    )
 
 
 def launch(args):
@@ -369,7 +421,9 @@ def launch(args):
     if args.no_wait:
         return {"pid": process.pid, "log": log_path(args.port)}
 
-    state = wait_for(args.port, args.until, args.equals, args.timeout, offset=0)
+    state = wait_for(
+        args.port, args.until, args.equals, args.timeout, offset=0, process=process
+    )
 
     return {"pid": process.pid, "log": log_path(args.port), "state": state}
 
