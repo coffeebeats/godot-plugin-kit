@@ -20,7 +20,11 @@ func _enter_tree() -> void:
 	# the Steam DRM wrapper, applied during upload. For more context, see
 	# https://partner.steamgames.com/doc/features/drm.
 
-	var response := Steam.steamInitEx(true)
+	# NOTE: No app ID is passed, so GodotSteam falls back to the project's
+	# 'steam/initialization/app_data' settings and, while those give 0, the SDK reads
+	# the ID the Steam client sets at launch or 'steam_appid.txt' beside the
+	# executable. Callbacks are not embedded, since '_process' runs them.
+	var response := Steam.steamInitEx()
 
 	_is_initialized = response.status == OK
 	if _is_initialized:
