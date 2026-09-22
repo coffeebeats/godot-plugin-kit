@@ -93,7 +93,7 @@ Game code becomes visible to it by defining `_get_debug_state() -> Dictionary` o
 
 ## **Agent plugin**
 
-This repository is also a [Claude Code plugin marketplace](https://code.claude.com/docs/en/plugin-marketplaces) holding one plugin, [`kit`](./plugins/kit). Nothing is published anywhere; a repository references it by GitHub path. The plugin carries the skills that describe this addon:
+This repository is also a plugin marketplace holding one plugin, [`kit`](./plugins/kit). [Claude Code](https://code.claude.com/docs/en/plugin-marketplaces) and Codex both read it, from the same `.claude-plugin/` files. Nothing is published anywhere; a repository references it by GitHub path. The plugin carries the skills that describe this addon:
 
 - `add-setting`, `add-save-field`, `add-input-action`, `add-sound` and `add-translation`, which extend a game built on kit. Each reads what the game owns out of its `project.godot` rather than assuming a layout.
 - `add-entity-hud` and `add-hud-element`, for the HUD.
@@ -124,6 +124,24 @@ The plugin declares no `version`, so each commit is its version, and it follows 
 The marketplace ref and the install are per machine and per repository path. The "Agent plugin" section of [godot-infra's README](https://github.com/coffeebeats/godot-infra#agent-plugin) says what to do when the hook or `godot-bridge` goes missing. A major release of this plugin moves the ref, so every machine re-adds the marketplace at the ref in the repository's `.claude/settings.json`.
 
 The marketplace is served from `main`, never from `dist`. `dist` carries the addon subtree for the engine to consume, and `package-addon` copies with a bare glob, so `.claude-plugin/` cannot reach it and `plugins/` is excluded by name.
+
+### Codex
+
+A repository declares the same marketplace in its `.codex/config.toml`, which Codex reads once the project folder is trusted:
+
+```toml
+[marketplaces.godot-plugin-kit]
+source_type = "git"
+source = "https://github.com/coffeebeats/godot-plugin-kit.git"
+ref = "v1"
+
+[plugins."kit@godot-plugin-kit"]
+enabled = true
+```
+
+A machine without that file gets the same result from `codex plugin marketplace add coffeebeats/godot-plugin-kit --ref v1` and `codex plugin add kit@godot-plugin-kit`.
+
+Codex puts nothing from the plugin on `PATH`, so `godot-bridge` is run as `python3 bridge/bridge.py` there; the `run-game` skill carries that form. The skills that call `godot-check` and `godot-locale` name the `godot` plugin's skills of those names for the same reason.
 
 ## **Development**
 
