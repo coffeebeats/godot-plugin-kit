@@ -33,7 +33,15 @@ NOISE = re.compile(
 )
 
 # A line matching this in the game's log means the run is not worth waiting on.
-FAILURE = re.compile(r"^(SCRIPT ERROR|USER SCRIPT ERROR|ERROR):")
+#
+# NOTE: The bare `ERROR:` is left out. `push_error` prints it, but so does the engine
+# when the OS refuses it something, and an agent harness that sandboxes the game, such
+# as Codex, refuses writes to `user://` and reads of the certificate store on every
+# run. A game that dies is caught by its exit instead.
+FAILURE = re.compile(r"^(SCRIPT ERROR|SHADER ERROR):")
+
+# How long to leave between liveness checks that cost a process spawn.
+LIVENESS_INTERVAL = 2.0
 
 
 class BridgeError(Exception):
@@ -80,6 +88,15 @@ def log_path(port):
 def pid_path(port):
     """pid_path returns the file recording the pid of the game holding the port."""
     return os.path.join(state_dir(port), "game.pid")
+
+
+def read_pid(port):
+    """read_pid returns the pid recorded for the port, or None if there is none."""
+    try:
+        with open(pid_path(port), encoding="utf-8") as handle:
+            return int(handle.read().strip())
+    except (OSError, ValueError):
+        return None
 
 
 def request(port, cmd, args=None, timeout=10.0):
@@ -187,31 +204,36 @@ def reap(port):
     except BridgeError:
         pass
 
-    try:
-        with open(pid_path(port), encoding="utf-8") as handle:
-            pid = int(handle.read().strip())
-    except (OSError, ValueError) as err:
+    pid = read_pid(port)
+    if pid is None:
         if port_is_free(port):
             return
         raise BridgeError(
             f"port {port} is held by a process this script did not start; close the "
             "game started from the editor, or pass a different --port"
-        ) from err
+        )
 
-    if not is_game_process(pid):
-        if port_is_free(port):
-            return
+    # NOTE: The pid can name a version manager's shim rather than the engine it spawned,
+    # so the whole tree is stopped; `launch` makes the game a process group for that.
+    if is_game_process(pid):
+        if os.name == "nt":
+            subprocess.run(
+                ["taskkill", "/PID", str(pid), "/T", "/F"],
+                capture_output=True,
+                timeout=10,
+            )
+        else:
+            with contextlib.suppress(OSError):
+                os.killpg(pid, 15)
+
+        time.sleep(1.0)
+    elif not port_is_free(port):
         raise BridgeError(f"port {port} is held by an unknown process")
 
-    if os.name == "nt":
-        subprocess.run(
-            ["taskkill", "/PID", str(pid), "/F"], capture_output=True, timeout=10
-        )
-    else:
-        with contextlib.suppress(OSError):
-            os.kill(pid, 15)
-
-    time.sleep(1.0)
+    # NOTE: `wait` reads the pid to tell whether the game exited, so a stale one would
+    # report a later game started from the editor as dead.
+    with contextlib.suppress(OSError):
+        os.remove(pid_path(port))
 
 
 def port_is_free(port):
@@ -287,10 +309,41 @@ def field_in_state(state, node, field):
     return next(iter(found.items()))
 
 
-def wait_for(port, target, expected, timeout, offset=None):
-    """wait_for polls the game's reported state until a field matches, or gives up.
+def log_tail(port, offset, lines=10):
+    """log_tail returns the end of the game's log, phrased to append to an error."""
+    tail = read_log(port, lines=lines, offset=offset)
+    if not tail:
+        return ""
 
-    NOTE: Only what the game logged from `offset` onward counts as that failure, since
+    return "\nthe game logged:\n" + "\n".join(tail)
+
+
+def game_is_gone(port, process, checked_at):
+    """game_is_gone returns whether the game has exited, and when it was last asked.
+
+    NOTE: `process` is exact and free, so `launch` passes the handle it holds. Without
+    one, a held port answers for the game, and only a free one pays for `tasklist`.
+    """
+    if process is not None:
+        return process.poll() is not None, checked_at
+
+    now = time.time()
+    if now - checked_at < LIVENESS_INTERVAL:
+        return False, checked_at
+
+    if not port_is_free(port):
+        return False, now
+
+    pid = read_pid(port)
+
+    return pid is not None and not is_game_process(pid), now
+
+
+def wait_for(port, target, expected, timeout, offset=None, process=None):
+    """wait_for polls the game's reported state until a field matches, or gives up once
+    the game exits, logs a broken script or shader, or `timeout` seconds pass.
+
+    NOTE: Only what the game logged from `offset` onward counts as a failure, since
     the log outlives the command which wrote it.
     """
     node, field = split_target(target)
@@ -300,11 +353,18 @@ def wait_for(port, target, expected, timeout, offset=None):
 
     deadline = time.time() + timeout
     last = "no response yet"
+    checked_at = time.time()
 
     while time.time() < deadline:
         failure = log_failure(port, offset)
         if failure:
             raise BridgeError(f"the game reported an error: {failure}")
+
+        gone, checked_at = game_is_gone(port, process, checked_at)
+        if gone:
+            raise BridgeError(
+                f"the game exited before {target}" + log_tail(port, offset)
+            )
 
         try:
             state = request(
@@ -320,7 +380,10 @@ def wait_for(port, target, expected, timeout, offset=None):
 
         time.sleep(0.2)
 
-    raise BridgeError(f"timed out after {timeout:.0f}s waiting for {target} ({last})")
+    raise BridgeError(
+        f"timed out after {timeout:.0f}s waiting for {target} ({last})"
+        + log_tail(port, offset)
+    )
 
 
 def launch(args):
@@ -356,7 +419,9 @@ def launch(args):
     if args.no_wait:
         return {"pid": process.pid, "log": log_path(args.port)}
 
-    state = wait_for(args.port, args.until, args.equals, args.timeout, offset=0)
+    state = wait_for(
+        args.port, args.until, args.equals, args.timeout, offset=0, process=process
+    )
 
     return {"pid": process.pid, "log": log_path(args.port), "state": state}
 

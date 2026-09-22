@@ -126,8 +126,10 @@ it lives in `project/` and not in kit.
 `Already in use` (`ERR_ALREADY_IN_USE`, error 22) and the new instance runs on with no
 bridge. `launch` reaps first with a graceful `quit` over the port, then stops the pid it
 recorded for that port once that pid still names a Godot process, since pids are
-recycled; that also stops a recorded game that never opened its port. A port held by an
-editor-launched game is reported as that rather than killed.
+recycled; that also stops a recorded game that never opened its port. It stops the pid's
+whole tree, since a version manager's `godot` is often a shim that runs the engine as
+its child. A port held by an editor-launched game is reported as that rather than
+killed.
 
 **`StdLogSinkGodot` drops the context dictionary for warnings and errors.** It hands
 `push_warning` the message alone, so anything the reader needs has to be in the message
@@ -152,10 +154,26 @@ the bridge mounts and a crash. `logs` tails it through the same noise filter as 
 during boot reports
 
 ```text
-bridge: the game reported an error: ERROR: Node not found: "NoSuchNode" (relative to "/root/Main").
+bridge: the game reported an error: SCRIPT ERROR: Invalid access to property or key 'missing' on a base object of type 'Node'.
 ```
 
 in a couple of seconds rather than timing out sixty seconds later.
+
+Only `SCRIPT ERROR` and `SHADER ERROR` count. The engine labels an error `ERROR`,
+`WARNING`, `SCRIPT ERROR` or `SHADER ERROR` and nothing else, and `push_error`, which
+the project's logger calls to report one, prints the bare `ERROR:`. The engine uses that
+same label to complain about the machine, and a sandboxed harness provokes those
+complaints on every run: an unwritable `user://`, an unreadable certificate store.
+Counting it failed every `launch` under one while the game ran fine.
+
+A game that dies is caught by its exit instead, which needs no pattern and catches a
+crash that logged nothing at all. `launch` holds the process handle and sees the exit at
+once. `wait` has only the port, so while the port is held it takes the game for alive,
+and once it is free it asks the OS every couple of seconds whether the recorded pid
+still runs. `stop` deletes that pid, so a game started from the editor afterwards is
+never mistaken for the stopped one. A game that survives its own error still has to
+reach what the wait is for, and both an exit and a timeout print the log's tail, so the
+line explaining a stall is in the message.
 
 A wait only counts what the game logged after that wait began. The log outlives the
 command that wrote to it, so scanning it whole let one stale line, such as a screenshot
