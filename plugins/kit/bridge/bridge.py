@@ -34,9 +34,10 @@ NOISE = re.compile(
 
 # A line matching this in the game's log means the run is not worth waiting on.
 #
-# NOTE: The bare `ERROR:` is left out, since `push_error` and the engine's complaints
-# about the machine share it and a sandbox provokes the latter on every run. A game that
-# dies is caught by its exit instead.
+# NOTE: The bare `ERROR:` is left out. `push_error` prints it, but so does the engine
+# when the OS refuses it something, and an agent harness that sandboxes the game, such
+# as Codex, refuses writes to `user://` and reads of the certificate store on every
+# run. A game that dies is caught by its exit instead.
 FAILURE = re.compile(r"^(SCRIPT ERROR|SHADER ERROR):")
 
 # How long to leave between liveness checks that cost a process spawn.

@@ -8,7 +8,8 @@ from unittest import mock
 
 import bridge
 
-# Two lines a sandboxed harness provokes on a run that is otherwise healthy.
+# Two lines an agent harness that sandboxes the game, such as Codex, provokes on a run
+# that is otherwise healthy.
 SANDBOX_LOG = [
     "ERROR: Failed to open 'user://logs/godot2026-09-22T14.14.31.log'.",
     "   at: copy (core/io/dir_access.cpp:429)",
@@ -59,7 +60,7 @@ class FailureTest(unittest.TestCase):
         self.assertIsNotNone(bridge.FAILURE.search(line))
 
     def test_failure_engine_environment_line_ignored(self):
-        # Given: The bare label, which a sandbox provokes on every run.
+        # Given: The bare label, which a sandboxed harness provokes on every run.
         for line in SANDBOX_LOG:
             with self.subTest(line=line):
                 # Then: It does not end the wait.
@@ -94,7 +95,7 @@ class LogTest(StateTestCase):
         self.assertEqual(failure, "SCRIPT ERROR: the one this wait should report.")
 
     def test_log_failure_sandboxed_run_finds_none(self):
-        # Given: A log carrying only what a sandbox provokes.
+        # Given: A log carrying only what a sandboxed harness provokes.
         self.write_log(SANDBOX_LOG)
 
         # Then: Nothing ends the wait.
