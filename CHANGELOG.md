@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.4.1 (2026-09-22)
+
+## What's Changed
+* fix(bridge): judge a launch by the game's exit, not every ERROR it logs by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/53
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v1.4.0...v1.4.1
+
 ## 1.4.0 (2026-09-22)
 
 ## What's Changed
