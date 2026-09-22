@@ -158,17 +158,17 @@ bridge: the game reported an error: SCRIPT ERROR: Invalid access to property or 
 in a couple of seconds rather than timing out sixty seconds later.
 
 Only `SCRIPT ERROR` and `SHADER ERROR` count. The engine labels an error `ERROR`,
-`WARNING`, `SCRIPT ERROR` or `SHADER ERROR` and nothing else, and `push_error`, which the
-project's logger calls to report one, prints the bare `ERROR:`. That label names the game
-and the machine under it alike, and a sandboxed harness guarantees a run's worth of the
-machine — an unwritable `user://`, an unreadable certificate store. Counting it failed
-every `launch` under one while the game ran fine.
+`WARNING`, `SCRIPT ERROR` or `SHADER ERROR` and nothing else, and `push_error`, which
+the project's logger calls to report one, prints the bare `ERROR:`. The engine uses that
+same label to complain about the machine, and a sandboxed harness provokes those
+complaints on every run: an unwritable `user://`, an unreadable certificate store.
+Counting it failed every `launch` under one while the game ran fine.
 
-A game that dies is caught by its exit instead, which needs no pattern and catches a crash
-that logged nothing at all. `launch` holds the process handle and sees the exit at once;
-`wait` has only the port, so it asks the OS every couple of seconds. A game that survives
-its own error still has to reach what the wait is for, and every way of giving up prints
-the log's tail, so the line explaining a stall is in the message either way.
+A game that dies is caught by its exit instead, which needs no pattern and catches a
+crash that logged nothing at all. `launch` holds the process handle and sees the exit at
+once. `wait` has only the port, so it asks the OS every couple of seconds. A game that
+survives its own error still has to reach what the wait is for, and both an exit and a
+timeout print the log's tail, so the line explaining a stall is in the message.
 
 A wait only counts what the game logged after that wait began. The log outlives the
 command that wrote to it, so scanning it whole let one stale line, such as a screenshot

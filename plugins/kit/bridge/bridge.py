@@ -34,13 +34,13 @@ NOISE = re.compile(
 
 # A line matching this in the game's log means the run is not worth waiting on.
 #
-# The engine labels an error `ERROR`, `WARNING`, `SCRIPT ERROR` or `SHADER ERROR` and
-# nothing else (`core/io/logger.cpp`), and `push_error`, which the project's own logger
-# calls to report one, prints the bare `ERROR:`. That label cannot say whether the game
-# or the machine under it failed, and a sandboxed harness guarantees a run's worth of
-# the machine. So only the two labels naming broken code count here. A game that dies is
-# caught by its exit, and one that survives its own error still has to reach `booted`.
+# NOTE: The bare `ERROR:` is left out, since `push_error` and the engine's complaints
+# about the machine share it and a sandbox provokes the latter on every run. A game that
+# dies is caught by its exit instead.
 FAILURE = re.compile(r"^(SCRIPT ERROR|SHADER ERROR):")
+
+# How long to leave between liveness checks that cost a process spawn.
+LIVENESS_INTERVAL = 2.0
 
 
 class BridgeError(Exception):
@@ -302,20 +302,12 @@ def field_in_state(state, node, field):
 
 
 def log_tail(port, offset, lines=10):
-    """log_tail returns the end of the game's log, phrased to append to an error.
-
-    NOTE: The log is what names a failure the patterns do not, so every way of giving up
-    on a game carries it.
-    """
+    """log_tail returns the end of the game's log, phrased to append to an error."""
     tail = read_log(port, lines=lines, offset=offset)
     if not tail:
         return ""
 
     return "\nthe game logged:\n" + "\n".join(tail)
-
-
-# How long to leave between liveness checks that cost a process spawn.
-LIVENESS_INTERVAL = 2.0
 
 
 def game_is_gone(port, process, checked_at):
@@ -337,12 +329,10 @@ def game_is_gone(port, process, checked_at):
 
 
 def wait_for(port, target, expected, timeout, offset=None, process=None):
-    """wait_for polls the game's reported state until a field matches, or gives up.
+    """wait_for polls the game's reported state until a field matches, or gives up once
+    the game exits, logs a broken script or shader, or `timeout` seconds pass.
 
-    Gives up when the game exits, when it logs a broken script or shader, or when
-    `timeout` seconds pass; every one of those reports the log's tail.
-
-    NOTE: Only what the game logged from `offset` onward counts as that failure, since
+    NOTE: Only what the game logged from `offset` onward counts as a failure, since
     the log outlives the command which wrote it.
     """
     node, field = split_target(target)
@@ -359,9 +349,6 @@ def wait_for(port, target, expected, timeout, offset=None, process=None):
         if failure:
             raise BridgeError(f"the game reported an error: {failure}")
 
-        # NOTE: A bare `ERROR:` names the game and the machine alike, so the exit is
-        # what separates a dead run from a noisy one, and it catches a crash that logged
-        # no line at all. Without it a dead game is noticed only once `timeout` ends.
         gone, checked_at = game_is_gone(port, process, checked_at)
         if gone:
             raise BridgeError(

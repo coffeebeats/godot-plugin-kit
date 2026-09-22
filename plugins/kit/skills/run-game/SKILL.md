@@ -58,7 +58,7 @@ Each of these returns a plausible wrong answer rather than an error.
 - **Node paths are relative to `/root`** — `--path Main`, never `--path /root/Main`. A POSIX-emulating shell on Windows rewrites the absolute form into a Windows path before the tool sees it.
 - **A wait only counts what the game logged after that wait began**, and `launch` truncates the log. `logs` after a `stop` can end on `Stray Node: …`; that is the project's own shutdown diagnostic, not a failure.
 - **`Input.action_press` raises no event**, so nothing built on `_input` sees it. Fire actions with `StdInputEvent.trigger_action` — see the Pitfalls section of AGENTS.md.
-- **A sandboxed harness cannot write `user://`.** Settings and saves the game writes are dropped, so a run that looks clean persists nothing. Reads still work, which is what makes it plausible — existing saves load, and only the write is missing. Grant the game's user directory, `OS.get_user_data_dir()`, to persist anything; under Codex that is `--add-dir <dir>` or `sandbox_workspace_write.writable_roots` in `.codex/config.toml`.
+- **A sandboxed harness cannot write `user://`.** Settings and saves the game writes are dropped, so a run that looks clean persists nothing. Reads still work, so existing saves load and only the writes go missing. Grant the game's user directory, `OS.get_user_data_dir()`, to persist anything; under Codex that is `--add-dir <dir>` or `sandbox_workspace_write.writable_roots` in `.codex/config.toml`.
 
 ## Reaching game state
 
