@@ -166,9 +166,12 @@ Counting it failed every `launch` under one while the game ran fine.
 
 A game that dies is caught by its exit instead, which needs no pattern and catches a
 crash that logged nothing at all. `launch` holds the process handle and sees the exit at
-once. `wait` has only the port, so it asks the OS every couple of seconds. A game that
-survives its own error still has to reach what the wait is for, and both an exit and a
-timeout print the log's tail, so the line explaining a stall is in the message.
+once. `wait` has only the port, so while the port is held it takes the game for alive,
+and once it is free it asks the OS every couple of seconds whether the recorded pid
+still runs. `stop` deletes that pid, so a game started from the editor afterwards is
+never mistaken for the stopped one. A game that survives its own error still has to
+reach what the wait is for, and both an exit and a timeout print the log's tail, so the
+line explaining a stall is in the message.
 
 A wait only counts what the game logged after that wait began. The log outlives the
 command that wrote to it, so scanning it whole let one stale line, such as a screenshot

@@ -212,20 +212,23 @@ def reap(port):
             "game started from the editor, or pass a different --port"
         )
 
-    if not is_game_process(pid):
-        if port_is_free(port):
-            return
+    if is_game_process(pid):
+        if os.name == "nt":
+            subprocess.run(
+                ["taskkill", "/PID", str(pid), "/F"], capture_output=True, timeout=10
+            )
+        else:
+            with contextlib.suppress(OSError):
+                os.kill(pid, 15)
+
+        time.sleep(1.0)
+    elif not port_is_free(port):
         raise BridgeError(f"port {port} is held by an unknown process")
 
-    if os.name == "nt":
-        subprocess.run(
-            ["taskkill", "/PID", str(pid), "/F"], capture_output=True, timeout=10
-        )
-    else:
-        with contextlib.suppress(OSError):
-            os.kill(pid, 15)
-
-    time.sleep(1.0)
+    # NOTE: `wait` reads the pid to tell whether the game exited, so a stale one would
+    # report a later game started from the editor as dead.
+    with contextlib.suppress(OSError):
+        os.remove(pid_path(port))
 
 
 def port_is_free(port):
@@ -313,8 +316,8 @@ def log_tail(port, offset, lines=10):
 def game_is_gone(port, process, checked_at):
     """game_is_gone returns whether the game has exited, and when it was last asked.
 
-    NOTE: `process` is exact and free, so `launch` passes the handle it already holds.
-    A caller which only has the port pays for `tasklist` or `ps`, so it asks rarely.
+    NOTE: `process` is exact and free, so `launch` passes the handle it holds. Without
+    one, a held port answers for the game, and only a free one pays for `tasklist`.
     """
     if process is not None:
         return process.poll() is not None, checked_at
@@ -322,6 +325,9 @@ def game_is_gone(port, process, checked_at):
     now = time.time()
     if now - checked_at < LIVENESS_INTERVAL:
         return False, checked_at
+
+    if not port_is_free(port):
+        return False, now
 
     pid = read_pid(port)
 

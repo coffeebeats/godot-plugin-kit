@@ -34,6 +34,11 @@ class StateTestCase(unittest.TestCase):
         with open(bridge.log_path(self.port), "w", encoding="utf-8") as handle:
             handle.write("\n".join(lines) + "\n")
 
+    def write_pid(self, pid):
+        """write_pid records `pid` as the game `launch` started."""
+        with open(bridge.pid_path(self.port), "w", encoding="utf-8") as handle:
+            handle.write(str(pid))
+
 
 class FailureTest(unittest.TestCase):
     """FailureTest covers which log lines end a wait."""
@@ -154,6 +159,66 @@ class LivenessTest(StateTestCase):
 
         # Then: The wait continues rather than reporting an exit.
         self.assertFalse(gone)
+
+    def test_game_is_gone_dead_pid_free_port_reports_exit(self):
+        # Given: A recorded game that has exited and released its port.
+        self.write_pid(4242)
+
+        with (
+            mock.patch.object(bridge, "port_is_free", return_value=True),
+            mock.patch.object(bridge, "is_game_process", return_value=False),
+        ):
+            # When: The wait asks whether it is still there.
+            gone, _ = bridge.game_is_gone(self.port, None, 0.0)
+
+        # Then: The exit is reported.
+        self.assertTrue(gone)
+
+    def test_game_is_gone_stale_pid_held_port_keeps_waiting(self):
+        # Given: A dead game's pid, left over from an earlier launch.
+        self.write_pid(4242)
+
+        # Given: A game started from the editor, holding the same port.
+        with (
+            mock.patch.object(bridge, "port_is_free", return_value=False),
+            mock.patch.object(bridge, "is_game_process") as asked,
+        ):
+            # When: The wait asks whether the game is still there.
+            gone, _ = bridge.game_is_gone(self.port, None, 0.0)
+
+        # Then: The live game is not reported dead, and no process is spawned to ask.
+        self.assertFalse(gone)
+        asked.assert_not_called()
+
+
+class ReapTest(StateTestCase):
+    """ReapTest covers stopping the game `launch` started."""
+
+    def setUp(self):
+        super().setUp()
+
+        # Given: A game that no longer answers, so no graceful quit is waited on.
+        for name, value in (
+            ("request", mock.Mock(side_effect=bridge.BridgeError("gone"))),
+            ("time", mock.Mock()),
+        ):
+            patch = mock.patch.object(bridge, name, value)
+            patch.start()
+            self.addCleanup(patch.stop)
+
+    def test_reap_exited_game_forgets_its_pid(self):
+        # Given: A recorded game that has exited and released its port.
+        self.write_pid(4242)
+
+        with (
+            mock.patch.object(bridge, "port_is_free", return_value=True),
+            mock.patch.object(bridge, "is_game_process", return_value=False),
+        ):
+            # When: The game is stopped.
+            bridge.reap(self.port)
+
+        # Then: No pid is left to misreport a later game.
+        self.assertIsNone(bridge.read_pid(self.port))
 
 
 if __name__ == "__main__":
