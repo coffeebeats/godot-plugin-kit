@@ -56,7 +56,7 @@ var _ui_navigation_cooldown: float = 0.0
 
 
 ## get_active_device returns the currently active input device for the specified player.
-func get_active_device(player_id: int = 0) -> StdInputDevice:
+func get_active_device(player_id: int = 1) -> StdInputDevice:
 	var slot := StdInputSlot.for_player(player_id)
 	if not slot:
 		assert(false, "invalid state; missing input slot for player")
@@ -68,7 +68,7 @@ func get_active_device(player_id: int = 0) -> StdInputDevice:
 
 
 ## get_input_slot returns the input slot for the specified player.
-func get_input_slot(player_id: int = 0) -> StdInputSlot:
+func get_input_slot(player_id: int = 1) -> StdInputSlot:
 	return StdInputSlot.for_player(player_id)
 
 
