@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.4.0 (2026-09-22)
+
+## What's Changed
+* feat(skills): support Codex in the kit plugin by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/51
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v1.3.4...v1.4.0
+
 ## 1.3.4 (2026-09-22)
 
 ## What's Changed
