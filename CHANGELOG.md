@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.4.2 (2026-10-09)
+
+## What's Changed
+* chore(deps): bump astral-sh/setup-uv from 10.0.1 to 10.2.0 by @dependabot[bot] in https://github.com/coffeebeats/godot-plugin-kit/pull/56
+* chore(deps): bump addons/std from `c873bb1` to `e4edf19` by @dependabot[bot] in https://github.com/coffeebeats/godot-plugin-kit/pull/55
+
+## New Contributors
+* @dependabot[bot] made their first contribution in https://github.com/coffeebeats/godot-plugin-kit/pull/56
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v1.4.1...v1.4.2
+
 ## 1.4.1 (2026-09-22)
 
 ## What's Changed
