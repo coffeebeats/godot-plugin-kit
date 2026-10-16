@@ -5,6 +5,7 @@
 [ext_resource type="Resource" uid="uid://bus0xmb3pu8xp" path="res://menu/settings/tab_sound_event.tres" id="3_gh6u1"]
 [ext_resource type="Script" uid="uid://dlrw0lhorb5uc" path="res://addons/std/input/loader.gd" id="3_m4kg3"]
 [ext_resource type="Resource" uid="uid://dp0wxxg20ablh" path="res://system/input/actions/menu_tabbed.tres" id="4_s0nl3"]
+[ext_resource type="Resource" uid="uid://bksqrhgb3nen6" path="res://system/input/actions/menu_navigation.tres" id="4_nav"]
 [ext_resource type="PackedScene" uid="uid://dg8wa8rp672rb" path="res://ui/glyph/glyph.tscn" id="5_xbtwd"]
 [ext_resource type="PackedScene" uid="uid://dkt0y14cgygus" path="res://menu/settings/sound/sound.tscn" id="7_x3q0k"]
 [ext_resource type="PackedScene" uid="uid://jxtm7mh7fsc0" path="res://menu/settings/interface/interface.tscn" id="8_kkqby"]
@@ -38,7 +39,7 @@ offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("3_m4kg3")
 action_set = ExtResource("3_7ixv1")
-action_set_layers = Array[ExtResource("14_layer")]([ExtResource("4_s0nl3")])
+action_set_layers = Array[ExtResource("14_layer")]([ExtResource("4_nav"), ExtResource("4_s0nl3")])
 
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=676371519]
 layout_mode = 1

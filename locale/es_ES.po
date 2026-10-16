@@ -37,42 +37,42 @@ msgid "Menus"
 msgstr ""
 
 #. An input action that confirms the current selection.
-msgctxt "actions_Menu"
+msgctxt "actions_MenuNavigation"
 msgid "Accept"
 msgstr ""
 
 #. An input action used to cancel the current selection/leave the current menu page.
-msgctxt "actions_Menu"
+msgctxt "actions_MenuNavigation"
 msgid "Cancel"
 msgstr ""
 
 #. An input action used to navigate left within a game menu.
-msgctxt "actions_Menu"
+msgctxt "actions_MenuNavigation"
 msgid "Left"
 msgstr ""
 
 #. An input action used to navigate right within a game menu.
-msgctxt "actions_Menu"
+msgctxt "actions_MenuNavigation"
 msgid "Right"
 msgstr ""
 
 #. An input action used to navigate up within a game menu.
-msgctxt "actions_Menu"
+msgctxt "actions_MenuNavigation"
 msgid "Up"
 msgstr ""
 
 #. An input action used to navigate down within a game menu.
-msgctxt "actions_Menu"
+msgctxt "actions_MenuNavigation"
 msgid "Down"
 msgstr ""
 
 #. An input action used to navigate to the next item within a game menu.
-msgctxt "actions_Menu"
+msgctxt "actions_MenuNavigation"
 msgid "Next"
 msgstr ""
 
 #. An input action used to navigate to the previous item within a game menu.
-msgctxt "actions_Menu"
+msgctxt "actions_MenuNavigation"
 msgid "Previous"
 msgstr ""
 

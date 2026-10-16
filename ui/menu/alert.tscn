@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://duam2ndvsfv4n" path="res://ui/input/button.tscn" id="4_button"]
 [ext_resource type="Script" uid="uid://dlrw0lhorb5uc" path="res://addons/std/input/loader.gd" id="5_loader"]
 [ext_resource type="Resource" uid="uid://ldk7k2w5uvks" path="res://system/input/actions/menu.tres" id="6_menu"]
+[ext_resource type="Script" uid="uid://dmvb2tblavngm" path="res://addons/std/input/action_set_layer.gd" id="7_layer"]
+[ext_resource type="Resource" uid="uid://bksqrhgb3nen6" path="res://system/input/actions/menu_navigation.tres" id="8_nav"]
 
 [sub_resource type="Resource" id="SubResource_screen"]
 resource_local_to_scene = true
@@ -28,6 +30,7 @@ offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("5_loader")
 action_set = ExtResource("6_menu")
+action_set_layers = Array[ExtResource("7_layer")]([ExtResource("8_nav")])
 
 [node name="Scrim" parent="." unique_id=1451285999 instance=ExtResource("3_scrim")]
 layout_mode = 1
