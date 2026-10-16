@@ -48,7 +48,7 @@ Everything the game owns is reachable from `project.godot`; nothing below assume
    c. Append the action set to `action_sets` on the `Input` instance in the system scene, so kit's controls tab lists it for rebinding, after the game's existing sets:
 
    ```
-   action_sets = Array[ExtResource("id_for_action_set_gd")]([ExtResource("id_for_gameplay_tres"), ExtResource("id_for_gameplay_options_tres"), ExtResource("id_for_new_action_set_tres")])
+   action_sets = Array[ExtResource("id_for_action_set_gd")]([ExtResource("id_for_gameplay_tres"), ExtResource("id_for_new_action_set_tres")])
    ```
 
    Add the new set's `ext_resource` entry at the top of the file. Kit's controls tab under `addons/kit/menu/settings/controls/` is read-only.
@@ -100,18 +100,22 @@ Everything the game owns is reachable from `project.godot`; nothing below assume
 
 Godot's InputMap is project-global, so every action set shares one namespace. Prefix a gameplay action with its action set (`combat_attack`, not `attack`) so two sets never define the same name, and leave the `ui_*` actions to kit's menu sets, which name them directly.
 
+## Layers
+
+A layer adds actions on top of whatever set is loaded. Kit ships two that any set may enable, since their `parent` is unset: `menu_options.tres` (`ui_toggle_menu`), which a map enables so Escape pauses, and `menu_navigation.tres` (the `ui_*` navigation actions), which a panel inside gameplay enables while it is visible. A game enables them from its scenes and never copies them, so the player rebinds them once. A layer the game owns for one of its own sets names that set as `parent`; the Steam Input manifest writes a parentless layer once under every set.
+
 ## Binding collisions
 
-An origin binds to at most one action, so an action added to a layer takes its key away from whatever held it before (`addons/std/input/godot/device_actions.gd:240`). Nothing reports this: the displaced action simply stops firing on that origin, and only on the screens that load the layer.
+An origin binds to at most one action, so an action added to a layer takes its key away from whatever held it before (`addons/std/input/godot/device_actions.gd`, `_bind_action_to_origin`). The Godot backend logs each such move at debug level, under `std/input/godot/device-actions`; nothing else reports it, and the displaced action simply stops firing on that origin, only on the screens that enable the layer.
 
-Kit's own sets carry one instance to check yours against. `ui_toggle_menu` and `ui_cancel` are both `Escape` in `project.godot`; on any screen loading `menu_options.tres` the key goes to `ui_toggle_menu`, leaving `ui_cancel` on the gamepad only.
+Kit's own layers carry one instance to check yours against. `ui_toggle_menu` and `ui_cancel` are both `Escape` in `project.godot`; a layer enabled later takes the key, so a map that enables `menu_options.tres` pauses on Escape, and a panel that then enables `menu_navigation.tres` closes on it instead until it hides.
 
 After adding a binding, check every action set that layers over the same origin, not just the one you edited.
 
 ## Key reference files
 
 - the game's `gameplay.tres` — action set resource pattern
-- the game's `gameplay_options.tres` — action set layer pattern (StdInputActionSetLayer)
+- `addons/kit/system/input/actions/menu_options.tres` and `menu_navigation.tres` — layers any set may enable (`parent` unset); a game's own layer for one set names it as `parent`
 - the system scene — `Input.action_sets`, the game's sets the controls tab lists
 - `addons/kit/menu/settings/controls/controls.gd` — how the controls tab lists them, above kit's menu sets
 - `project.godot` — `[input]` section for default bindings
