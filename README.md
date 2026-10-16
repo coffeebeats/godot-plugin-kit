@@ -72,6 +72,16 @@ Each menu is a finished screen, used in place:
 
 For a different layout, assemble a menu from the scenes it is made of: the settings tabs and their `group` and `setting` rows, the controls tab's `action_set` groups, the save menu's `slot_button`, and the dialogs in `ui/menu/`.
 
+### Put UI inside gameplay
+
+A menu screen loads kit's `Menu` set, which clears every binding, and enables the layers it needs over it: `system/input/actions/menu_navigation.tres` carries the `ui_*` navigation actions and `menu_options.tres` carries `ui_toggle_menu`. Neither layer names a parent set, so a gameplay screen enables the same resources over the game's own set, and the player rebinds each action once:
+
+1. The map's root lists `menu_options.tres` in `action_set_layers`, so Escape pauses through `menu/pause/pusher.tscn`.
+2. A panel over the world, such as a build menu, carries its own `StdInputActionSetLoader` with `menu_navigation.tres` in `action_set_layers` and `active_while` set to `VISIBLE`. Arrows, Enter and the gamepad navigate it while it shows, and because its layer is enabled after the map's, Escape reaches it as `ui_cancel` until it hides. The loader is a `Control`; under a container give it `mouse_filter = IGNORE`, or it covers the panel's buttons.
+3. Kit's map scenes place the map's loader before `UI` in tree order, which is what keeps that order on an uncover; a map built another way must keep its loader ahead of its panels.
+4. A button that doubles a bindable action, such as a build or a wave start, takes a `FocusHandler` and a `StdInputActionTrigger`; any other button connects `pressed`. The handler the action reaches validates it, since a key gets there whether or not the button is enabled.
+5. A screen with a text field lists the `ui_text_*` actions in a layer of its own.
+
 ### Configure the project
 
 Kit's scenes also read these project settings:

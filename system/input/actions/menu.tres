@@ -5,8 +5,3 @@
 [resource]
 script = ExtResource("1_c83rl")
 name = &"Menu"
-actions_digital = Array[StringName]([&"ui_accept", &"ui_cancel", &"ui_left", &"ui_right", &"ui_up", &"ui_down", &"ui_focus_next", &"ui_focus_prev"])
-cursor_activates_kbm = 1
-cursor_hide_actions = Array[StringName]([&"ui_left", &"ui_right", &"ui_up", &"ui_down", &"ui_focus_next", &"ui_focus_prev", &"ui_accept"])
-cursor_hide_actions_if_hovered = Array[StringName]([&"ui_accept"])
-cursor_reveal_distance_minimum = Vector2(4, 4)
