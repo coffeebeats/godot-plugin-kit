@@ -82,9 +82,7 @@ func test_templates_hand_the_action_set_to_their_loader() -> void:
 
 		# NOTE: No input slot exists under test, so the loader must not act on them.
 		var loader := map.action_set_loader
-		loader.load_on_enter = false
-		loader.enable_on_enter = false
-		loader.disable_on_exit = false
+		loader.active_while = StdInputActionSetLoader.ActiveWhile.NEVER
 
 		# When: It enters the tree, noting what the loader holds as it enters, which is
 		# when it loads them.

@@ -26,6 +26,12 @@ func test_generate_registers_every_action_set_in_the_project() -> void:
 	assert_true(got.contains('"#layer_MenuOptions"'))
 	assert_true(got.contains('"#layer_MenuTabbed"'))
 
+	# Then: A layer with no parent is written once under each set, named for both.
+	assert_true(got.contains('"MenuNavigation_Menu"'))
+	assert_true(got.contains('"MenuNavigation_Splash"'))
+	assert_true(got.contains('"MenuOptions_Menu"'))
+	assert_true(got.contains('"MenuOptions_Splash"'))
+
 
 func test_generate_writes_a_section_per_loaded_catalogue() -> void:
 	# Given: A manifest with no configuration.
@@ -53,12 +59,12 @@ func test_generate_resolves_names_through_the_catalogues() -> void:
 	# When: The manifest is generated.
 	var got := manifest.generate()
 
-	# Then: The English section names the set from the catalogue.
-	assert_true(got.contains('"set_Menu"\t\t\t\t\t"Menus"'))
+	# Then: The English section names the navigation layer from the catalogue.
+	assert_true(got.contains('"layer_MenuNavigation"\t\t\t\t\t"Menus"'))
 	assert_true(got.contains('"action_ui_accept"\t\t\t\t\t"Accept"'))
 
-	# Then: No section falls through to the set's raw identifier.
-	assert_false(got.contains('"set_Menu"\t\t\t\t\t"Menu"'))
+	# Then: No section falls through to the layer's raw identifier.
+	assert_false(got.contains('"layer_MenuNavigation"\t\t\t\t\t"MenuNavigation"'))
 
 
 # -- TEST HOOKS ---------------------------------------------------------------------- #

@@ -22,7 +22,7 @@
 [ext_resource type="Resource" uid="uid://c750nhjvglhky" path="res://menu/settings/controls/button_prompt_option_formatter.tres" id="18_8p5d5"]
 [ext_resource type="PackedScene" uid="uid://duam2ndvsfv4n" path="res://ui/input/button.tscn" id="18_v42t3"]
 [ext_resource type="PackedScene" uid="uid://nia5b07rjxi7" path="res://menu/settings/controls/action_set.tscn" id="19_ngc7g"]
-[ext_resource type="Resource" uid="uid://ldk7k2w5uvks" path="res://system/input/actions/menu.tres" id="20_h7kk8"]
+[ext_resource type="Resource" uid="uid://bksqrhgb3nen6" path="res://system/input/actions/menu_navigation.tres" id="20_h7kk8"]
 [ext_resource type="Resource" uid="uid://ccmnjg2p3cow0" path="res://system/input/unknown/bindings_scope.tres" id="21_dqueq"]
 [ext_resource type="Resource" uid="uid://dp0wxxg20ablh" path="res://system/input/actions/menu_tabbed.tres" id="22_6tsaj"]
 [ext_resource type="Resource" uid="uid://bhsjw6b4deo8i" path="res://system/input/actions/menu_binding.tres" id="23_ahsqh"]
