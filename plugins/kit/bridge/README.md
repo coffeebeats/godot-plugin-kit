@@ -103,6 +103,11 @@ fails with `Invalid named index 'Main' for base type Object`. The singleton half
 obvious, because `ResourceLoader` and `OS` read like built-ins; they are not, and
 `ResourceLoader.load(...)` fails the same way until it is bound.
 
+**`Expression` has no `&"…"` or `^"…"` literals.** Both fail to parse with `Expected
+expression.`, which does not point at the literal, so the bridge rewrites them to
+`StringName("…")` and `NodePath("…")` first. Only a prefix where an operand belongs is
+rewritten; after an operand, `&` and `^` are still bitwise AND and XOR.
+
 **A pop emits `screen_uncovered`, never `screen_entered`.** Anything tracking whether a
 transition is in flight has to clear its flag on both. Clearing on `screen_entered`
 alone leaves the app reporting `settled=false` forever after one push and pop, and

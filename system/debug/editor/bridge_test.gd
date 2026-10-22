@@ -1,7 +1,10 @@
+# gdlint:ignore=max-public-methods
+
 ##
 ## Unit tests for the debug bridge. They cover how it finds the nodes reporting
 ## state and the pure functions behind every reply, including identifier
-## extraction, node lookup, the tree description and JSON rendering.
+## extraction, literal rewriting, node lookup, the tree description and JSON
+## rendering.
 ##
 ## The socket itself is exercised by driving a real game through `godot-bridge`, which
 ## kit's agent plugin ships.
@@ -188,6 +191,53 @@ func test_debug_resolve_finds_what_expression_cannot() -> void:
 func test_debug_resolve_with_an_unknown_name_returns_null() -> void:
 	# Then: A name nothing in the project defines resolves to nothing.
 	assert_null(_bridge._resolve("NotAnythingThisProjectDefines"))
+
+
+func test_debug_rewrite_literals_evaluates_a_prefixed_string_as_its_type() -> void:
+	# Given: A list holding one literal of each prefix, as GDScript writes them.
+	var source := "[&\"a\", ^'b/c']"
+
+	# Then: Its rewritten form parses.
+	var expression := Expression.new()
+	assert_eq(expression.parse(_bridge._rewrite_literals(source)), OK)
+
+	# When: The parsed expression is run.
+	var out: Variant = expression.execute([], null, false)
+
+	# Then: Each element has the type its prefix names.
+	assert_eq(out, [&"a", ^"b/c"])
+	assert_typeof(out[0], TYPE_STRING_NAME)
+	assert_typeof(out[1], TYPE_NODE_PATH)
+
+
+func test_debug_rewrite_literals_after_an_operator_rewrites_the_literal() -> void:
+	# Then: A prefix after an operator or an operator keyword is a literal.
+	assert_eq(
+		_bridge._rewrite_literals('f(&"ui_accept")'), 'f(StringName("ui_accept"))'
+	)
+	assert_eq(_bridge._rewrite_literals('a == ^"b"'), 'a == NodePath("b")')
+	assert_eq(_bridge._rewrite_literals('a && &"b"'), 'a && StringName("b")')
+	assert_eq(_bridge._rewrite_literals('not &"a"'), 'not StringName("a")')
+	assert_eq(_bridge._rewrite_literals('a in ^"b"'), 'a in NodePath("b")')
+
+
+func test_debug_rewrite_literals_after_an_operand_keeps_the_operator() -> void:
+	# Then: A prefix after an operand stays bitwise AND or XOR.
+	for source in ['1&"a"', 'x ^ "b"', 'f()^"a"', '[1] & "a"', '"a"&"b"', 'nota&"b"']:
+		assert_eq(_bridge._rewrite_literals(source), source)
+
+	# Then: The second `&` of a logical AND is never read as a prefix.
+	assert_eq(_bridge._rewrite_literals('a&&"b"'), 'a&&"b"')
+	assert_eq(_bridge._rewrite_literals('a&&&"b"'), 'a&&StringName("b")')
+
+
+func test_debug_rewrite_literals_inside_a_string_changes_nothing() -> void:
+	# Then: A prefix inside a string literal is text, even past an escaped quote.
+	assert_eq(_bridge._rewrite_literals('"&\\"a\\""'), '"&\\"a\\""')
+	assert_eq(_bridge._rewrite_literals("'^\"a\"'"), "'^\"a\"'")
+
+	# Then: A rewritten literal ends at its own closing quote, not an escaped one.
+	assert_eq(_bridge._rewrite_literals('&"a\\"b"&"c"'), 'StringName("a\\"b")&"c"')
 
 
 func test_debug_node_accepts_every_form_of_the_same_path() -> void:

@@ -348,6 +348,8 @@ func _on_eval(args: Dictionary) -> void:
 		_fail("missing argument: expr")
 		return
 
+	source = _rewrite_literals(source)
+
 	# NOTE: `Expression` sees only the names it is given, so without this the bridge
 	# reaches no project API at all.
 	var names := PackedStringArray()
@@ -529,6 +531,79 @@ func _resolve(identifier: String) -> Variant:
 		return load(classes[identifier])
 
 	return null
+
+
+## _rewrite_literals rewrites the `&"…"` and `^"…"` literals of GDScript, which
+## `Expression` cannot parse, into the `StringName("…")` and `NodePath("…")` calls it
+## can. Text inside a string literal is copied unchanged.
+##
+## NOTE: Only a prefix in operand position is rewritten. After an operand, `&` and `^`
+## are bitwise AND and XOR, so `1&"a"` keeps the meaning it has without the rewrite.
+func _rewrite_literals(source: String) -> String:
+	var out := ""
+	var word := ""
+
+	# operand is whether the last token ended an operand.
+	var operand := false
+	# quote is the quote which ends the string being copied, if inside one.
+	var quote := ""
+	# closes is whether that string is a rewritten literal's argument.
+	var closes := false
+
+	var i := 0
+	while i < source.length():
+		var c := source[i]
+		i += 1
+
+		if quote:
+			out += c
+			if c == "\\" and i < source.length():
+				out += source[i]
+				i += 1
+			elif c == quote:
+				quote = ""
+				if closes:
+					out += ")"
+					closes = false
+
+			continue
+
+		if c.is_valid_identifier() or c.is_valid_int():
+			word += c
+			operand = word not in ["and", "in", "not", "or"]
+			out += c
+			continue
+
+		word = ""
+
+		# NOTE: `&&` is logical AND, so its second `&` is never a prefix.
+		if c == "&" and source.substr(i, 1) == "&":
+			out += "&&"
+			operand = false
+			i += 1
+			continue
+
+		if c in ["&", "^"] and not operand and i < source.length():
+			var next := source[i]
+			if next in ['"', "'"]:
+				out += ("StringName(" if c == "&" else "NodePath(") + next
+				quote = next
+				closes = true
+				operand = true
+				i += 1
+				continue
+
+		if c in ['"', "'"]:
+			quote = c
+			operand = true
+		elif c in [")", "]", "}"]:
+			operand = true
+		elif c.strip_edges() != "":
+			operand = false
+
+		out += c
+
+	return out
 
 
 ## _send writes one response line to the peer.
