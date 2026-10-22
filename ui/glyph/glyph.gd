@@ -263,8 +263,10 @@ func _update_glyph(device_type: DeviceType) -> bool:
 	if texture_rect.visible:
 		minimum_size = minimum_size.max(texture_rect.get_combined_minimum_size())
 
+	# NOTE: The panel's size includes its stylebox and margins around the label, so a
+	# label's box stays inside the glyph's rect and a container's separation holds.
 	if label.visible:
-		minimum_size = minimum_size.max(label.get_combined_minimum_size())
+		minimum_size = minimum_size.max(panel_container.get_combined_minimum_size())
 
 	custom_minimum_size = minimum_size
 
