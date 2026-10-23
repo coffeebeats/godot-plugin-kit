@@ -12,6 +12,8 @@ godot-bridge eval 'Main.screens().get_depth()'
 godot-bridge state                        # what every reporting node says
 godot-bridge state --filter Map           # one node, by name at any depth
 godot-bridge reporters                    # which nodes report, without asking
+godot-bridge press ui_accept              # press and release an action
+godot-bridge click 600 408                # left click at window pixels
 godot-bridge screenshot --out shot.png    # or --node <path> to crop to one control
 godot-bridge logs                         # what the game printed
 godot-bridge wait --for booted            # poll until a node reports ready
@@ -107,6 +109,28 @@ obvious, because `ResourceLoader` and `OS` read like built-ins; they are not, an
 expression.`, which does not point at the literal, so the bridge rewrites them to
 `StringName("…")` and `NodePath("…")` first. Only a prefix where an operand belongs is
 rewritten; after an operand, `&` and `^` are still bitwise AND and XOR.
+
+**`push_input` skips `Input`.** A click pushed into the root viewport reaches the
+controls under it, but `Input` never hears of it, so `Input.is_mouse_button_pressed`, an
+action bound to the mouse and polled through `Input`, and std's switch to keyboard and
+mouse all miss it. `click` hands its events to `Input.parse_input_event` instead, the
+path an OS click takes, and `Input` passes them on to the window, which applies the
+stretch transform itself. `press` goes the same way through
+`StdInputEvent.trigger_action`.
+
+**A release parsed alongside its press is flushed with it.** `Input` buffers events and
+flushes them together at the start of the next frame, so a handler polling
+`is_action_pressed` would never see the input held. Both commands send the release on the
+following `process_frame`, which still runs before the bridge reads its next request. The
+headless display server never flushes that buffer at all, which is why the bridge's tests
+flush it by hand.
+
+**A click is in window pixels; `tree` rects are in the canvas.** With a `canvas_items`
+stretch the two differ whenever the window is not the base size: in a 960x540 window over
+a 1920x1080 base, `click 100 75` lands at canvas `(200, 150)`. A full screenshot is in
+window pixels, so a point read off one is right as it stands, and `click` answers with the
+canvas point it hit. The root viewport's `get_mouse_position()` reads the OS cursor, so
+it never reports the click.
 
 **A pop emits `screen_uncovered`, never `screen_entered`.** Anything tracking whether a
 transition is in flight has to clear its flag on both. Clearing on `screen_entered`
