@@ -64,9 +64,11 @@ Everything the game owns is reachable from `project.godot`; nothing below assume
 
    - `actions_digital` — boolean on/off actions (buttons, keys)
    - `actions_analog_1d` — single-axis analog actions (triggers)
-   - `actions_analog_2d` — dual-axis analog actions (sticks)
+   - `actions_analog_2d` — sticks, each driving four directional digital actions
 
    Add the action's `StringName` (e.g., `&"jump"`) to the correct array. If the array doesn't exist in the `.tres` file yet, add it under the `[resource]` section.
+
+   An `analog_2d` action names the stick (e.g., `&"combat_move"`, never `_x` or `_y`), and its four directions `<action>_left`, `<action>_right`, `<action>_up` and `<action>_down` also go in `actions_digital`, or std's `list_action_names` asserts. The game reads them with `Input.get_vector`. The directions get the bindings in step 5 and the controls tab rows; the stick gets neither. Both the stick and the four directions need a translation in step 6, since the Steam Input manifest names the stick and the controls tab names the directions.
 
 5. **Add default bindings in `project.godot`** under the `[input]` section. Each action needs a block like:
 

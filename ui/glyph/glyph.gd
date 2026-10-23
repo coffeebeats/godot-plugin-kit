@@ -189,7 +189,7 @@ func _get_device_type() -> DeviceType:
 	)
 
 
-func _update_glyph(device_type: DeviceType) -> bool:
+func _update_glyph(device_type: DeviceType, index: int) -> bool:
 	var label_prev: String = label.text
 	label.text = ""
 
@@ -212,7 +212,7 @@ func _update_glyph(device_type: DeviceType) -> bool:
 			. get_action_glyph(
 				action_set,
 				action,
-				binding_index,
+				index,
 				custom_minimum_size,
 				device_type,
 			)
@@ -237,7 +237,7 @@ func _update_glyph(device_type: DeviceType) -> bool:
 				. get_action_origin_label(
 					action_set,
 					action,
-					binding_index,
+					index,
 					device_type,
 				)
 			)
