@@ -174,9 +174,8 @@ func _ready() -> void:
 ## _click presses the left mouse button at `point`, in window pixels, and releases it on
 ## the next frame, as `_press` does an action.
 ##
-## NOTE: The event goes through `Input`, as an OS click does, rather than the root
-## viewport's `push_input`. That skips `Input`, so a polled mouse-bound action and
-## `Input.is_mouse_button_pressed` would never see the click.
+## NOTE: The click goes through `Input`, as an OS click does. The root viewport's
+## `push_input` skips `Input`, so its button state and polled actions miss the click.
 func _click(point: Vector2) -> void:
 	var event := InputEventMouseButton.new()
 	event.button_index = MOUSE_BUTTON_LEFT

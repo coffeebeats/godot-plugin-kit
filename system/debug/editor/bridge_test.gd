@@ -332,13 +332,14 @@ func test_debug_to_json_renders_a_bare_object_as_text() -> void:
 
 
 func test_debug_click_on_a_button_presses_it_once_released() -> void:
-	# Given: A button, and its center in window pixels.
+	# Given: A button whose signals are watched.
 	var button := Button.new()
 	button.position = Vector2(100, 100)
 	button.size = Vector2(200, 100)
 	add_child_autofree(button)
 	watch_signals(button)
 
+	# Given: The button's center, in window pixels.
 	var xform := button.get_viewport().get_screen_transform()
 	var point := xform * button.get_global_rect().get_center()
 

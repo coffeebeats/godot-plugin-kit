@@ -111,7 +111,7 @@ expression.`, which does not point at the literal, so the bridge rewrites them t
 rewritten; after an operand, `&` and `^` are still bitwise AND and XOR.
 
 **`push_input` skips `Input`.** A click pushed into the root viewport reaches the
-controls under it, but `Input` never hears of it, so `Input.is_mouse_button_pressed`, an
+controls under it, but `Input` never sees it, so `Input.is_mouse_button_pressed`, an
 action bound to the mouse and polled through `Input`, and std's switch to keyboard and
 mouse all miss it. `click` hands its events to `Input.parse_input_event` instead, the
 path an OS click takes, and `Input` passes them on to the window, which applies the
