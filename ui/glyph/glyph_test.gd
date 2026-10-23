@@ -45,6 +45,53 @@ func test_glyph_keyboard_label_fits_its_box_inside_the_glyph() -> void:
 	assert_eq(size.max(box), size)
 
 
+func test_glyph_secondary_binding_draws_the_second_origin() -> void:
+	# Given: A platform whose profile loaded, and the input scene with its slot.
+	add_child_autofree(PlatformScene.instantiate())
+	add_child_autofree(SystemInputScene.instantiate())
+
+	# Given: A loaded set holding `ui_accept`, which the engine binds to several keys.
+	var actions := _load_actions()
+
+	# Given: A keyboard glyph for the action's secondary binding.
+	var glyph := _create_glyph(actions)
+	glyph.binding_index = StdInputDeviceActions.BINDING_INDEX_SECONDARY
+
+	# When: The glyph enters the tree and draws its key's label.
+	add_child_autofree(glyph)
+	await wait_process_frames(2)
+
+	# Then: The glyph shows the second origin's label, not the first's.
+	var second := _get_origin_label(actions, 1)
+	assert_ne(second, _get_origin_label(actions, 0))
+	assert_eq(glyph.label.text, second)
+
+
+func test_glyph_cycle_interval_advances_to_the_next_origin() -> void:
+	# Given: A platform whose profile loaded, and the input scene with its slot.
+	add_child_autofree(PlatformScene.instantiate())
+	add_child_autofree(SystemInputScene.instantiate())
+
+	# Given: A loaded set holding `ui_accept`, which the engine binds to several keys.
+	var actions := _load_actions()
+
+	# Given: A keyboard glyph in the tree, drawing the primary binding.
+	var glyph := _create_glyph(actions)
+	add_child_autofree(glyph)
+	await wait_process_frames(2)
+
+	# When: The glyph starts cycling through every origin.
+	glyph.cycle_interval = 0.05
+
+	# Then: The glyph restarts at the first origin.
+	var first := _get_origin_label(actions, 0)
+	assert_eq(glyph.label.text, first)
+
+	# Then: Once the interval elapses, the glyph shows the second origin.
+	await wait_until(func(): return glyph.label.text != first, 1.0)
+	assert_eq(glyph.label.text, _get_origin_label(actions, 1))
+
+
 # -- TEST HOOKS ---------------------------------------------------------------------- #
 
 
@@ -54,3 +101,40 @@ func after_each() -> void:
 	var slot := StdInputSlot.for_player(1)
 	if slot:
 		slot.load_action_set(StdInputActionSet.new())
+
+
+# -- PRIVATE METHODS ----------------------------------------------------------------- #
+
+
+func _create_glyph(actions: StdInputActionSet) -> KitInputGlyph:
+	var glyph: KitInputGlyph = GlyphScene.instantiate()
+	glyph.always_show_kbm = true
+	glyph.action_set = actions
+	glyph.action = &"ui_accept"
+
+	# NOTE: The scene shows "Kp Enter" as "Enter", which would hide which of
+	# `ui_accept`'s origins the glyph draws.
+	glyph.origin_label_overrides = {}
+
+	return glyph
+
+
+func _get_origin_label(actions: StdInputActionSet, index: int) -> String:
+	return (
+		StdInputSlot
+		. for_player(1)
+		. get_action_origin_label(
+			actions,
+			&"ui_accept",
+			index,
+			StdInputDevice.DEVICE_TYPE_KEYBOARD,
+		)
+	)
+
+
+func _load_actions() -> StdInputActionSet:
+	var actions := StdInputActionSet.new()
+	actions.name = &"Glyphs"
+	actions.actions_digital = [&"ui_accept"] as Array[StringName]
+	StdInputSlot.for_player(1).load_action_set(actions)
+	return actions
