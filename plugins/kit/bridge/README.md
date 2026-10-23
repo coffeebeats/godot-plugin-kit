@@ -129,8 +129,10 @@ flush it by hand.
 stretch the two differ whenever the window is not the base size: in a 960x540 window over
 a 1920x1080 base, `click 100 75` lands at canvas `(200, 150)`. A full screenshot is in
 window pixels, so a point read off one is right as it stands, and `click` answers with the
-canvas point it hit. The root viewport's `get_mouse_position()` reads the OS cursor, so
-it never reports the click.
+canvas point it hit. A map's `SubViewportContainer` maps the click on into the world as it
+would an OS click: over the pixel map's 3x upscale, `click 1500 900` reaches
+`_unhandled_input` at world `(501, 301)`. `get_mouse_position()` reads the OS cursor in
+the root viewport and in a map's `SubViewport` alike, so it never reports the click.
 
 **A pop emits `screen_uncovered`, never `screen_entered`.** Anything tracking whether a
 transition is in flight has to clear its flag on both. Clearing on `screen_entered`

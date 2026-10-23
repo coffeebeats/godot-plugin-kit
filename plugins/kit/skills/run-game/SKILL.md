@@ -62,7 +62,7 @@ Each of these returns a plausible wrong answer rather than an error.
 - **`Input.action_press` raises no event**, so nothing built on `_input` sees it. Fire actions with `press`, which goes through `StdInputEvent.trigger_action`, and never call a game's handlers directly, which skips the input path the check exists to cover.
 - **Input lands after the command answers.** `press` and `click` reply once the event is queued; the game handles it on a later frame, and a screen transition swallows input outright. `wait --for` the field the input should change before a screenshot or an assertion.
 - **`click` takes window pixels, not `tree` rects.** A full screenshot is in window pixels; `tree` reports rects in the root viewport's canvas, which differs once the window is not the project's base size. The reply's `position` is the click in canvas space, so check it falls inside the rect you meant.
-- **`get_global_mouse_position()` in the root viewport reads the real cursor**, not the click. A handler that reads it instead of the event's position ignores `click`.
+- **`get_global_mouse_position()` reads the real cursor, not the click**, in the root viewport and inside a map's `SubViewport` alike. A handler that reads it instead of the event's position ignores `click`.
 - **A sandboxed harness cannot write `user://`.** Settings and saves the game writes are dropped, so a run that looks clean persists nothing. Reads still work, so existing saves load and only the writes go missing. Grant the game's user directory, `OS.get_user_data_dir()`, to persist anything; under Codex that is `--add-dir <dir>` or `sandbox_workspace_write.writable_roots` in `.codex/config.toml`.
 
 ## Reaching game state
