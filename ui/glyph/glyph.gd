@@ -46,9 +46,12 @@ extends StdInputGlyph
 
 @export_subgroup("Force hide")
 
-## hide_if_cursor_visible controls whether this glyph is hidden upon the cursor being
-## made visible. This is to enable keyboard and mouse-only glyphs being shown only when
-## the game is using "focus" mode navigation.
+## hide_if_cursor_visible controls whether this glyph is hidden while the cursor is
+## visible and the keyboard and mouse are active. This is to enable keyboard and
+## mouse-only glyphs being shown only when the game is using "focus" mode navigation.
+##
+## NOTE: A cursor revealed while a joypad stays active keeps the glyph shown, since the
+## joypad's binding is still the one the player would press.
 @export var hide_if_cursor_visible: bool = false
 
 ## hide_if_kbm_active controls whether this glyph is displayed when the active device is
@@ -201,6 +204,7 @@ func _update_glyph(device_type: DeviceType, index: int) -> bool:
 		or (hide_if_joy_active and _slot.device_category == DEVICE_TYPE_GENERIC)
 		or (
 			hide_if_cursor_visible
+			and _slot.device_type == DEVICE_TYPE_KEYBOARD
 			and _slot.cursor is StdInputCursor
 			and _slot.cursor.get_is_visible()
 		)

@@ -92,6 +92,73 @@ func test_glyph_cycle_interval_advances_to_the_next_origin() -> void:
 	assert_eq(glyph.label.text, _get_origin_label(actions, 1))
 
 
+func test_glyph_hide_if_cursor_visible_keeps_joypad_glyph_shown() -> void:
+	# Given: A platform whose profile loaded, and the input scene with its slot.
+	add_child_autofree(PlatformScene.instantiate())
+	add_child_autofree(SystemInputScene.instantiate())
+
+	# Given: A loaded set holding `ui_accept`, which the engine binds to joypad A.
+	var actions := _load_actions()
+
+	# Given: A connected joypad, made active by a press of `ui_accept`.
+	var slot := StdInputSlot.for_player(1)
+	slot.joypad_monitor.joy_connected.emit(0, StdInputDevice.DEVICE_TYPE_XBOX_ONE)
+	_press_joypad_button(JOY_BUTTON_A)
+	assert_eq(slot.device_type, StdInputDevice.DEVICE_TYPE_XBOX_ONE)
+
+	# Given: A glyph for the active device which hides while the cursor is visible.
+	var glyph := _create_glyph(actions)
+	glyph.always_show_kbm = false
+	glyph.hide_if_cursor_visible = true
+
+	# NOTE: The headless joypad has no glyph or label, and a hidden glyph skips its
+	# fallback, so the fallback label shows whether the glyph is hidden.
+	glyph.fallback_label = "Fallback"
+
+	add_child_autofree(glyph)
+	await wait_process_frames(2)
+	assert_true(_is_glyph_shown(glyph))
+
+	# When: The cursor is revealed while the joypad stays active.
+	KitSystems.input().show_cursor()
+	await wait_process_frames(1)
+	assert_true(slot.cursor.get_is_visible())
+	assert_eq(slot.device_type, StdInputDevice.DEVICE_TYPE_XBOX_ONE)
+
+	# Then: The glyph still shows the joypad's binding.
+	assert_true(_is_glyph_shown(glyph))
+
+
+func test_glyph_hide_if_cursor_visible_hides_keyboard_glyph() -> void:
+	# Given: A platform whose profile loaded, and the input scene with its slot.
+	add_child_autofree(PlatformScene.instantiate())
+	add_child_autofree(SystemInputScene.instantiate())
+
+	# Given: A loaded set holding `ui_accept`, which the engine binds to keys.
+	var actions := _load_actions()
+
+	# Given: A keyboard glyph which hides while the cursor is visible.
+	var glyph := _create_glyph(actions)
+	glyph.hide_if_cursor_visible = true
+	add_child_autofree(glyph)
+	await wait_process_frames(2)
+
+	# Given: The keyboard is active and the cursor is hidden.
+	var slot := StdInputSlot.for_player(1)
+	slot.cursor.hide_cursor()
+	await wait_process_frames(1)
+	assert_false(slot.cursor.get_is_visible())
+	assert_eq(slot.device_type, StdInputDevice.DEVICE_TYPE_KEYBOARD)
+	assert_true(_is_glyph_shown(glyph))
+
+	# When: The cursor is revealed.
+	KitSystems.input().show_cursor()
+	await wait_process_frames(1)
+
+	# Then: The glyph is hidden.
+	assert_false(_is_glyph_shown(glyph))
+
+
 # -- TEST HOOKS ---------------------------------------------------------------------- #
 
 
@@ -132,9 +199,23 @@ func _get_origin_label(actions: StdInputActionSet, index: int) -> String:
 	)
 
 
+func _is_glyph_shown(glyph: KitInputGlyph) -> bool:
+	return glyph.label.visible or glyph.texture_rect.visible
+
+
 func _load_actions() -> StdInputActionSet:
 	var actions := StdInputActionSet.new()
 	actions.name = &"Glyphs"
 	actions.actions_digital = [&"ui_accept"] as Array[StringName]
 	StdInputSlot.for_player(1).load_action_set(actions)
 	return actions
+
+
+func _press_joypad_button(button: JoyButton) -> void:
+	for pressed in [true, false]:
+		var event := InputEventJoypadButton.new()
+		event.device = 0
+		event.button_index = button
+		event.pressed = pressed
+		Input.parse_input_event(event)
+		Input.flush_buffered_events()
