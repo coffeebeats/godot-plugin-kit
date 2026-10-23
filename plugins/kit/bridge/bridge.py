@@ -474,6 +474,17 @@ def main(argv=None):
     parser_eval = commands.add_parser("eval", help="evaluate an expression")
     parser_eval.add_argument("expr")
 
+    parser_press = commands.add_parser(
+        "press", help="press and release an input action, as a key would"
+    )
+    parser_press.add_argument("action")
+
+    parser_click = commands.add_parser(
+        "click", help="click the left mouse button at a point in the window"
+    )
+    parser_click.add_argument("x", type=float, help="window pixels, as in a screenshot")
+    parser_click.add_argument("y", type=float, help="window pixels, as in a screenshot")
+
     parser_shot = commands.add_parser("screenshot", help="capture the window")
     parser_shot.add_argument("--out", help="where to write the PNG")
     parser_shot.add_argument("--node", help="crop to this Control, relative to /root")
@@ -511,6 +522,12 @@ def main(argv=None):
 
     if args.command == "eval":
         return request(args.port, "eval", {"expr": args.expr})
+
+    if args.command == "press":
+        return request(args.port, "press", {"action": args.action})
+
+    if args.command == "click":
+        return request(args.port, "click", {"x": args.x, "y": args.y})
 
     if args.command == "screenshot":
         out = args.out or os.path.join(

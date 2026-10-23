@@ -4,7 +4,7 @@
 ## Unit tests for the debug bridge. They cover how it finds the nodes reporting
 ## state and the pure functions behind every reply, including identifier
 ## extraction, literal rewriting, node lookup, the tree description and JSON
-## rendering.
+## rendering, and the input it sends for `press` and `click`.
 ##
 ## The socket itself is exercised by driving a real game through `godot-bridge`, which
 ## kit's agent plugin ships.
@@ -329,6 +329,55 @@ func test_debug_to_json_renders_a_bare_object_as_text() -> void:
 
 	# Then: It degrades to a string rather than failing the whole command.
 	assert_typeof(out, TYPE_STRING)
+
+
+func test_debug_click_on_a_button_presses_it_once_released() -> void:
+	# Given: A button whose signals are watched.
+	var button := Button.new()
+	button.position = Vector2(100, 100)
+	button.size = Vector2(200, 100)
+	add_child_autofree(button)
+	watch_signals(button)
+
+	# Given: The button's center, in window pixels.
+	var xform := button.get_viewport().get_screen_transform()
+	var point := xform * button.get_global_rect().get_center()
+
+	# When: The bridge clicks there.
+	_bridge._click(point)
+
+	# NOTE: The headless display server never flushes `Input`'s buffer, which a windowed
+	# one does at the start of every frame, so the test flushes it.
+	Input.flush_buffered_events()
+
+	# Then: The button and `Input` both see the mouse button held.
+	assert_signal_emitted(button, "button_down")
+	assert_signal_not_emitted(button, "pressed")
+	assert_true(Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT))
+
+	# When: The release is sent on a later frame.
+	await wait_process_frames(2)
+	Input.flush_buffered_events()
+
+	# Then: The button fires and the mouse button is up.
+	assert_signal_emitted(button, "pressed")
+	assert_false(Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT))
+
+
+func test_debug_press_holds_the_action_until_the_next_frame() -> void:
+	# When: The bridge presses an action.
+	_bridge._press(&"ui_accept")
+	Input.flush_buffered_events()
+
+	# Then: The action is held.
+	assert_true(Input.is_action_pressed(&"ui_accept"))
+
+	# When: The release is sent on a later frame.
+	await wait_process_frames(2)
+	Input.flush_buffered_events()
+
+	# Then: The action is released.
+	assert_false(Input.is_action_pressed(&"ui_accept"))
 
 
 # -- TEST HOOKS ---------------------------------------------------------------------- #

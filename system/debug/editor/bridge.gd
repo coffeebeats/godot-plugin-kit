@@ -1,7 +1,8 @@
 ##
 ## SystemDebugBridge is a development-only bridge which lets an external process
 ## inspect and drive a running game. It reads line-delimited JSON from a loopback
-## socket and answers with the scene tree, expressions, screenshots and node state.
+## socket and answers with the scene tree, expressions, screenshots and node state, and
+## it presses actions and clicks the mouse as a player would.
 ##
 ## NOTE: This file is in `editor/`, which an export excludes, and nothing a game ships
 ## names anything in here. The bridge listens only when given a port.
@@ -170,6 +171,30 @@ func _ready() -> void:
 # -- PRIVATE METHODS ----------------------------------------------------------------- #
 
 
+## _click presses the left mouse button at `point`, in window pixels, and releases it on
+## the next frame, as `_press` does an action.
+##
+## NOTE: The click goes through `Input`, as an OS click does. The root viewport's
+## `push_input` skips `Input`, so its button state and polled actions miss the click.
+func _click(point: Vector2) -> void:
+	var event := InputEventMouseButton.new()
+	event.button_index = MOUSE_BUTTON_LEFT
+	event.button_mask = MOUSE_BUTTON_MASK_LEFT
+	event.position = point
+	event.global_position = point
+	event.pressed = true
+
+	Input.parse_input_event(event)
+
+	var release := event.duplicate() as InputEventMouseButton
+	release.button_mask = 0
+	release.pressed = false
+
+	get_tree().process_frame.connect(
+		Input.parse_input_event.bind(release), CONNECT_ONE_SHOT
+	)
+
+
 ## _collect_reporters appends `node` and its descendants which report state to `out`,
 ## in tree order.
 func _collect_reporters(node: Node, out: Array[Node]) -> void:
@@ -278,6 +303,10 @@ func _handle(request: Dictionary) -> void:
 			_on_state(args)
 		&"screenshot":
 			await _on_screenshot(args)
+		&"press":
+			_on_press(args)
+		&"click":
+			_on_click(args)
 		&"quit":
 			_reply(true)
 			_quit.call_deferred()
@@ -341,6 +370,26 @@ func _node(path: String) -> Node:
 	return root.get_node_or_null(NodePath(relative))
 
 
+## _on_click clicks the left mouse button at a point in window pixels, and answers with
+## where it landed in the root viewport's canvas, the space `tree` reports rects in.
+func _on_click(args: Dictionary) -> void:
+	for axis in ["x", "y"]:
+		if not (args.get(axis) is float or args.get(axis) is int):
+			_fail("missing argument: %s" % axis)
+			return
+
+	var root := get_tree().root
+	var point := Vector2(args["x"], args["y"])
+
+	if not Rect2(Vector2.ZERO, root.size).has_point(point):
+		_fail("point is outside the window (%dx%d)" % [root.size.x, root.size.y])
+		return
+
+	_click(point)
+
+	_reply({&"position": root.get_screen_transform().affine_inverse() * point})
+
+
 ## _on_eval evaluates an expression against the running game.
 func _on_eval(args: Dictionary) -> void:
 	var source: String = args.get("expr", "")
@@ -376,6 +425,24 @@ func _on_eval(args: Dictionary) -> void:
 		return
 
 	_reply(result)
+
+
+## _on_press presses an input action and releases it on the next frame.
+func _on_press(args: Dictionary) -> void:
+	var action: String = args.get("action", "")
+	if action == "":
+		_fail("missing argument: action")
+		return
+
+	# NOTE: An `InputEventAction` matches by name whether or not the action exists, so
+	# without this a mistyped action does nothing and still reports success.
+	if not InputMap.has_action(action):
+		_fail("unknown action: %s" % action)
+		return
+
+	_press(action)
+
+	_reply(true)
 
 
 ## _on_screenshot captures the window and writes it to a PNG file.
@@ -454,6 +521,21 @@ func _on_tree(args: Dictionary) -> void:
 		return
 
 	_reply(_describe(node, int(args.get("depth", TREE_DEPTH))))
+
+
+## _press presses `action` on the synthetic device and releases it on the next frame.
+##
+## NOTE: A release parsed alongside its press is flushed with it in the same frame, so
+## a handler polling `Input.is_action_pressed` would never see the action held.
+func _press(action: StringName) -> void:
+	StdInputEvent.trigger_action(action)
+
+	get_tree().process_frame.connect(
+		StdInputEvent.trigger_action.bind(
+			action, StdInputEvent.DEVICE_ID_SYNTHETIC, false
+		),
+		CONNECT_ONE_SHOT
+	)
 
 
 ## _quit shuts the game down as though the window manager had asked it to.
