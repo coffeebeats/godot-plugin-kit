@@ -87,6 +87,11 @@ func _generate_settings() -> void:
 	_clear_settings()
 
 	for action in action_set.list_action_names():
+		# NOTE: A 2D analog action names a stick, which is never bound itself; its four
+		# directional actions are digital and get their own rows.
+		if action in action_set.actions_analog_2d:
+			continue
+
 		var primary := BindingScene.instantiate()
 		primary.scope = scope
 		primary.glyph.action = action

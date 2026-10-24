@@ -115,7 +115,7 @@ A repository enables the plugin in its `.claude/settings.json`, beside `godot-in
 {
   "extraKnownMarketplaces": {
     "godot-plugin-kit": {
-      "source": { "source": "github", "repo": "coffeebeats/godot-plugin-kit", "ref": "v1" },
+      "source": { "source": "github", "repo": "coffeebeats/godot-plugin-kit", "ref": "v2" },
       "autoUpdate": true
     }
   },
@@ -129,7 +129,7 @@ Each machine installs it once, after trusting the repository folder:
 claude plugin install kit@godot-plugin-kit --scope project
 ```
 
-The plugin declares no `version`, so each commit is its version, and it follows the floating major tag: a release moves `v1`, and Claude Code picks the update up in the background. The skills and the gitlink therefore agree at the major, which is the level a skill's claims hold at.
+The plugin declares no `version`, so each commit is its version, and it follows the floating major tag: a release moves `v2`, and Claude Code picks the update up in the background. The skills and the gitlink therefore agree at the major, which is the level a skill's claims hold at.
 
 The marketplace ref and the install are per machine and per repository path. The "Agent plugin" section of [godot-infra's README](https://github.com/coffeebeats/godot-infra#agent-plugin) says what to do when the hook or `godot-bridge` goes missing. A major release of this plugin moves the ref, so every machine re-adds the marketplace at the ref in the repository's `.claude/settings.json`.
 
@@ -143,13 +143,13 @@ A repository declares the same marketplace in its `.codex/config.toml`, which Co
 [marketplaces.godot-plugin-kit]
 source_type = "git"
 source = "https://github.com/coffeebeats/godot-plugin-kit.git"
-ref = "v1"
+ref = "v2"
 
 [plugins."kit@godot-plugin-kit"]
 enabled = true
 ```
 
-A machine without that file gets the same result from `codex plugin marketplace add coffeebeats/godot-plugin-kit --ref v1` and `codex plugin add kit@godot-plugin-kit`.
+A machine without that file gets the same result from `codex plugin marketplace add coffeebeats/godot-plugin-kit --ref v2` and `codex plugin add kit@godot-plugin-kit`.
 
 Codex puts nothing from the plugin on `PATH`, so `godot-bridge` is run there through `python3`, at a path built from the skill directory the harness names; the `run-game` skill carries that form. The skills that call `godot-check` and `godot-locale` name the `godot` plugin's skills of those names for the same reason.
 
