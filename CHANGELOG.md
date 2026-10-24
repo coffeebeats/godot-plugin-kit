@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.0.0 (2026-10-24)
+
+## What's Changed
+* fix(input): size a keyboard glyph to its label's padded box by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/61
+* feat(debug): accept `&"…"` and `^"…"` literals in the bridge's `eval` by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/63
+* feat(debug): add the bridge's `press` and `click` commands by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/64
+* chore(addons)!: bump `std` to v7.1.0 by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/65
+* chore(menu): cover the rebinder's bind, cancel and device-switch paths by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/66
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v1.5.0...v2.0.0
+
 ## 1.5.0 (2026-10-16)
 
 ## What's Changed
