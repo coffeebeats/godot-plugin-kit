@@ -6,4 +6,4 @@
 script = ExtResource("1_splash")
 name = &"Splash"
 actions_digital = Array[StringName]([&"ui_accept", &"ui_cancel"])
-cursor_activates_kbm = 1
+cursor_click_activates_kbm = 1
