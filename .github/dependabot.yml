@@ -20,3 +20,11 @@ updates:
       - coffeebeats
     schedule:
       interval: "monthly"
+
+  # Update Python tooling dependencies
+  - package-ecosystem: "uv"
+    directory: "/"
+    reviewers:
+      - coffeebeats
+    schedule:
+      interval: "monthly"
