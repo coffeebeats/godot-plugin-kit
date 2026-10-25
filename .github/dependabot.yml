@@ -12,6 +12,10 @@ updates:
       - coffeebeats
     schedule:
       interval: "monthly"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
 
   # Update Git submodule dependencies
   - package-ecosystem: "gitsubmodule"
@@ -20,6 +24,10 @@ updates:
       - coffeebeats
     schedule:
       interval: "monthly"
+    groups:
+      submodules:
+        patterns:
+          - "*"
 
   # Update Python tooling dependencies
   - package-ecosystem: "uv"
@@ -28,3 +36,7 @@ updates:
       - coffeebeats
     schedule:
       interval: "monthly"
+    groups:
+      python:
+        patterns:
+          - "*"
