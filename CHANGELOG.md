@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.0.1 (2026-10-25)
+
+## What's Changed
+* fix(map): name no 3D class in the base map so a 2D-only export parses by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/67
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v2.0.0...v2.0.1
+
 ## 2.0.0 (2026-10-24)
 
 ## What's Changed

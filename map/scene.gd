@@ -170,6 +170,9 @@ func viewport_to_screen(p: Vector2) -> Vector2:
 ## inherits it, so an inherited scene is reported with no wiring of its own.
 ##
 ## NOTE: Nothing in a shipped build calls this; the bridge finds it by method name.
+##
+## NOTE: Each subclass adds its own camera. Naming `Camera3D` here fails to parse on a
+## template built with `disable_3d`, and every map script extending this fails too.
 func _get_debug_state() -> Dictionary:
 	var out := {
 		&"scene": scene_file_path,
@@ -187,14 +190,6 @@ func _get_debug_state() -> Dictionary:
 		world.append(String(child.name))
 
 	out[&"world"] = world
-
-	var camera_2d := sub_viewport.get_camera_2d()
-	if camera_2d:
-		out[&"camera"] = camera_2d.get_screen_center_position()
-
-	var camera_3d := sub_viewport.get_camera_3d()
-	if camera_3d:
-		out[&"camera"] = camera_3d.global_position
 
 	return out
 
