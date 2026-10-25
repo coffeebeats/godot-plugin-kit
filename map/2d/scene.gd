@@ -17,3 +17,20 @@ extends KitMap
 func world_to_screen(p: Vector2) -> Vector2:
 	p = (sub_viewport.canvas_transform * p) if sub_viewport else p
 	return viewport_to_screen(p)
+
+
+# -- PRIVATE METHODS (OVERRIDES) ----------------------------------------------------- #
+
+
+## _get_debug_state adds the active `Camera2D`'s screen center to `KitMap`'s report.
+func _get_debug_state() -> Dictionary:
+	var out := super()
+
+	if not sub_viewport:
+		return out
+
+	var camera := sub_viewport.get_camera_2d()
+	if camera:
+		out[&"camera"] = camera.get_screen_center_position()
+
+	return out

@@ -66,3 +66,20 @@ func world_to_screen_direction(p: Vector3, camera: Camera3D = null) -> Vector2:
 	var center := viewport_to_screen(Vector2(sub_viewport.size) / 2.0)
 	var screen_position := viewport_to_screen(camera.unproject_position(mirrored))
 	return (screen_position - center).normalized()
+
+
+# -- PRIVATE METHODS (OVERRIDES) ----------------------------------------------------- #
+
+
+## _get_debug_state adds the active `Camera3D`'s position to `KitMap`'s report.
+func _get_debug_state() -> Dictionary:
+	var out := super()
+
+	if not sub_viewport:
+		return out
+
+	var camera := sub_viewport.get_camera_3d()
+	if camera:
+		out[&"camera"] = camera.global_position
+
+	return out
