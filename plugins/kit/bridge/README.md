@@ -68,7 +68,10 @@ func _get_debug_state() -> Dictionary:
 
 That is the whole contract. There is nothing to register and nothing to import; the
 method name is all the two sides share, which is what lets a game exclude the bridge
-outright. In a shipped build the method has no caller.
+outright. In a shipped build the method has no caller, but it still has to parse
+there, so it may name only classes the game's export template keeps. A template built
+with `disable_3d` has no `Camera3D`, and a script whose method names one fails to
+load in that export, as does every script extending it.
 
 A reporter node in a group would be the other way to do this, and it cannot reach what
 is worth reporting. Most of that is private or computed, such as `is_hit_stopped()`, a

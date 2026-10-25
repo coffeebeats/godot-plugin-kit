@@ -1,6 +1,7 @@
 ##
 ## Unit tests for the `KitMap2D` projection methods that bridge SubViewport-local
-## coordinates with screen-space coordinates.
+## coordinates with screen-space coordinates, and for the camera the map reports to
+## the debug bridge.
 ##
 
 extends GutTest
@@ -16,6 +17,21 @@ var _container: SubViewportContainer = null
 var _viewport: SubViewport = null
 
 # -- TEST METHODS -------------------------------------------------------------------- #
+
+
+func test_debug_state_with_a_camera_reports_its_screen_center() -> void:
+	# Given: A current camera centered on (100, 50) inside the SubViewport.
+	var camera := Camera2D.new()
+	camera.position = Vector2(100, 50)
+	_viewport.add_child(camera)
+	camera.make_current()
+	camera.force_update_scroll()
+
+	# When: The map reports its state.
+	var state := _map._get_debug_state()
+
+	# Then: It reports the camera's screen center.
+	assert_almost_eq(state.get(&"camera"), Vector2(100, 50), TOLERANCE)
 
 
 func test_world_to_screen_identity_default_transforms() -> void:

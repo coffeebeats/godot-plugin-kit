@@ -1,6 +1,6 @@
 ##
-## Unit tests for `KitMap3D`'s screen-projection methods — `world_to_screen` and
-## `world_to_screen_direction`.
+## Unit tests for `KitMap3D`'s screen-projection methods, `world_to_screen` and
+## `world_to_screen_direction`, and for the camera the map reports to the debug bridge.
 ##
 
 extends GutTest
@@ -16,6 +16,17 @@ var _container: SubViewportContainer = null
 var _viewport: SubViewport = null
 
 # -- TEST METHODS -------------------------------------------------------------------- #
+
+
+func test_debug_state_with_a_camera_reports_its_position() -> void:
+	# Given: A current camera at (0, 0, 5) inside the SubViewport.
+	_install_camera(Vector3(0, 0, 5))
+
+	# When: The map reports its state.
+	var state := _map._get_debug_state()
+
+	# Then: It reports the camera's position.
+	assert_eq(state.get(&"camera"), Vector3(0, 0, 5))
 
 
 func test_in_front_returns_finite() -> void:
