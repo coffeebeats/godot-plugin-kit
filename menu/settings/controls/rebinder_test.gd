@@ -1,7 +1,7 @@
 ##
 ## Tests for the rebinder, which binds the next press from one device of the binding's
-## category and cancels on any device's press, and for its prompt, which must survive a
-## translation that lost its placeholder.
+## category and cancels on any device's press, and for its prompt, which shows that
+## device's cancel button and must survive a translation that lost its placeholder.
 ##
 
 extends GutTest
@@ -11,6 +11,7 @@ extends GutTest
 const Bindings := preload("res://addons/std/input/godot/binding.gd")
 const BindingScene := preload("binding.tscn")
 const MenuActions := preload("res://system/input/actions/menu.tres")
+const MenuBindingActions := preload("res://system/input/actions/menu_binding.tres")
 const PlatformScene := preload("res://premade/platform.tscn")
 const Rebinder := preload("rebinder.gd")
 const SystemInputScene := preload("res://system/input/input.tscn")
@@ -176,6 +177,32 @@ func test_rebinder_injected_cancel_closes_without_binding() -> void:
 
 	# Then: Nothing is bound.
 	assert_null(_binding(StdInputDevice.DEVICE_TYPE_KEYBOARD))
+
+
+func test_rebinder_keyboard_rebind_with_joypad_active_prompts_the_keyboard() -> void:
+	# Given: A joypad is connected and active.
+	await _activate_joypad()
+
+	# When: The rebinder opens for the keyboard's primary binding.
+	await _start_rebinding(_KEYBOARD)
+
+	# Then: The prompt shows the keyboard's cancel key.
+	var glyph := _prompt_glyph()
+	assert_eq(glyph.label.text, "Esc")
+	assert_null(glyph.texture_rect.texture)
+
+
+func test_rebinder_controller_rebind_with_keyboard_active_prompts_the_joypad() -> void:
+	# Given: A joypad is connected, and a bound key makes the keyboard active.
+	await _activate_keyboard_beside_joypad()
+
+	# When: The rebinder opens for the controller's primary binding.
+	await _start_rebinding(_CONTROLLER)
+
+	# Then: The prompt shows the joypad's cancel button.
+	var glyph := _prompt_glyph()
+	assert_eq(glyph.texture_rect.texture, _cancel_glyph(glyph))
+	assert_eq(glyph.label.text, "")
 
 
 func test_rebinder_controller_rebind_with_keyboard_active_binds_the_joypad() -> void:
@@ -452,6 +479,21 @@ func _bound_keycode(
 	return (binding as InputEventKey).keycode if binding is InputEventKey else KEY_NONE
 
 
+## _cancel_glyph returns the Xbox joypad's glyph for `ui_binding_stop`, drawn at
+## `glyph`'s size.
+func _cancel_glyph(glyph: KitInputGlyph) -> Texture2D:
+	return (
+		_slot
+		. get_action_glyph(
+			MenuBindingActions,
+			_ACTION_STOP,
+			StdInputDeviceActions.BINDING_INDEX_PRIMARY,
+			glyph.custom_minimum_size,
+			StdInputDevice.DEVICE_TYPE_XBOX_ONE,
+		)
+	)
+
+
 func _is_rebinder_open() -> bool:
 	return not StdGroup.is_empty(Rebinder.GROUP_REBINDER)
 
@@ -467,6 +509,11 @@ func _key(keycode: Key) -> InputEventKey:
 	var event := InputEventKey.new()
 	event.keycode = keycode
 	return event
+
+
+## _prompt_glyph returns the open rebinder's glyph for its cancel button.
+func _prompt_glyph() -> KitInputGlyph:
+	return Rebinder._instance.get_node(^"%Glyph")
 
 
 ## _start_rebinding opens the rebinder for the primary binding of `device_category`.

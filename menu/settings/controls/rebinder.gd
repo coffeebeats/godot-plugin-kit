@@ -4,7 +4,8 @@
 ## `Rebinder.start_rebinding()` to initiate a rebind.
 ##
 ## A rebind binds the next press from one device of the binding's category, regardless
-## of the active device, and any device's `ui_binding_stop` cancels it.
+## of the active device, and its prompt shows that device's cancel button. Any device's
+## `ui_binding_stop` cancels it.
 ##
 
 extends Control
@@ -278,8 +279,14 @@ static func _split_placeholder(template: String) -> PackedStringArray:
 	return parts if parts.size() > 1 else PackedStringArray([template, ""])
 
 
+## _update_prompt locks the cancel glyph to the rebind's device and fills in the title
+## and instructions for its action.
 func _update_prompt() -> void:
+	var is_keyboard := _device.device_type == DEVICE_TYPE_KEYBOARD
+
 	_label_glyph.player_id = _player
+	_label_glyph.always_show_kbm = is_keyboard
+	_label_glyph.always_show_joy = not is_keyboard
 	_label_glyph.update()
 
 	# NOTE: The title is one label, so format it; a template which lost its placeholder
@@ -292,11 +299,7 @@ func _update_prompt() -> void:
 	var instructions := _split_placeholder(
 		tr(
 			MSGID_REBINDER_INSTRUCTIONS,
-			(
-				MSGCTXT_REBINDER_KEYBOARD
-				if _device.device_type == DEVICE_TYPE_KEYBOARD
-				else MSGCTXT_REBINDER_GAMEPAD
-			),
+			MSGCTXT_REBINDER_KEYBOARD if is_keyboard else MSGCTXT_REBINDER_GAMEPAD,
 		)
 	)
 
