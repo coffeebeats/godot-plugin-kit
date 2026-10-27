@@ -10,7 +10,6 @@ extends GutTest
 const Bindings := preload("res://addons/std/input/godot/binding.gd")
 const BindingScene := preload("binding.tscn")
 const MenuActions := preload("res://system/input/actions/menu.tres")
-const NavigationActions := preload("res://system/input/actions/menu_navigation.tres")
 const PlatformScene := preload("res://premade/platform.tscn")
 const Rebinder := preload("rebinder.gd")
 const SystemInputScene := preload("res://system/input/input.tscn")
@@ -314,9 +313,8 @@ func before_each() -> void:
 	add_child_autofree(SystemInputScene.instantiate())
 	_slot = StdInputSlot.for_player(1)
 
-	# Given: The menu's set and navigation layer are active, as in the settings menu.
+	# Given: The menu's set is active, as in the settings menu.
 	_slot.load_action_set(MenuActions)
-	_slot.enable_action_set_layer(NavigationActions)
 
 	# Given: A screen manager below the input scene, as in the game's main scene.
 	_manager = StdScreenManager.new()

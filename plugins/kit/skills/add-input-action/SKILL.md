@@ -104,20 +104,21 @@ Godot's InputMap is project-global, so every action set shares one namespace. Pr
 
 ## Layers
 
-A layer adds actions on top of whatever set is loaded. Kit ships two that any set may enable, since their `parent` is unset: `menu_options.tres` (`ui_toggle_menu`), which a map enables so Escape pauses, and `menu_navigation.tres` (the `ui_*` navigation actions), which a panel inside gameplay enables while it is visible. A game enables them from its scenes and never copies them, so the player rebinds them once. A layer the game owns for one of its own sets names that set as `parent`; the Steam Input manifest writes a parentless layer once under every set.
+A layer adds actions on top of whatever set is loaded. Kit ships one that any set may enable, since its `parent` is unset: `menu_options.tres` (`ui_toggle_menu`), which a map enables so Escape pauses. A game enables it from its scenes and never copies it, so the player rebinds it once. Kit's menus navigate with the `ui_*` actions in its `Menu` set, so a panel inside gameplay that navigates gets a layer of the game's own holding the `ui_*` actions it needs, enabled while the panel is visible; a player rebinds those apart from the menus'. A layer the game owns for one of its own sets names that set as `parent`; the Steam Input manifest writes a parentless layer once under every set.
 
 ## Binding collisions
 
 An origin binds to at most one action, so an action added to a layer takes its key away from whatever held it before (`addons/std/input/godot/device_actions.gd`, `_bind_action_to_origin`). The Godot backend logs each such move at debug level, under `std/input/godot/device-actions`; nothing else reports it, and the displaced action simply stops firing on that origin, only on the screens that enable the layer.
 
-Kit's own layers carry one instance to check yours against. `ui_toggle_menu` and `ui_cancel` are both `Escape` in `project.godot`; a layer enabled later takes the key, so a map that enables `menu_options.tres` pauses on Escape, and a panel that then enables `menu_navigation.tres` closes on it instead until it hides.
+Kit's options layer shows one instance to check yours against. `ui_toggle_menu` and `ui_cancel` are both `Escape` in `project.godot`; a layer enabled later takes the key, so a map that enables `menu_options.tres` pauses on Escape, and a panel whose layer then binds `ui_cancel` closes on it instead until it hides.
 
 After adding a binding, check every action set that layers over the same origin, not just the one you edited.
 
 ## Key reference files
 
 - the game's `gameplay.tres` — action set resource pattern
-- `addons/kit/system/input/actions/menu_options.tres` and `menu_navigation.tres` — layers any set may enable (`parent` unset); a game's own layer for one set names it as `parent`
+- `addons/kit/system/input/actions/menu_options.tres` — a layer any set may enable (`parent` unset); a game's own layer for one set names it as `parent`
+- `addons/kit/system/input/actions/menu.tres` — kit's menu set, which carries the `ui_*` navigation actions
 - the system scene — `Input.action_sets`, the game's sets the controls tab lists
 - `addons/kit/menu/settings/controls/controls.gd` — how the controls tab lists them, above kit's menu sets
 - `project.godot` — `[input]` section for default bindings

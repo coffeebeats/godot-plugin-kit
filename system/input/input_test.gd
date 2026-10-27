@@ -7,7 +7,7 @@ extends GutTest
 # -- DEPENDENCIES -------------------------------------------------------------------- #
 
 const AlertScene := preload("res://ui/menu/alert.tscn")
-const MenuNavigation := preload("res://system/input/actions/menu_navigation.tres")
+const Menu := preload("res://system/input/actions/menu.tres")
 const MenuOptions := preload("res://system/input/actions/menu_options.tres")
 const PauseMenuScene := preload("res://menu/pause/menu.tscn")
 const PlatformScene := preload("res://premade/platform.tscn")
@@ -17,7 +17,7 @@ const SystemInputScene := preload("input.tscn")
 # -- TEST METHODS -------------------------------------------------------------------- #
 
 
-func test_input_kit_menus_keep_a_shared_layer_through_a_pop() -> void:
+func test_input_kit_menus_over_a_map_restore_its_set_through_a_pop() -> void:
 	# Given: A platform whose profile loaded, and the input scene with its slot.
 	add_child_autofree(PlatformScene.instantiate())
 	add_child_autofree(SystemInputScene.instantiate())
@@ -40,8 +40,8 @@ func test_input_kit_menus_keep_a_shared_layer_through_a_pop() -> void:
 	var alert: Node = add_child_autofree(AlertScene.instantiate())
 	await wait_idle_frames(1)
 
-	# Then: Both menus hold the navigation layer, and only the pause menu the options.
-	assert_has(slot.list_action_set_layers(), MenuNavigation)
+	# Then: The alert's menu set is loaded, without the pause menu's options layer.
+	assert_eq(slot.actions.get_action_set(slot.device_id), Menu)
 	assert_does_not_have(slot.list_action_set_layers(), MenuOptions)
 
 	# When: Each is popped the way the screen manager pops, uncovering the screen
@@ -51,10 +51,9 @@ func test_input_kit_menus_keep_a_shared_layer_through_a_pop() -> void:
 	map.propagate_notification(StdScreenManager.NOTIFICATION_SCREEN_UNCOVERED)
 	remove_child(pause)
 
-	# Then: The map's set is loaded with its options layer, and navigation is off.
+	# Then: The map's set is loaded with its options layer.
 	assert_eq(slot.actions.get_action_set(slot.device_id), map.action_set)
 	assert_has(slot.list_action_set_layers(), MenuOptions)
-	assert_does_not_have(slot.list_action_set_layers(), MenuNavigation)
 
 
 func test_input_ready_with_implementation_loads_module() -> void:

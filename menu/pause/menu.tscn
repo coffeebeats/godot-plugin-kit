@@ -7,7 +7,6 @@
 [ext_resource type="Script" uid="uid://dlrw0lhorb5uc" path="res://addons/std/input/loader.gd" id="5_loader"]
 [ext_resource type="Resource" uid="uid://ldk7k2w5uvks" path="res://system/input/actions/menu.tres" id="6_menu"]
 [ext_resource type="Resource" uid="uid://bcsts082smqrp" path="res://system/input/actions/menu_options.tres" id="7_opts"]
-[ext_resource type="Resource" uid="uid://bksqrhgb3nen6" path="res://system/input/actions/menu_navigation.tres" id="7_nav"]
 [ext_resource type="Resource" uid="uid://d2vp2eesnf5ng" path="res://menu/settings/screen.tres" id="8_settings"]
 [ext_resource type="Script" uid="uid://dmvb2tblavngm" path="res://addons/std/input/action_set_layer.gd" id="9_layer"]
 [ext_resource type="PackedScene" uid="uid://dii55pwtpi0w6" path="res://menu/pause/quit.tscn" id="10_quit"]
@@ -31,7 +30,7 @@ offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("5_loader")
 action_set = ExtResource("6_menu")
-action_set_layers = Array[ExtResource("9_layer")]([ExtResource("7_nav"), ExtResource("7_opts")])
+action_set_layers = Array[ExtResource("9_layer")]([ExtResource("7_opts")])
 
 [node name="Scrim" parent="." instance=ExtResource("2_scrim")]
 layout_mode = 1
