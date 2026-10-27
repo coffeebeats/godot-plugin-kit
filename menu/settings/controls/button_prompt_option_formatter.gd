@@ -10,6 +10,7 @@ extends StdSettingsControllerOptionButtonFormatter
 const MSGCTXT_BUTTON_PROMPT := &"button_prompt"
 const MSGID_BUTTON_PROMPT_AUTO := &"kit_options_controls_button_prompt_auto"
 const MSGID_BUTTON_PROMPT_KBM := &"kit_options_controls_button_prompt_kbm"
+const MSGID_BUTTON_PROMPT_CONTROLLER := &"kit_options_controls_button_prompt_controller"
 const MSGID_BUTTON_PROMPT_XBOX := &"kit_options_controls_button_prompt_xbox"
 const MSGID_BUTTON_PROMPT_PS := &"kit_options_controls_button_prompt_ps"
 const MSGID_BUTTON_PROMPT_SWITCH := &"kit_options_controls_button_prompt_switch"
@@ -28,6 +29,8 @@ func _format_option(device_type: Variant) -> String:
 			message_id = MSGID_BUTTON_PROMPT_AUTO
 		StdInputDevice.DEVICE_TYPE_KEYBOARD:
 			message_id = MSGID_BUTTON_PROMPT_KBM
+		StdInputDevice.DEVICE_TYPE_GENERIC:
+			message_id = MSGID_BUTTON_PROMPT_CONTROLLER
 		StdInputDevice.DEVICE_TYPE_XBOX_ONE:
 			message_id = MSGID_BUTTON_PROMPT_XBOX
 		StdInputDevice.DEVICE_TYPE_PS_5:

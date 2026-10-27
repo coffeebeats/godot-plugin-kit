@@ -35,22 +35,33 @@ const MODULE_ID := &"input"
 
 # -- CONFIGURATION ------------------------------------------------------------------- #
 
-## action_sets are the game's action sets, which the settings menu's controls tab lists
+## action_sets are the game's action sets, which the settings menu's controls tabs list
 ## for rebinding above kit's own. The settings menu loads at runtime, out of reach of
 ## the scene placing this node, so it reads the value here.
+##
+## NOTE: On Steam builds the Steam joypad monitor also reads a controller's binding
+## against these, and a controller binding only a left-out set's actions looks opted out
+## of the Steam Input API.
 @export var action_sets: Array[StdInputActionSet] = []
 
 ## focused_sound_group is the sound group used for focused UI elements.
 @export var focused_sound_group: StdSoundGroup = null
 
-## ui_navigation_cooldown is a wait period after inputting a UI navigation action that
-## must elapse prior to another one being accepted.
+## ui_navigation_cooldown is a wait period after a UI navigation press moves focus which
+## must elapse before another one is accepted, so a key's repeat or a stick wavering at
+## its deadzone can't race through a menu.
+##
+## NOTE: A press which moves no focus, such as left or right in a vertical list, starts
+## no cooldown, so it can't swallow the next press.
 @export var ui_navigation_cooldown: float = 0.08
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
 var _cursor: StdInputCursor = null
-var _ui_navigation_cooldown: float = 0.0
+
+## _ui_navigation_cooldown_end is the time, in milliseconds since launch, at which
+## `ui_navigation_cooldown` ends.
+var _ui_navigation_cooldown_end: int = 0
 
 # -- PUBLIC METHODS ------------------------------------------------------------------ #
 
@@ -135,8 +146,6 @@ func _enter_tree() -> void:
 	assert(StdGroup.is_empty(GROUP_INPUT_SHIM), "invalid state; duplicate node found")
 	StdGroup.with_id(GROUP_INPUT_SHIM).add_member(self)
 
-	set_process(false)
-
 
 func _exit_tree() -> void:
 	StdGroup.with_id(GROUP_INPUT_SHIM).remove_member(self)
@@ -152,22 +161,16 @@ func _input(event: InputEvent) -> void:
 		or event.is_action_pressed(&"ui_down", true)
 		or event.is_action_pressed(&"ui_left", true)
 	):
-		if is_processing():
+		if Time.get_ticks_msec() < _ui_navigation_cooldown_end:
 			get_viewport().set_input_as_handled()
 			return
 
-		_ui_navigation_cooldown = ui_navigation_cooldown
-		set_process(true)
-
-
-func _process(delta: float) -> void:
-	# Try to normalize the rate of UI inputs by treating anything below one frame
-	# as successfully completed.
-	if _ui_navigation_cooldown < (1.0 / Engine.get_frames_per_second() / 2.0):
-		set_process(false)
-		return
-
-	_ui_navigation_cooldown -= delta
+		# NOTE: The GUI moves focus after this callback, so focus is compared once the
+		# press is handled.
+		var focus := get_viewport().gui_get_focus_owner()
+		_start_navigation_cooldown.call_deferred(
+			focus.get_instance_id() if focus else 0
+		)
 
 
 func _ready() -> void:
@@ -201,3 +204,21 @@ func _get_module_id() -> StringName:
 
 func _get_module_requires() -> Array[StringName]:
 	return [Profile.MODULE_ID]
+
+
+# -- PRIVATE METHODS ----------------------------------------------------------------- #
+
+
+## _start_navigation_cooldown starts `ui_navigation_cooldown` if focus has moved off the
+## control whose instance ID is `focus_id`, or `0` for none.
+func _start_navigation_cooldown(focus_id: int) -> void:
+	if not is_inside_tree():
+		return
+
+	var focus := get_viewport().gui_get_focus_owner()
+	if (focus.get_instance_id() if focus else 0) == focus_id:
+		return
+
+	_ui_navigation_cooldown_end = (
+		Time.get_ticks_msec() + roundi(ui_navigation_cooldown * 1000.0)
+	)

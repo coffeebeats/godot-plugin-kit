@@ -21,6 +21,7 @@
 [ext_resource type="Resource" uid="uid://b6swfasqq8m8i" path="res://addons/kit/system/input/unknown/glyphs/switch.tres" id="19_r1fof"]
 [ext_resource type="Resource" uid="uid://pya88dyjf32f" path="res://addons/kit/system/input/unknown/glyphs/steam_controller.tres" id="20_fkhpl"]
 [ext_resource type="Script" uid="uid://7kitoqcsdfhe" path="res://addons/std/input/godot/device_haptics.gd" id="21_wqjmf"]
+[ext_resource type="Resource" uid="uid://cqc0nf1n3dcrs" path="res://addons/kit/system/setting/controls/cursor_confined_property.tres" id="22_c0nf1"]
 
 [node name="Input" type="Node" unique_id=652922554]
 
@@ -30,6 +31,7 @@ scope = ExtResource("2_wy44a")
 
 [node name="InputCursor" type="Node" parent="." unique_id=1318947749]
 script = ExtResource("3_vy78x")
+confined_property = ExtResource("22_c0nf1")
 
 [node name="InputSlots" type="Node" parent="." unique_id=1793035678]
 

@@ -6,8 +6,17 @@
 [ext_resource type="Script" uid="uid://bgdumcxwsm0p7" path="res://addons/std/input/steam/joypad_monitor.gd" id="3_kpuj4"]
 [ext_resource type="Script" uid="uid://bsay0if3dnmqr" path="res://addons/std/input/steam/device_actions.gd" id="4_l5spr"]
 [ext_resource type="Script" uid="uid://b4mni3fbbw33x" path="res://addons/std/input/steam/device_glyphs.gd" id="6_62q7k"]
+[ext_resource type="Script" uid="uid://dtkt2um4lxhjh" path="res://addons/kit/system/input/steam/input.gd" id="7_input"]
+[ext_resource type="Script" uid="uid://cljg7byxqnq7d" path="res://addons/std/input/action_set.gd" id="8_set"]
+[ext_resource type="Resource" uid="uid://ldk7k2w5uvks" path="res://addons/kit/system/input/actions/menu.tres" id="9_menu"]
+[ext_resource type="Resource" uid="uid://dya1kttgcn4aq" path="res://addons/kit/system/input/actions/splash.tres" id="10_splash"]
+[ext_resource type="Resource" uid="uid://bhsjw6b4deo8i" path="res://addons/kit/system/input/actions/menu_binding.tres" id="11_binding"]
+[ext_resource type="Resource" uid="uid://bcsts082smqrp" path="res://addons/kit/system/input/actions/menu_options.tres" id="13_options"]
+[ext_resource type="Resource" uid="uid://dp0wxxg20ablh" path="res://addons/kit/system/input/actions/menu_tabbed.tres" id="14_tabbed"]
 
-[node name="Input" type="Node" unique_id=2112835291]
+[node name="Input" type="Node" unique_id=2112835291 node_paths=PackedStringArray("joypad_monitor")]
+script = ExtResource("7_input")
+joypad_monitor = NodePath("JoypadMonitor")
 
 [node name="Godot" parent="." unique_id=1609587437 instance=ExtResource("1_stiaj")]
 
@@ -26,8 +35,10 @@ steam_device_actions = NodePath("../../Components/Actions")
 steam_device_glyphs = NodePath("../../Components/Glyphs")
 steam_device_haptics = NodePath("../../Godot/Godot/Components/Haptics")
 
-[node name="JoypadMonitor" type="Node" parent="." unique_id=1986027736]
+[node name="JoypadMonitor" type="Node" parent="." unique_id=1986027736 node_paths=PackedStringArray("godot_joypad_monitor")]
 script = ExtResource("3_kpuj4")
+action_sets = Array[ExtResource("8_set")]([ExtResource("9_menu"), ExtResource("10_splash"), ExtResource("11_binding"), ExtResource("13_options"), ExtResource("14_tabbed")])
+godot_joypad_monitor = NodePath("../Godot/Godot/JoypadMonitor")
 steam_input_enabled_property = ExtResource("2_4olke")
 
 [node name="Components" type="Node" parent="." unique_id=1229388222]

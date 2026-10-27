@@ -48,10 +48,10 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed(&"ui_tab_next"):
+	if event.is_action_pressed(&"ui_tab_next", false, true):
 		_tab_group.select_next()
 		get_viewport().set_input_as_handled()
-	elif event.is_action_pressed(&"ui_tab_prev"):
+	elif event.is_action_pressed(&"ui_tab_prev", false, true):
 		_tab_group.select_previous()
 		get_viewport().set_input_as_handled()
 

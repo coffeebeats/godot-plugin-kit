@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.0.0 (2026-10-27)
+
+## What's Changed
+* feat(input)!: give each device its own controls tab and drop the menu navigation layer by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/82
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v2.0.2...v3.0.0
+
 ## 2.0.2 (2026-10-27)
 
 ## What's Changed

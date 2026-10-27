@@ -5,7 +5,6 @@
 [ext_resource type="Resource" uid="uid://bus0xmb3pu8xp" path="res://addons/kit/menu/settings/tab_sound_event.tres" id="3_gh6u1"]
 [ext_resource type="Script" uid="uid://dlrw0lhorb5uc" path="res://addons/std/input/loader.gd" id="3_m4kg3"]
 [ext_resource type="Resource" uid="uid://dp0wxxg20ablh" path="res://addons/kit/system/input/actions/menu_tabbed.tres" id="4_s0nl3"]
-[ext_resource type="Resource" uid="uid://bksqrhgb3nen6" path="res://addons/kit/system/input/actions/menu_navigation.tres" id="4_nav"]
 [ext_resource type="PackedScene" uid="uid://dg8wa8rp672rb" path="res://addons/kit/ui/glyph/glyph.tscn" id="5_xbtwd"]
 [ext_resource type="PackedScene" uid="uid://dkt0y14cgygus" path="res://addons/kit/menu/settings/sound/sound.tscn" id="7_x3q0k"]
 [ext_resource type="PackedScene" uid="uid://jxtm7mh7fsc0" path="res://addons/kit/menu/settings/interface/interface.tscn" id="8_kkqby"]
@@ -39,7 +38,7 @@ offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("3_m4kg3")
 action_set = ExtResource("3_7ixv1")
-action_set_layers = Array[ExtResource("14_layer")]([ExtResource("4_nav"), ExtResource("4_s0nl3")])
+action_set_layers = Array[ExtResource("14_layer")]([ExtResource("4_s0nl3")])
 
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=676371519]
 layout_mode = 1
@@ -90,7 +89,7 @@ action = &"ui_tab_prev"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-tabs = ["kit_options_sound", "kit_options_interface", "kit_options_display", "kit_options_controls"]
+tabs = ["kit_options_sound", "kit_options_interface", "kit_options_display", "kit_options_controller", "kit_options_keyboard_mouse"]
 content = NodePath("../../../../Body/MarginContainer/ScrollContainer/TabContents")
 
 [node name="GlyphTabNext" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Header/MarginContainer/HBoxContainer" unique_id=1501074617 instance=ExtResource("5_xbtwd")]
@@ -134,9 +133,15 @@ layout_mode = 2
 visible = false
 layout_mode = 2
 
-[node name="Controls" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Body/MarginContainer/ScrollContainer/TabContents" unique_id=403269405 instance=ExtResource("10_46fy4")]
+[node name="Controller" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Body/MarginContainer/ScrollContainer/TabContents" unique_id=403269405 instance=ExtResource("10_46fy4")]
 visible = false
 layout_mode = 2
+device_category = 1
+
+[node name="KeyboardMouse" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Body/MarginContainer/ScrollContainer/TabContents" unique_id=1530982711 instance=ExtResource("10_46fy4")]
+visible = false
+layout_mode = 2
+device_category = 2
 
 [node name="CloseButton" parent="CenterContainer/PanelContainer" unique_id=833171423 instance=ExtResource("12_close")]
 layout_mode = 2

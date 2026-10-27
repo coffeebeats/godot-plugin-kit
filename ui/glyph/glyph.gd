@@ -155,22 +155,21 @@ func _get_device_type() -> DeviceType:
 	if device_type_override is StdSettingsPropertyInt:
 		property_value = device_type_override.get_value()
 
+	# NOTE: A `DEVICE_TYPE_GENERIC` override stands for the connected joypads' own type,
+	# as std's glyph resolves it.
+	if property_value == DEVICE_TYPE_GENERIC:
+		property_value = _slot.get_joypad_device_type()
+
 	if always_show_joy:
 		# When showing joypad glyphs, still check if an override was set in settings,
 		# but only use it if a joypad type is selected.
-		if device_type_override is StdSettingsPropertyInt:
-			if (
-				property_value != DEVICE_TYPE_UNKNOWN
-				and property_value != DEVICE_TYPE_KEYBOARD
-			):
-				return property_value
+		if (
+			property_value != DEVICE_TYPE_UNKNOWN
+			and property_value != DEVICE_TYPE_KEYBOARD
+		):
+			return property_value
 
-		var last_active_joy := _slot.get_last_active_joypad_device()
-		if last_active_joy:
-			return last_active_joy.device_type
-
-		var connected := _slot.get_connected_devices(false)
-		return connected[0].device_type if connected else DeviceType.GENERIC
+		return _slot.get_joypad_device_type()
 
 	if restrict_glyph_type_to_device_category:
 		match _slot.device_category:

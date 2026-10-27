@@ -9,8 +9,6 @@
 [ext_resource type="PackedScene" uid="uid://bskqdm3mqabu4" path="res://addons/kit/menu/save/delete_button.tscn" id="12_delete"]
 [ext_resource type="Script" uid="uid://dlrw0lhorb5uc" path="res://addons/std/input/loader.gd" id="8_loader"]
 [ext_resource type="Resource" uid="uid://ldk7k2w5uvks" path="res://addons/kit/system/input/actions/menu.tres" id="9_menu"]
-[ext_resource type="Script" uid="uid://dmvb2tblavngm" path="res://addons/std/input/action_set_layer.gd" id="10_layer"]
-[ext_resource type="Resource" uid="uid://bksqrhgb3nen6" path="res://addons/kit/system/input/actions/menu_navigation.tres" id="11_nav"]
 
 [node name="SaveMenu" type="Control" unique_id=938619952]
 layout_mode = 3
@@ -26,7 +24,6 @@ offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("8_loader")
 action_set = ExtResource("9_menu")
-action_set_layers = Array[ExtResource("10_layer")]([ExtResource("11_nav")])
 
 [node name="Scrim" parent="." unique_id=1622107886 instance=ExtResource("5_scrim")]
 layout_mode = 1

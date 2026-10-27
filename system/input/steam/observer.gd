@@ -6,6 +6,10 @@
 
 extends StdSettingsObserver
 
+# -- DEPENDENCIES -------------------------------------------------------------------- #
+
+const GodotDeviceActions := preload("res://addons/std/input/godot/device_actions.gd")
+
 # -- CONFIGURATION ------------------------------------------------------------------- #
 
 ## slot is the player slot which will have its components swapped.
@@ -64,6 +68,13 @@ func _handle_value_change(property: StdSettingsProperty, value: bool) -> void:
 	if not slot:
 		assert(false, "invalid config; missing player slot")
 		return
+
+	# NOTE: The Godot actions component stays the keyboard's while Steam Input drives
+	# joypads, so it stops binding joypad origins; otherwise the virtual gamepad Steam
+	# runs for a controller would press actions through the `InputMap`.
+	var godot_actions := godot_device_actions as GodotDeviceActions
+	if godot_actions:
+		godot_actions.claim_joy_input = not value
 
 	_logger.debug(
 		"Swapped device components for input slot.",

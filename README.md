@@ -36,7 +36,7 @@ Each value the game owns is an export on a scene instanced in `System`:
 
 | Scene | Export | Value |
 | --- | --- | --- |
-| `system/input/input.tscn` | `action_sets` | The game's action sets, which the settings menu lists for rebinding. |
+| `system/input/input.tscn` | `action_sets` | The game's action sets and layers, which the settings menu's Controller and Keyboard & Mouse tabs list for rebinding. On Steam builds, Steam Input also reads a controller's binding against them, so list every set the game's manifest has. |
 | `system/setting/settings.tscn` | `menu_tabs` | The game's own settings menu tabs, keyed by their label's message ID. |
 | `system/setting/interface/font_scaling_observer.tscn` | `theme` | The font theme which the text scaling setting resizes. |
 | `system/save/saves.tscn` | `schema` | The game's save data, required. |
@@ -70,14 +70,14 @@ Each menu is a finished screen, used in place:
 - **Pause:** list `menu/pause/pusher.tscn` in a gameplay screen's `attachment_scenes`.
 - **Splash:** push `ui/splash/godot_screen.tres`, whose scene emits `advanced` once it is done. `ui/splash/splash.gd` makes a splash of any scene.
 
-For a different layout, assemble a menu from the scenes it is made of: the settings tabs and their `group` and `setting` rows, the controls tab's `action_set` groups, the save menu's `slot_button`, and the dialogs in `ui/menu/`.
+For a different layout, assemble a menu from the scenes it is made of: the settings tabs and their `group` and `setting` rows, the `controls` tab, placed once per `device_category`, with its `action_set` groups, the save menu's `slot_button`, and the dialogs in `ui/menu/`.
 
 ### Put UI inside gameplay
 
-A menu screen loads kit's `Menu` set, which clears every binding, and enables the layers it needs over it: `system/input/actions/menu_navigation.tres` carries the `ui_*` navigation actions and `menu_options.tres` carries `ui_toggle_menu`. Neither layer names a parent set, so a gameplay screen enables the same resources over the game's own set, and the player rebinds each action once:
+A menu screen loads kit's `Menu` set, `system/input/actions/menu.tres`, which clears every other binding and carries the `ui_*` navigation actions, and enables the layers it needs over it. `menu_options.tres` carries `ui_toggle_menu` and names no parent set, so a gameplay screen enables the same layer over the game's own set, and the player rebinds it once. Navigation inside gameplay takes a layer the game owns.
 
 1. The map's root lists `menu_options.tres` in `action_set_layers`, so Escape pauses through `menu/pause/pusher.tscn`.
-2. A panel over the world, such as a build menu, carries its own `StdInputActionSetLoader` with `menu_navigation.tres` in `action_set_layers` and `active_while` set to `VISIBLE`. Arrows, Enter and the gamepad navigate it while it shows, and because its layer is enabled after the map's, Escape reaches it as `ui_cancel` until it hides. The loader is a `Control`; under a container give it `mouse_filter = IGNORE`, or it covers the panel's buttons.
+2. A panel over the world, such as a build menu, carries its own `StdInputActionSetLoader`, with `active_while` set to `VISIBLE` and a game layer in `action_set_layers` that holds the `ui_*` actions the panel needs. The layer names the game's set as `parent`, and the game lists it in `Input.action_sets` so the controls tabs offer its bindings, which are saved apart from the `Menu` set's. Arrows, Enter and the gamepad navigate it while it shows, and because its layer is enabled after the map's, Escape reaches it as `ui_cancel` until it hides. The loader is a `Control`; under a container give it `mouse_filter = IGNORE`, or it covers the panel's buttons.
 3. Kit's map scenes place the map's loader before `UI` in tree order, which is what keeps that order on an uncover; a map built another way must keep its loader ahead of its panels.
 4. A button that doubles a bindable action, such as a build or a wave start, takes a `FocusHandler` and a `StdInputActionTrigger`; any other button connects `pressed`. The handler the action reaches validates it, since a key gets there whether or not the button is enabled.
 5. A screen with a text field lists the `ui_text_*` actions in a layer of its own.
