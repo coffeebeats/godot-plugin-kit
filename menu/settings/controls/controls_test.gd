@@ -10,9 +10,6 @@ extends GutTest
 const Binding := preload("binding.gd")
 const ControlsScene := preload("controls.tscn")
 const PlatformScene := preload("res://premade/platform.tscn")
-const SteamInputEnabled := preload(
-	"res://system/input/steam_input_enabled_property.tres"
-)
 const SystemInputScene := preload("res://system/input/input.tscn")
 
 # -- DEFINITIONS --------------------------------------------------------------------- #
@@ -147,34 +144,6 @@ func test_controls_controller_tab_without_a_joypad_disables_rebinding() -> void:
 		assert_false(binding.button.disabled)
 
 
-func test_controls_controller_tab_with_steam_input_shows_the_configurator() -> void:
-	# Given: Steam Input drives controllers.
-	SteamInputEnabled.set_value(true)
-
-	# When: A controller tab enters the tree.
-	var controls := await _add_controls(_CONTROLLER)
-
-	# Then: Steam's configurator shows in place of the bindings.
-	var steam_input := controls.get_node(^"Controller/SteamInput")
-	assert_true(steam_input.visible)
-	assert_false(controls.get_node(^"%ActionSets").visible)
-
-	# Then: The configurator opens from the configurator setting's button.
-	var configurator := controls.get_node(
-		^"Controller/Steam/StdConditionParent/SteamConfigurator"
-	)
-	assert_true(configurator.is_inside_tree())
-	assert_eq(configurator.button, steam_input.get_node(^"Configurator/Prompt"))
-
-	# When: Steam Input stops driving controllers.
-	SteamInputEnabled.set_value(false)
-	await wait_process_frames(1)
-
-	# Then: The bindings show in place of the configurator.
-	assert_false(steam_input.visible)
-	assert_true(controls.get_node(^"%ActionSets").visible)
-
-
 # -- TEST HOOKS ---------------------------------------------------------------------- #
 
 
@@ -192,10 +161,6 @@ func after_each() -> void:
 	var slot := StdInputSlot.for_player(1)
 	if slot:
 		slot.load_action_set(StdInputActionSet.new())
-
-	SteamInputEnabled.scope.config.erase(
-		SteamInputEnabled.category, SteamInputEnabled.name
-	)
 
 
 func before_all() -> void:

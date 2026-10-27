@@ -7,7 +7,6 @@ extends GutTest
 
 # -- DEPENDENCIES -------------------------------------------------------------------- #
 
-const InputScene := preload("res://system/input/steam/input.tscn")
 const PlatformScene := preload("res://premade/platform.tscn")
 const SystemInput := preload("res://system/input/input.gd")
 
@@ -16,6 +15,17 @@ const MenuBinding := preload("res://system/input/actions/menu_binding.tres")
 const MenuOptions := preload("res://system/input/actions/menu_options.tres")
 const MenuTabbed := preload("res://system/input/actions/menu_tabbed.tres")
 const Splash := preload("res://system/input/actions/splash.tres")
+
+# -- DEFINITIONS --------------------------------------------------------------------- #
+
+## _INPUT_SCENE_PATH is the Steam input scene, loaded in `before_all` rather than
+## preloaded, since its monitor can't be parsed without the `Steam` singleton the
+## GodotSteam extension registers and `should_skip_script` skips this script without it.
+const _INPUT_SCENE_PATH := "res://system/input/steam/input.tscn"
+
+# -- INITIALIZATION ------------------------------------------------------------------ #
+
+var _input_scene: PackedScene = null
 
 # -- TEST METHODS -------------------------------------------------------------------- #
 
@@ -53,6 +63,20 @@ func test_input_monitor_holds_godot_joypad_monitor() -> void:
 	assert_eq(monitor.godot_joypad_monitor, observer.godot_joypad_monitor)
 
 
+# -- TEST HOOKS ---------------------------------------------------------------------- #
+
+
+func before_all() -> void:
+	_input_scene = load(_INPUT_SCENE_PATH)
+
+
+func should_skip_script():
+	if not ClassDB.class_exists(&"Steam"):
+		return "the GodotSteam extension isn't available on this platform"
+
+	return false
+
+
 # -- PRIVATE METHODS ----------------------------------------------------------------- #
 
 
@@ -64,7 +88,7 @@ func _add_input(action_sets: Array[StdInputActionSet] = []) -> Node:
 	var system := SystemInput.new()
 	system.action_sets = action_sets
 
-	var input := InputScene.instantiate()
+	var input := _input_scene.instantiate()
 	system.add_child(input)
 	add_child_autofree(system)
 

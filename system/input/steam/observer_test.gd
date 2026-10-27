@@ -6,12 +6,22 @@ extends GutTest
 
 # -- DEPENDENCIES -------------------------------------------------------------------- #
 
-const InputScene := preload("res://system/input/steam/input.tscn")
 const PlatformScene := preload("res://premade/platform.tscn")
 const SteamInputEnabled := preload(
 	"res://system/input/steam_input_enabled_property.tres"
 )
 const SystemInput := preload("res://system/input/input.gd")
+
+# -- DEFINITIONS --------------------------------------------------------------------- #
+
+## _INPUT_SCENE_PATH is the Steam input scene, loaded in `before_all` rather than
+## preloaded, since its monitor can't be parsed without the `Steam` singleton the
+## GodotSteam extension registers and `should_skip_script` skips this script without it.
+const _INPUT_SCENE_PATH := "res://system/input/steam/input.tscn"
+
+# -- INITIALIZATION ------------------------------------------------------------------ #
+
+var _input_scene: PackedScene = null
 
 # -- TEST METHODS -------------------------------------------------------------------- #
 
@@ -24,7 +34,7 @@ func test_observer_unbinds_joypads_from_godot_actions_while_steam_input_runs() -
 	#
 	# NOTE: Its monitor fails to start Steam Input without the Steam client.
 	var system := SystemInput.new()
-	var input := InputScene.instantiate()
+	var input := _input_scene.instantiate()
 	system.add_child(input)
 	add_child_autofree(system)
 	assert_engine_error("SteamAPI_SteamInput")
@@ -55,3 +65,17 @@ func test_observer_unbinds_joypads_from_godot_actions_while_steam_input_runs() -
 
 	# Then: It binds joypad origins again.
 	assert_true(actions.claim_joy_input)
+
+
+# -- TEST HOOKS ---------------------------------------------------------------------- #
+
+
+func before_all() -> void:
+	_input_scene = load(_INPUT_SCENE_PATH)
+
+
+func should_skip_script():
+	if not ClassDB.class_exists(&"Steam"):
+		return "the GodotSteam extension isn't available on this platform"
+
+	return false
