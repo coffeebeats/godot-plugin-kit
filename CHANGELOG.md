@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.0.2 (2026-10-27)
+
+## What's Changed
+* chore(ci): update Python tooling with Dependabot by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/69
+* chore(ci): group Dependabot updates by ecosystem by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/73
+* chore(addons): bump `std` to v7.1.1 by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/79
+* chore(deps-dev): bump ruff from 0.16.7 to 0.17.2 by @dependabot[bot] in https://github.com/coffeebeats/godot-plugin-kit/pull/72
+* chore(deps): bump astral-sh/setup-uv from 10.2.0 to 10.3.2 by @dependabot[bot] in https://github.com/coffeebeats/godot-plugin-kit/pull/71
+* chore(addons): bump `std` to v7.1.2 by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/81
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v2.0.1...v2.0.2
+
 ## 2.0.1 (2026-10-25)
 
 ## What's Changed
