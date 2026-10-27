@@ -92,7 +92,6 @@ theme_override_constants/margin_right = 6
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
-restrict_glyph_type_to_device_category = true
 action_set = ExtResource("3_nyt6g")
 action = &"ui_binding_stop"
 

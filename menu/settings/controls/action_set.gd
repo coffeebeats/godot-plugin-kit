@@ -1,6 +1,7 @@
 ##
 ## ActionSet is a subclass of a settings group component which creates a setting per
-## action included in the specified `StdInputActionSet`.
+## action included in the specified `StdInputActionSet`, showing one category of
+## device's bindings.
 ##
 
 @warning_ignore("MISSING_TOOL")
@@ -14,6 +15,10 @@ const Reset := preload("reset.gd")
 const ResetScene := preload("reset.tscn")
 const Setting := preload("../setting.gd")
 const SettingScene := preload("../setting.tscn")
+
+# -- DEFINITIONS --------------------------------------------------------------------- #
+
+const DEVICE_TYPE_KEYBOARD := StdInputDevice.DEVICE_TYPE_KEYBOARD
 
 # -- CONFIGURATION ------------------------------------------------------------------- #
 
@@ -32,6 +37,11 @@ const SettingScene := preload("../setting.tscn")
 ## scope is the settings scope in which binding overrides will be stored.
 @export var scope: StdSettingsScope = null
 
+## device_category is the category of device whose bindings the group shows, resets and
+## rebinds, either `DEVICE_TYPE_KEYBOARD` for the keyboard and mouse or
+## `DEVICE_TYPE_GENERIC` for controllers.
+@export var device_category: StdInputDevice.DeviceType = DEVICE_TYPE_KEYBOARD
+
 @export_subgroup("Player")
 
 ## player_id is a player identifier which will be used to look up the action's input
@@ -41,11 +51,8 @@ const SettingScene := preload("../setting.tscn")
 	set(value):
 		player_id = value
 
-		for node in get_children():
-			if not node is Setting:
-				continue
-
-			node.get_child(1).player_id = value
+		if is_node_ready():
+			_generate_settings()
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
@@ -62,7 +69,7 @@ func _ready() -> void:
 	action_set = action_set  # Trigger 'label' update.
 
 	_reset.action_set = action_set
-	_reset.player_id = player_id
+	_reset.device_category = device_category
 
 	_generate_settings()
 
@@ -94,6 +101,7 @@ func _generate_settings() -> void:
 
 		var primary := BindingScene.instantiate()
 		primary.scope = scope
+		primary.device_category = device_category
 		primary.glyph.action = action
 		primary.glyph.action_set = action_set
 		primary.glyph.binding_index = StdInputDeviceActions.BINDING_INDEX_PRIMARY
@@ -101,6 +109,7 @@ func _generate_settings() -> void:
 
 		var secondary := BindingScene.instantiate()
 		secondary.scope = scope
+		secondary.device_category = device_category
 		secondary.glyph.action = action
 		secondary.glyph.action_set = action_set
 		secondary.glyph.binding_index = StdInputDeviceActions.BINDING_INDEX_SECONDARY

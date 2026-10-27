@@ -31,46 +31,46 @@ msgstr ""
 
 #. Used as a category name for a group of input actions related to menu navigation.
 msgctxt "action_sets"
-msgid "MenuNavigation"
+msgid "Menu"
 msgstr ""
 
 #. An input action that confirms the current selection.
-msgctxt "actions_MenuNavigation"
+msgctxt "actions_Menu"
 msgid "ui_accept"
 msgstr ""
 
 #. An input action used to cancel the current selection/leave the current menu page.
-msgctxt "actions_MenuNavigation"
+msgctxt "actions_Menu"
 msgid "ui_cancel"
 msgstr ""
 
 #. An input action used to navigate left within a game menu.
-msgctxt "actions_MenuNavigation"
+msgctxt "actions_Menu"
 msgid "ui_left"
 msgstr ""
 
 #. An input action used to navigate right within a game menu.
-msgctxt "actions_MenuNavigation"
+msgctxt "actions_Menu"
 msgid "ui_right"
 msgstr ""
 
 #. An input action used to navigate up within a game menu.
-msgctxt "actions_MenuNavigation"
+msgctxt "actions_Menu"
 msgid "ui_up"
 msgstr ""
 
 #. An input action used to navigate down within a game menu.
-msgctxt "actions_MenuNavigation"
+msgctxt "actions_Menu"
 msgid "ui_down"
 msgstr ""
 
 #. An input action used to navigate to the next item within a game menu.
-msgctxt "actions_MenuNavigation"
+msgctxt "actions_Menu"
 msgid "ui_focus_next"
 msgstr ""
 
 #. An input action used to navigate to the previous item within a game menu.
-msgctxt "actions_MenuNavigation"
+msgctxt "actions_Menu"
 msgid "ui_focus_prev"
 msgstr ""
 
@@ -198,8 +198,12 @@ msgstr ""
 msgid "kit_options_display"
 msgstr ""
 
-#. A tab within the game's options menu containing controls/input-related settings.
-msgid "kit_options_controls"
+#. A tab within the game's options menu containing the controller's bindings and settings.
+msgid "kit_options_controller"
+msgstr ""
+
+#. A tab within the game's options menu containing the keyboard and mouse's bindings and settings.
+msgid "kit_options_keyboard_mouse"
 msgstr ""
 
 #. Used as a category name for a group of settings related to volume.
@@ -288,6 +292,11 @@ msgctxt "button_prompt"
 msgid "kit_options_controls_button_prompt_kbm"
 msgstr ""
 
+#. Describes one possible option in the button prompt setting; fixes gamepad icons to use the style of the connected controller.
+msgctxt "button_prompt"
+msgid "kit_options_controls_button_prompt_controller"
+msgstr ""
+
 #. Describes one possible option in the button prompt setting; fixes gamepad icons to use an Microsoft Xbox style.
 msgctxt "button_prompt"
 msgid "kit_options_controls_button_prompt_xbox"
@@ -322,6 +331,18 @@ msgstr ""
 
 #. Describes a setting which adjusts the action-to-button bindings for a game controller.
 msgid "kit_options_controls_steam_configurator"
+msgstr ""
+
+#. Tells the user to connect a game controller, since its bindings can't be changed while none is connected.
+msgid "kit_options_controls_controller_disconnected"
+msgstr ""
+
+#. Used as a category name for mouse settings.
+msgid "kit_options_controls_mouse"
+msgstr ""
+
+#. Describes the setting which keeps the mouse cursor inside the game's window.
+msgid "kit_options_controls_confine_cursor"
 msgstr ""
 
 #. Instructs the user that they will be updating the controller binding for the specified action. Here, the '%s' placeholder will be replaced with the translated name of the game action.

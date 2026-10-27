@@ -37,42 +37,42 @@ msgid "Menus"
 msgstr ""
 
 #. An input action that confirms the current selection.
-msgctxt "actions_MenuNavigation"
+msgctxt "actions_Menu"
 msgid "Accept"
 msgstr ""
 
 #. An input action used to cancel the current selection/leave the current menu page.
-msgctxt "actions_MenuNavigation"
+msgctxt "actions_Menu"
 msgid "Cancel"
 msgstr ""
 
 #. An input action used to navigate left within a game menu.
-msgctxt "actions_MenuNavigation"
+msgctxt "actions_Menu"
 msgid "Left"
 msgstr ""
 
 #. An input action used to navigate right within a game menu.
-msgctxt "actions_MenuNavigation"
+msgctxt "actions_Menu"
 msgid "Right"
 msgstr ""
 
 #. An input action used to navigate up within a game menu.
-msgctxt "actions_MenuNavigation"
+msgctxt "actions_Menu"
 msgid "Up"
 msgstr ""
 
 #. An input action used to navigate down within a game menu.
-msgctxt "actions_MenuNavigation"
+msgctxt "actions_Menu"
 msgid "Down"
 msgstr ""
 
 #. An input action used to navigate to the next item within a game menu.
-msgctxt "actions_MenuNavigation"
+msgctxt "actions_Menu"
 msgid "Next"
 msgstr ""
 
 #. An input action used to navigate to the previous item within a game menu.
-msgctxt "actions_MenuNavigation"
+msgctxt "actions_Menu"
 msgid "Previous"
 msgstr ""
 
@@ -200,8 +200,12 @@ msgstr ""
 msgid "Display"
 msgstr ""
 
-#. A tab within the game's options menu containing controls/input-related settings.
-msgid "Controls"
+#. A tab within the game's options menu containing the controller's bindings and settings.
+msgid "Controller"
+msgstr ""
+
+#. A tab within the game's options menu containing the keyboard and mouse's bindings and settings.
+msgid "Keyboard & Mouse"
 msgstr ""
 
 #. Used as a category name for a group of settings related to volume.
@@ -290,6 +294,11 @@ msgctxt "button_prompt"
 msgid "KB&M"
 msgstr ""
 
+#. Describes one possible option in the button prompt setting; fixes gamepad icons to use the style of the connected controller.
+msgctxt "button_prompt"
+msgid "Controller"
+msgstr ""
+
 #. Describes one possible option in the button prompt setting; fixes gamepad icons to use an Microsoft Xbox style.
 msgctxt "button_prompt"
 msgid "Xbox"
@@ -324,6 +333,18 @@ msgstr ""
 
 #. Describes a setting which adjusts the action-to-button bindings for a game controller.
 msgid "Controller layout"
+msgstr ""
+
+#. Tells the user to connect a game controller, since its bindings can't be changed while none is connected.
+msgid "Connect a controller to change its bindings."
+msgstr ""
+
+#. Used as a category name for mouse settings.
+msgid "Mouse"
+msgstr ""
+
+#. Describes the setting which keeps the mouse cursor inside the game's window.
+msgid "Confine cursor"
 msgstr ""
 
 #. Instructs the user that they will be updating the controller binding for the specified action. Here, the '%s' placeholder will be replaced with the translated name of the game action.
