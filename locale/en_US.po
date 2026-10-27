@@ -198,9 +198,13 @@ msgstr "Interface"
 msgid "kit_options_display"
 msgstr "Display"
 
-#. A tab within the game's options menu containing controls/input-related settings.
-msgid "kit_options_controls"
-msgstr "Controls"
+#. A tab within the game's options menu containing the controller's bindings and settings.
+msgid "kit_options_controller"
+msgstr "Controller"
+
+#. A tab within the game's options menu containing the keyboard and mouse's bindings and settings.
+msgid "kit_options_keyboard_mouse"
+msgstr "Keyboard & Mouse"
 
 #. Used as a category name for a group of settings related to volume.
 msgid "kit_options_sound_volume"
@@ -328,6 +332,18 @@ msgstr "Steam Input"
 #. Describes a setting which adjusts the action-to-button bindings for a game controller.
 msgid "kit_options_controls_steam_configurator"
 msgstr "Controller layout"
+
+#. Tells the user to connect a game controller, since its bindings can't be changed while none is connected.
+msgid "kit_options_controls_controller_disconnected"
+msgstr "Connect a controller to change its bindings."
+
+#. Used as a category name for mouse settings.
+msgid "kit_options_controls_mouse"
+msgstr "Mouse"
+
+#. Describes the setting which keeps the mouse cursor inside the game's window.
+msgid "kit_options_controls_confine_cursor"
+msgstr "Confine cursor"
 
 #. Instructs the user that they will be updating the controller binding for the specified action. Here, the '%s' placeholder will be replaced with the translated name of the game action.
 msgid "kit_options_controls_rebinder_title"

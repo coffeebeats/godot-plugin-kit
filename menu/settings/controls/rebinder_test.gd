@@ -1,6 +1,7 @@
 ##
-## Tests for the rebinder, which binds the next press from the device it listens to, and
-## for its prompt, which must survive a translation that lost its placeholder.
+## Tests for the rebinder, which binds the next press from one device of the binding's
+## category and cancels on any device's press, and for its prompt, which must survive a
+## translation that lost its placeholder.
 ##
 
 extends GutTest
@@ -26,6 +27,12 @@ const _ACTION_STOP := &"ui_binding_stop"
 ## _JOYPAD is the device ID of the test joypad.
 const _JOYPAD := 0
 
+## _CONTROLLER is the device category of controllers.
+const _CONTROLLER := StdInputDevice.DEVICE_TYPE_GENERIC
+
+## _KEYBOARD is the device category of the keyboard and mouse.
+const _KEYBOARD := StdInputDevice.DEVICE_TYPE_KEYBOARD
+
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
 var _action_set: StdInputActionSet = null
@@ -42,8 +49,8 @@ func test_rebinder_key_press_binds_the_keyboard_binding() -> void:
 	# Given: The keyboard is active.
 	assert_eq(_active_type(), StdInputDevice.DEVICE_TYPE_KEYBOARD, "precondition")
 
-	# Given: The rebinder is open for the primary binding.
-	await _start_rebinding()
+	# Given: The rebinder is open for the keyboard's primary binding.
+	await _start_rebinding(_KEYBOARD)
 
 	# When: A key is pressed.
 	await _tap(_key(KEY_K))
@@ -59,8 +66,8 @@ func test_rebinder_joypad_button_binds_the_joypad_binding() -> void:
 	# Given: A joypad is connected and active.
 	await _activate_joypad()
 
-	# Given: The rebinder is open for the primary binding.
-	await _start_rebinding()
+	# Given: The rebinder is open for the controller's primary binding.
+	await _start_rebinding(_CONTROLLER)
 
 	# When: A joypad button is pressed.
 	await _tap(_joy_button(JOY_BUTTON_X))
@@ -79,8 +86,8 @@ func test_rebinder_cancel_closes_without_binding() -> void:
 	# Given: The keyboard is active.
 	assert_eq(_active_type(), StdInputDevice.DEVICE_TYPE_KEYBOARD, "precondition")
 
-	# Given: The rebinder is open for the primary binding.
-	await _start_rebinding()
+	# Given: The rebinder is open for the keyboard's primary binding.
+	await _start_rebinding(_KEYBOARD)
 
 	# When: The keyboard's cancel key is pressed.
 	await _tap(_key(KEY_ESCAPE))
@@ -96,8 +103,8 @@ func test_rebinder_unbound_press_from_another_device_is_ignored() -> void:
 	# Given: A joypad is connected and active.
 	await _activate_joypad()
 
-	# Given: The rebinder is open for the primary binding.
-	await _start_rebinding()
+	# Given: The rebinder is open for the controller's primary binding.
+	await _start_rebinding(_CONTROLLER)
 
 	# When: A key bound to no active action is pressed.
 	await _tap(_key(KEY_J))
@@ -117,8 +124,8 @@ func test_rebinder_touch_emulated_click_does_not_bind() -> void:
 	# Given: The keyboard is active.
 	assert_eq(_active_type(), StdInputDevice.DEVICE_TYPE_KEYBOARD, "precondition")
 
-	# Given: The rebinder is open for the primary binding.
-	await _start_rebinding()
+	# Given: The rebinder is open for the keyboard's primary binding.
+	await _start_rebinding(_KEYBOARD)
 
 	# When: A left click which Godot emulates from a touch arrives.
 	var click := InputEventMouseButton.new()
@@ -133,47 +140,30 @@ func test_rebinder_touch_emulated_click_does_not_bind() -> void:
 	assert_null(_binding(StdInputDevice.DEVICE_TYPE_KEYBOARD))
 
 
-# NOTE: This pins down today's behavior, in which the rebinder follows the active
-# device. A rebinder pinned to one device should cancel here instead.
-func test_rebinder_cancel_from_another_device_retargets_the_rebind() -> void:
+func test_rebinder_cancel_from_another_device_closes_without_binding() -> void:
 	# Given: A joypad is connected and active.
 	await _activate_joypad()
 
-	# Given: The rebinder is open for the primary binding.
-	await _start_rebinding()
+	# Given: The rebinder is open for the controller's primary binding.
+	await _start_rebinding(_CONTROLLER)
 
 	# When: The keyboard's cancel key is pressed.
 	await _tap(_key(KEY_ESCAPE))
 
-	# Then: The rebinder is still open, now listening to the keyboard.
-	assert_true(_is_rebinder_open())
-	assert_eq(_active_type(), StdInputDevice.DEVICE_TYPE_KEYBOARD)
-
-	# When: A key is pressed.
-	await _tap(_key(KEY_K))
-
-	# Then: The keyboard binding is that key.
-	assert_eq(_bound_keycode(StdInputDevice.DEVICE_TYPE_KEYBOARD), KEY_K)
-
-	# Then: The joypad binding is unchanged.
-	assert_null(_binding(StdInputDevice.DEVICE_TYPE_XBOX_ONE))
-
 	# Then: The rebinder is closed.
 	assert_false(_is_rebinder_open())
 
+	# Then: Nothing is bound.
+	assert_null(_binding(StdInputDevice.DEVICE_TYPE_XBOX_ONE))
+	assert_null(_binding(StdInputDevice.DEVICE_TYPE_KEYBOARD))
 
-# NOTE: This pins down today's behavior, in which a Steam Input controller can't
-# cancel a rebind or take it over, since Steam reports its presses as injected actions.
-func test_rebinder_discards_an_injected_action() -> void:
+
+func test_rebinder_injected_cancel_closes_without_binding() -> void:
 	# Given: A joypad is connected, and a bound key makes the keyboard active.
-	_slot.joypad_monitor.joy_connected.emit(
-		_JOYPAD, StdInputDevice.DEVICE_TYPE_XBOX_ONE
-	)
-	await _tap(_key(KEY_ENTER))
-	assert_eq(_active_type(), StdInputDevice.DEVICE_TYPE_KEYBOARD, "precondition")
+	await _activate_keyboard_beside_joypad()
 
-	# Given: The rebinder is open for the primary binding.
-	await _start_rebinding()
+	# Given: The rebinder is open for the keyboard's primary binding.
+	await _start_rebinding(_KEYBOARD)
 
 	# When: The joypad's cancel action is injected, as Steam Input reports it.
 	var action := InputEventAction.new()
@@ -181,14 +171,70 @@ func test_rebinder_discards_an_injected_action() -> void:
 	action.device = _JOYPAD
 	await _tap(action)
 
-	# Then: The rebinder is still open.
-	assert_true(_is_rebinder_open())
-
-	# Then: The keyboard stays active.
-	assert_eq(_active_type(), StdInputDevice.DEVICE_TYPE_KEYBOARD)
+	# Then: The rebinder is closed.
+	assert_false(_is_rebinder_open())
 
 	# Then: Nothing is bound.
 	assert_null(_binding(StdInputDevice.DEVICE_TYPE_KEYBOARD))
+
+
+func test_rebinder_controller_rebind_with_keyboard_active_binds_the_joypad() -> void:
+	# Given: A joypad is connected, and a bound key makes the keyboard active.
+	await _activate_keyboard_beside_joypad()
+
+	# Given: The rebinder is open for the controller's primary binding.
+	await _start_rebinding(_CONTROLLER)
+
+	# When: A key is pressed.
+	await _tap(_key(KEY_K))
+
+	# Then: The rebinder is still open.
+	assert_true(_is_rebinder_open())
+
+	# When: A joypad button is pressed.
+	await _tap(_joy_button(JOY_BUTTON_X))
+
+	# Then: The joypad binding is that button.
+	assert_eq(_bound_button(StdInputDevice.DEVICE_TYPE_XBOX_ONE), JOY_BUTTON_X)
+
+	# Then: The keyboard binding is unchanged.
+	assert_null(_binding(StdInputDevice.DEVICE_TYPE_KEYBOARD))
+
+	# Then: The rebinder is closed.
+	assert_false(_is_rebinder_open())
+
+
+func test_rebinder_joypad_disconnect_closes_without_binding() -> void:
+	# Given: A joypad is connected and active.
+	await _activate_joypad()
+
+	# Given: The rebinder is open for the controller's primary binding.
+	await _start_rebinding(_CONTROLLER)
+
+	# When: The joypad disconnects.
+	_slot.joypad_monitor.joy_disconnected.emit(_JOYPAD)
+	await wait_process_frames(2)
+
+	# Then: The rebinder is closed.
+	assert_false(_is_rebinder_open())
+
+	# Then: Nothing is bound.
+	assert_null(_binding(StdInputDevice.DEVICE_TYPE_XBOX_ONE))
+
+
+func test_rebinder_controller_rebind_without_a_joypad_opens_nothing() -> void:
+	# Given: No joypad is connected.
+	assert_true(_slot.get_connected_devices(false).is_empty(), "precondition")
+
+	# When: A rebind of the controller's primary binding starts.
+	var started := Rebinder.start_rebinding(
+		_manager, _scope, _action_set, _ACTION, _CONTROLLER
+	)
+	await wait_process_frames(2)
+
+	# Then: Nothing opens.
+	assert_false(started)
+	assert_false(_is_rebinder_open())
 
 
 func test_rebinder_binding_row_press_rebinds_its_action_and_slot() -> void:
@@ -351,6 +397,16 @@ func _add_action(action: StringName, events: Array[InputEvent]) -> void:
 	_added_actions.append(action)
 
 
+## _activate_keyboard_beside_joypad connects an Xbox joypad, then makes the keyboard
+## active with a press of `ui_accept`, which the engine binds to Enter.
+func _activate_keyboard_beside_joypad() -> void:
+	_slot.joypad_monitor.joy_connected.emit(
+		_JOYPAD, StdInputDevice.DEVICE_TYPE_XBOX_ONE
+	)
+	await _tap(_key(KEY_ENTER))
+	assert_eq(_active_type(), StdInputDevice.DEVICE_TYPE_KEYBOARD, "precondition")
+
+
 ## _activate_joypad connects an Xbox joypad and makes it active with a press of
 ## `ui_accept`, which the engine binds to its A button.
 func _activate_joypad() -> void:
@@ -413,7 +469,8 @@ func _key(keycode: Key) -> InputEventKey:
 	return event
 
 
-func _start_rebinding() -> void:
+## _start_rebinding opens the rebinder for the primary binding of `device_category`.
+func _start_rebinding(device_category: StdInputDevice.DeviceType) -> void:
 	(
 		Rebinder
 		. start_rebinding(
@@ -421,6 +478,7 @@ func _start_rebinding() -> void:
 			_scope,
 			_action_set,
 			_ACTION,
+			device_category,
 			StdInputDeviceActions.BINDING_INDEX_PRIMARY,
 			1,
 		)

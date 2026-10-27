@@ -3,6 +3,9 @@
 ## Uses a static instance pushed via `StdScreenManager`. Binding nodes delegate to
 ## `Rebinder.start_rebinding()` to initiate a rebind.
 ##
+## A rebind binds the next press from one device of the binding's category, regardless
+## of the active device, and any device's `ui_binding_stop` cancels it.
+##
 
 extends Control
 
@@ -19,8 +22,8 @@ const RebinderScene := preload("rebinder.tscn")
 
 const GROUP_REBINDER := &"menu/settings:rebinder"
 
+const DEVICE_TYPE_GENERIC := StdInputDevice.DEVICE_TYPE_GENERIC
 const DEVICE_TYPE_KEYBOARD := StdInputDevice.DEVICE_TYPE_KEYBOARD
-const DEVICE_TYPE_UNKNOWN := StdInputDevice.DEVICE_TYPE_UNKNOWN
 
 const MSGCTXT_REBINDER_KEYBOARD := &"keyboard"
 const MSGCTXT_REBINDER_GAMEPAD := &"gamepad"
@@ -55,13 +58,44 @@ var _scope: StdSettingsScope = null
 # -- PUBLIC METHODS ------------------------------------------------------------------ #
 
 
+## find_device returns the device of `device_category` which a rebind on `slot` listens
+## to, or `null` while none is connected. That is the keyboard for
+## `DEVICE_TYPE_KEYBOARD`, and for `DEVICE_TYPE_GENERIC` the last active joypad, else
+## the first connected one.
+static func find_device(
+	slot: StdInputSlot, device_category: StdInputDevice.DeviceType
+) -> StdInputDevice:
+	assert(slot is StdInputSlot, "invalid argument; missing input slot")
+
+	match device_category:
+		DEVICE_TYPE_KEYBOARD:
+			var devices := slot.get_connected_devices(true)
+			if devices and devices[0].device_type == DEVICE_TYPE_KEYBOARD:
+				return devices[0]
+		DEVICE_TYPE_GENERIC:
+			var joypad := slot.get_last_active_joypad_device()
+			if joypad:
+				return joypad
+
+			var joypads := slot.get_connected_devices(false)
+			if joypads:
+				return joypads[0]
+		_:
+			assert(false, "invalid argument; unsupported device category")
+
+	return null
+
+
 ## start_rebinding begins the rebinding process for the specified action and player,
-## pushing the rebinder screen onto the given screen manager.
+## pushing the rebinder screen onto the given screen manager. The rebind listens to the
+## player's device of `device_category` (see `find_device`), and it returns `false`,
+## opening nothing, while none is connected.
 static func start_rebinding(
 	screens: StdScreenManager,
 	scope: StdSettingsScope,
 	action_set: StdInputActionSet,
 	action: StringName,
+	device_category: StdInputDevice.DeviceType,
 	binding_index: StdInputDeviceActions.BindingIndex = (
 		StdInputDeviceActions.BINDING_INDEX_PRIMARY
 	),
@@ -74,7 +108,7 @@ static func start_rebinding(
 		assert(false, "invalid state; missing input slot")
 		return false
 
-	var device := slot.get_active_device()
+	var device := find_device(slot, device_category)
 	if not device:
 		return false
 
@@ -92,7 +126,9 @@ static func start_rebinding(
 
 	# NOTE: The instance is reused across rebinds, so a prior `stop` may have left this
 	# connected.
-	Signals.ensure_connected(slot.device_activated, _instance._on_device_activated)
+	Signals.ensure_connected(
+		slot.device_disconnected, _instance._on_device_disconnected
+	)
 
 	screens.push(_instance.screen, _instance)
 
@@ -128,7 +164,7 @@ func stop(bound: bool = false) -> void:
 	assert(slot is StdInputSlot, "invalid state; missing input slot")
 
 	if slot:
-		Signals.disconnect_safe(slot.device_activated, _on_device_activated)
+		Signals.disconnect_safe(slot.device_disconnected, _on_device_disconnected)
 
 	_scope = null
 	_action_set = null
@@ -157,18 +193,15 @@ func _input(event: InputEvent) -> void:
 		stop()
 		return
 
-	# FIXME: This will block valid actions.
-	if event is InputEventAction:
+	# NOTE: Any device cancels, so the player can back out with the device in their
+	# hands. A joypad Steam Input drives reports its press as an injected action.
+	if event.is_action_pressed(&"ui_binding_stop"):
 		get_viewport().set_input_as_handled()
+		stop()
 		return
 
 	# NOTE: Let this event through so that the other device can be activated.
 	if not _device.is_matching_event_origin(event):
-		return
-
-	if event.is_action_pressed("ui_binding_stop"):
-		get_viewport().set_input_as_handled()
-		stop()
 		return
 
 	if not _action_set.is_matching_event_origin(_action, event):
@@ -274,6 +307,7 @@ func _update_prompt() -> void:
 # -- SIGNAL HANDLERS ----------------------------------------------------------------- #
 
 
-func _on_device_activated(device: StdInputDevice) -> void:
-	_device = device
-	_update_prompt()
+func _on_device_disconnected(device: StdInputDevice) -> void:
+	# NOTE: The slot frees a disconnected joypad, so the rebind can't outlive it.
+	if device == _device:
+		stop()

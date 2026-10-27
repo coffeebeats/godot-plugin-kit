@@ -35,7 +35,7 @@ const MODULE_ID := &"input"
 
 # -- CONFIGURATION ------------------------------------------------------------------- #
 
-## action_sets are the game's action sets, which the settings menu's controls tab lists
+## action_sets are the game's action sets, which the settings menu's controls tabs list
 ## for rebinding above kit's own. The settings menu loads at runtime, out of reach of
 ## the scene placing this node, so it reads the value here.
 ##

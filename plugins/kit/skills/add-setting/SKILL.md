@@ -130,7 +130,7 @@ Kit's settings under `addons/kit/system/setting/` are the reference to copy from
 - `addons/kit/system/setting/user_settings_scope.tres` — per-user scope
 - `addons/kit/system/setting/project_settings_scope.tres` — project-wide scope
 - `addons/kit/menu/settings/sound/sound.tscn` — full settings tab UI (slider, option button, checkbox examples)
-- `addons/kit/menu/settings/controls/controls.tscn` — controls tab UI
+- `addons/kit/menu/settings/controls/controls.tscn` — controls tab UI, placed once per device category
 - `addons/kit/menu/settings/setting.tscn` — setting container scene
 - `addons/kit/menu/settings/group.tscn` — group container scene
 - a scene from `Settings.menu_tabs` — the game's own settings tab

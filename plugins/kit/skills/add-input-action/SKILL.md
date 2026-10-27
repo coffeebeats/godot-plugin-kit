@@ -23,7 +23,7 @@ Everything the game owns is reachable from `project.godot`; nothing below assume
    - `addons/kit/system/input/actions/` — kit's menu action sets, for reference only; the submodule never gains an action
    - `project.godot` — `[input]` section for existing default bindings
    - the catalogue's `messages.pot` — existing `msgctxt "actions_*"` entries
-   - the system scene — the `Input` instance's `action_sets`, which kit's controls tab lists for rebinding
+   - the system scene — the `Input` instance's `action_sets`, which kit's controls tabs list for rebinding
 
 2. **Check if the action set exists** in the action-set directory. Action set files are `StdInputActionSet` resources (`.tres`). If the specified action set does not exist, create it (see step 3). If it does exist, skip to step 4.
 
@@ -45,13 +45,13 @@ Everything the game owns is reachable from `project.godot`; nothing below assume
 
    b. Run `godot --import --headless` to generate the UID.
 
-   c. Append the action set to `action_sets` on the `Input` instance in the system scene, so kit's controls tab lists it for rebinding, after the game's existing sets:
+   c. Append the action set to `action_sets` on the `Input` instance in the system scene, so kit's controls tabs list it for rebinding, after the game's existing sets:
 
    ```
    action_sets = Array[ExtResource("id_for_action_set_gd")]([ExtResource("id_for_gameplay_tres"), ExtResource("id_for_new_action_set_tres")])
    ```
 
-   Add the new set's `ext_resource` entry at the top of the file. Kit's controls tab under `addons/kit/menu/settings/controls/` is read-only.
+   Add the new set's `ext_resource` entry at the top of the file. Kit's controls tabs under `addons/kit/menu/settings/controls/` are read-only.
 
    d. Add a translation for the action set name using the `add-translation` skill. Action set display names use the set's `name` as the `msgid`, under one shared context:
    - `msgctxt "action_sets"`
@@ -68,7 +68,7 @@ Everything the game owns is reachable from `project.godot`; nothing below assume
 
    Add the action's `StringName` (e.g., `&"jump"`) to the correct array. If the array doesn't exist in the `.tres` file yet, add it under the `[resource]` section.
 
-   An `analog_2d` action names the stick (e.g., `&"combat_move"`, never `_x` or `_y`), and its four directions `<action>_left`, `<action>_right`, `<action>_up` and `<action>_down` also go in `actions_digital`, or std's `list_action_names` asserts. The game reads them with `Input.get_vector`. The directions get the bindings in step 5 and the controls tab rows; the stick gets neither. Both the stick and the four directions need a translation in step 6, since the Steam Input manifest names the stick and the controls tab names the directions.
+   An `analog_2d` action names the stick (e.g., `&"combat_move"`, never `_x` or `_y`), and its four directions `<action>_left`, `<action>_right`, `<action>_up` and `<action>_down` also go in `actions_digital`, or std's `list_action_names` asserts. The game reads them with `Input.get_vector`. The directions get the bindings in step 5 and the controls tabs' rows; the stick gets neither. Both the stick and the four directions need a translation in step 6, since the Steam Input manifest names the stick and the controls tabs name the directions.
 
 5. **Add default bindings in `project.godot`** under the `[input]` section. Each action needs a block like:
 
@@ -119,8 +119,8 @@ After adding a binding, check every action set that layers over the same origin,
 - the game's `gameplay.tres` — action set resource pattern
 - `addons/kit/system/input/actions/menu_options.tres` — a layer any set may enable (`parent` unset); a game's own layer for one set names it as `parent`
 - `addons/kit/system/input/actions/menu.tres` — kit's menu set, which carries the `ui_*` navigation actions
-- the system scene — `Input.action_sets`, the game's sets the controls tab lists
-- `addons/kit/menu/settings/controls/controls.gd` — how the controls tab lists them, above kit's menu sets
+- the system scene — `Input.action_sets`, the game's sets the controls tabs list
+- `addons/kit/menu/settings/controls/controls.gd` — how each controls tab lists them, above kit's menu sets
 - `project.godot` — `[input]` section for default bindings
 - the catalogue's `messages.pot` — `msgctxt "actions_*"` translation entries
 - the catalogue's `en_US.po` — corresponding English translations

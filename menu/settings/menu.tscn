@@ -89,7 +89,7 @@ action = &"ui_tab_prev"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-tabs = ["kit_options_sound", "kit_options_interface", "kit_options_display", "kit_options_controls"]
+tabs = ["kit_options_sound", "kit_options_interface", "kit_options_display", "kit_options_controller", "kit_options_keyboard_mouse"]
 content = NodePath("../../../../Body/MarginContainer/ScrollContainer/TabContents")
 
 [node name="GlyphTabNext" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Header/MarginContainer/HBoxContainer" unique_id=1501074617 instance=ExtResource("5_xbtwd")]
@@ -133,9 +133,15 @@ layout_mode = 2
 visible = false
 layout_mode = 2
 
-[node name="Controls" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Body/MarginContainer/ScrollContainer/TabContents" unique_id=403269405 instance=ExtResource("10_46fy4")]
+[node name="Controller" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Body/MarginContainer/ScrollContainer/TabContents" unique_id=403269405 instance=ExtResource("10_46fy4")]
 visible = false
 layout_mode = 2
+device_category = 1
+
+[node name="KeyboardMouse" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Body/MarginContainer/ScrollContainer/TabContents" unique_id=1530982711 instance=ExtResource("10_46fy4")]
+visible = false
+layout_mode = 2
+device_category = 2
 
 [node name="CloseButton" parent="CenterContainer/PanelContainer" unique_id=833171423 instance=ExtResource("12_close")]
 layout_mode = 2

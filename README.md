@@ -36,7 +36,7 @@ Each value the game owns is an export on a scene instanced in `System`:
 
 | Scene | Export | Value |
 | --- | --- | --- |
-| `system/input/input.tscn` | `action_sets` | The game's action sets, which the settings menu lists for rebinding. |
+| `system/input/input.tscn` | `action_sets` | The game's action sets and layers, which the settings menu's Controller and Keyboard & Mouse tabs list for rebinding. On Steam builds, Steam Input also reads a controller's binding against them, so list every set the game's manifest has. |
 | `system/setting/settings.tscn` | `menu_tabs` | The game's own settings menu tabs, keyed by their label's message ID. |
 | `system/setting/interface/font_scaling_observer.tscn` | `theme` | The font theme which the text scaling setting resizes. |
 | `system/save/saves.tscn` | `schema` | The game's save data, required. |
@@ -70,7 +70,7 @@ Each menu is a finished screen, used in place:
 - **Pause:** list `menu/pause/pusher.tscn` in a gameplay screen's `attachment_scenes`.
 - **Splash:** push `ui/splash/godot_screen.tres`, whose scene emits `advanced` once it is done. `ui/splash/splash.gd` makes a splash of any scene.
 
-For a different layout, assemble a menu from the scenes it is made of: the settings tabs and their `group` and `setting` rows, the controls tab's `action_set` groups, the save menu's `slot_button`, and the dialogs in `ui/menu/`.
+For a different layout, assemble a menu from the scenes it is made of: the settings tabs and their `group` and `setting` rows, the `controls` tab, placed once per `device_category`, with its `action_set` groups, the save menu's `slot_button`, and the dialogs in `ui/menu/`.
 
 ### Put UI inside gameplay
 

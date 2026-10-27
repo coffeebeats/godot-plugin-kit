@@ -11,6 +11,10 @@ const Bindings := preload("res://addons/std/input/godot/binding.gd")
 const Binding := preload("binding.gd")
 const Rebinder := preload("rebinder.gd")
 
+# -- DEFINITIONS --------------------------------------------------------------------- #
+
+const DEVICE_TYPE_KEYBOARD := StdInputDevice.DEVICE_TYPE_KEYBOARD
+
 # -- CONFIGURATION ------------------------------------------------------------------- #
 
 ## scope is the settings scope in which binding overrides will be stored.
@@ -23,12 +27,13 @@ const Rebinder := preload("rebinder.gd")
 ## NOTE: Only one of `action_set` and `bindings` may be specified.
 @export var action_set: StdInputActionSet = null
 
-## player_id is a player identifier which will be used to look up the action's input
-## origin bindings. Specifically, this is used to find the corresponding `StdInputSlot`
-## node, which must be present in the scene tree.
+## device_category is the category of device whose bindings in `action_set` are reset,
+## either `DEVICE_TYPE_KEYBOARD` for the keyboard and mouse or `DEVICE_TYPE_GENERIC` for
+## controllers.
 ##
-## ## NOTE: This property is only used if `action_set` is specified.
-@export var player_id: int = 1
+## NOTE: This property is only used if `action_set` is specified; each of `bindings`
+## resets its own device's binding.
+@export var device_category: StdInputDevice.DeviceType = DEVICE_TYPE_KEYBOARD
 
 @export_subgroup("Bindings ")
 
@@ -42,17 +47,11 @@ const Rebinder := preload("rebinder.gd")
 var _is_update_handled: bool = false
 var _prefix_category: StringName = &""
 var _prefix_key: StringName = &""
-var _slot: StdInputSlot = null
 
 @onready var _button: Button = get_node("Prompt")
 @onready var _icon: TextureRect = get_node("CenterContainer/TextureRect")
 
 # -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
-
-
-func _enter_tree() -> void:
-	_slot = StdInputSlot.for_player(player_id)
-	assert(_slot is StdInputSlot, "invalid state; missing player slot")
 
 
 func _ready() -> void:
@@ -64,7 +63,6 @@ func _ready() -> void:
 
 	Signals.connect_safe(_button.pressed, _on_pressed)
 	Signals.connect_safe(scope.config.changed, _on_config_changed)
-	Signals.connect_safe(_slot.device_activated, _on_device_activated)
 
 	custom_minimum_size = custom_minimum_size.max(_icon.get_combined_minimum_size())
 
@@ -101,17 +99,8 @@ func _ready() -> void:
 
 func _update_visibility() -> void:
 	if action_set is StdInputActionSet:
-		var active_device := _slot.get_active_device()
-		if not active_device:
-			return
-
-		visible = (
-			Bindings
-			. category_has_user_override(
-				scope,
-				action_set,
-				active_device.device_category,
-			)
+		visible = Bindings.category_has_user_override(
+			scope, action_set, device_category
 		)
 
 		return
@@ -135,22 +124,14 @@ func _on_config_changed(category: StringName, key: StringName) -> void:
 		_update_visibility()
 
 
-func _on_device_activated(_device: StdInputDevice) -> void:
-	_update_visibility()
-
-
 func _on_pressed() -> void:
 	var next_focus: Control = null
 
 	if action_set is StdInputActionSet:
-		var active_device := _slot.get_active_device()
-		if not active_device:
-			return
-
 		assert(not _is_update_handled, "invalid state; already handling update")
 		_is_update_handled = true
 
-		Bindings.reset_all_actions(scope, action_set, active_device.device_category)
+		Bindings.reset_all_actions(scope, action_set, device_category)
 
 		next_focus = find_valid_focus_neighbor(SIDE_BOTTOM)
 	else:
