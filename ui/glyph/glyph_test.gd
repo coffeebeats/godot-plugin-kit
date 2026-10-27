@@ -159,6 +159,42 @@ func test_glyph_hide_if_cursor_visible_hides_keyboard_glyph() -> void:
 	assert_false(_is_glyph_shown(glyph))
 
 
+func test_glyph_controller_prompt_lock_draws_the_connected_joypad_family() -> void:
+	# Given: A platform whose profile loaded, and the input scene with its slot.
+	add_child_autofree(PlatformScene.instantiate())
+	add_child_autofree(SystemInputScene.instantiate())
+
+	# Given: A loaded set holding `ui_accept`, which the engine binds to keys.
+	var actions := _load_actions()
+
+	# Given: A connected PlayStation joypad.
+	var slot := StdInputSlot.for_player(1)
+	slot.joypad_monitor.joy_connected.emit(0, StdInputDevice.DEVICE_TYPE_PS_5)
+
+	# Given: A key press makes the keyboard active.
+	_press_key(KEY_ENTER)
+	assert_eq(slot.device_type, StdInputDevice.DEVICE_TYPE_KEYBOARD, "precondition")
+
+	# Given: A button prompt setting locked to controller prompts.
+	var prompt := StdSettingsPropertyInt.new()
+	prompt.category = &"controls"
+	prompt.name = &"glyph/type"
+	prompt.scope = StdSettingsScope.new()
+	prompt.set_value(StdInputDevice.DEVICE_TYPE_GENERIC)
+
+	# Given: A glyph which reads that setting.
+	var glyph := _create_glyph(actions)
+	glyph.always_show_kbm = false
+	glyph.device_type_override = prompt
+
+	# When: The glyph enters the tree.
+	add_child_autofree(glyph)
+	await wait_process_frames(2)
+
+	# Then: The glyph draws the connected joypad's family, not the keyboard's.
+	assert_eq(glyph._get_device_type(), StdInputDevice.DEVICE_TYPE_PS_5)
+
+
 # -- TEST HOOKS ---------------------------------------------------------------------- #
 
 
@@ -216,6 +252,15 @@ func _press_joypad_button(button: JoyButton) -> void:
 		var event := InputEventJoypadButton.new()
 		event.device = 0
 		event.button_index = button
+		event.pressed = pressed
+		Input.parse_input_event(event)
+		Input.flush_buffered_events()
+
+
+func _press_key(keycode: Key) -> void:
+	for pressed in [true, false]:
+		var event := InputEventKey.new()
+		event.keycode = keycode
 		event.pressed = pressed
 		Input.parse_input_event(event)
 		Input.flush_buffered_events()

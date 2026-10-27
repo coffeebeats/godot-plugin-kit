@@ -288,6 +288,11 @@ msgctxt "button_prompt"
 msgid "kit_options_controls_button_prompt_kbm"
 msgstr "KB&M"
 
+#. Describes one possible option in the button prompt setting; fixes gamepad icons to use the style of the connected controller.
+msgctxt "button_prompt"
+msgid "kit_options_controls_button_prompt_controller"
+msgstr "Controller"
+
 #. Describes one possible option in the button prompt setting; fixes gamepad icons to use an Microsoft Xbox style.
 msgctxt "button_prompt"
 msgid "kit_options_controls_button_prompt_xbox"
