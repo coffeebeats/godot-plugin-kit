@@ -117,6 +117,46 @@ func test_input_get_active_device_without_player_returns_first_players_device() 
 	assert_same(got, StdInputSlot.for_player(1).get_active_device())
 
 
+func test_input_navigation_press_moving_focus_swallows_the_next_press() -> void:
+	# Given: The input scene, whose cooldown outlasts the test.
+	add_child_autofree(PlatformScene.instantiate())
+	var input: SystemInput = add_child_autofree(SystemInputScene.instantiate())
+	input.ui_navigation_cooldown = 60.0
+
+	# Given: A vertical list of two buttons, the first focused.
+	var buttons := _add_vertical_list()
+	buttons[0].grab_focus()
+
+	# When: A down press moves focus to the second button.
+	await _press(&"ui_down")
+
+	# When: An up press follows at once.
+	await _press(&"ui_up")
+
+	# Then: The up press was swallowed, so the second button keeps focus.
+	assert_true(buttons[1].has_focus())
+
+
+func test_input_navigation_press_moving_no_focus_keeps_the_next_press() -> void:
+	# Given: The input scene, whose cooldown outlasts the test.
+	add_child_autofree(PlatformScene.instantiate())
+	var input: SystemInput = add_child_autofree(SystemInputScene.instantiate())
+	input.ui_navigation_cooldown = 60.0
+
+	# Given: A vertical list of two buttons, the first focused.
+	var buttons := _add_vertical_list()
+	buttons[0].grab_focus()
+
+	# When: A left press moves no focus in the list.
+	await _press(&"ui_left")
+
+	# When: A down press follows at once.
+	await _press(&"ui_down")
+
+	# Then: The down press moved focus to the second button.
+	assert_true(buttons[1].has_focus())
+
+
 # -- TEST HOOKS ---------------------------------------------------------------------- #
 
 
@@ -142,3 +182,31 @@ func before_all() -> void:
 	ProjectSettings.set_setting(
 		&"input/ui_toggle_menu", {"deadzone": 0.5, "events": [escape]}
 	)
+
+
+# -- PRIVATE METHODS ----------------------------------------------------------------- #
+
+
+## _add_vertical_list adds a vertical list of two buttons and returns them in order.
+func _add_vertical_list() -> Array[Button]:
+	var list: VBoxContainer = add_child_autofree(VBoxContainer.new())
+	var buttons: Array[Button] = [Button.new(), Button.new()]
+	for button in buttons:
+		list.add_child(button)
+
+	return buttons
+
+
+## _press presses and releases `action`, letting the frames pass which deliver each to
+## the scene's input callbacks.
+func _press(action: StringName) -> void:
+	var event := InputEventAction.new()
+	event.action = action
+	event.pressed = true
+	Input.parse_input_event(event)
+	await wait_process_frames(2)
+
+	var release: InputEventAction = event.duplicate()
+	release.pressed = false
+	Input.parse_input_event(release)
+	await wait_process_frames(2)
