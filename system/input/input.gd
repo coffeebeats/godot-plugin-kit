@@ -38,6 +38,10 @@ const MODULE_ID := &"input"
 ## action_sets are the game's action sets, which the settings menu's controls tab lists
 ## for rebinding above kit's own. The settings menu loads at runtime, out of reach of
 ## the scene placing this node, so it reads the value here.
+##
+## NOTE: On Steam builds the Steam joypad monitor also reads a controller's binding
+## against these, and a controller binding only a left-out set's actions looks opted out
+## of the Steam Input API.
 @export var action_sets: Array[StdInputActionSet] = []
 
 ## focused_sound_group is the sound group used for focused UI elements.
