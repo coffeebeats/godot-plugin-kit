@@ -65,6 +65,21 @@ func test_generate_resolves_names_through_the_catalogues() -> void:
 	assert_false(got.contains('"set_Menu"\t\t\t\t\t"Menu"'))
 
 
+func test_generate_labels_every_action_through_the_catalogues() -> void:
+	# Given: A manifest with no configuration.
+	var manifest := KitSteamInGameActions.new()
+
+	# When: The manifest is generated.
+	var got := manifest.generate()
+
+	# Then: Each of kit's sets and layers labels its actions.
+	assert_true(got.contains('"action_ui_toggle_menu"\t\t\t\t\t"Menu"'))
+
+	# Then: No label falls through to the action's raw identifier.
+	var raw_labels := RegEx.create_from_string('"action_(\\w+)"\\s+"\\1"')
+	assert_null(raw_labels.search(got))
+
+
 # -- TEST HOOKS ---------------------------------------------------------------------- #
 
 
