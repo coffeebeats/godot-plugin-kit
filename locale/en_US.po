@@ -74,10 +74,30 @@ msgctxt "actions_Menu"
 msgid "ui_focus_prev"
 msgstr "Previous"
 
+#. Used as a category name for a group of input actions related to splash screens.
+msgctxt "action_sets"
+msgid "Splash"
+msgstr "Splash"
+
+#. The accept input action, which skips a splash screen.
+msgctxt "actions_Splash"
+msgid "ui_accept"
+msgstr "Accept"
+
+#. The cancel input action, which skips a splash screen.
+msgctxt "actions_Splash"
+msgid "ui_cancel"
+msgstr "Cancel"
+
 #. Used as a category name for a group of input actions related to the options menu.
 msgctxt "action_sets"
 msgid "MenuOptions"
 msgstr "Menu options"
+
+#. An input action that opens or closes a game menu, such as the pause or options menu.
+msgctxt "actions_MenuOptions"
+msgid "ui_toggle_menu"
+msgstr "Menu"
 
 #. Used as a category name for a group of input actions related to changing tabs in a tabbed menu.
 msgctxt "action_sets"
