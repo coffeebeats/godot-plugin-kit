@@ -59,6 +59,8 @@ func test_generate_resolves_names_through_the_catalogues() -> void:
 
 	# Then: The English section names the menu set from the catalogue.
 	assert_true(got.contains('"set_Menu"\t\t\t\t\t"Menus"'))
+
+	# Then: The English section names the accept action from the catalogue.
 	assert_true(got.contains('ui_accept"\t\t\t\t\t"Accept"'))
 
 	# Then: No section falls through to the set's raw identifier.
@@ -72,13 +74,15 @@ func test_generate_labels_every_action_through_the_catalogues() -> void:
 	# When: The manifest is generated.
 	var got := manifest.generate()
 
-	# Then: Each of kit's sets and layers labels its actions.
+	# Then: The options layer labels the action that toggles a menu.
 	assert_true(got.contains('ui_toggle_menu"\t\t\t\t\t"Menu"'))
 
-	# Then: No label falls through to the action's raw identifier, whether or not its
-	# key names its set.
-	var raw_labels := RegEx.create_from_string('"action_(?:\\w+_)?(ui_\\w+)"\\s+"\\1"')
-	assert_null(raw_labels.search(got))
+	# Then: No action in kit's sets and layers is labelled with its raw name.
+	var action_sets := KitSteamInGameActions.find_resources(&"StdInputActionSet")
+	for action_set: StdInputActionSet in action_sets:
+		for action in action_set.list_action_names(true):
+			var raw := RegEx.create_from_string('"action_\\w+"\\s+"%s"' % action)
+			assert_null(raw.search(got), action)
 
 
 # -- TEST HOOKS ---------------------------------------------------------------------- #
