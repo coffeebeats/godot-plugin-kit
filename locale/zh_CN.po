@@ -81,12 +81,12 @@ msgctxt "action_sets"
 msgid "Splash"
 msgstr ""
 
-#. An input action that confirms a splash screen.
+#. The accept input action, which skips a splash screen.
 msgctxt "actions_Splash"
 msgid "Accept"
 msgstr ""
 
-#. An input action that cancels a splash screen.
+#. The cancel input action, which skips a splash screen.
 msgctxt "actions_Splash"
 msgid "Cancel"
 msgstr ""
