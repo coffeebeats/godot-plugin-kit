@@ -1,5 +1,17 @@
 # Changelog
 
+## 3.0.1 (2026-11-01)
+
+## What's Changed
+* docs(readme): point the marketplace ref at v3 by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/108
+* chore(deps-dev): bump ruff from 0.17.2 to 0.17.3 in the python group by @dependabot[bot] in https://github.com/coffeebeats/godot-plugin-kit/pull/107
+* chore(deps): bump astral-sh/setup-uv from 10.3.2 to 10.3.3 in the github-actions group by @dependabot[bot] in https://github.com/coffeebeats/godot-plugin-kit/pull/106
+* fix(input): label the `Splash` and `MenuOptions` actions by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/111
+* chore(addons): bump `std` to v7.2.0 and `GodotSteam` to latest by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/112
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v3.0.0...v3.0.1
+
 ## 3.0.0 (2026-10-27)
 
 ## What's Changed
