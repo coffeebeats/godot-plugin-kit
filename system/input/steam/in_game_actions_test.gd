@@ -59,7 +59,7 @@ func test_generate_resolves_names_through_the_catalogues() -> void:
 
 	# Then: The English section names the menu set from the catalogue.
 	assert_true(got.contains('"set_Menu"\t\t\t\t\t"Menus"'))
-	assert_true(got.contains('"action_ui_accept"\t\t\t\t\t"Accept"'))
+	assert_true(got.contains('ui_accept"\t\t\t\t\t"Accept"'))
 
 	# Then: No section falls through to the set's raw identifier.
 	assert_false(got.contains('"set_Menu"\t\t\t\t\t"Menu"'))
@@ -73,10 +73,11 @@ func test_generate_labels_every_action_through_the_catalogues() -> void:
 	var got := manifest.generate()
 
 	# Then: Each of kit's sets and layers labels its actions.
-	assert_true(got.contains('"action_ui_toggle_menu"\t\t\t\t\t"Menu"'))
+	assert_true(got.contains('ui_toggle_menu"\t\t\t\t\t"Menu"'))
 
-	# Then: No label falls through to the action's raw identifier.
-	var raw_labels := RegEx.create_from_string('"action_(\\w+)"\\s+"\\1"')
+	# Then: No label falls through to the action's raw identifier, whether or not its
+	# key names its set.
+	var raw_labels := RegEx.create_from_string('"action_(?:\\w+_)?(ui_\\w+)"\\s+"\\1"')
 	assert_null(raw_labels.search(got))
 
 
