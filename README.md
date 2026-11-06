@@ -79,10 +79,22 @@ For a different layout, assemble a menu from the scenes it is made of: the setti
 A menu screen loads kit's `Menu` set, `system/input/actions/menu.tres`, which clears every other binding and carries the `ui_*` navigation actions, and enables the layers it needs over it. Kit ships only the sets and layers its own scenes load, and each of its layers names `Menu` as its `parent`. A layer over the game's own set belongs to the game, which writes it in its own input directory, usually `project/input/actions/`, under a name of its own, since every set and layer needs a unique name.
 
 1. Kit's pause and settings pushers open on `ui_toggle_menu`, which `menu_options.tres` carries over `Menu`. For gameplay, the game writes an options layer over its set that holds `ui_toggle_menu` and lists it in the map root's `action_set_layers`, so Escape pauses through `menu/pause/pusher.tscn`. It also lists the layer in `Input.menu_options_layers`. Bindings save under a layer's name, so that list is how a rebind in the controls tabs' `MenuOptions` group reaches the game's layer. Nothing ties the game's layer to kit's, so a kit release whose pushers expect another action names it in its release notes.
-2. A panel over the world that takes over input, such as a build menu, carries its own `StdInputActionSetLoader` with `active_while` set to `VISIBLE` and loads kit's `Menu` set, so a rebind in the controls tabs' `Menu` group reaches it. Whatever stays live while it shows goes in a layer of the game's own with `Menu` as `parent`, listed in the loader's `action_set_layers` and in `Input.action_sets`. An action that does something only while the panel shows, such as a build menu's item keys, lives only in that layer, so it has one binding. Escape reaches the panel as `ui_cancel` until it hides, and the set before it comes back then.
-3. Kit's map scenes place the map's loader before `UI` in tree order, which is what keeps that order on an uncover; a map built another way must keep its loader ahead of its panels.
-4. A button that doubles a bindable action, such as a build or a wave start, takes a `FocusHandler` and a `StdInputActionTrigger`; any other button connects `pressed`. The handler the action reaches validates it, since a key gets there whether or not the button is enabled.
-5. A screen with a text field lists the `ui_text_*` actions in a layer of its own.
+2. A menu over the world, such as a build or context menu, is a panel. Place `ui/panel/panel.tscn` in the map's `UI`, or `ui/panel/world_panel_2d.tscn` or `world_panel_3d.tscn` to follow a point in the world, put the game's buttons inside it, and open it through its `StdPanel` node or by showing it. While open, the panel keeps focus inside itself and loads kit's `Menu` set, so a rebind in the controls tabs' `Menu` group reaches it; the set before it comes back once it closes. Whatever stays live while it's open goes in a layer of the game's own with `Menu` as `parent`, listed in its loader's `action_set_layers` and in `Input.action_sets`. An action that does something only while the panel is open, such as a build menu's item keys, lives only in that layer, so it has one binding. A panel has no scrim; a menu that wants one is a screen.
+3. A button that doubles a bindable action, such as a build or a wave start, takes a `FocusHandler` and a `StdInputActionTrigger`; any other button connects `pressed`. The handler the action reaches validates it, since a key gets there whether or not the button is enabled.
+4. A screen with a text field lists the `ui_text_*` actions in a layer of its own.
+
+A panel's values are exports on its child nodes, which *Editable Children* on its instance shows:
+
+| Node | Export | Value |
+| --- | --- | --- |
+| `StdPanel` | `transition` | How the panel opens and closes, or `transition_open` and `transition_close` for each. Without one it opens and closes instantly. |
+| `StdPanel` | `close_actions` | The actions that close it, `ui_cancel` by default. |
+| `StdPanel` | `click_outside_to_close` | The mouse buttons whose press outside it closes it, the left one by default. The press still reaches what it lands on, so a HUD button beside the panel closes it and is pressed. |
+| `StdPanel` | `close_on_hide`, `open_on_show`, `close_when_covered` | Hiding the panel closes it and showing it opens it, both on by default. A screen covering the map closes it only with `close_when_covered`. |
+| `StdPanel` | `sound_open`, `sound_close` | The sounds it plays as it opens and closes, none by default. |
+| `StdInputActionSetLoader` | `action_set_layers` | The game's layers over `Menu` holding what stays live. |
+| `WorldTracker2D`, `WorldTracker3D` | `map`, `target` | The map, and the node in its world the panel follows. Until `target` is set, the panel stays where it is. An open panel follows its target off-screen and stays open; to close it instead, connect the tracker's `target_exited_view` to `StdPanel`'s `close`. |
+| `WorldTracker2D`, `WorldTracker3D` | `offset`, `flip_at_edges`, `viewport_margin` | Where the panel sits from its target. With `flip_at_edges` on, the default, it moves to the target's far side rather than cross the screen's edge, staying `viewport_margin` inside it. |
 
 ### Change the button prompts
 

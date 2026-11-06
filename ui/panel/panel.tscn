@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://bk8s5mg16rk2s"]
+
+[ext_resource type="Script" uid="uid://holox3h4k543" path="res://addons/std/screen/panel.gd" id="1_panel"]
+[ext_resource type="Script" uid="uid://uqm0k06ft6w2" path="res://addons/std/input/cursor_focus_scope.gd" id="2_scope"]
+[ext_resource type="Script" uid="uid://dlrw0lhorb5uc" path="res://addons/std/input/loader.gd" id="3_loader"]
+[ext_resource type="Resource" uid="uid://ldk7k2w5uvks" path="res://system/input/actions/menu.tres" id="4_menu"]
+
+[node name="Panel" type="PanelContainer" unique_id=2030283406]
+visible = false
+theme_type_variation = &"panel_dialog"
+
+[node name="StdPanel" type="Node" parent="." unique_id=121929065]
+script = ExtResource("1_panel")
+close_actions = Array[StringName]([&"ui_cancel"])
+click_outside_to_close = 1
+
+[node name="StdInputCursorFocusScope" type="Node" parent="." unique_id=1546606075]
+script = ExtResource("2_scope")
+
+[node name="StdInputActionSetLoader" type="Node" parent="." unique_id=233611423]
+script = ExtResource("3_loader")
+active_while = 1
+action_set = ExtResource("4_menu")

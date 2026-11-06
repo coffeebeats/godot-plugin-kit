@@ -1,8 +1,10 @@
+# gdlint:ignore=max-public-methods
 ##
 ## Unit tests for `KitWorldTracker` — verifies the shared tracking behavior (lifecycle
-## and view-crossing signals, host positioning, off-screen clamping, startup assertions)
-## through a stub subclass with a fakeable projection. Dimension-specific projection is
-## covered by `world_tracker_2d_test.gd` and `world_tracker_3d_test.gd`.
+## and view-crossing signals, host positioning, off-screen clamping, edge flipping,
+## startup assertions) through a stub subclass with a fakeable projection.
+## Dimension-specific projection is covered by `world_tracker_2d_test.gd` and
+## `world_tracker_3d_test.gd`.
 ##
 
 extends GutTest
@@ -289,6 +291,167 @@ func test_resolve_offscreen_override_replaces_default() -> void:
 
 	# Then: The override decides the host position, not the built-in `clamped` logic.
 	assert_eq(_host.global_position, Vector2(7, 7))
+
+
+func test_flipping_host_that_fits_stays_put() -> void:
+	# Given: A flipping tracker with a sized host and an offset.
+	_host.size = Vector2(80, 40)
+	var tracker := _attach_tracker(_host)
+	tracker.flip_at_edges = true
+	tracker.offset = Vector2(10, 10)
+
+	# Given: A target whose host fits on-screen beside it.
+	tracker.projection = Vector2(100, 100)
+
+	# When: A frame is processed.
+	await wait_process_frames(1)
+
+	# Then: The host sits at the projection plus the offset.
+	assert_eq(_host.global_position, Vector2(110, 110))
+
+
+func test_flipping_host_crossing_an_edge_moves_past_the_target() -> void:
+	# Given: A flipping tracker with a sized host and an offset.
+	_host.size = Vector2(80, 40)
+	var tracker := _attach_tracker(_host)
+	tracker.flip_at_edges = true
+	tracker.offset = Vector2(10, 10)
+
+	# Given: A target whose host would cross the right edge.
+	tracker.projection = Vector2(600, 100)
+
+	# When: A frame is processed.
+	await wait_process_frames(1)
+
+	# Then: The host flips to the target's left and keeps its vertical offset.
+	assert_eq(_host.global_position, Vector2(510, 110))
+
+	# When: The target moves near the lower-right corner.
+	tracker.projection = Vector2(600, 340)
+	await wait_process_frames(1)
+
+	# Then: The host flips on both axes.
+	assert_eq(_host.global_position, Vector2(510, 290))
+
+
+func test_flipping_host_without_room_on_the_far_side_stays_put() -> void:
+	# Given: A flipping tracker whose host is wider than either side of its target.
+	_host.size = Vector2(400, 40)
+	var tracker := _attach_tracker(_host)
+	tracker.flip_at_edges = true
+
+	# Given: A target at the viewport's center.
+	tracker.projection = Vector2(320, 100)
+
+	# When: A frame is processed.
+	await wait_process_frames(1)
+
+	# Then: The host sits at the projection.
+	assert_eq(_host.global_position, Vector2(320, 100))
+
+
+func test_flipping_host_whose_shifted_point_leaves_view_flips_into_view() -> void:
+	# Given: A flipping tracker with a sized host and an offset.
+	_host.size = Vector2(80, 40)
+	var tracker := _attach_tracker(_host)
+	tracker.flip_at_edges = true
+	tracker.offset = Vector2(24, 0)
+	watch_signals(tracker)
+
+	# Given: An on-screen target whose shifted point is past the right edge.
+	tracker.projection = Vector2(630, 100)
+
+	# When: A frame is processed.
+	await wait_process_frames(1)
+
+	# Then: The host flips to the target's left.
+	assert_eq(_host.global_position, Vector2(526, 100))
+
+	# Then: The host counts as in view.
+	assert_signal_emit_count(tracker, "target_entered_view", 1)
+	assert_signal_emit_count(tracker, "target_exited_view", 0)
+
+
+func test_flipping_host_whose_target_is_shifted_into_view_flips() -> void:
+	# Given: A flipping tracker with a sized host and an offset raising it.
+	_host.size = Vector2(80, 40)
+	var tracker := _attach_tracker(_host)
+	tracker.flip_at_edges = true
+	tracker.offset = Vector2(24, -30)
+
+	# Given: A target below the bottom edge whose shifted point is on-screen.
+	tracker.projection = Vector2(600, 370)
+
+	# When: A frame is processed.
+	await wait_process_frames(1)
+
+	# Then: The host flips to the target's left; above it, flipping has no room.
+	assert_eq(_host.global_position, Vector2(496, 340))
+
+
+func test_flipping_clamped_host_without_room_clamps_to_the_edge() -> void:
+	# Given: A flipping, clamped tracker whose host is too wide for either side.
+	_host.size = Vector2(620, 40)
+	var tracker := _attach_tracker(_host)
+	tracker.flip_at_edges = true
+	tracker.clamped = true
+	tracker.offset = Vector2(24, 0)
+
+	# Given: An on-screen target whose shifted point is past the right edge.
+	tracker.projection = Vector2(630, 100)
+
+	# When: A frame is processed.
+	await wait_process_frames(1)
+
+	# Then: The host clamps to the viewport's edge.
+	assert_almost_eq(_host.global_position, Vector2(20, 157.6), Vector2(0.1, 0.1))
+
+
+func test_flipping_host_whose_target_is_past_the_edge_stays_off_screen() -> void:
+	# Given: A flipping tracker with a sized host and an offset.
+	_host.size = Vector2(80, 40)
+	var tracker := _attach_tracker(_host)
+	tracker.flip_at_edges = true
+	tracker.offset = Vector2(24, 0)
+	watch_signals(tracker)
+
+	# Given: A target past the right edge by less than the offset.
+	tracker.projection = Vector2(650, 100)
+
+	# When: A frame is processed.
+	await wait_process_frames(1)
+
+	# Then: The host follows the shifted point off-screen.
+	assert_eq(_host.global_position, Vector2(674, 100))
+
+	# Then: The host counts as out of view.
+	assert_signal_emit_count(tracker, "target_entered_view", 0)
+	assert_signal_emit_count(tracker, "target_exited_view", 1)
+
+
+func test_tracker_without_target_waits_until_one_is_set() -> void:
+	# Given: A tracker without a target, its host at a known position.
+	_host.global_position = Vector2(5, 5)
+	var tracker := _StubTracker.new()
+	tracker.map = _map
+	tracker.projection = Vector2(100, 50)
+	watch_signals(tracker)
+
+	# When: It enters the tree and a frame is processed.
+	_host.add_child(tracker)
+	await wait_process_frames(1)
+
+	# Then: It hasn't started, and the host is where it was.
+	assert_signal_emit_count(tracker, "started", 0)
+	assert_eq(_host.global_position, Vector2(5, 5))
+
+	# When: A target is set and a frame is processed.
+	tracker.target = _target
+	await wait_process_frames(1)
+
+	# Then: It starts and moves the host to the projection.
+	assert_signal_emit_count(tracker, "started", 1)
+	assert_eq(_host.global_position, Vector2(100, 50))
 
 
 func test_parent_must_be_control_asserts() -> void:
