@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://bk4gpjmehp4u6"]
+
+[ext_resource type="PackedScene" uid="uid://4brfq2tumt1o" path="res://ui/menu/alert.tscn" id="1_alert"]
+[ext_resource type="Script" uid="uid://b7ynn70doalds" path="res://addons/std/screen/screen.gd" id="2_screen"]
+[ext_resource type="Script" uid="uid://bedrw0ulxu5kq" path="res://addons/std/transition/fade.gd" id="3_fade"]
+[ext_resource type="Script" uid="uid://biupfx6h42h8k" path="res://addons/std/tween/curve.gd" id="4_curve"]
+[ext_resource type="Script" uid="uid://dmvb2tblavngm" path="res://addons/std/input/action_set_layer.gd" id="5_layer"]
+[ext_resource type="Resource" uid="uid://bcsts082smqrp" path="res://system/input/actions/menu_options.tres" id="6_opts"]
+
+[sub_resource type="Resource" id="Resource_curve"]
+script = ExtResource("4_curve")
+duration = 0.25
+metadata/_custom_type_script = "uid://biupfx6h42h8k"
+
+[sub_resource type="Resource" id="Resource_fade"]
+script = ExtResource("3_fade")
+curve = SubResource("Resource_curve")
+metadata/_custom_type_script = "uid://bedrw0ulxu5kq"
+
+[sub_resource type="Resource" id="Resource_screen"]
+resource_local_to_scene = true
+script = ExtResource("2_screen")
+transition = SubResource("Resource_fade")
+attachment_scenes = PackedStringArray("uid://u6xwo0vi803h")
+
+[node name="ResultDialog" unique_id=1820374615 instance=ExtResource("1_alert")]
+screen = SubResource("Resource_screen")
+dismissable = false
+primary_label = "kit_alert_continue"
+secondary_label = ""
+
+[node name="StdInputActionSetLoader" parent="." index="0"]
+action_set_layers = Array[ExtResource("5_layer")]([ExtResource("6_opts")])
+
+[node name="Secondary" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer" parent_id_path=PackedInt32Array(1339541960) index="0" unique_id=2020329531]
+visible = false
+text = ""
+
+[node name="FocusHandler" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer/Secondary" index="0" unique_id=976075707]
+use_as_anchor = false
+
+[node name="Primary" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer" parent_id_path=PackedInt32Array(1339541960) index="1" unique_id=1951974589]
+text = "kit_alert_continue"
+
+[editable path="CenterContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer/Secondary"]
+[editable path="CenterContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer/Primary"]
