@@ -25,7 +25,6 @@ border_fade_in = ExtResource("2_lmvm6")
 border_fade_out = ExtResource("3_4b0ty")
 
 [node name="FocusHandler" parent="." unique_id=1438764810 instance=ExtResource("4_mguvk")]
-layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1265623181]
 layout_mode = 2

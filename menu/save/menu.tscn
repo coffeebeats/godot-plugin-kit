@@ -18,10 +18,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="StdInputActionSetLoader" type="Control" parent="."]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="StdInputActionSetLoader" type="Node" parent="."]
 script = ExtResource("8_loader")
 action_set = ExtResource("9_menu")
 

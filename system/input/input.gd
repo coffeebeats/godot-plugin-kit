@@ -25,6 +25,11 @@ signal focus_root_changed(root: Control)
 const StdInputDevice := preload("res://addons/std/input/device.gd")
 const Signals := preload("res://addons/std/event/signal.gd")
 const Profile := preload("../../platform/profile/profile.gd")
+const MenuActions := preload("actions/menu.tres")
+const MenuBindingActions := preload("actions/menu_binding.tres")
+const MenuOptionsActions := preload("actions/menu_options.tres")
+const MenuTabbedActions := preload("actions/menu_tabbed.tres")
+const SplashActions := preload("actions/splash.tres")
 
 # -- DEFINITIONS --------------------------------------------------------------------- #
 
@@ -43,6 +48,12 @@ const MODULE_ID := &"input"
 ## against these, and a controller binding only a left-out set's actions looks opted out
 ## of the Steam Input API.
 @export var action_sets: Array[StdInputActionSet] = []
+
+## menu_options_layers are the game's layers over its own sets which carry kit's
+## `MenuOptions` actions, such as `ui_toggle_menu` for the pause and settings pushers.
+## A rebind in the controls tabs' `MenuOptions` group writes to each one declaring it,
+## so list them here and not in `action_sets`.
+@export var menu_options_layers: Array[StdInputActionSetLayer] = []
 
 ## focused_sound_group is the sound group used for focused UI elements.
 @export var focused_sound_group: StdSoundGroup = null
@@ -183,6 +194,10 @@ func _ready() -> void:
 		_report_failed("missing the first player's input slot")
 		return
 
+	if not StdInputActionSet.validate(_list_action_sets()):
+		_report_failed("invalid action sets")
+		return
+
 	_cursor = cursors[0]
 
 	# Forward the `StdInputCursor` events.
@@ -207,6 +222,24 @@ func _get_module_requires() -> Array[StringName]:
 
 
 # -- PRIVATE METHODS ----------------------------------------------------------------- #
+
+
+## _list_action_sets returns kit's sets and layers followed by the game's, each listed
+## once.
+func _list_action_sets() -> Array[StdInputActionSet]:
+	var listed: Array[StdInputActionSet] = [
+		MenuActions,
+		MenuBindingActions,
+		MenuOptionsActions,
+		MenuTabbedActions,
+		SplashActions,
+	]
+
+	for action_set in action_sets + menu_options_layers:
+		if action_set not in listed:
+			listed.append(action_set)
+
+	return listed
 
 
 ## _start_navigation_cooldown starts `ui_navigation_cooldown` if focus has moved off the

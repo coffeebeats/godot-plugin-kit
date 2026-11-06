@@ -104,7 +104,9 @@ Godot's InputMap is project-global, so every action set shares one namespace. Pr
 
 ## Layers
 
-A layer adds actions on top of the set it names as `parent`, and is enabled only while that set is loaded. Kit's `menu_options.tres` (`ui_toggle_menu`) sits over its `Menu` set, so a map that pauses on Escape enables a layer of the game's own over the game's set, holding `ui_toggle_menu`. Kit's menus navigate with the `ui_*` actions in its `Menu` set, so a panel inside gameplay that navigates gets a layer of the game's own holding the `ui_*` actions it needs, enabled while the panel is visible; a player rebinds those apart from the menus'. A layer the game owns names its set as `parent`, and the Steam Input manifest writes it under that set.
+A set is a mode of play, and loading one clears every other binding. A layer adds actions on top of the set it names as `parent`, and is enabled only while that set is loaded. Use a set for a new mode, such as driving or a menu, and a layer for actions that join a mode only sometimes, such as while a panel shows.
+
+Every set and layer needs a unique name, and bindings save under it. Kit ships only the layers its own scenes load, over its `Menu` set, so a layer over one of the game's sets is the game's own. Write it beside the game's sets under a name of its own rather than copying kit's. Kit's `menu_options.tres` carries `ui_toggle_menu` over `Menu`, so a map that pauses on Escape enables a game layer over the game's set that holds `ui_toggle_menu`. The system scene lists that layer in `menu_options_layers` rather than `action_sets`, so the controls tabs' `MenuOptions` group rebinds it along with kit's. That group shows only kit's `MenuOptions` actions, so an action of the game's own goes in a set or layer listed in `action_sets`. A panel inside gameplay that takes over input loads kit's `Menu` set, so it navigates with the menus' bindings, and a game layer with `Menu` as `parent` holds whatever stays live and any action that works only while the panel shows. The Steam Input manifest writes each layer under its `parent`.
 
 ## Binding collisions
 
@@ -117,9 +119,9 @@ After adding a binding, check every action set that layers over the same origin,
 ## Key reference files
 
 - the game's `gameplay.tres` — action set resource pattern
-- `addons/kit/system/input/actions/menu_options.tres` — kit's options layer, with its `Menu` set as `parent`; a game's own layer names the game's set the same way
-- `addons/kit/system/input/actions/menu.tres` — kit's menu set, which carries the `ui_*` navigation actions
-- the system scene — `Input.action_sets`, the game's sets the controls tabs list
+- `addons/kit/system/input/actions/menu_options.tres` — kit's options layer, with its `Menu` set as `parent`; the game writes its own layer over its own set under its own name
+- `addons/kit/system/input/actions/menu.tres` — kit's menu set, which carries the `ui_*` navigation actions and which a panel taking over input loads
+- the system scene — `Input.action_sets`, the game's sets and layers the controls tabs list, and `Input.menu_options_layers`, the game's layers carrying kit's options actions
 - `addons/kit/menu/settings/controls/controls.gd` — how each controls tab lists them, above kit's menu sets
 - `project.godot` — `[input]` section for default bindings
 - the catalogue's `messages.pot` — `msgctxt "actions_*"` translation entries

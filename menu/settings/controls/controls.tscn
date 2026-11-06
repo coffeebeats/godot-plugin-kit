@@ -181,6 +181,7 @@ action_set = ExtResource("22_6tsaj")
 scope = ExtResource("21_dqueq")
 
 [node name="MenuOptions" parent="ActionSets" unique_id=123406559 instance=ExtResource("19_ngc7g")]
+unique_name_in_owner = true
 layout_mode = 2
 action_set = ExtResource("28_8eihr")
 scope = ExtResource("21_dqueq")

@@ -8,4 +8,3 @@ size_flags_horizontal = 3
 text = "kit_save_slots_delete"
 
 [node name="FocusHandler" parent="." instance=ExtResource("1_focus")]
-layout_mode = 0

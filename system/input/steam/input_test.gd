@@ -1,6 +1,6 @@
 ##
 ## Tests for the Steam Input implementation's scene, which wires std's Steam joypad
-## monitor to kit's sets, the game's sets and the Godot joypad monitor.
+## monitor to kit's sets, the game's sets and layers, and the Godot joypad monitor.
 ##
 
 extends GutTest
@@ -36,8 +36,14 @@ func test_input_monitor_reads_bindings_against_kit_and_game_sets() -> void:
 	gameplay.name = &"Gameplay"
 	var action_sets: Array[StdInputActionSet] = [gameplay, Menu]
 
+	# Given: The game's options layer over its set.
+	var options := StdInputActionSetLayer.new()
+	options.name = &"GameplayOptions"
+	options.parent = gameplay
+	var layers: Array[StdInputActionSetLayer] = [options]
+
 	# When: The Steam input scene enters the tree under the input system.
-	var input := _add_input(action_sets)
+	var input := _add_input(action_sets, layers)
 
 	# Then: Its monitor holds each of kit's sets and layers.
 	var monitor: Node = input.get_node(^"JoypadMonitor")
@@ -45,11 +51,26 @@ func test_input_monitor_reads_bindings_against_kit_and_game_sets() -> void:
 	for action_set in kit_sets:
 		assert_has(monitor.action_sets, action_set)
 
-	# Then: It holds the game's set.
+	# Then: It holds the game's set and options layer.
 	assert_has(monitor.action_sets, gameplay)
+	assert_has(monitor.action_sets, options)
 
 	# Then: It holds a set both list once.
 	assert_eq(monitor.action_sets.count(Menu), 1)
+
+
+func test_input_monitor_kit_sets_are_each_validated_by_the_input_system() -> void:
+	# Given: The Steam input scene, whose monitor lists kit's own sets and layers.
+	var input: Node = autofree(_input_scene.instantiate())
+
+	# When: The input system lists the sets it validates.
+	var listed: Array[StdInputActionSet] = (
+		autofree(SystemInput.new())._list_action_sets()
+	)
+
+	# Then: Each of kit's sets on the monitor is among them.
+	for action_set in input.get_node(^"JoypadMonitor").action_sets:
+		assert_has(listed, action_set)
 
 
 func test_input_monitor_holds_godot_joypad_monitor() -> void:
@@ -81,12 +102,17 @@ func should_skip_script():
 
 
 ## _add_input adds a platform whose profile loaded, then the Steam input scene under an
-## input system listing `action_sets`, as the system's loader places it on Steam builds.
-func _add_input(action_sets: Array[StdInputActionSet] = []) -> Node:
+## input system listing `action_sets` and `menu_options_layers`, as the system's loader
+## places it on Steam builds.
+func _add_input(
+	action_sets: Array[StdInputActionSet] = [],
+	menu_options_layers: Array[StdInputActionSetLayer] = [],
+) -> Node:
 	add_child_autofree(PlatformScene.instantiate())
 
 	var system := SystemInput.new()
 	system.action_sets = action_sets
+	system.menu_options_layers = menu_options_layers
 
 	var input := _input_scene.instantiate()
 	system.add_child(input)

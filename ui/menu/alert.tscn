@@ -22,10 +22,7 @@ grow_vertical = 2
 script = ExtResource("1_script")
 screen = SubResource("SubResource_screen")
 
-[node name="StdInputActionSetLoader" type="Control" parent="."]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="StdInputActionSetLoader" type="Node" parent="."]
 script = ExtResource("5_loader")
 action_set = ExtResource("6_menu")
 

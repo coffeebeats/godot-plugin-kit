@@ -8,8 +8,13 @@ extends GutTest
 # -- DEPENDENCIES -------------------------------------------------------------------- #
 
 const Binding := preload("binding.gd")
+const Bindings := preload("res://addons/std/input/godot/binding.gd")
+const BindingsScope := preload("res://system/input/unknown/bindings_scope.tres")
 const ControlsScene := preload("controls.tscn")
+const MenuOptions := preload("res://system/input/actions/menu_options.tres")
 const PlatformScene := preload("res://premade/platform.tscn")
+const Rebinder := preload("rebinder.gd")
+const Reset := preload("reset.gd")
 const SystemInputScene := preload("res://system/input/input.tscn")
 
 # -- DEFINITIONS --------------------------------------------------------------------- #
@@ -32,6 +37,17 @@ const _GAME_ACTIONS: Array[StringName] = [
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
 var _added_actions: Array[StringName] = []
+
+## _game_options is the game's options layer over its own set, carrying pause.
+var _game_options: StdInputActionSetLayer = null
+
+## _game_shop is a game layer over the same set carrying none of kit's options actions.
+var _game_shop: StdInputActionSetLayer = null
+
+## _input drives the tab `_mount_controls` mounted.
+var _input: StdTestInput = null
+
+var _translations: Array[Translation] = []
 
 # -- TEST METHODS -------------------------------------------------------------------- #
 
@@ -144,6 +160,77 @@ func test_controls_controller_tab_without_a_joypad_disables_rebinding() -> void:
 		assert_false(binding.button.disabled)
 
 
+func test_controls_menu_options_rebind_writes_each_game_layer_declaring_it() -> void:
+	# Given: The game lists its options layer and its shop layer for kit's options.
+	_list_game_layers()
+
+	# Given: A keyboard and mouse tab, shown in a screen.
+	var controls := await _mount_controls()
+	var row: Binding = _list_bindings(controls.get_node(^"%MenuOptions"))[0]
+
+	# When: The pause action's primary binding is clicked.
+	await _click(row.button)
+	assert_true(_is_rebinder_open(), "precondition")
+
+	# When: P is pressed.
+	_input.press_key(KEY_P)
+	_input.release_key(KEY_P)
+	await wait_process_frames(2)
+
+	# Then: Kit's options layer and the game's both bind pause to P.
+	assert_eq(_bound_keycode(MenuOptions), KEY_P)
+	assert_eq(_bound_keycode(_game_options), KEY_P)
+
+	# Then: The game layer which lacks the action is untouched.
+	assert_false(
+		Bindings.category_has_user_override(BindingsScope, _game_shop, _KEYBOARD)
+	)
+
+
+func test_controls_menu_options_row_reset_resets_each_game_layer_declaring_it() -> void:
+	# Given: The game lists its options layer and its shop layer for kit's options.
+	_list_game_layers()
+
+	# Given: Pause bound to P in kit's options layer and the game's.
+	for action_set: StdInputActionSet in [MenuOptions, _game_options]:
+		Bindings.bind_action(
+			BindingsScope, action_set, &"ui_toggle_menu", _key(KEY_P), _KEYBOARD
+		)
+
+	# Given: A keyboard and mouse tab, shown in a screen.
+	var controls := await _mount_controls()
+	var row: Binding = _list_bindings(controls.get_node(^"%MenuOptions"))[0]
+
+	# When: The pause action's reset is clicked.
+	await _click(_find_reset(row).get_node(^"Prompt"))
+
+	# Then: Neither layer overrides pause any longer.
+	assert_false(_has_user_override(MenuOptions))
+	assert_false(_has_user_override(_game_options))
+
+
+func test_controls_menu_options_group_reset_resets_each_game_layer() -> void:
+	# Given: The game lists its options layer and its shop layer for kit's options.
+	_list_game_layers()
+
+	# Given: Pause bound to P in kit's options layer and the game's.
+	for action_set: StdInputActionSet in [MenuOptions, _game_options]:
+		Bindings.bind_action(
+			BindingsScope, action_set, &"ui_toggle_menu", _key(KEY_P), _KEYBOARD
+		)
+
+	# Given: A keyboard and mouse tab, shown in a screen.
+	var controls := await _mount_controls()
+
+	# When: The options group's reset is clicked.
+	var group := controls.get_node(^"%MenuOptions")
+	await _click(group.get_node(^"%Reset").get_node(^"Prompt"))
+
+	# Then: Neither layer overrides pause any longer.
+	assert_false(_has_user_override(MenuOptions))
+	assert_false(_has_user_override(_game_options))
+
+
 # -- TEST HOOKS ---------------------------------------------------------------------- #
 
 
@@ -154,16 +241,44 @@ func after_all() -> void:
 
 	_added_actions.clear()
 
+	for translation in _translations:
+		TranslationServer.remove_translation(translation)
+
+	_translations.clear()
+
 
 func after_each() -> void:
+	# NOTE: The game frees its main scene before the input autoload, so the mounted tab
+	# goes first here too, while the slot its bindings watch still exists.
+	if is_instance_valid(_input):
+		_input.free()
+
 	# NOTE: The Godot backend keeps the loaded set across slots, so leave an empty one
 	# behind rather than a set whose actions a later test's input map lacks.
 	var slot := StdInputSlot.for_player(1)
 	if slot:
 		slot.load_action_set(StdInputActionSet.new())
 
+	# NOTE: The tab's scope is a shared resource, so a rebind would outlive the test.
+	for action_set: StdInputActionSet in [MenuOptions, _game_options, _game_shop]:
+		Bindings.reset_all_actions(BindingsScope, action_set, _KEYBOARD)
+
+	# NOTE: The rebinder reuses one instance, which the screen manager freed with itself,
+	# so a later test must not find the freed one.
+	Rebinder._instance = null
+
 
 func before_all() -> void:
+	# NOTE: The rebinder's title formats a translated template, and kit's project lists
+	# no catalogues, so this loads the shipped ones the way a game's settings would.
+	for path in DirAccess.get_files_at("res://locale"):
+		if not path.ends_with(".mo"):
+			continue
+
+		var translation: Translation = load("res://locale".path_join(path))
+		TranslationServer.add_translation(translation)
+		_translations.append(translation)
+
 	# NOTE: std reads an action's defaults from the project settings, so each action is
 	# added there as well as to the input map, as a game's project defines it.
 	for action in _GAME_ACTIONS:
@@ -179,6 +294,19 @@ func before_each() -> void:
 	# Given: A platform whose profile loaded, and the input scene with its slot.
 	add_child_autofree(PlatformScene.instantiate())
 	add_child_autofree(SystemInputScene.instantiate())
+
+	var gameplay := StdInputActionSet.new()
+	gameplay.name = &"Gameplay"
+
+	_game_options = StdInputActionSetLayer.new()
+	_game_options.name = &"GameplayOptions"
+	_game_options.parent = gameplay
+	_game_options.actions_digital = [&"ui_toggle_menu"] as Array[StringName]
+
+	_game_shop = StdInputActionSetLayer.new()
+	_game_shop.name = &"GameplayShop"
+	_game_shop.parent = gameplay
+	_game_shop.actions_digital = [&"ui_accept"] as Array[StringName]
 
 
 # -- PRIVATE METHODS ----------------------------------------------------------------- #
@@ -216,9 +344,62 @@ func _add_controls(device_category: StdInputDevice.DeviceType) -> VBoxContainer:
 	return controls
 
 
+func _bound_keycode(action_set: StdInputActionSet) -> Key:
+	var binding := (
+		Bindings
+		. get_action_binding(
+			BindingsScope,
+			action_set,
+			&"ui_toggle_menu",
+			_KEYBOARD,
+			StdInputDeviceActions.BINDING_INDEX_PRIMARY,
+		)
+	)
+	return (binding as InputEventKey).keycode if binding is InputEventKey else KEY_NONE
+
+
+## _click clicks `control` and lets the frames pass which open or close a screen.
+func _click(control: Control) -> void:
+	_input.click(control)
+	await wait_process_frames(2)
+
+
 func _connect_joypad() -> void:
 	StdInputSlot.for_player(1).joypad_monitor.joy_connected.emit(
 		_JOYPAD, StdInputDevice.DEVICE_TYPE_XBOX_ONE
+	)
+
+
+## _find_reset returns the reset button in `binding`'s row.
+func _find_reset(binding: Binding) -> Reset:
+	for node in binding.get_parent().get_children():
+		if node is Reset:
+			return node
+
+	return null
+
+
+func _has_user_override(action_set: StdInputActionSet) -> bool:
+	return Bindings.action_has_user_override(
+		BindingsScope, action_set, &"ui_toggle_menu", _KEYBOARD
+	)
+
+
+func _is_rebinder_open() -> bool:
+	return not StdGroup.is_empty(Rebinder.GROUP_REBINDER)
+
+
+func _key(keycode: Key) -> InputEventKey:
+	var event := InputEventKey.new()
+	event.keycode = keycode
+	return event
+
+
+## _list_game_layers lists the game's options and shop layers in the input system's
+## `menu_options_layers`, as a game sets them on its `Input` instance.
+func _list_game_layers() -> void:
+	KitSystems.input().menu_options_layers = (
+		[_game_options, _game_shop] as Array[StdInputActionSetLayer]
 	)
 
 
@@ -229,3 +410,17 @@ func _list_bindings(controls: Node) -> Array[Binding]:
 			bindings.append(node)
 
 	return bindings
+
+
+## _mount_controls mounts a keyboard and mouse tab in a screen, as the settings menu
+## shows it, so its rows can open the rebinder over it, and returns the tab.
+func _mount_controls() -> VBoxContainer:
+	var manager := StdScreenManager.new()
+	_input = await StdTestInput.mount(self, manager)
+
+	var controls: VBoxContainer = ControlsScene.instantiate()
+	controls.device_category = _KEYBOARD
+	manager.push(StdScreen.new(), controls)
+	await wait_process_frames(2)
+
+	return controls

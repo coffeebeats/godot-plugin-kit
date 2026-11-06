@@ -7,4 +7,3 @@
 script = ExtResource("1_1sudd")
 
 [node name="FocusHandler" parent="." unique_id=1558508030 instance=ExtResource("2_0ic2f")]
-layout_mode = 0

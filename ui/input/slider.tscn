@@ -20,7 +20,6 @@ size_flags_vertical = 4
 size_flags_stretch_ratio = 9.0
 
 [node name="FocusHandler" parent="HSlider" unique_id=1272590389 instance=ExtResource("2_5m6je")]
-layout_mode = 0
 
 [node name="Label" type="Label" parent="." unique_id=1886732228]
 layout_mode = 2

@@ -35,6 +35,13 @@ const DEVICE_TYPE_KEYBOARD := StdInputDevice.DEVICE_TYPE_KEYBOARD
 ## resets its own device's binding.
 @export var device_category: StdInputDevice.DeviceType = DEVICE_TYPE_KEYBOARD
 
+## linked_layers are layers over other sets which declare some of `action_set`'s
+## actions. A reset also returns those actions' bindings in each of them to their
+## defaults.
+##
+## NOTE: This property is only used if `action_set` is specified.
+@export var linked_layers: Array[StdInputActionSetLayer] = []
+
 @export_subgroup("Bindings ")
 
 ## bindings is a list of `Binding`-typed nodes which this `Reset` node will apply to.
@@ -97,6 +104,20 @@ func _ready() -> void:
 # -- PRIVATE METHODS ----------------------------------------------------------------- #
 
 
+## _reset_linked_layers returns the bindings of `action_set`'s actions in each of
+## `linked_layers` to their defaults, leaving the layers' other actions alone.
+func _reset_linked_layers() -> void:
+	for layer in linked_layers:
+		var actions := layer.list_action_names()
+
+		for action in action_set.list_action_names():
+			if action not in actions or action in action_set.actions_analog_2d:
+				continue
+
+			for index in StdInputDeviceActions.BindingIndex.values():
+				Bindings.reset_action(scope, layer, action, device_category, index)
+
+
 func _update_visibility() -> void:
 	if action_set is StdInputActionSet:
 		visible = Bindings.category_has_user_override(
@@ -132,6 +153,7 @@ func _on_pressed() -> void:
 		_is_update_handled = true
 
 		Bindings.reset_all_actions(scope, action_set, device_category)
+		_reset_linked_layers()
 
 		next_focus = find_valid_focus_neighbor(SIDE_BOTTOM)
 	else:
