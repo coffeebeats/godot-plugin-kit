@@ -71,12 +71,10 @@ Each menu is a finished screen, used in place:
 - **Settings:** push `menu/settings/screen.tres`, or list `menu/settings/pusher.tscn` in a screen's `attachment_scenes` to open it on `ui_toggle_menu`.
 - **Save slots:** push `menu/save/screen.tres` and await its `popped` signal, which carries the chosen slot's index.
 - **Pause:** list `menu/pause/pusher.tscn` in a gameplay screen's `attachment_scenes`.
-- **Result:** when a match ends, the map instantiates `menu/result/dialog.tscn`, sets its values, connects `closed` and calls `open` with the `StdScreenManager` that pushed the map. The dialog frees itself once it closes.
+- **Alerts over gameplay:** a map opens `ui/menu/alert_gameplay.tscn` for a match's result, a game over or a disconnect, as [`ui/menu/README.md`](ui/menu/README.md) describes.
 - **Splash:** push `ui/splash/godot_screen.tres`, whose scene emits `advanced` once it is done. `ui/splash/splash.gd` makes a splash of any scene.
 
-The result dialog is a `KitAlertDialog`. `title` and `message` hold the outcome, and `primary_label` and `secondary_label` name its two actions; until the game sets them, the primary reads Continue and the secondary is hidden. The labels are translated in the `alert` context, so the game's catalogue lists its own under `msgctxt "alert"`. `closed` carries `PRIMARY` or `SECONDARY` for the button pressed, and the game restarts or leaves from there. It carries `DISMISS` when the dialog leaves the stack any other way, such as returning to the main menu from the pause menu, which Escape opens over the dialog. Cancel and clicks don't close it, and a key still held from gameplay doesn't press its button.
-
-For a different layout, assemble a menu from the scenes it is made of: the settings tabs and their `group` and `setting` rows, the `controls` tab, placed once per `device_category`, with its `action_set` groups, the save menu's `slot_button`, and the dialogs in `ui/menu/`.
+For a different layout, assemble a menu from the scenes it is made of: the settings tabs and their `group` and `setting` rows, the `controls` tab, placed once per `device_category`, with its `action_set` groups, the save menu's `slot_button`, and the dialogs in `ui/menu/`, whose [README](ui/menu/README.md) lists their values and what each one is for.
 
 ### Put UI inside gameplay
 

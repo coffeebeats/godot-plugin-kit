@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Godot 4+ addon of opinionated game infrastructure assembled from `godot-plugin-std`: platform services (storefront, profile, logging), the audio, input, save and settings systems, menus, UI and map templates. Games consume the `dist` branch as `addons/kit`. `README.md` describes every scene a game places and each value it sets on them.
+Godot 4+ addon of opinionated game infrastructure assembled from `godot-plugin-std`: platform services (storefront, profile, logging), the audio, input, save and settings systems, menus, UI and map templates. Games consume the `dist` branch as `addons/kit`. `README.md` describes every scene a game places and each value it sets on them, linking to a folder's own `README.md` where that folder details its parts.
 
 ## Commands
 
@@ -32,6 +32,7 @@ LOCALE_DIR=locale godot-locale validate
 ## Design
 
 - A game uses kit's scenes in place and sets its own values on the instances it places, never by editing kit. Slice scenes so that holds, and list each value a game sets in `README.md`.
+- A folder's own `README.md`, such as `ui/menu/README.md`, details how its parts combine and why each value matters, so a game can assemble its own from them. The root `README.md` names the scene in one line and links there.
 - Kit's docs, comments and skills stay generic. Never name a particular game or project template; refer to a game's files as "usually `project/...`".
 - `plugins/kit/` is the agent plugin released with the addon, holding the game skills and `godot-bridge`.
 

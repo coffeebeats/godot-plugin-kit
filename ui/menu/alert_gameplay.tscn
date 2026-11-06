@@ -23,7 +23,7 @@ script = ExtResource("2_screen")
 transition = SubResource("Resource_fade")
 attachment_scenes = PackedStringArray("uid://u6xwo0vi803h")
 
-[node name="ResultDialog" unique_id=1820374615 instance=ExtResource("1_alert")]
+[node name="GameplayAlert" unique_id=1820374615 instance=ExtResource("1_alert")]
 screen = SubResource("Resource_screen")
 dismissable = false
 primary_label = "kit_alert_continue"

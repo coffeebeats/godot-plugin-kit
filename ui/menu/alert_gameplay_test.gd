@@ -1,6 +1,6 @@
 ##
-## Tests for the result dialog, opened over kit's 2D map template on a screen manager
-## and driven with real keys and clicks.
+## Tests for the alert shown over gameplay, opened over kit's 2D map template on a
+## screen manager and driven with real keys and clicks.
 ##
 
 extends GutTest
@@ -8,7 +8,7 @@ extends GutTest
 # -- DEPENDENCIES -------------------------------------------------------------------- #
 
 const ButtonScene := preload("res://ui/input/button.tscn")
-const DialogScene := preload("res://menu/result/dialog.tscn")
+const DialogScene := preload("res://ui/menu/alert_gameplay.tscn")
 const MapScene := preload("res://map/2d/scene.tscn")
 const Menu := preload("res://system/input/actions/menu.tres")
 const MenuOptions := preload("res://system/input/actions/menu_options.tres")
@@ -34,8 +34,8 @@ var _manager: StdTestScreenManager = null
 # -- TEST METHODS -------------------------------------------------------------------- #
 
 
-func test_result_open_shows_the_outcome_and_primary_closes_it() -> void:
-	# Given: A result dialog open over a map, with the cursor hidden.
+func test_alert_gameplay_open_shows_the_outcome_and_primary_closes_it() -> void:
+	# Given: An alert open over a map, with the cursor hidden.
 	await _open()
 	var slot := StdInputSlot.for_player(1)
 
@@ -57,8 +57,8 @@ func test_result_open_shows_the_outcome_and_primary_closes_it() -> void:
 	assert_eq(slot.actions.get_action_set(slot.device_id), _gameplay)
 
 
-func test_result_key_during_its_entrance_does_not_press_it() -> void:
-	# Given: A result dialog opened over a map, with the cursor hidden.
+func test_alert_gameplay_key_during_its_entrance_does_not_press_it() -> void:
+	# Given: An alert opened over a map, with the cursor hidden.
 	await _mount()
 	var screen := _dialog.screen
 	_dialog.open(_manager)
@@ -70,7 +70,7 @@ func test_result_key_during_its_entrance_does_not_press_it() -> void:
 
 	await wait_process_frames(1)
 
-	# Given: The dialog is still entering, with its primary action focused.
+	# Given: The alert is still entering, with its primary action focused.
 	assert_signal_not_emitted(screen, "entered")
 	assert_eq(_focus_owner(), _dialog.get_node(^"%Primary"))
 
@@ -83,20 +83,20 @@ func test_result_key_during_its_entrance_does_not_press_it() -> void:
 
 	await wait_for_signal(screen.entered, _TIMEOUT)
 
-	# Then: The dialog stays open.
+	# Then: The alert stays open.
 	assert_true(_manager.is_current(screen))
 	assert_signal_not_emitted(screen, "exiting")
 
 
-func test_result_escape_pushes_the_pause_menu_over_it() -> void:
-	# Given: A result dialog open over a map.
+func test_alert_gameplay_escape_pushes_the_pause_menu_over_it() -> void:
+	# Given: An alert open over a map.
 	await _open()
 
 	# When: Escape is pressed.
 	_press(KEY_ESCAPE)
 	await wait_until(_manager.is_current.bind(PauseScreen), _TIMEOUT)
 
-	# Then: The pause menu covers the dialog, which stays open.
+	# Then: The pause menu covers the alert, which stays open.
 	assert_true(_manager.is_current(PauseScreen))
 	assert_signal_not_emitted(_dialog.screen, "exiting")
 
@@ -104,13 +104,13 @@ func test_result_escape_pushes_the_pause_menu_over_it() -> void:
 	_press(KEY_ESCAPE)
 	await wait_until(_manager.is_current.bind(_dialog.screen), _TIMEOUT)
 
-	# Then: The pause menu closes over the dialog, which stays open.
+	# Then: The pause menu closes over the alert, which stays open.
 	assert_true(_manager.is_current(_dialog.screen))
 	assert_signal_not_emitted(_dialog.screen, "exiting")
 
 
-func test_result_cancel_or_a_click_on_the_hud_leaves_it_open() -> void:
-	# Given: A result dialog open over a map, with a HUD button under it.
+func test_alert_gameplay_cancel_or_a_click_on_the_hud_leaves_it_open() -> void:
+	# Given: An alert open over a map, with a HUD button under it.
 	await _open()
 	var presses := [0]
 	_hud.pressed.connect(func() -> void: presses[0] += 1)
@@ -120,13 +120,13 @@ func test_result_cancel_or_a_click_on_the_hud_leaves_it_open() -> void:
 	_input.release_action(&"ui_cancel")
 	await wait_process_frames(1)
 
-	# Then: The dialog stays open.
+	# Then: The alert stays open.
 	assert_signal_not_emitted(_dialog.screen, "exiting")
 
 	# When: The HUD button is clicked.
 	_input.click(_hud)
 
-	# Then: The button isn't pressed, and the dialog stays open.
+	# Then: The button isn't pressed, and the alert stays open.
 	assert_eq(presses[0], 0)
 	assert_signal_not_emitted(_dialog.screen, "exiting")
 
@@ -183,7 +183,7 @@ func _focus_owner() -> Control:
 
 
 ## _mount pushes a map holding the game's set, with a HUD button in its UI, onto a
-## screen manager, hides the cursor, and readies a result dialog the game has set up.
+## screen manager, hides the cursor, and readies an alert the game has set up.
 func _mount() -> void:
 	var map: KitMap2D = MapScene.instantiate()
 	map.action_set = _gameplay
@@ -207,7 +207,7 @@ func _mount() -> void:
 	watch_signals(_dialog.screen)
 
 
-## _open mounts a map and returns once the result dialog has entered over it.
+## _open mounts a map and returns once the alert has entered over it.
 func _open() -> void:
 	await _mount()
 	_dialog.open(_manager)
