@@ -99,7 +99,7 @@ A panel's values are exports on its child nodes, which *Editable Children* on it
 
 ### Change the button prompts
 
-A prompt draws an origin from the first set in `Input.glyph_sets` that matches the device and has art for it, moving on to the next matching set when one has none. To change part of a family, put a set with only that art ahead of kit's, such as one Xbox button. To change all of them, replace the list. On Steam builds the sets draw the keyboard and any pad Steam Input isn't driving, and Steam draws its own art for the rest. A bound button with no art in any matching set, or with no image in Steam, draws `Input.unknown_glyph`, unless the prompt shows button names and the button has one.
+A prompt draws an origin from the first set in `Input.glyph_sets` that matches the device and has art for it, moving on to the next matching set when one has none. To change part of a family, put a set with only that art ahead of kit's, such as one Xbox button. Kit's own families layer the same way, with `xbox_one.tres` holding only View ahead of `xbox.tres`, and `playstation_4.tres` only Share ahead of `playstation.tres`. To change all of them, replace the list, keeping those two ahead of their families. Kit's art comes from the CC0 pack named in `system/input/unknown/glyphs/SOURCE.md`, which has matching art for most pads. On Steam builds the sets draw the keyboard and any pad Steam Input isn't driving, and Steam draws its own art for the rest. A bound button with no art in any matching set, or with no image in Steam, draws `Input.unknown_glyph`, unless the prompt shows button names and the button has one.
 
 Kit draws every key the same way, from one keycap resource, `system/input/unknown/glyphs/keyboard.tres`:
 

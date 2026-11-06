@@ -1,6 +1,6 @@
 ##
 ## Tests for the input system's Godot implementation, which draws glyphs from the game's
-## `glyph_sets` and `unknown_glyph`.
+## `glyph_sets` and `unknown_glyph`, and for the art in kit's own sets.
 ##
 
 extends GutTest
@@ -10,9 +10,60 @@ extends GutTest
 const ArrowUp := preload("glyphs/keyboard/arrow_up.svg")
 const KeycapTexture := preload("res://addons/std/input/godot/keycap_texture.gd")
 const PlatformScene := preload("res://premade/platform.tscn")
+const PlayStationCreate := preload("glyphs/playstation/create.png")
+const PlayStationShare := preload("glyphs/playstation/share.png")
+const SteamDeckView := preload("glyphs/steam_deck/view.png")
+const SwitchMinus := preload("glyphs/switch/minus.png")
 const SystemInput := preload("res://system/input/input.gd")
 const SystemInputScene := preload("res://system/input/input.tscn")
 const Unknown := preload("glyphs/unknown.svg")
+const XboxBack := preload("glyphs/xbox/back.png")
+const XboxView := preload("glyphs/xbox/view.png")
+
+# -- DEFINITIONS --------------------------------------------------------------------- #
+
+## _GAPS_ON_EVERY_PAD lists the buttons no set of kit's has art for, which draw the
+## unknown glyph on every joypad.
+const _GAPS_ON_EVERY_PAD := [
+	JOY_BUTTON_GUIDE,
+	JOY_BUTTON_PADDLE1,
+	JOY_BUTTON_PADDLE2,
+	JOY_BUTTON_PADDLE3,
+	JOY_BUTTON_PADDLE4,
+	JOY_BUTTON_MISC2,
+	JOY_BUTTON_MISC3,
+	JOY_BUTTON_MISC4,
+	JOY_BUTTON_MISC5,
+	JOY_BUTTON_MISC6,
+]
+
+## _GAPS lists, by joypad type, the further buttons kit's sets have no art for.
+const _GAPS := {
+	StdInputDevice.DEVICE_TYPE_GENERIC: [JOY_BUTTON_TOUCHPAD],
+	StdInputDevice.DEVICE_TYPE_PS_4: [],
+	StdInputDevice.DEVICE_TYPE_PS_5: [],
+	StdInputDevice.DEVICE_TYPE_STEAM_CONTROLLER:
+	[
+		JOY_BUTTON_DPAD_UP,
+		JOY_BUTTON_DPAD_DOWN,
+		JOY_BUTTON_DPAD_LEFT,
+		JOY_BUTTON_DPAD_RIGHT,
+		JOY_BUTTON_MISC1,
+		JOY_BUTTON_TOUCHPAD,
+	],
+	StdInputDevice.DEVICE_TYPE_STEAM_DECK: [JOY_BUTTON_MISC1, JOY_BUTTON_TOUCHPAD],
+	StdInputDevice.DEVICE_TYPE_SWITCH_JOY_CON_PAIR:
+	[JOY_BUTTON_MISC1, JOY_BUTTON_TOUCHPAD],
+	StdInputDevice.DEVICE_TYPE_SWITCH_JOY_CON_SINGLE:
+	[JOY_BUTTON_MISC1, JOY_BUTTON_TOUCHPAD],
+	StdInputDevice.DEVICE_TYPE_SWITCH_PRO: [JOY_BUTTON_MISC1, JOY_BUTTON_TOUCHPAD],
+	StdInputDevice.DEVICE_TYPE_XBOX_360: [JOY_BUTTON_TOUCHPAD],
+	StdInputDevice.DEVICE_TYPE_XBOX_ONE: [JOY_BUTTON_TOUCHPAD],
+}
+
+# -- INITIALIZATION ------------------------------------------------------------------ #
+
+var _added_actions: Array[StringName] = []
 
 # -- TEST METHODS -------------------------------------------------------------------- #
 
@@ -133,7 +184,97 @@ func test_glyphs_game_unknown_glyph_replaces_kits() -> void:
 	assert_eq(glyph, input.unknown_glyph)
 
 
+func test_glyphs_back_draws_each_pads_own_button() -> void:
+	# Given: The input scene with kit's glyph sets.
+	add_child_autofree(PlatformScene.instantiate())
+	add_child_autofree(SystemInputScene.instantiate())
+
+	# Given: A loaded set holding an action on the pad's Back button.
+	_add_action(&"glyphs_test_back", JOY_BUTTON_BACK)
+	var actions := _load_actions([&"glyphs_test_back"])
+
+	# Given: Each pad's Back art, with a generic pad sharing the Xbox 360's.
+	var expected := {
+		StdInputDevice.DEVICE_TYPE_GENERIC: XboxBack,
+		StdInputDevice.DEVICE_TYPE_XBOX_360: XboxBack,
+		StdInputDevice.DEVICE_TYPE_XBOX_ONE: XboxView,
+		StdInputDevice.DEVICE_TYPE_PS_4: PlayStationShare,
+		StdInputDevice.DEVICE_TYPE_PS_5: PlayStationCreate,
+		StdInputDevice.DEVICE_TYPE_SWITCH_PRO: SwitchMinus,
+		StdInputDevice.DEVICE_TYPE_STEAM_DECK: SteamDeckView,
+	}
+
+	for device_type in expected:
+		# When: The pad's glyph is drawn for the action.
+		var glyph := _get_glyph(actions, &"glyphs_test_back", device_type)
+
+		# Then: The glyph is that pad's own button.
+		assert_eq(
+			glyph,
+			expected[device_type],
+			StdInputDevice.DeviceType.find_key(device_type),
+		)
+
+
+func test_glyph_sets_have_art_for_every_pad_origin_except_the_listed_gaps() -> void:
+	# Given: Kit's glyph sets, read from the input scene.
+	var input: SystemInput = autofree(SystemInputScene.instantiate())
+
+	# When: Each joypad type's matching sets are searched for art for each origin.
+	#
+	# NOTE: This reads the sets rather than drawing through the provider, which would
+	# return the unknown glyph for a gap and so never fail.
+	var mismatched: Array[String] = []
+	for device_type in StdInputDevice.DeviceType.values():
+		if (
+			device_type
+			in [
+				StdInputDevice.DEVICE_TYPE_UNKNOWN,
+				StdInputDevice.DEVICE_TYPE_KEYBOARD,
+				StdInputDevice.DEVICE_TYPE_TOUCH,
+			]
+		):
+			continue
+
+		var sets := input.glyph_sets.filter(
+			func(glyph_set): return glyph_set.matches(device_type)
+		)
+		var gaps: Array = _GAPS_ON_EVERY_PAD + _GAPS.get(device_type, [])
+
+		for event in _list_pad_origins():
+			var has_art := sets.any(
+				func(glyph_set): return glyph_set.get_origin_glyph(event) != null
+			)
+			var is_gap: bool = (
+				event is InputEventJoypadButton and event.button_index in gaps
+			)
+			if has_art == is_gap:
+				(
+					mismatched
+					. append(
+						(
+							"%s: %s"
+							% [
+								StdInputDevice.DeviceType.find_key(device_type),
+								event.as_text(),
+							]
+						)
+					)
+				)
+
+	# Then: Art is missing for the listed gaps and nothing else.
+	assert_eq(mismatched, [] as Array[String])
+
+
 # -- TEST HOOKS ---------------------------------------------------------------------- #
+
+
+func after_all() -> void:
+	for action in _added_actions:
+		InputMap.erase_action(action)
+		ProjectSettings.set_setting(&"input/" + action, null)
+
+	_added_actions.clear()
 
 
 func after_each() -> void:
@@ -147,6 +288,25 @@ func after_each() -> void:
 # -- PRIVATE METHODS ----------------------------------------------------------------- #
 
 
+## _add_action registers `action` with `button` as its default binding, unless it's
+## already registered. std reads an action's defaults from the project settings, so the
+## action is added there as well as to the input map.
+func _add_action(action: StringName, button: JoyButton) -> void:
+	if ProjectSettings.has_setting(&"input/" + action):
+		return
+
+	var event := InputEventJoypadButton.new()
+	event.button_index = button
+	ProjectSettings.set_setting(
+		&"input/" + action, {"deadzone": 0.5, "events": [event]}
+	)
+
+	InputMap.add_action(action)
+	InputMap.action_add_event(action, event)
+
+	_added_actions.append(action)
+
+
 func _get_glyph(
 	actions: StdInputActionSet,
 	action: StringName,
@@ -155,6 +315,30 @@ func _get_glyph(
 	return StdInputSlot.for_player(1).get_action_glyph(
 		actions, action, 0, Vector2.ZERO, device_type
 	)
+
+
+func _list_pad_origins() -> Array[InputEvent]:
+	var origins: Array[InputEvent] = []
+
+	for button in JOY_BUTTON_SDL_MAX:
+		var event := InputEventJoypadButton.new()
+		event.button_index = button as JoyButton
+		origins.append(event)
+
+	for axis in [JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y, JOY_AXIS_RIGHT_X, JOY_AXIS_RIGHT_Y]:
+		for value in [-1.0, 1.0]:
+			var event := InputEventJoypadMotion.new()
+			event.axis = axis
+			event.axis_value = value
+			origins.append(event)
+
+	for axis in [JOY_AXIS_TRIGGER_LEFT, JOY_AXIS_TRIGGER_RIGHT]:
+		var event := InputEventJoypadMotion.new()
+		event.axis = axis
+		event.axis_value = 1.0
+		origins.append(event)
+
+	return origins
 
 
 func _load_actions(names: Array[StringName]) -> StdInputActionSet:

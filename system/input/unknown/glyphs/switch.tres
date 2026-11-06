@@ -16,6 +16,7 @@
 [ext_resource type="Texture2D" uid="uid://bamnahlmja614" path="res://system/input/unknown/glyphs/switch/plus.png" id="11_sgkau"]
 [ext_resource type="Texture2D" uid="uid://dbie1xd72stuc" path="res://system/input/unknown/glyphs/switch/x.png" id="14_7u3p7"]
 [ext_resource type="Texture2D" uid="uid://s3mdlv46dsy1" path="res://system/input/unknown/glyphs/switch/y.png" id="15_31t52"]
+[ext_resource type="Texture2D" uid="uid://drf8wrtlnh8vn" path="res://system/input/unknown/glyphs/switch/minus.png" id="16_minus"]
 
 [resource]
 script = ExtResource("1_6j68a")
@@ -31,6 +32,7 @@ button_a = ExtResource("1_na2oh")
 button_b = ExtResource("2_a00sv")
 button_x = ExtResource("14_7u3p7")
 button_y = ExtResource("15_31t52")
+button_back = ExtResource("16_minus")
 button_start = ExtResource("11_sgkau")
 button_stick_left = ExtResource("7_y060g")
 button_stick_right = ExtResource("8_togvw")
