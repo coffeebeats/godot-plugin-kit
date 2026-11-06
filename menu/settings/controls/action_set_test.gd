@@ -34,7 +34,7 @@ func test_generate_settings_lists_a_stick_directions_without_the_stick() -> void
 	for node in group.get_children():
 		# NOTE: A row holds its label, its reset button, then its primary binding.
 		if node is Setting:
-			listed.append(node.get_child(2).glyph.action)
+			listed.append(node.get_child(2).action)
 
 	assert_eq(
 		listed,

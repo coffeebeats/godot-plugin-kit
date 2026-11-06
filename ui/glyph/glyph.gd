@@ -1,28 +1,16 @@
 ##
-## Glyph is an opinionated implementation of a dynamic origin icon which updates its
-## contents based on what the action is currently bound to and which device the player
-## is currently using.
+## KitInputGlyph is a `TextureRect` which draws the glyph of the origin bound to an
+## action, following its player's active device, bindings and keyboard layout. The glyph
+## is as tall as a line of the theme's text, times `glyph_scale`, so it follows the
+## player's text size.
 ##
 
 @tool
 class_name KitInputGlyph
-extends Control
-
-# -- SIGNALS ------------------------------------------------------------------------- #
-
-## glyph_updated is emitted after each redraw with whether the glyph shows anything. It
-## may fire when nothing changed.
-signal glyph_updated(has_contents: bool)
-
-# -- DEPENDENCIES -------------------------------------------------------------------- #
-
-const GodotDeviceGlyphs := preload("res://addons/std/input/godot/device_glyphs.gd")
-const KeycapTexture := preload("res://addons/std/input/godot/keycap_texture.gd")
-const Signals := preload("res://addons/std/event/signal.gd")
+extends TextureRect
 
 # -- DEFINITIONS --------------------------------------------------------------------- #
 
-const DeviceType := StdInputDevice.DeviceType  # gdlint:ignore=constant-name
 const DEVICE_TYPE_GENERIC := StdInputDevice.DEVICE_TYPE_GENERIC
 const DEVICE_TYPE_KEYBOARD := StdInputDevice.DEVICE_TYPE_KEYBOARD
 const DEVICE_TYPE_UNKNOWN := StdInputDevice.DEVICE_TYPE_UNKNOWN
@@ -31,204 +19,146 @@ const DEVICE_TYPE_UNKNOWN := StdInputDevice.DEVICE_TYPE_UNKNOWN
 
 @export_subgroup("Action")
 
-## action_set is an input action set which defines the configured action.
-@export var action_set: StdInputActionSet = null
+## action_set is the action set which defines `action`.
+@export var action_set: StdInputActionSet = null:
+	set(value):
+		action_set = value
+		if _glyph:
+			_glyph.action_set = value
 
 ## action is the input action whose binding the glyph shows.
-@export var action := &""
+@export var action := &"":
+	set(value):
+		action = value
+		if _glyph:
+			_glyph.action = value
 
-## binding_index is the index/rank (e.g. primary or secondary) of the action binding.
-@export var binding_index: int = 0
+## binding_index is the binding (e.g. primary or secondary) drawn first. An unbound
+## index is skipped, so the glyph draws the next binding instead.
+@export var binding_index: int = 0:
+	set(value):
+		binding_index = value
+		if _glyph:
+			_glyph.binding_index = value
 
-## cycle_interval is the time (in seconds) each origin bound to the action is shown
-## before the glyph advances to the next one, starting over from `binding_index`, so a
-## player sees every binding. `0` shows `binding_index` alone.
+## cycle_interval is the time in seconds each origin bound to the action is shown before
+## the glyph advances to the next, starting over from `binding_index`, so a player sees
+## every binding; `0` shows the first alone.
 @export var cycle_interval: float = 0.0:
 	set(value):
-		if value == cycle_interval:
-			return
-
 		cycle_interval = value
-
-		if Engine.is_editor_hint() or not is_node_ready():
-			return
-
-		# NOTE: A change restarts the cycle, since the origin count is only fetched while
-		# cycling, and starts or stops the processing which drives it.
-		_cycle_offset = 0
-		_cycle_time = 0.0
-		set_process(cycle_interval > 0.0)
-		_handle_update()
+		if _glyph:
+			_glyph.cycle_interval = value
 
 @export_subgroup("Player")
 
-## player_id selects the player whose `StdInputSlot` supplies the bindings. That slot
-## must be in the scene tree when the glyph enters it.
-@export var player_id: int = 1
+## player_id selects the player whose `StdInputSlot` supplies the bindings.
+@export var player_id: int = 1:
+	set(value):
+		player_id = value
+		if _glyph:
+			_glyph.player_id = value
 
 @export_subgroup("Device")
 
-## device_type_override is an optional setting that locks which device's glyphs draw,
-## while every device stays accepted. `DEVICE_TYPE_UNKNOWN` follows the active device,
-## `DEVICE_TYPE_GENERIC` the connected joypads' family, and any other value that type.
-@export var device_type_override: StdSettingsPropertyInt = null
+## device_type_override is the player's setting for the device type whose glyphs draw.
+## `DEVICE_TYPE_UNKNOWN` follows the active device, `DEVICE_TYPE_GENERIC` the connected
+## joypads' family, and any other value that type.
+@export var device_type_override: StdSettingsPropertyInt = null:
+	set(value):
+		device_type_override = value
+		if _glyph:
+			_glyph.device_type_override = value
 
 @export_group("Display")
 
-## restrict_glyph_type_to_device_category controls whether the displayed glyph type
-## should be constrained to the active device's category. Effectively, this means that
-## glyph type overrides will be ignored if they don't pertain to the active device
-## category (i.e. keyboard vs. joypad).
-@export var restrict_glyph_type_to_device_category: bool = false
+## glyph_scale is the glyph's height in lines of the theme's text.
+@export var glyph_scale: float = 1.0:
+	set(value):
+		glyph_scale = value
+		_update_size()
+
+## restrict_glyph_type_to_device_category ignores a `device_type_override` outside the
+## active device's category (i.e. keyboard vs. joypad).
+@export var restrict_glyph_type_to_device_category: bool = false:
+	set(value):
+		restrict_glyph_type_to_device_category = value
+		if _glyph:
+			_glyph.restrict_to_device_category = value
 
 @export_subgroup("Device type")
 
-## always_show_kbm forcibly shows glyph information for keyboard and mouse devices. When
-## enabled, `device_type_override` will be ignored.
+## always_show_kbm draws the keyboard and mouse binding whichever device is active,
+## ignoring `device_type_override`.
 ##
-## NOTE: Only one of `always_show_kbm` and `always_show_joy` may be `true`. If neither
-## are enabled then either the active device's type is used or the
-## `device_type_override` if it's set.
+## NOTE: Only one of `always_show_kbm` and `always_show_joy` may be `true`.
 @export var always_show_kbm: bool = false:
 	set(value):
 		always_show_kbm = value
 		if value and always_show_joy:
 			always_show_joy = false
 
-## always_show_joy forcibly shows glyph information for joypad devices. When enabled,
-## `device_type_override` will be ignored.
+		_update_device_type()
+
+## always_show_joy draws the controller binding whichever device is active, in the
+## family `device_type_override` names, else the connected joypads'.
 ##
-## NOTE: Only one of `always_show_joy` and `always_show_kbm` may be `true`. If neither
-## are enabled then either the active device's type is used or the
-## `device_type_override` if it's set.
+## NOTE: Only one of `always_show_joy` and `always_show_kbm` may be `true`.
 @export var always_show_joy: bool = false:
 	set(value):
 		always_show_joy = value
 		if value and always_show_kbm:
 			always_show_kbm = false
 
+		_update_device_type()
+
 @export_subgroup("Force hide")
 
-## hide_if_cursor_visible controls whether this glyph is hidden while the cursor is
-## visible and the keyboard and mouse are active. This is to enable keyboard and
-## mouse-only glyphs being shown only when the game is using "focus" mode navigation.
+## hide_if_cursor_visible hides the glyph while the cursor is visible and the keyboard
+## and mouse are active, so a keyboard glyph shows only in focus navigation.
 ##
 ## NOTE: A cursor revealed while a joypad stays active keeps the glyph shown, since the
 ## joypad's binding is still the one the player would press.
-@export var hide_if_cursor_visible: bool = false
+@export var hide_if_cursor_visible: bool = false:
+	set(value):
+		hide_if_cursor_visible = value
+		_update_shown()
 
-## hide_if_kbm_active controls whether this glyph is displayed when the active device is
-## a keyboard and mouse. Note that this applies regardless of whether `always_show_kbm`
-## is selected.
-@export var hide_if_kbm_active: bool = false
+## hide_if_kbm_active hides the glyph while the keyboard and mouse are active, whatever
+## `always_show_kbm` says.
+@export var hide_if_kbm_active: bool = false:
+	set(value):
+		hide_if_kbm_active = value
+		_update_shown()
 
-## hide_if_joy_active controls whether this glyph is displayed when the active device is
-## a joypad. Note that this applies regardless of whether `always_show_joy`
-## is selected.
-@export var hide_if_joy_active: bool = false
-
-@export_subgroup("Labels")
-
-## show_origin_label_as_fallback_kbm controls whether to show the origin display name if
-## there's no glyph icon available for the keyboard and mouse device.
-##
-## NOTE: The name also replaces the unknown glyph drawn for a bound origin with no art,
-## which still draws when the origin has no name.
-@export var show_origin_label_as_fallback_kbm: bool = true
-
-## show_origin_label_as_fallback_joy controls whether to show the origin display name if
-## there's no glyph icon available for joypad devices.
-##
-## NOTE: As with `show_origin_label_as_fallback_kbm`, the name also replaces an unknown
-## glyph.
-@export var show_origin_label_as_fallback_joy: bool = false
-
-## origin_label_overrides is a lookup table of overrides for the origin label returned
-## by the input system. Use this to customize output (e.g. "Esc" instead of "Escape").
-##
-## See https://github.com/godotengine/godot/blob/master/core/os/keyboard.cpp for a list
-## of key labels.
-##
-## TODO: Replace this system with translations once localization of keys is supported;
-## see https://github.com/godotengine/godot-proposals/issues/10350.
-@export var origin_label_overrides: Dictionary = {}
-
-## label_stylebox is an optional stylebox to display the origin label within. If set,
-## this will override the default stylebox for the label's `PanelContainer`.
-##
-## NOTE: Both this stylebox and the default one set on `panel_container` will *only* be
-## shown when an origin label is set.
-@export var label_stylebox: StyleBox = null
-
-## show_keys_as_labels controls whether a drawn key shows its keycap's label in `label`,
-## inside `label_stylebox`, in place of the keycap. A key drawn as an icon, such as an
-## arrow, keeps its keycap.
-@export var show_keys_as_labels: bool = false
-
-## Fallback properties apply when neither a glyph or a label (if configured) are found
-## for the configured action. When fallbacks are used, *both* of the label and textures
-## are used if set.
-##
-## NOTE: An unknown glyph counts as a glyph found, so while one is set these apply only
-## to a binding index with no origin bound.
-@export_subgroup("Fallback")
-
-## fallback_label is a label to display when no glyph or label is found.
-@export var fallback_label: String = ""
-
-## fallback_texture is a texture to display when no glyph or label is found.
-@export var fallback_texture: Texture2D = null
-
-@export_group("Components")
-
-## label is the `Label` node which origin display names will be rendered in.
-@export var label: Label = null
-
-## panel_container is the `PanelContainer` node in which keyboard labels will be shown.
-@export var panel_container: PanelContainer = null
-
-## texture_rect is the `TextureRect` node which the origin glyph icon will be rendered
-## in.
-@export var texture_rect: TextureRect = null
+## hide_if_joy_active hides the glyph while a joypad is active, whatever
+## `always_show_joy` says.
+@export var hide_if_joy_active: bool = false:
+	set(value):
+		hide_if_joy_active = value
+		_update_shown()
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
-# gdlint:ignore=class-definitions-order
-static var _stylebox_empty := StyleBoxEmpty.new()
-
-var _custom_minimum_size: Vector2 = Vector2.ZERO
-var _cycle_offset: int = 0
-var _cycle_time: float = 0.0
-var _origin_count: int = 0
-var _slot: StdInputSlot = null
-var _stylebox: StyleBox = null
+## _glyph is the texture which draws the glyph, shown as `texture` unless hidden.
+var _glyph: StdInputGlyphTexture = null
 
 # -- PUBLIC METHODS ------------------------------------------------------------------ #
 
 
-## get_binding_index returns the index of the origin to display: `binding_index`, moved
-## along by cycling.
-func get_binding_index() -> int:
-	return binding_index + _cycle_offset
+## get_glyph returns the texture which draws the glyph, also while the glyph is hidden.
+func get_glyph() -> StdInputGlyphTexture:
+	return _glyph
 
 
 ## update redraws the glyph and restarts its cycle from `binding_index`. Call it after
-## changing the action configuration.
+## changing the action's bindings outside the input system.
 func update() -> void:
-	_cycle_offset = 0
-	_cycle_time = 0.0
-	_handle_update()
+	if _glyph:
+		_glyph.update()
 
 
 # -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
-
-
-func _enter_tree() -> void:
-	if Engine.is_editor_hint():
-		return
-
-	_slot = StdInputSlot.for_player(player_id)
-	assert(_slot is StdInputSlot, "invalid state; missing player slot")
 
 
 func _get_configuration_warnings() -> PackedStringArray:
@@ -240,278 +170,91 @@ func _get_configuration_warnings() -> PackedStringArray:
 	elif not action:
 		warnings.append("missing action")
 
-	elif not (
-		action in action_set.actions_analog_1d
-		or action in action_set.actions_analog_2d
-		or action in action_set.actions_digital
-		or action == action_set.action_absolute_mouse
-	):
+	elif action not in action_set.list_action_names():
 		warnings.append("invalid action; not in action set")
-
-	elif player_id < 0:
-		warnings.append("invalid action; missing player")
 
 	return warnings
 
 
-func _process(delta: float) -> void:
-	if cycle_interval <= 0.0 or _get_cycle_length() < 2:
+func _init() -> void:
+	if Engine.is_editor_hint():
 		return
 
-	_cycle_time += delta
-	if _cycle_time < cycle_interval:
-		return
+	_glyph = StdInputGlyphTexture.new()
+	_glyph.changed.connect(_update_shown)
 
-	# NOTE: A frame longer than the interval advances the glyph once and drops the
-	# surplus, rather than catching up a step per frame afterwards.
-	_cycle_time = fmod(_cycle_time, cycle_interval)
-	_cycle_offset = (_cycle_offset + 1) % _get_cycle_length()
-	_handle_update()
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_THEME_CHANGED:
+		_update_size()
 
 
 func _ready() -> void:
-	_custom_minimum_size = custom_minimum_size
-
 	if Engine.is_editor_hint():
-		set_process(false)
 		return
 
-	assert(label is Label, "invalid state; missing node")
-	assert(panel_container is PanelContainer, "invalid state; missing node")
-	assert(texture_rect is TextureRect, "invalid state; missing node")
+	# NOTE: This binds the texture to the player's slot and draws it, so `texture` is set
+	# before the parent's `_ready`.
+	_glyph.update()
 
-	_stylebox = (
-		label_stylebox
-		if label_stylebox
-		else panel_container.get_theme_stylebox(&"panel")
-	)
 
-	set_process(cycle_interval > 0.0)
-
-	Signals.connect_safe(_slot.action_configuration_changed, _on_actions_changed)
-	Signals.connect_safe(_slot.cursor_visibility_changed, _on_slot_changed)
-	Signals.connect_safe(_slot.device_activated, _on_device_activated)
-	Signals.connect_safe(_slot.origin_labels_changed, _handle_update)
-
-	# NOTE: A controller glyph locked by a `DEVICE_TYPE_GENERIC` override follows the
-	# connected joypads, so a connect or disconnect can change its family.
-	Signals.connect_safe(_slot.device_connected, _on_slot_changed)
-	Signals.connect_safe(_slot.device_disconnected, _on_slot_changed)
-
-	if device_type_override is StdSettingsPropertyInt:
-		Signals.connect_safe(device_type_override.value_changed, _on_slot_changed)
-
-	# NOTE: Deferred so a parent can configure the glyph in its own `_ready` first.
-	_handle_update.call_deferred()
+func _validate_property(property: Dictionary) -> void:
+	# NOTE: The glyph is the texture, so a texture set in a scene would only be replaced.
+	if property[&"name"] == &"texture":
+		property[&"usage"] = PROPERTY_USAGE_NONE
 
 
 # -- PRIVATE METHODS ----------------------------------------------------------------- #
 
 
-func _get_cycle_length() -> int:
-	return _origin_count - binding_index
-
-
-func _get_device_type() -> DeviceType:
-	if always_show_kbm:
-		return DeviceType.KEYBOARD
-
-	var property_value: DeviceType = DEVICE_TYPE_UNKNOWN
-	if device_type_override is StdSettingsPropertyInt:
-		property_value = device_type_override.get_value()
-
-	# NOTE: A `DEVICE_TYPE_GENERIC` override stands for the connected joypads' own type,
-	# as std's glyph resolves it.
-	if property_value == DEVICE_TYPE_GENERIC:
-		property_value = _slot.get_joypad_device_type()
-
-	if always_show_joy:
-		# When showing joypad glyphs, still check if an override was set in settings,
-		# but only use it if a joypad type is selected.
-		if (
-			property_value != DEVICE_TYPE_UNKNOWN
-			and property_value != DEVICE_TYPE_KEYBOARD
-		):
-			return property_value
-
-		return _slot.get_joypad_device_type()
-
-	if restrict_glyph_type_to_device_category:
-		match _slot.device_category:
-			DEVICE_TYPE_UNKNOWN, DEVICE_TYPE_KEYBOARD:
-				return _slot.device_type  # Both categories only have one type.
-			DEVICE_TYPE_GENERIC:
-				var property_category := StdInputDevice.get_device_category(
-					property_value
-				)
-				return (
-					property_value
-					if property_category == DEVICE_TYPE_GENERIC
-					else _slot.device_type
-				)
-
-	# gdlint:ignore=max-returns
-	return (
-		property_value if property_value != DEVICE_TYPE_UNKNOWN else _slot.device_type
-	)
-
-
-func _handle_update() -> void:
-	assert(action, "invalid config; missing action")
-	assert(action_set is StdInputActionSet, "invalid config; missing action set")
-
-	var device_type := _get_device_type()
-
-	_origin_count = (
-		_slot.get_action_origin_count(action_set, action, device_type)
-		if cycle_interval > 0.0
-		else 0
-	)
-	if _cycle_offset >= maxi(_get_cycle_length(), 1):
-		_cycle_offset = 0
-
-	var has_contents: bool = _update_glyph(device_type, get_binding_index())
-
-	glyph_updated.emit(has_contents)
-
-
-## _is_unknown_glyph returns whether `texture` is an unknown glyph of the component
-## which draws `device_type`'s origins, its own or one of its glyph sets'.
-func _is_unknown_glyph(texture: Texture2D, device_type: DeviceType) -> bool:
-	if not texture:
+## _is_hidden returns whether one of the `hide_if_*` conditions holds for the player's
+## active device.
+func _is_hidden() -> bool:
+	var slot := StdInputSlot.for_player(player_id)
+	if not slot:
 		return false
 
-	# NOTE: This picks the component as std's `slot_glyphs.gd` does, so it must change
-	# along with it.
-	var glyphs: StdInputDeviceGlyphs = (
-		_slot.glyphs_kbm if device_type == DEVICE_TYPE_KEYBOARD else _slot.glyphs_joy
-	)
-	if not glyphs:
-		return false
-
-	if texture == glyphs.unknown_glyph:
+	if hide_if_kbm_active and slot.device_type == DEVICE_TYPE_KEYBOARD:
 		return true
 
-	var godot_glyphs := glyphs as GodotDeviceGlyphs
-	if godot_glyphs:
-		for glyph_set in godot_glyphs.glyph_sets:
-			if texture == glyph_set.unknown_glyph:
-				return true
+	if hide_if_joy_active and slot.device_category == DEVICE_TYPE_GENERIC:
+		return true
 
-	return false
-
-
-func _update_glyph(device_type: DeviceType, index: int) -> bool:
-	var label_prev: String = label.text
-	label.text = ""
-
-	var texture_prev: Texture = texture_rect.texture
-	texture_rect.texture = null
-
-	var should_hide := (
-		(hide_if_kbm_active and _slot.device_type == DEVICE_TYPE_KEYBOARD)
-		or (hide_if_joy_active and _slot.device_category == DEVICE_TYPE_GENERIC)
-		or (
-			hide_if_cursor_visible
-			and _slot.device_type == DEVICE_TYPE_KEYBOARD
-			and _slot.cursor is StdInputCursor
-			and _slot.cursor.get_is_visible()
-		)
+	return (
+		hide_if_cursor_visible
+		and slot.device_type == DEVICE_TYPE_KEYBOARD
+		and slot.cursor is StdInputCursor
+		and slot.cursor.get_is_visible()
 	)
 
-	if not should_hide:
-		texture_rect.texture = (
-			_slot
-			. get_action_glyph(
-				action_set,
-				action,
-				index,
-				custom_minimum_size,
-				device_type,
-			)
-		)
 
-		var keycap := texture_rect.texture as KeycapTexture
-		if show_keys_as_labels and keycap and not keycap.icon:
-			texture_rect.texture = null
-			label.text = keycap.label
+## _update_device_type locks the texture to the keyboard or to a controller as
+## `always_show_kbm` and `always_show_joy` ask, else lets it follow the active device.
+func _update_device_type() -> void:
+	if not _glyph:
+		return
 
-		# An unknown glyph gives way to the origin's name below, and draws again when no
-		# name shows.
-		var unknown: Texture2D = null
-		if _is_unknown_glyph(texture_rect.texture, device_type):
-			unknown = texture_rect.texture
-			texture_rect.texture = null
-
-		if (
-			texture_rect.texture == null
-			and label.text == ""
-			and (
-				(
-					show_origin_label_as_fallback_kbm
-					and device_type == DEVICE_TYPE_KEYBOARD
-				)
-				or (
-					show_origin_label_as_fallback_joy
-					and device_type != DEVICE_TYPE_KEYBOARD
-					and device_type != DEVICE_TYPE_UNKNOWN
-				)
-			)
-		):
-			var origin_label := (
-				_slot
-				. get_action_origin_label(
-					action_set,
-					action,
-					index,
-					device_type,
-				)
-			)
-
-			label.text = origin_label_overrides.get(origin_label, origin_label)
-
-		if texture_rect.texture == null and label.text == "":
-			texture_rect.texture = unknown
-
-	if not should_hide and texture_rect.texture == null and label.text == "":
-		label.text = fallback_label
-		texture_rect.texture = fallback_texture
-
-	if label.text == "":
-		panel_container.add_theme_stylebox_override(&"panel", _stylebox_empty)
-	elif _stylebox:
-		panel_container.add_theme_stylebox_override(&"panel", _stylebox)
-	else:
-		panel_container.remove_theme_stylebox_override(&"panel")
-
-	texture_rect.visible = texture_rect.texture != null
-	label.visible = label.text != ""
-
-	var minimum_size := _custom_minimum_size
-
-	if texture_rect.visible:
-		minimum_size = minimum_size.max(texture_rect.get_combined_minimum_size())
-
-	# NOTE: The panel's size includes its stylebox and margins around the label, so a
-	# label's box stays inside the glyph's rect and a container's separation holds.
-	if label.visible:
-		minimum_size = minimum_size.max(panel_container.get_combined_minimum_size())
-
-	custom_minimum_size = minimum_size
-
-	return texture_rect.texture != texture_prev or label.text != label_prev
+	_glyph.device_type = (
+		DEVICE_TYPE_KEYBOARD
+		if always_show_kbm
+		else DEVICE_TYPE_GENERIC if always_show_joy else DEVICE_TYPE_UNKNOWN
+	)
 
 
-# -- SIGNAL HANDLERS ----------------------------------------------------------------- #
+## _update_shown shows the glyph, or hides it while a `hide_if_*` condition holds. A
+## hidden glyph keeps only its `custom_minimum_size`.
+func _update_shown() -> void:
+	if not _glyph or not is_inside_tree():
+		return
+
+	texture = null if _is_hidden() else _glyph
 
 
-func _on_actions_changed() -> void:
-	update()
+## _update_size sets the glyph's height to a line of the theme's text at its font size,
+## times `glyph_scale`.
+func _update_size() -> void:
+	if not _glyph:
+		return
 
-
-func _on_device_activated(_device: StdInputDevice) -> void:
-	update()
-
-
-func _on_slot_changed(_value: Variant) -> void:
-	_handle_update()
+	var line := get_theme_default_font().get_height(get_theme_default_font_size())
+	_glyph.size = roundi(line * glyph_scale)

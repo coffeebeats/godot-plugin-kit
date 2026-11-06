@@ -191,9 +191,11 @@ func test_rebinder_keyboard_rebind_with_joypad_active_prompts_the_keyboard() -> 
 	await _start_rebinding(_KEYBOARD)
 
 	# Then: The prompt shows the keyboard's cancel key.
-	var keycap := _prompt_glyph().texture_rect.texture as KeycapTexture
-	assert_not_null(keycap)
-	assert_eq(keycap.label, "Esc")
+	var glyph := _prompt_glyph().get_glyph()
+	assert_true(glyph.has_glyph())
+	assert_eq(
+		glyph.get_origin_label(), _cancel_label(StdInputDevice.DEVICE_TYPE_KEYBOARD)
+	)
 
 
 func test_rebinder_controller_rebind_with_keyboard_active_prompts_the_joypad() -> void:
@@ -204,9 +206,11 @@ func test_rebinder_controller_rebind_with_keyboard_active_prompts_the_joypad() -
 	await _start_rebinding(_CONTROLLER)
 
 	# Then: The prompt shows the joypad's cancel button.
-	var glyph := _prompt_glyph()
-	assert_eq(glyph.texture_rect.texture, _cancel_glyph(glyph))
-	assert_eq(glyph.label.text, "")
+	var glyph := _prompt_glyph().get_glyph()
+	assert_true(glyph.has_glyph())
+	assert_eq(
+		glyph.get_origin_label(), _cancel_label(StdInputDevice.DEVICE_TYPE_XBOX_ONE)
+	)
 
 
 func test_rebinder_controller_rebind_with_keyboard_active_binds_the_joypad() -> void:
@@ -275,10 +279,9 @@ func test_rebinder_binding_row_press_rebinds_its_action_and_slot() -> void:
 	# Given: A Controls tab row for the action's secondary binding, under the manager.
 	var row: Control = BindingScene.instantiate()
 	row.scope = _scope
-	row.glyph.action_set = _action_set
-	row.glyph.action = _ACTION
-	row.glyph.binding_index = StdInputDeviceActions.BINDING_INDEX_SECONDARY
-	row.glyph.player_id = 1
+	row.action_set = _action_set
+	row.action = _ACTION
+	row.binding_index = StdInputDeviceActions.BINDING_INDEX_SECONDARY
 
 	var host := Control.new()
 	host.add_child(row)
@@ -311,9 +314,8 @@ func test_rebinder_binding_row_key_shows_as_text() -> void:
 	# Given: A Controls tab row for the cancel action, which the keyboard binds to Esc.
 	var row: Control = BindingScene.instantiate()
 	row.scope = _scope
-	row.glyph.action_set = MenuBindingActions
-	row.glyph.action = _ACTION_STOP
-	row.glyph.player_id = 1
+	row.action_set = MenuBindingActions
+	row.action = _ACTION_STOP
 
 	# When: The row enters the tree under the manager and draws its key.
 	var host := Control.new()
@@ -322,17 +324,16 @@ func test_rebinder_binding_row_key_shows_as_text() -> void:
 	await wait_process_frames(2)
 
 	# Then: The row shows the key's abbreviation as text, with no keycap.
-	assert_null(row.glyph.texture_rect.texture)
-	assert_eq(row.glyph.label.text, "Esc")
+	assert_false(row.glyph.visible)
+	assert_eq(row.label.text, "Esc")
 
 
 func test_rebinder_binding_row_arrow_key_keeps_its_keycap() -> void:
 	# Given: A Controls tab row for the menu's up action, which the engine binds to Up.
 	var row: Control = BindingScene.instantiate()
 	row.scope = _scope
-	row.glyph.action_set = MenuActions
-	row.glyph.action = &"ui_up"
-	row.glyph.player_id = 1
+	row.action_set = MenuActions
+	row.action = &"ui_up"
 
 	# When: The row enters the tree under the manager and draws its key.
 	var host := Control.new()
@@ -341,10 +342,69 @@ func test_rebinder_binding_row_arrow_key_keeps_its_keycap() -> void:
 	await wait_process_frames(2)
 
 	# Then: The row draws the arrow on its keycap, with no text.
-	var keycap: KeycapTexture = row.glyph.texture_rect.texture as KeycapTexture
+	var keycap: KeycapTexture = row.glyph.texture as KeycapTexture
 	assert_not_null(keycap)
 	assert_eq(keycap.icon, ArrowUp)
-	assert_eq(row.glyph.label.text, "")
+	assert_false(row.label.visible)
+
+
+func test_rebinder_binding_row_arrow_key_follows_the_text_size() -> void:
+	# Given: A Controls tab row for the menu's up action, under a theme.
+	var row: Control = BindingScene.instantiate()
+	row.scope = _scope
+	row.action_set = MenuActions
+	row.action = &"ui_up"
+
+	var host := Control.new()
+	host.theme = Theme.new()
+	host.theme.default_font_size = 16
+	host.add_child(row)
+	_manager.add_child(host)
+	await wait_process_frames(2)
+	var before: float = row.glyph.custom_minimum_size.y
+
+	# When: The player's text size doubles the theme's font size.
+	host.theme.default_font_size = 32
+	await wait_process_frames(1)
+
+	# Then: The arrow's keycap grows with the text.
+	var font := row.get_theme_font(&"font", &"Label")
+	var line := font.get_height(row.get_theme_font_size(&"font_size", &"Label"))
+	assert_gt(row.glyph.custom_minimum_size.y, before)
+	assert_eq(row.glyph.custom_minimum_size.y, float(roundi(line * row.glyph_scale)))
+
+
+func test_rebinder_binding_row_unbound_index_says_so_though_the_next_is_bound() -> void:
+	# Given: An action with no primary key and a key the player bound as its secondary.
+	_slot.glyphs_kbm.scope = _scope
+	(
+		Bindings
+		. bind_action(
+			_scope,
+			_action_set,
+			_ACTION,
+			_key(KEY_J),
+			StdInputDevice.DEVICE_TYPE_KEYBOARD,
+			StdInputDeviceActions.BINDING_INDEX_SECONDARY,
+		)
+	)
+	_slot.load_action_set(_action_set)
+
+	# Given: A Controls tab row for the action's primary binding.
+	var row: Control = BindingScene.instantiate()
+	row.scope = _scope
+	row.action_set = _action_set
+	row.action = _ACTION
+
+	# When: The row enters the tree under the manager and draws its binding.
+	var host := Control.new()
+	host.add_child(row)
+	_manager.add_child(host)
+	await wait_process_frames(2)
+
+	# Then: The row says the primary binding is unbound, not the secondary's key.
+	assert_false(row.glyph.visible)
+	assert_eq(row.label.text, tr(row.MSGID_UNBOUND))
 
 
 func test_split_placeholder_separates_the_text_around_the_placeholder() -> void:
@@ -523,17 +583,15 @@ func _bound_keycode(
 	return (binding as InputEventKey).keycode if binding is InputEventKey else KEY_NONE
 
 
-## _cancel_glyph returns the Xbox joypad's glyph for `ui_binding_stop`, drawn at
-## `glyph`'s size.
-func _cancel_glyph(glyph: KitInputGlyph) -> Texture2D:
+## _cancel_label returns the name of the origin which cancels a rebind on `device_type`.
+func _cancel_label(device_type: StdInputDevice.DeviceType) -> String:
 	return (
 		_slot
-		. get_action_glyph(
+		. get_action_origin_label(
 			MenuBindingActions,
 			_ACTION_STOP,
 			StdInputDeviceActions.BINDING_INDEX_PRIMARY,
-			glyph.custom_minimum_size,
-			StdInputDevice.DEVICE_TYPE_XBOX_ONE,
+			device_type,
 		)
 	)
 

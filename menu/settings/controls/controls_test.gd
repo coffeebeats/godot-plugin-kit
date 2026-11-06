@@ -102,7 +102,7 @@ func test_controls_keyboard_tab_lists_only_keyboard_bindings_and_settings() -> v
 
 	for binding in bindings:
 		assert_eq(binding.device_category, _KEYBOARD)
-		assert_true(binding.glyph.always_show_kbm)
+		assert_eq(_get_shown_category(binding), _KEYBOARD)
 		assert_false(binding.button.disabled)
 
 
@@ -134,7 +134,7 @@ func test_controls_controller_tab_lists_only_controller_bindings_and_settings() 
 
 	for binding in bindings:
 		assert_eq(binding.device_category, _CONTROLLER)
-		assert_true(binding.glyph.always_show_joy)
+		assert_eq(_get_shown_category(binding), _CONTROLLER)
 		assert_false(binding.button.disabled)
 
 	# Then: No note asks for a controller.
@@ -377,6 +377,14 @@ func _find_reset(binding: Binding) -> Reset:
 			return node
 
 	return null
+
+
+## _get_shown_category returns the category of the device whose origin `binding` shows.
+func _get_shown_category(binding: Binding) -> StdInputDevice.DeviceType:
+	var device_type: StdInputDevice.DeviceType = binding._get_device_type(
+		StdInputSlot.for_player(1)
+	)
+	return StdInputDevice.get_device_category(device_type)
 
 
 func _has_user_override(action_set: StdInputActionSet) -> bool:

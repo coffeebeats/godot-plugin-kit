@@ -367,6 +367,10 @@ msgstr ""
 msgid "Confine cursor"
 msgstr ""
 
+#. Shown in place of a key or button in the controls settings, for an action with nothing bound at that slot.
+msgid "--"
+msgstr ""
+
 #. Instructs the user that they will be updating the controller binding for the specified action. Here, the '%s' placeholder will be replaced with the translated name of the game action.
 msgid "Bind “%s”"
 msgstr ""
@@ -379,4 +383,8 @@ msgstr ""
 #. Instructs the user that they should now press the new keyboard button or exit the operation. Here, the '%s' placeholder will be replaced with an icon of the controller button to press.
 msgctxt "gamepad"
 msgid "Press any button now or %s to cancel."
+msgstr ""
+
+#. The name assistive technology reads for a button which performs a game action. Here, the '{origin}' placeholder will be replaced with the name of the key or controller button bound to the action, and '{action}' with the translated name of the action.
+msgid "{origin}, {action}"
 msgstr ""

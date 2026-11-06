@@ -39,7 +39,7 @@ Each value the game owns is an export on a scene instanced in `System`:
 | `system/input/input.tscn` | `action_sets` | The game's action sets and its own layers, which the settings menu's Controller and Keyboard & Mouse tabs list for rebinding, leaving out those in `menu_options_layers`. On Steam builds, Steam Input also reads a controller's binding against them, so list every set and layer the game's manifest has, here or in `menu_options_layers`. |
 | `system/input/input.tscn` | `menu_options_layers` | The game's layers over its own sets that carry the actions of kit's `MenuOptions` layer, such as `ui_toggle_menu`. The controls tabs show those actions in the `MenuOptions` group, one row per action, and a rebind there writes to each layer that declares the action. The group shows no other action, so put any action of the game's own in a set or layer listed in `action_sets`. List each layer here and not in `action_sets`, where the tabs would give it a group whose rebinds reach only that layer. Steam Input reads them as it does `action_sets`. |
 | `system/input/input.tscn` | `glyph_sets` | The glyph sets button prompts draw from, defaulting to kit's. See [Change the button prompts](#change-the-button-prompts). |
-| `system/input/input.tscn` | `unknown_glyph` | The glyph a prompt draws for a bound button with no art, defaulting to kit's "??" icon. A prompt that shows button names, as keyboard prompts do by default, shows the name instead where the button has one. Left empty, the prompt shows its label instead. |
+| `system/input/input.tscn` | `unknown_glyph` | The glyph a prompt draws for a bound button with no art, defaulting to kit's "??" icon. Left empty, the prompt draws nothing for such a button. |
 | `system/setting/settings.tscn` | `menu_tabs` | The game's own settings menu tabs, keyed by their label's message ID. |
 | `system/setting/interface/font_scaling_observer.tscn` | `theme` | The font theme which the text scaling setting resizes. |
 | `system/save/saves.tscn` | `schema` | The game's save data, required. |
@@ -82,7 +82,7 @@ A menu screen loads kit's `Menu` set, `system/input/actions/menu.tres`, which cl
 
 1. Kit's pause and settings pushers open on `ui_toggle_menu`, which `menu_options.tres` carries over `Menu`. For gameplay, the game writes an options layer over its set that holds `ui_toggle_menu` and lists it in the map root's `action_set_layers`, so Escape pauses through `menu/pause/pusher.tscn`. It also lists the layer in `Input.menu_options_layers`. Bindings save under a layer's name, so that list is how a rebind in the controls tabs' `MenuOptions` group reaches the game's layer. Nothing ties the game's layer to kit's, so a kit release whose pushers expect another action names it in its release notes.
 2. A menu over the world, such as a build or context menu, is a panel. Place `ui/panel/panel.tscn` in the map's `UI`, or `ui/panel/world_panel_2d.tscn` or `world_panel_3d.tscn` to follow a point in the world, put the game's buttons inside it, and open it through its `StdPanel` node or by showing it. While open, the panel keeps focus inside itself and loads kit's `Menu` set, so a rebind in the controls tabs' `Menu` group reaches it; the set before it comes back once it closes. Whatever stays live while it's open goes in a layer of the game's own with `Menu` as `parent`, listed in its loader's `action_set_layers` and in `Input.action_sets`. An action that does something only while the panel is open, such as a build menu's item keys, lives only in that layer, so it has one binding. A panel has no scrim; a menu that wants one is a screen.
-3. A button that doubles a bindable action, such as a build or a wave start, takes a `FocusHandler` and a `StdInputActionTrigger`; any other button connects `pressed`. The handler the action reaches validates it, since a key gets there whether or not the button is enabled.
+3. A button that doubles a bindable action, such as a build or a wave start, is an [action button](#add-an-action-button); any other button connects `pressed`. The handler the action reaches validates it, since a key gets there whether or not the button is enabled.
 4. A screen with a text field lists the `ui_text_*` actions in a layer of its own.
 
 A panel's values are exports on its child nodes, which *Editable Children* on its instance shows:
@@ -98,9 +98,23 @@ A panel's values are exports on its child nodes, which *Editable Children* on it
 | `WorldTracker2D`, `WorldTracker3D` | `map`, `target` | The map, and the node in its world the panel follows. Until `target` is set, the panel stays where it is. An open panel follows its target off-screen and stays open; to close it instead, connect the tracker's `target_exited_view` to `StdPanel`'s `close`. |
 | `WorldTracker2D`, `WorldTracker3D` | `offset`, `flip_at_edges`, `viewport_margin` | Where the panel sits from its target. With `flip_at_edges` on, the default, it moves to the target's far side rather than cross the screen's edge, staying `viewport_margin` inside it. |
 
+### Add an action button
+
+`ui/input/action_button.tscn` is a `KitInputActionButton`, a `Button` that stands for one action. Its icon is the glyph of the key or button bound to the action, its text is the action's translated name, and a click raises the action, held for as long as the button is. The game sets these on its instance:
+
+| Export | Value |
+| --- | --- |
+| `action_set`, `action` | The action the button stands for. |
+| `binding_index`, `player_id` | The binding the glyph draws first and the player whose devices it follows, by default the primary binding and player 1. |
+| `raise_action` | On by default. Off, a click raises nothing, and the game connects `pressed` as on any button. |
+| `use_action_text` | On by default, so the text follows the player's language. Off, the button keeps the `text` the game sets. |
+| `focus_anchor` | Whether focus navigation lands on the button when its screen opens. |
+
+The glyph is as tall as a line of the button's text, so it grows with the text size setting, and it follows the Button prompts setting. To make every action button's glyph taller, the game's theme sets the integer constant `glyph_scale_percent` under the type `KitInputActionButton`, or under a button's own type variation. Assistive tech reads the button as the key's name and then its text, such as "Cross, Sell". For a glyph without a button, place `ui/glyph/glyph.tscn`, a `KitInputGlyph`, which sizes the same way from its `glyph_scale` export rather than the theme.
+
 ### Change the button prompts
 
-A prompt draws an origin from the first set in `Input.glyph_sets` that matches the device and has art for it, moving on to the next matching set when one has none. To change part of a family, put a set with only that art ahead of kit's, such as one Xbox button. Kit's own families layer the same way, with `xbox_one.tres` holding only View ahead of `xbox.tres`, and `playstation_4.tres` only Share ahead of `playstation.tres`. To change all of them, replace the list, keeping those two ahead of their families. Kit's art comes from the CC0 pack named in `system/input/unknown/glyphs/SOURCE.md`, which has matching art for most pads. On Steam builds the sets draw the keyboard and any pad Steam Input isn't driving, and Steam draws its own art for the rest. A bound button with no art in any matching set, or with no image in Steam, draws `Input.unknown_glyph`, unless the prompt shows button names and the button has one.
+A prompt draws an origin from the first set in `Input.glyph_sets` that matches the device and has art for it, moving on to the next matching set when one has none. To change part of a family, put a set with only that art ahead of kit's, such as one Xbox button. Kit's own families layer the same way, with `xbox_one.tres` holding only View ahead of `xbox.tres`, and `playstation_4.tres` only Share ahead of `playstation.tres`. To change all of them, replace the list, keeping those two ahead of their families. Kit's art comes from the CC0 pack named in `system/input/unknown/glyphs/SOURCE.md`, which has matching art for most pads. On Steam builds the sets draw the keyboard and any pad Steam Input isn't driving, and Steam draws its own art for the rest. A bound button with no art in any matching set, or with no image in Steam, draws `Input.unknown_glyph`.
 
 Kit draws every key the same way, from one keycap resource, `system/input/unknown/glyphs/keyboard.tres`:
 
@@ -135,7 +149,7 @@ Game code becomes visible to it by defining `_get_debug_state() -> Dictionary` o
 
 This repository is also a plugin marketplace holding one plugin, [`kit`](./plugins/kit). [Claude Code](https://code.claude.com/docs/en/plugin-marketplaces) and Codex both read it, from the same `.claude-plugin/` files. Nothing is published anywhere; a repository references it by GitHub path. The plugin carries the skills that describe this addon:
 
-- `add-setting`, `add-save-field`, `add-input-action`, `add-sound` and `add-translation`, which extend a game built on kit. Each reads what the game owns out of its `project.godot` rather than assuming a layout.
+- `add-setting`, `add-save-field`, `add-input-action`, `add-action-button`, `add-sound` and `add-translation`, which extend a game built on kit. Each reads what the game owns out of its `project.godot` rather than assuming a layout.
 - `add-entity-hud` and `add-hud-element`, for the HUD.
 - `run-game`, and the `godot-bridge` it drives a live game with, through the debug bridge above.
 

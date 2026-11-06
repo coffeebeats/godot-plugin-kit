@@ -81,6 +81,7 @@ size_flags_horizontal = 10
 hide_if_cursor_visible = true
 action_set = ExtResource("4_s0nl3")
 action = &"ui_tab_prev"
+glyph_scale = 2.0
 
 [node name="TabGroup" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Header/MarginContainer/HBoxContainer" unique_id=891982953 node_paths=PackedStringArray("content") instance=ExtResource("13_tabs")]
 unique_name_in_owner = true
@@ -96,6 +97,7 @@ size_flags_horizontal = 2
 hide_if_cursor_visible = true
 action_set = ExtResource("4_s0nl3")
 action = &"ui_tab_next"
+glyph_scale = 2.0
 
 [node name="Body" type="PanelContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1489876437]
 layout_mode = 2
