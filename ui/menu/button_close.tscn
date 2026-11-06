@@ -19,7 +19,6 @@ ignore_texture_size = true
 stretch_mode = 5
 
 [node name="FocusHandler" parent="." unique_id=1181933752 instance=ExtResource("2_olnlp")]
-layout_mode = 0
 
 [node name="StdInputActionTrigger" type="Node" parent="." unique_id=644336236]
 script = ExtResource("3_trigger")

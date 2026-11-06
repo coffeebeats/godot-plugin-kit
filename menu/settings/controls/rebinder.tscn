@@ -33,10 +33,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 0.607843)
 
-[node name="StdInputActionSetLoader" type="Control" parent="." unique_id=1446947959]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="StdInputActionSetLoader" type="Node" parent="." unique_id=1446947959]
 script = ExtResource("3_rp1ye")
 action_set_layers = Array[ExtResource("5_layer")]([ExtResource("3_nyt6g")])
 
