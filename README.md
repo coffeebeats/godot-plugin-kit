@@ -148,7 +148,7 @@ Game code becomes visible to it by defining `_get_debug_state() -> Dictionary` o
 
 This repository is also a plugin marketplace holding one plugin, [`kit`](./plugins/kit). [Claude Code](https://code.claude.com/docs/en/plugin-marketplaces) and Codex both read it, from the same `.claude-plugin/` files. Nothing is published anywhere; a repository references it by GitHub path. The plugin carries the skills that describe this addon:
 
-- `add-setting`, `add-save-field`, `add-input-action`, `add-sound` and `add-translation`, which extend a game built on kit. Each reads what the game owns out of its `project.godot` rather than assuming a layout.
+- `add-setting`, `add-save-field`, `add-input-action`, `add-action-button`, `add-sound` and `add-translation`, which extend a game built on kit. Each reads what the game owns out of its `project.godot` rather than assuming a layout.
 - `add-entity-hud` and `add-hud-element`, for the HUD.
 - `run-game`, and the `godot-bridge` it drives a live game with, through the debug bridge above.
 
