@@ -32,10 +32,10 @@ const ButtonScene := preload("../input/button.tscn")
 @export_group("Theme")
 
 ## theme_type_selected is the theme type variation for the selected tab.
-@export var theme_type_selected: StringName = &"button_tab_selected"
+@export var theme_type_selected: StringName = &"ButtonTabSelected"
 
 ## theme_type_unselected is the theme type variation for unselected tabs.
-@export var theme_type_unselected: StringName = &"button_tab_unselected"
+@export var theme_type_unselected: StringName = &"ButtonTabUnselected"
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
 

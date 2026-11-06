@@ -3,8 +3,8 @@
 ## feel by editing a resource rather than a script, and shares one setting across every
 ## entity that uses it.
 ##
-## Colors, fonts and box art are *not* here. Those are theme type variations - `hud_bar`
-## and `hud_bar_ghost` in the game's theme - because the theme system already
+## Colors, fonts and box art are *not* here. Those are theme type variations - `HudBar`
+## and `HudBarGhost` in the game's theme - because the theme system already
 ## expresses them. This resource carries only what a theme cannot: timing and motion.
 ##
 

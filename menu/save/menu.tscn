@@ -37,7 +37,7 @@ mouse_filter = 2
 [node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=1970037364]
 custom_minimum_size = Vector2(1152, 648)
 layout_mode = 2
-theme_type_variation = &"panel_dialog"
+theme_type_variation = &"PanelDialog"
 script = ExtResource("1_sihek")
 confirm_delete_scene = ExtResource("7_delete")
 delete_failed_scene = ExtResource("10_failed")

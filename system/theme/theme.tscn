@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://bb53maji3qq05"]
+
+[ext_resource type="Script" uid="uid://q6nbq7lc7vly" path="res://system/theme/theme.gd" id="1_theme"]
+[ext_resource type="Theme" uid="uid://de6hnqt60rtk3" path="res://ui/theme/base.tres" id="2_base"]
+
+[node name="Theme" type="Node"]
+script = ExtResource("1_theme")
+base = ExtResource("2_base")

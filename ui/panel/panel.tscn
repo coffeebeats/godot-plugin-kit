@@ -7,7 +7,7 @@
 
 [node name="Panel" type="PanelContainer" unique_id=2030283406]
 visible = false
-theme_type_variation = &"panel_dialog"
+theme_type_variation = &"PanelDialog"
 
 [node name="StdPanel" type="Node" parent="." unique_id=121929065]
 script = ExtResource("1_panel")
