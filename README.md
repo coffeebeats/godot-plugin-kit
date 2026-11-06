@@ -39,6 +39,7 @@ Each value the game owns is an export on a scene instanced in `System`:
 | `system/input/input.tscn` | `action_sets` | The game's action sets and its own layers, which the settings menu's Controller and Keyboard & Mouse tabs list for rebinding, leaving out those in `menu_options_layers`. On Steam builds, Steam Input also reads a controller's binding against them, so list every set and layer the game's manifest has, here or in `menu_options_layers`. |
 | `system/input/input.tscn` | `menu_options_layers` | The game's layers over its own sets that carry the actions of kit's `MenuOptions` layer, such as `ui_toggle_menu`. The controls tabs show those actions in the `MenuOptions` group, one row per action, and a rebind there writes to each layer that declares the action. The group shows no other action, so put any action of the game's own in a set or layer listed in `action_sets`. List each layer here and not in `action_sets`, where the tabs would give it a group whose rebinds reach only that layer. Steam Input reads them as it does `action_sets`. |
 | `system/input/input.tscn` | `glyph_sets` | The glyph sets button prompts draw from, defaulting to kit's. See [Change the button prompts](#change-the-button-prompts). |
+| `system/input/input.tscn` | `unknown_glyph` | The glyph a prompt draws for a bound button with no art, defaulting to kit's "??" icon. A prompt that shows button names, as keyboard prompts do by default, shows the name instead where the button has one. Left empty, the prompt shows its label instead. |
 | `system/setting/settings.tscn` | `menu_tabs` | The game's own settings menu tabs, keyed by their label's message ID. |
 | `system/setting/interface/font_scaling_observer.tscn` | `theme` | The font theme which the text scaling setting resizes. |
 | `system/save/saves.tscn` | `schema` | The game's save data, required. |
@@ -86,7 +87,7 @@ A menu screen loads kit's `Menu` set, `system/input/actions/menu.tres`, which cl
 
 ### Change the button prompts
 
-A prompt draws an origin from the first set in `Input.glyph_sets` that matches the device and has art for it, moving on to the next matching set when one has none. To change part of a family, put a set with only that art ahead of kit's, such as one Xbox button. To change all of them, replace the list. On Steam builds the sets draw the keyboard and any pad Steam Input isn't driving, and Steam draws its own art for the rest.
+A prompt draws an origin from the first set in `Input.glyph_sets` that matches the device and has art for it, moving on to the next matching set when one has none. To change part of a family, put a set with only that art ahead of kit's, such as one Xbox button. To change all of them, replace the list. On Steam builds the sets draw the keyboard and any pad Steam Input isn't driving, and Steam draws its own art for the rest. A bound button with no art in any matching set, or with no image in Steam, draws `Input.unknown_glyph`, unless the prompt shows button names and the button has one.
 
 Kit draws every key the same way, from one keycap resource, `system/input/unknown/glyphs/keyboard.tres`:
 

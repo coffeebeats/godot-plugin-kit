@@ -66,6 +66,13 @@ const MODULE_ID := &"input"
 ## draw only the keyboard and the joypads Steam Input isn't driving.
 @export var glyph_sets: Array[StdInputGlyphSet] = []
 
+## unknown_glyph is the glyph prompts draw for a bound origin with no art, in the glyph
+## sets or in Steam Input. A prompt showing origin names shows the name instead where
+## the origin has one. Left empty, such a prompt shows its label instead.
+##
+## NOTE: It's read once, when the input implementation loads.
+@export var unknown_glyph: Texture2D = null
+
 ## ui_navigation_cooldown is a wait period after a UI navigation press moves focus which
 ## must elapse before another one is accepted, so a key's repeat or a stick wavering at
 ## its deadzone can't race through a menu.

@@ -1,7 +1,7 @@
 ##
 ## GodotInput is the input system's implementation over Godot's own input. It hands the
-## game's glyph sets, read from the `Input` system component's `glyph_sets`, to the
-## Godot glyphs component.
+## `Input` system component's `glyph_sets` and `unknown_glyph` to the Godot glyphs
+## component.
 ##
 
 extends Node
@@ -24,4 +24,6 @@ func _enter_tree() -> void:
 		assert(false, "invalid config; missing Godot glyphs component")
 		return
 
-	component.glyph_sets = KitSystems.input().glyph_sets
+	var input := KitSystems.input()
+	component.glyph_sets = input.glyph_sets
+	component.unknown_glyph = input.unknown_glyph
