@@ -6,6 +6,9 @@
 ## Subclasses supply dimension-specific projection; attach `KitWorldTracker2D` or
 ## `KitWorldTracker3D`, never this script directly.
 ##
+## NOTE: A tracker without a `target` waits, leaving its host where it is, and starts
+## once one is set.
+##
 
 class_name KitWorldTracker
 extends Node
@@ -27,13 +30,20 @@ signal stopped
 # -- CONFIGURATION ------------------------------------------------------------------- #
 
 ## offset shifts the tracked point in screen-space pixels (e.g. to float a widget above
-## its target). View-crossing and edge-clamping both act on the shifted point.
+## its target). View-crossing and edge-clamping both act on the shifted point, or on
+## the flipped one once `flip_at_edges` moves the host.
 @export var offset: Vector2 = Vector2.ZERO
 
 ## clamped pins the host to the viewport edge while the tracked point is off-screen.
 @export var clamped: bool = false
 
-## viewport_margin insets the clamped edge by this many screen-space pixels.
+## flip_at_edges moves the host to the far side of the tracked point, mirroring
+## `offset`, on each axis where it would otherwise cross the viewport edge while the
+## point is on-screen, shifted or not.
+@export var flip_at_edges: bool = false
+
+## viewport_margin insets the clamped and flipping edges by this many screen-space
+## pixels.
 @export var viewport_margin: float = 0.0
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
@@ -59,6 +69,12 @@ func _process(_delta: float) -> void:
 	if not _active:
 		_active = true
 		_view_initialized = false
+
+		assert(
+			target.get_viewport() == map.sub_viewport,
+			"invalid config; 'target' must live inside 'map.sub_viewport'",
+		)
+
 		started.emit()
 
 	var screen_position := _project_target()
@@ -66,6 +82,16 @@ func _process(_delta: float) -> void:
 		screen_position += offset
 
 	var screen_rect := map.get_screen_rect()
+
+	# NOTE: Flip before the view test, since a flip can bring back a host whose shifted
+	# point left the screen; a host still off-screen falls through below.
+	var is_near_view := (
+		screen_rect.has_point(screen_position)
+		or screen_rect.has_point(screen_position - offset)
+	)
+	if flip_at_edges and is_near_view:
+		screen_position = _flip_to_fit(screen_position, screen_rect)
+
 	var is_in_view := screen_rect.has_point(screen_position)
 	if not is_in_view:
 		screen_position = _resolve_offscreen(screen_position, screen_rect)
@@ -85,19 +111,11 @@ func _process(_delta: float) -> void:
 
 func _ready() -> void:
 	var map := _get_map()
-	var target := _get_target()
 	assert(map, "invalid config; missing 'map'")
 	assert(map.sub_viewport, "invalid config; 'map' has no SubViewport")
-	assert(target, "invalid config; missing 'target'")
 
 	_host = get_parent() as Control
 	assert(_host, "invalid config; KitWorldTracker's parent must be a Control")
-
-	# Validate scene topology and tree ordering.
-	assert(
-		target.get_viewport() == map.sub_viewport,
-		"invalid config; 'target' must live inside 'map.sub_viewport'",
-	)
 
 	# NOTE: The tracker reads `canvas_transform` in `_process`, which the camera writes
 	# during its own. Godot runs `_process` in depth-first tree order, so a tracker
@@ -161,6 +179,26 @@ func _clamp_to_edge(screen_position: Vector2, screen_rect: Rect2) -> Vector2:
 	if direction == Vector2.ZERO:
 		return Vector2.INF
 	return _intersect_rect_edge(center, direction, bounds) - half
+
+
+## _flip_to_fit returns `screen_position`, the host's position including `offset`,
+## moved to the far side of the tracked point on each axis where the host crosses the
+## `viewport_margin`-inset edge of `screen_rect` and the far side fits.
+func _flip_to_fit(screen_position: Vector2, screen_rect: Rect2) -> Vector2:
+	var bounds := screen_rect.grow(-viewport_margin)
+	var size := _host.get_global_rect().size
+	var flipped := screen_position - offset * 2.0 - size
+
+	var result := screen_position
+	for axis in [Vector2.AXIS_X, Vector2.AXIS_Y]:
+		var start := bounds.position[axis]
+		var end := bounds.end[axis] - size[axis]
+		if screen_position[axis] >= start and screen_position[axis] <= end:
+			continue
+		if flipped[axis] >= start and flipped[axis] <= end:
+			result[axis] = flipped[axis]
+
+	return result
 
 
 ## _intersect_rect_edge returns the point where the ray from `origin` along `direction`

@@ -84,8 +84,8 @@ func attach(anchor: KitHudAnchor) -> KitHudGroup:
 	group.anchor = anchor
 	group.layer = self
 
-	# NOTE: `KitWorldTracker` asserts on both `map` and `target` in its `_ready`, so the
-	# tracker must be wired before the group enters the tree.
+	# NOTE: `KitWorldTracker` asserts on `map` in its `_ready`, so the tracker must be
+	# wired before the group enters the tree.
 	_configure_tracker(group.tracker, anchor)
 
 	# NOTE: Before mounting, and deliberately not left to `@onready`. `add_child` only
