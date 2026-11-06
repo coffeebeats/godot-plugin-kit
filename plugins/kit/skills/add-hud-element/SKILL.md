@@ -27,7 +27,7 @@ Before starting, check that a stock element with a different style resource does
    | Colors, fonts, styleboxes, icons | Durations, delays, curves, distances, easing |
    | Anything `Theme` can express | Anything it cannot |
 
-   Add the variation to the game's theme (`gui/theme/custom` in `project.godot`), named `hud_<element>`, following `hud_bar` and `hud_number`. Write `style.gd` as `class_name Hud<Name>Style extends Resource` using the `Resource` script template, with one `@export` per tunable and a doc comment saying what it does in feel terms, not in units. Ship at least one preset `.tres`.
+   Add the variation to the game's theme (`gui/theme/custom` in `project.godot`), named `Hud<Element>`, following `HudBar` and `HudNumber`. Write `style.gd` as `class_name Hud<Name>Style extends Resource` using the `Resource` script template, with one `@export` per tunable and a doc comment saying what it does in feel terms, not in units. Ship at least one preset `.tres`.
 
    Use `StdTweenCurve` for any curve export — `KitHudBarStyle.drain` and `KitHudNumberStyle.motion` both do, and it carries the delay as well as the easing.
 

@@ -22,7 +22,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_type_variation = &"menu_body"
+theme_type_variation = &"MenuBody"
 
 [node name="Volume" parent="." unique_id=2056102013 instance=ExtResource("1_0oves")]
 layout_mode = 2

@@ -47,14 +47,14 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_type_variation = &"menu_body"
+theme_type_variation = &"MenuBody"
 script = ExtResource("29_ctrls")
 scope = ExtResource("21_dqueq")
 
 [node name="Controller" type="VBoxContainer" parent="." unique_id=1067462580]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"menu_body"
+theme_type_variation = &"MenuBody"
 
 [node name="Steam" type="Node" parent="Controller" unique_id=227106428]
 
@@ -144,7 +144,7 @@ autowrap_mode = 3
 [node name="Keyboard" type="VBoxContainer" parent="." unique_id=1439178426]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"menu_body"
+theme_type_variation = &"MenuBody"
 
 [node name="Mouse" parent="Keyboard" unique_id=1950413672 instance=ExtResource("10_heyw7")]
 layout_mode = 2
@@ -167,7 +167,7 @@ property = ExtResource("3_c0nf1")
 [node name="ActionSets" type="VBoxContainer" parent="." unique_id=1871204496]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"menu_body"
+theme_type_variation = &"MenuBody"
 
 [node name="MenuControls" parent="ActionSets" unique_id=1209626123 instance=ExtResource("19_ngc7g")]
 unique_name_in_owner = true

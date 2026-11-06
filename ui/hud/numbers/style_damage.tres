@@ -17,7 +17,7 @@ transition_type = 4
 [resource]
 script = ExtResource("1_style")
 format = "%d"
-theme_variation = &"hud_number"
+theme_variation = &"HudNumber"
 travel = Vector2(0, -40)
 spread_degrees = 40.0
 duration = 0.7

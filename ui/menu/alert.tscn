@@ -41,7 +41,7 @@ mouse_filter = 2
 [node name="Panel" type="PanelContainer" parent="CenterContainer" unique_id=758535495]
 custom_minimum_size = Vector2(640, 0)
 layout_mode = 2
-theme_type_variation = &"panel_dialog"
+theme_type_variation = &"PanelDialog"
 
 [node name="MarginContainer" type="MarginContainer" parent="CenterContainer/Panel" unique_id=260022418]
 layout_mode = 2
@@ -75,7 +75,7 @@ theme_override_constants/separation = 16
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
-theme_type_variation = &"button_dialog"
+theme_type_variation = &"ButtonDialog"
 action_mode = 1
 text = "kit_alert_cancel"
 
@@ -87,7 +87,7 @@ priority = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
-theme_type_variation = &"button_dialog"
+theme_type_variation = &"ButtonDialog"
 action_mode = 1
 text = "kit_alert_okay"
 
