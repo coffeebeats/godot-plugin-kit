@@ -77,6 +77,43 @@ func test_input_ready_with_implementation_loads_module() -> void:
 	assert_true(KitModule.is_loaded(SystemInput.MODULE_ID))
 
 
+func test_input_ready_with_a_game_layer_in_both_lists_loads_module() -> void:
+	# Given: A platform whose profile loaded.
+	add_child_autofree(PlatformScene.instantiate())
+
+	# Given: The input scene, listing the game's options layer in both of its lists.
+	var input: SystemInput = SystemInputScene.instantiate()
+	var options := _create_game_options_layer(&"GameplayOptions")
+	input.action_sets = [options] as Array[StdInputActionSet]
+	input.menu_options_layers = [options] as Array[StdInputActionSetLayer]
+
+	# When: It enters the scene tree.
+	add_child_autofree(input)
+
+	# Then: Its module loaded.
+	assert_true(KitModule.is_loaded(SystemInput.MODULE_ID))
+
+
+func test_input_ready_with_a_game_layer_named_as_kits_fails_module() -> void:
+	# Given: A platform whose profile loaded.
+	add_child_autofree(PlatformScene.instantiate())
+
+	# Given: The input scene, listing a game layer which takes the name of kit's layer.
+	var input: SystemInput = SystemInputScene.instantiate()
+	var options := _create_game_options_layer(MenuOptions.name)
+	input.menu_options_layers = [options] as Array[StdInputActionSetLayer]
+
+	# When: It enters the scene tree.
+	add_child_autofree(input)
+
+	# Then: The repeated name is reported.
+	assert_engine_error("duplicate name: MenuOptions")
+
+	# Then: Its module failed.
+	assert_eq(KitModule.get_status(SystemInput.MODULE_ID), KitModule.Status.FAILED)
+	assert_push_error("Kit module failed to load.")
+
+
 func test_input_ready_without_cursor_fails_module() -> void:
 	# Given: A platform whose profile loaded.
 	add_child_autofree(PlatformScene.instantiate())
@@ -192,6 +229,20 @@ func before_all() -> void:
 
 
 # -- PRIVATE METHODS ----------------------------------------------------------------- #
+
+
+## _create_game_options_layer returns a game layer called `layer_name` over a game set,
+## carrying the pause action.
+func _create_game_options_layer(layer_name: StringName) -> StdInputActionSetLayer:
+	var gameplay := StdInputActionSet.new()
+	gameplay.name = &"Gameplay"
+
+	var options := StdInputActionSetLayer.new()
+	options.name = layer_name
+	options.parent = gameplay
+	options.actions_digital = [&"ui_toggle_menu"] as Array[StringName]
+
+	return options
 
 
 ## _add_vertical_list adds a vertical list of two buttons and returns them in order.

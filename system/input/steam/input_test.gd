@@ -59,6 +59,20 @@ func test_input_monitor_reads_bindings_against_kit_and_game_sets() -> void:
 	assert_eq(monitor.action_sets.count(Menu), 1)
 
 
+func test_input_monitor_kit_sets_are_each_validated_by_the_input_system() -> void:
+	# Given: The Steam input scene, whose monitor lists kit's own sets and layers.
+	var input: Node = autofree(_input_scene.instantiate())
+
+	# When: The input system lists the sets it validates.
+	var listed: Array[StdInputActionSet] = (
+		autofree(SystemInput.new())._list_action_sets()
+	)
+
+	# Then: Each of kit's sets on the monitor is among them.
+	for action_set in input.get_node(^"JoypadMonitor").action_sets:
+		assert_has(listed, action_set)
+
+
 func test_input_monitor_holds_godot_joypad_monitor() -> void:
 	# When: The Steam input scene enters the tree under the input system.
 	var input := _add_input()
