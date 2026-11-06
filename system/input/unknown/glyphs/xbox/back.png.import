@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://n11em6xwrmiu"
-path="res://.godot/imported/triangle.png-a6f20a57e6df8c3b1fff0be1cf83046b.ctex"
+uid="uid://c73d4r70xfvw7"
+path="res://.godot/imported/back.png-156227fbc3bbd902def616849e226487.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://system/input/unknown/glyphs/playstation/triangle.png"
-dest_files=["res://.godot/imported/triangle.png-a6f20a57e6df8c3b1fff0be1cf83046b.ctex"]
+source_file="res://system/input/unknown/glyphs/xbox/back.png"
+dest_files=["res://.godot/imported/back.png-156227fbc3bbd902def616849e226487.ctex"]
 
 [params]
 
