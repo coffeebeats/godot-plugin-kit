@@ -75,27 +75,23 @@ func _ready() -> void:
 
 	for binding in bindings:
 		assert(binding is Binding, "invalid state; missing binding")
-		assert(binding.glyph is KitInputGlyph, "invalid state; missing glyph")
-		assert(binding.glyph.action, "invalid state; missing action")
+		assert(binding.action, "invalid state; missing action")
 		assert(
-			binding.glyph.action_set is StdInputActionSet,
+			binding.action_set is StdInputActionSet,
 			"invalid state; missing action set",
 		)
 
 		assert(
-			(
-				not _prefix_category
-				or binding.glyph.action_set.name + "/" == _prefix_category
-			),
+			not _prefix_category or binding.action_set.name + "/" == _prefix_category,
 			"invalid config; conflicting binding",
 		)
-		_prefix_category = binding.glyph.action_set.name + "/"
+		_prefix_category = binding.action_set.name + "/"
 
 		assert(
-			not _prefix_key or binding.glyph.action + "/" == _prefix_key,
+			not _prefix_key or binding.action + "/" == _prefix_key,
 			"invalid config; conflicting binding",
 		)
-		_prefix_key = binding.glyph.action + "/"
+		_prefix_key = binding.action + "/"
 
 	# Defer this call so parent nodes can set properties on this one.
 	call_deferred(&"_update_visibility")

@@ -114,19 +114,19 @@ func _generate_settings() -> void:
 		primary.scope = scope
 		primary.device_category = device_category
 		primary.linked_layers = linked
-		primary.glyph.action = action
-		primary.glyph.action_set = action_set
-		primary.glyph.binding_index = StdInputDeviceActions.BINDING_INDEX_PRIMARY
-		primary.glyph.player_id = player_id
+		primary.action = action
+		primary.action_set = action_set
+		primary.binding_index = StdInputDeviceActions.BINDING_INDEX_PRIMARY
+		primary.player_id = player_id
 
 		var secondary := BindingScene.instantiate()
 		secondary.scope = scope
 		secondary.device_category = device_category
 		secondary.linked_layers = linked
-		secondary.glyph.action = action
-		secondary.glyph.action_set = action_set
-		secondary.glyph.binding_index = StdInputDeviceActions.BINDING_INDEX_SECONDARY
-		secondary.glyph.player_id = player_id
+		secondary.action = action
+		secondary.action_set = action_set
+		secondary.binding_index = StdInputDeviceActions.BINDING_INDEX_SECONDARY
+		secondary.player_id = player_id
 
 		var reset := ResetScene.instantiate()
 		reset.scope = scope

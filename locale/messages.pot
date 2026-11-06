@@ -365,6 +365,10 @@ msgstr ""
 msgid "kit_options_controls_confine_cursor"
 msgstr ""
 
+#. Shown in place of a key or button in the controls settings, for an action with nothing bound at that slot.
+msgid "kit_options_controls_unbound"
+msgstr ""
+
 #. Instructs the user that they will be updating the controller binding for the specified action. Here, the '%s' placeholder will be replaced with the translated name of the game action.
 msgid "kit_options_controls_rebinder_title"
 msgstr ""
