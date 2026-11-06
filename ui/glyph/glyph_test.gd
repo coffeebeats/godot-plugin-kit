@@ -92,6 +92,31 @@ func test_glyph_cycle_interval_advances_to_the_next_origin() -> void:
 	assert_eq(glyph.label.text, _get_origin_label(actions, 1))
 
 
+func test_glyph_origin_labels_changed_redraws_the_key_label() -> void:
+	# Given: A platform whose profile loaded, and the input scene with its slot.
+	add_child_autofree(PlatformScene.instantiate())
+	add_child_autofree(SystemInputScene.instantiate())
+
+	# Given: A loaded set holding `ui_accept`, which the engine binds to keys.
+	var actions := _load_actions()
+
+	# Given: A keyboard glyph drawing the first origin's label.
+	var glyph := _create_glyph(actions)
+	add_child_autofree(glyph)
+	await wait_process_frames(2)
+	var expected := _get_origin_label(actions, 0)
+	assert_eq(glyph.label.text, expected, "precondition")
+
+	# Given: A label left over from a previous keyboard layout or locale.
+	glyph.label.text = "Stale"
+
+	# When: The slot reports that its origins' labels changed.
+	StdInputSlot.for_player(1).origin_labels_changed.emit()
+
+	# Then: The glyph draws the current label again.
+	assert_eq(glyph.label.text, expected)
+
+
 func test_glyph_hide_if_cursor_visible_keeps_joypad_glyph_shown() -> void:
 	# Given: A platform whose profile loaded, and the input scene with its slot.
 	add_child_autofree(PlatformScene.instantiate())

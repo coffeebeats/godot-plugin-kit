@@ -23,14 +23,21 @@ func test_input_kit_menus_over_a_map_restore_its_set_through_a_pop() -> void:
 	add_child_autofree(SystemInputScene.instantiate())
 	var slot := StdInputSlot.for_player(1)
 
-	# Given: A map's loader holding the game's set with kit's options layer over it.
+	# Given: A map's loader holding the game's set.
 	var map := StdInputActionSetLoader.new()
 	map.action_set = StdInputActionSet.new()
 	map.action_set.name = &"Gameplay"
-	map.action_set_layers = [MenuOptions] as Array[StdInputActionSetLayer]
+
+	# Given: The game's own options layer over its set, carrying the pause action.
+	var options := StdInputActionSetLayer.new()
+	options.name = &"GameplayOptions"
+	options.parent = map.action_set
+	options.actions_digital = [&"ui_toggle_menu"] as Array[StringName]
+	map.action_set_layers = [options] as Array[StdInputActionSetLayer]
+
 	add_child_autofree(map)
 	await wait_idle_frames(1)
-	assert_has(slot.list_action_set_layers(), MenuOptions)
+	assert_has(slot.list_action_set_layers(), options)
 
 	# When: The pause menu covers the map, and an alert then covers the pause menu.
 	map.propagate_notification(StdScreenManager.NOTIFICATION_SCREEN_COVERED)
@@ -53,7 +60,7 @@ func test_input_kit_menus_over_a_map_restore_its_set_through_a_pop() -> void:
 
 	# Then: The map's set is loaded with its options layer.
 	assert_eq(slot.actions.get_action_set(slot.device_id), map.action_set)
-	assert_has(slot.list_action_set_layers(), MenuOptions)
+	assert_has(slot.list_action_set_layers(), options)
 
 
 func test_input_ready_with_implementation_loads_module() -> void:

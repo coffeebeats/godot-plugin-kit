@@ -52,7 +52,7 @@ var _player: int = -1
 var _scope: StdSettingsScope = null
 
 @onready var _label_action: Label = %Action
-@onready var _label_glyph: StdInputGlyph = %Glyph
+@onready var _label_glyph: KitInputGlyph = %Glyph
 @onready var _label_instructions_pre: Label = %InstructionsPre
 @onready var _label_instructions_post: Label = %InstructionsPost
 

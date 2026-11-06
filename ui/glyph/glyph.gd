@@ -6,9 +6,70 @@
 
 @tool
 class_name KitInputGlyph
-extends StdInputGlyph
+extends Control
+
+# -- SIGNALS ------------------------------------------------------------------------- #
+
+## glyph_updated is emitted after each redraw with whether the glyph shows anything. It
+## may fire when nothing changed.
+signal glyph_updated(has_contents: bool)
+
+# -- DEPENDENCIES -------------------------------------------------------------------- #
+
+const Signals := preload("res://addons/std/event/signal.gd")
+
+# -- DEFINITIONS --------------------------------------------------------------------- #
+
+const DeviceType := StdInputDevice.DeviceType  # gdlint:ignore=constant-name
+const DEVICE_TYPE_GENERIC := StdInputDevice.DEVICE_TYPE_GENERIC
+const DEVICE_TYPE_KEYBOARD := StdInputDevice.DEVICE_TYPE_KEYBOARD
+const DEVICE_TYPE_UNKNOWN := StdInputDevice.DEVICE_TYPE_UNKNOWN
 
 # -- CONFIGURATION ------------------------------------------------------------------- #
+
+@export_subgroup("Action")
+
+## action_set is an input action set which defines the configured action.
+@export var action_set: StdInputActionSet = null
+
+## action is the input action whose binding the glyph shows.
+@export var action := &""
+
+## binding_index is the index/rank (e.g. primary or secondary) of the action binding.
+@export var binding_index: int = 0
+
+## cycle_interval is the time (in seconds) each origin bound to the action is shown
+## before the glyph advances to the next one, starting over from `binding_index`, so a
+## player sees every binding. `0` shows `binding_index` alone.
+@export var cycle_interval: float = 0.0:
+	set(value):
+		if value == cycle_interval:
+			return
+
+		cycle_interval = value
+
+		if Engine.is_editor_hint() or not is_node_ready():
+			return
+
+		# NOTE: A change restarts the cycle, since the origin count is only fetched while
+		# cycling, and starts or stops the processing which drives it.
+		_cycle_offset = 0
+		_cycle_time = 0.0
+		set_process(cycle_interval > 0.0)
+		_handle_update()
+
+@export_subgroup("Player")
+
+## player_id selects the player whose `StdInputSlot` supplies the bindings. That slot
+## must be in the scene tree when the glyph enters it.
+@export var player_id: int = 1
+
+@export_subgroup("Device")
+
+## device_type_override is an optional setting that locks which device's glyphs draw,
+## while every device stays accepted. `DEVICE_TYPE_UNKNOWN` follows the active device,
+## `DEVICE_TYPE_GENERIC` the connected joypads' family, and any other value that type.
+@export var device_type_override: StdSettingsPropertyInt = null
 
 @export_group("Display")
 
@@ -119,18 +180,84 @@ extends StdInputGlyph
 # gdlint:ignore=class-definitions-order
 static var _stylebox_empty := StyleBoxEmpty.new()
 
-var _stylebox: StyleBox = null
 var _custom_minimum_size: Vector2 = Vector2.ZERO
+var _cycle_offset: int = 0
+var _cycle_time: float = 0.0
+var _origin_count: int = 0
+var _slot: StdInputSlot = null
+var _stylebox: StyleBox = null
+
+# -- PUBLIC METHODS ------------------------------------------------------------------ #
+
+
+## get_binding_index returns the index of the origin to display: `binding_index`, moved
+## along by cycling.
+func get_binding_index() -> int:
+	return binding_index + _cycle_offset
+
+
+## update redraws the glyph and restarts its cycle from `binding_index`. Call it after
+## changing the action configuration.
+func update() -> void:
+	_cycle_offset = 0
+	_cycle_time = 0.0
+	_handle_update()
+
 
 # -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
+
+
+func _enter_tree() -> void:
+	if Engine.is_editor_hint():
+		return
+
+	_slot = StdInputSlot.for_player(player_id)
+	assert(_slot is StdInputSlot, "invalid state; missing player slot")
+
+
+func _get_configuration_warnings() -> PackedStringArray:
+	var warnings := PackedStringArray()
+
+	if not action_set is StdInputActionSet:
+		warnings.append("missing action set")
+
+	elif not action:
+		warnings.append("missing action")
+
+	elif not (
+		action in action_set.actions_analog_1d
+		or action in action_set.actions_analog_2d
+		or action in action_set.actions_digital
+		or action == action_set.action_absolute_mouse
+	):
+		warnings.append("invalid action; not in action set")
+
+	elif player_id < 0:
+		warnings.append("invalid action; missing player")
+
+	return warnings
+
+
+func _process(delta: float) -> void:
+	if cycle_interval <= 0.0 or _get_cycle_length() < 2:
+		return
+
+	_cycle_time += delta
+	if _cycle_time < cycle_interval:
+		return
+
+	# NOTE: A frame longer than the interval advances the glyph once and drops the
+	# surplus, rather than catching up a step per frame afterwards.
+	_cycle_time = fmod(_cycle_time, cycle_interval)
+	_cycle_offset = (_cycle_offset + 1) % _get_cycle_length()
+	_handle_update()
 
 
 func _ready() -> void:
 	_custom_minimum_size = custom_minimum_size
 
-	super._ready()  # gdlint:ignore=private-method-call
-
 	if Engine.is_editor_hint():
+		set_process(false)
 		return
 
 	assert(label is Label, "invalid state; missing node")
@@ -143,8 +270,30 @@ func _ready() -> void:
 		else panel_container.get_theme_stylebox(&"panel")
 	)
 
+	set_process(cycle_interval > 0.0)
 
-# -- PRIVATE METHODS (OVERRIDES) ----------------------------------------------------- #
+	Signals.connect_safe(_slot.action_configuration_changed, _on_actions_changed)
+	Signals.connect_safe(_slot.cursor_visibility_changed, _on_slot_changed)
+	Signals.connect_safe(_slot.device_activated, _on_device_activated)
+	Signals.connect_safe(_slot.origin_labels_changed, _handle_update)
+
+	# NOTE: A controller glyph locked by a `DEVICE_TYPE_GENERIC` override follows the
+	# connected joypads, so a connect or disconnect can change its family.
+	Signals.connect_safe(_slot.device_connected, _on_slot_changed)
+	Signals.connect_safe(_slot.device_disconnected, _on_slot_changed)
+
+	if device_type_override is StdSettingsPropertyInt:
+		Signals.connect_safe(device_type_override.value_changed, _on_slot_changed)
+
+	# NOTE: Deferred so a parent can configure the glyph in its own `_ready` first.
+	_handle_update.call_deferred()
+
+
+# -- PRIVATE METHODS ----------------------------------------------------------------- #
+
+
+func _get_cycle_length() -> int:
+	return _origin_count - binding_index
 
 
 func _get_device_type() -> DeviceType:
@@ -189,6 +338,25 @@ func _get_device_type() -> DeviceType:
 	return (
 		property_value if property_value != DEVICE_TYPE_UNKNOWN else _slot.device_type
 	)
+
+
+func _handle_update() -> void:
+	assert(action, "invalid config; missing action")
+	assert(action_set is StdInputActionSet, "invalid config; missing action set")
+
+	var device_type := _get_device_type()
+
+	_origin_count = (
+		_slot.get_action_origin_count(action_set, action, device_type)
+		if cycle_interval > 0.0
+		else 0
+	)
+	if _cycle_offset >= maxi(_get_cycle_length(), 1):
+		_cycle_offset = 0
+
+	var has_contents: bool = _update_glyph(device_type, get_binding_index())
+
+	glyph_updated.emit(has_contents)
 
 
 func _update_glyph(device_type: DeviceType, index: int) -> bool:
@@ -274,3 +442,18 @@ func _update_glyph(device_type: DeviceType, index: int) -> bool:
 	custom_minimum_size = minimum_size
 
 	return texture_rect.texture != texture_prev or label.text != label_prev
+
+
+# -- SIGNAL HANDLERS ----------------------------------------------------------------- #
+
+
+func _on_actions_changed() -> void:
+	update()
+
+
+func _on_device_activated(_device: StdInputDevice) -> void:
+	update()
+
+
+func _on_slot_changed(_value: Variant) -> void:
+	_handle_update()
