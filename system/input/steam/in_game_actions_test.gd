@@ -26,9 +26,8 @@ func test_generate_registers_every_action_set_in_the_project() -> void:
 	assert_true(got.contains('"#layer_MenuOptions"'))
 	assert_true(got.contains('"#layer_MenuTabbed"'))
 
-	# Then: A layer with no parent is written once under each set, named for both.
-	assert_true(got.contains('"MenuOptions_Menu"'))
-	assert_true(got.contains('"MenuOptions_Splash"'))
+	# Then: The options layer is written once, under its `Menu` parent alone.
+	assert_eq(got.count('"#layer_MenuOptions"'), 1)
 
 
 func test_generate_writes_a_section_per_loaded_catalogue() -> void:

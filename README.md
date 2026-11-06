@@ -74,9 +74,9 @@ For a different layout, assemble a menu from the scenes it is made of: the setti
 
 ### Put UI inside gameplay
 
-A menu screen loads kit's `Menu` set, `system/input/actions/menu.tres`, which clears every other binding and carries the `ui_*` navigation actions, and enables the layers it needs over it. `menu_options.tres` carries `ui_toggle_menu` and names no parent set, so a gameplay screen enables the same layer over the game's own set, and the player rebinds it once. Navigation inside gameplay takes a layer the game owns.
+A menu screen loads kit's `Menu` set, `system/input/actions/menu.tres`, which clears every other binding and carries the `ui_*` navigation actions, and enables the layers it needs over it. `menu_options.tres` carries `ui_toggle_menu` over the `Menu` set, its `parent`. A gameplay screen enables a layer the game owns over its own set instead, carrying `ui_toggle_menu`. Navigation inside gameplay takes a layer the game owns too.
 
-1. The map's root lists `menu_options.tres` in `action_set_layers`, so Escape pauses through `menu/pause/pusher.tscn`.
+1. The map's root lists the game's options layer in `action_set_layers`, holding `ui_toggle_menu` with the game's set as `parent`, so Escape pauses through `menu/pause/pusher.tscn`.
 2. A panel over the world, such as a build menu, carries its own `StdInputActionSetLoader`, with `active_while` set to `VISIBLE` and a game layer in `action_set_layers` that holds the `ui_*` actions the panel needs. The layer names the game's set as `parent`, and the game lists it in `Input.action_sets` so the controls tabs offer its bindings, which are saved apart from the `Menu` set's. Arrows, Enter and the gamepad navigate it while it shows, and because its layer is enabled after the map's, Escape reaches it as `ui_cancel` until it hides.
 3. Kit's map scenes place the map's loader before `UI` in tree order, which is what keeps that order on an uncover; a map built another way must keep its loader ahead of its panels.
 4. A button that doubles a bindable action, such as a build or a wave start, takes a `FocusHandler` and a `StdInputActionTrigger`; any other button connects `pressed`. The handler the action reaches validates it, since a key gets there whether or not the button is enabled.
