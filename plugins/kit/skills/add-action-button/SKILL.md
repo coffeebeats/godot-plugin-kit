@@ -21,7 +21,7 @@ Add a `KitInputActionButton` to one of the game's scenes. The button's icon is t
 3. **Instance `res://addons/kit/ui/input/action_button.tscn`** in the scene, not a bare `Button` with the script, since the scene carries the focus handler. Set on the instance:
    - `action_set`: the set's `.tres`, as an `ext_resource`
    - `action`: the action's `StringName`, such as `&"combat_build"`
-   - `focus_anchor = true` on the one button focus navigation lands on when the screen opens
+   - `focus_anchor = true` on the one button focus navigation lands on when the screen opens, except for a row of `ui/panel/menu_rows.tscn`, which focuses its first usable row itself
    - `use_action_text = false` and a `text` of the game's own only where the button's label isn't the action's name
    - `raise_action = false` only where a click should run the game's own code instead of raising the action, which the game connects to `pressed`
 
