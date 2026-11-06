@@ -48,6 +48,7 @@ var _action: StringName = &""
 var _binding_index := StdInputDeviceActions.BINDING_INDEX_PRIMARY
 var _cursor_was_visible: bool = false
 var _device: StdInputDevice = null
+var _linked_layers: Array[StdInputActionSetLayer] = []
 var _player: int = -1
 var _scope: StdSettingsScope = null
 
@@ -90,7 +91,8 @@ static func find_device(
 ## start_rebinding begins the rebinding process for the specified action and player,
 ## pushing the rebinder screen onto the given screen manager. The rebind listens to the
 ## player's device of `device_category` (see `find_device`), and it returns `false`,
-## opening nothing, while none is connected.
+## opening nothing, while none is connected. The new binding is written to `action_set`
+## and to each of `linked_layers`, which must declare `action` too.
 static func start_rebinding(
 	screens: StdScreenManager,
 	scope: StdSettingsScope,
@@ -101,6 +103,7 @@ static func start_rebinding(
 		StdInputDeviceActions.BINDING_INDEX_PRIMARY
 	),
 	player: int = 1,
+	linked_layers: Array[StdInputActionSetLayer] = [],
 ) -> bool:
 	assert(screens is StdScreenManager, "invalid argument; missing screen manager")
 
@@ -122,6 +125,7 @@ static func start_rebinding(
 	_instance._action_set = action_set
 	_instance._action = action
 	_instance._binding_index = binding_index
+	_instance._linked_layers = linked_layers
 	_instance._player = player
 	_instance._device = device
 
@@ -173,6 +177,7 @@ func stop(bound: bool = false) -> void:
 	_binding_index = StdInputDeviceActions.BINDING_INDEX_PRIMARY
 	_cursor_was_visible = false
 	_device = null
+	_linked_layers = []
 	_player = -1
 
 	Screens.find_manager(self).pop(bound)
@@ -209,17 +214,18 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 
-	(
-		Bindings
-		. bind_action(
-			_scope,
-			_action_set,
-			_action,
-			event,
-			_device.device_category,
-			_binding_index,
+	for action_set: StdInputActionSet in [_action_set] + _linked_layers:
+		(
+			Bindings
+			. bind_action(
+				_scope,
+				action_set,
+				_action,
+				event,
+				_device.device_category,
+				_binding_index,
+			)
 		)
-	)
 
 	get_viewport().set_input_as_handled()
 	stop(true)

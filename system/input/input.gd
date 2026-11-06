@@ -44,6 +44,12 @@ const MODULE_ID := &"input"
 ## of the Steam Input API.
 @export var action_sets: Array[StdInputActionSet] = []
 
+## menu_options_layers are the game's layers over its own sets which carry kit's
+## `MenuOptions` actions, such as `ui_toggle_menu` for the pause and settings pushers.
+## A rebind in the controls tabs' `MenuOptions` group writes to each one declaring it,
+## so list them here and not in `action_sets`.
+@export var menu_options_layers: Array[StdInputActionSetLayer] = []
+
 ## focused_sound_group is the sound group used for focused UI elements.
 @export var focused_sound_group: StdSoundGroup = null
 

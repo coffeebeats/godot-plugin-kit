@@ -2,7 +2,8 @@
 ## Controls is a settings menu tab listing one category of device's bindings, the
 ## keyboard and mouse's or controllers', regardless of the active device. Beside kit's
 ## own menu action sets, it lists the game's, read from the `Input` system component's
-## `action_sets`, so a game makes its actions rebindable without editing the tab.
+## `action_sets`, so a game makes its actions rebindable without editing the tab. The
+## `MenuOptions` group also writes its rebinds to the game's `menu_options_layers`.
 ##
 ## A controller tab also shows the controller settings, and while a controller Steam
 ## Input drives is connected it shows Steam's configurator in place of the bindings. A
@@ -55,6 +56,8 @@ func _enter_tree() -> void:
 	for group in get_node(^"%ActionSets").get_children():
 		if group is ActionSet:
 			group.device_category = device_category
+
+	get_node(^"%MenuOptions").linked_layers = KitSystems.input().menu_options_layers
 
 
 func _ready() -> void:

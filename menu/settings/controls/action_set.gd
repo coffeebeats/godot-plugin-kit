@@ -32,6 +32,11 @@ const DEVICE_TYPE_KEYBOARD := StdInputDevice.DEVICE_TYPE_KEYBOARD
 		if value is StdInputActionSet:
 			label = Locales.tr_action_set(value.name)
 
+## linked_layers are layers over other sets which declare some of `action_set`'s
+## actions, saving their bindings under their own names. A row's rebind or reset writes
+## to each one declaring its action, as does the group's reset.
+@export var linked_layers: Array[StdInputActionSetLayer] = []
+
 @export_subgroup("Binding")
 
 ## scope is the settings scope in which binding overrides will be stored.
@@ -70,6 +75,7 @@ func _ready() -> void:
 
 	_reset.action_set = action_set
 	_reset.device_category = device_category
+	_reset.linked_layers = linked_layers
 
 	_generate_settings()
 
@@ -99,9 +105,15 @@ func _generate_settings() -> void:
 		if action in action_set.actions_analog_2d:
 			continue
 
+		var linked: Array[StdInputActionSetLayer] = []
+		for layer in linked_layers:
+			if action in layer.list_action_names():
+				linked.append(layer)
+
 		var primary := BindingScene.instantiate()
 		primary.scope = scope
 		primary.device_category = device_category
+		primary.linked_layers = linked
 		primary.glyph.action = action
 		primary.glyph.action_set = action_set
 		primary.glyph.binding_index = StdInputDeviceActions.BINDING_INDEX_PRIMARY
@@ -110,6 +122,7 @@ func _generate_settings() -> void:
 		var secondary := BindingScene.instantiate()
 		secondary.scope = scope
 		secondary.device_category = device_category
+		secondary.linked_layers = linked
 		secondary.glyph.action = action
 		secondary.glyph.action_set = action_set
 		secondary.glyph.binding_index = StdInputDeviceActions.BINDING_INDEX_SECONDARY

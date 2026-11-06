@@ -28,6 +28,11 @@ const DEVICE_TYPE_KEYBOARD := StdInputDevice.DEVICE_TYPE_KEYBOARD
 ## `DEVICE_TYPE_GENERIC` for controllers.
 @export var device_category: StdInputDevice.DeviceType = DEVICE_TYPE_KEYBOARD
 
+## linked_layers are layers over other sets which also declare `glyph.action`, saving
+## its binding under their own names. A rebind or reset writes to each of them as well
+## as to `glyph.action_set`, whose binding this shows.
+@export var linked_layers: Array[StdInputActionSetLayer] = []
+
 @export_subgroup("Components")
 
 ## glyph is the `KitInputGlyph` node which displays the current origin binding.
@@ -56,16 +61,17 @@ func has_user_override() -> bool:
 
 ## reset returns the input binding back to its default value.
 func reset() -> void:
-	(
-		Bindings
-		. reset_action(
-			scope,
-			glyph.action_set,
-			glyph.action,
-			device_category,
-			glyph.binding_index,
+	for action_set: StdInputActionSet in [glyph.action_set] + linked_layers:
+		(
+			Bindings
+			. reset_action(
+				scope,
+				action_set,
+				glyph.action,
+				device_category,
+				glyph.binding_index,
+			)
 		)
-	)
 
 
 # -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
@@ -129,6 +135,7 @@ func _on_button_pressed() -> void:
 			device_category,
 			glyph.binding_index,
 			glyph.player_id,
+			linked_layers,
 		)
 	)
 
