@@ -130,20 +130,20 @@ One cap serves the whole game. The settings menu's binding rows show labelled ke
 
 Kit's scenes take their look from type variations in the game's theme:
 
-| Variation | Base type | Styles |
-| --- | --- | --- |
-| `ButtonDialog` | `Button` | An alert's buttons. |
-| `ButtonMenu` | `Button` | The pause menu's buttons. |
-| `ButtonTabSelected`, `ButtonTabUnselected` | `Button` | The settings menu's tabs, the selected one and the rest. |
-| `HudBar`, `HudBarGhost` | `ProgressBar` | A HUD bar's fill, and the ghost behind it that drains after a hit. |
-| `HudNumber`, `HudNumberCrit` | `Label` | Floating numbers, and the critical hit preset's. |
-| `MenuBody` | `VBoxContainer` | The settings menu's tab contents. |
-| `PanelDialog` | `PanelContainer` | The panel behind each menu, alert and gameplay panel. |
-| `PanelSettingsHeader`, `PanelSettingsBody` | `PanelContainer` | The settings menu's tab bar and the area below it. |
+| Variation | Base type | Styles | Kit sets |
+| --- | --- | --- | --- |
+| `ButtonDialog` | `Button` | An alert's buttons. | Nothing. |
+| `ButtonMenu` | `Button` | The pause menu's buttons. | Nothing. |
+| `ButtonTabSelected`, `ButtonTabUnselected` | `Button` | The settings menu's tabs, the selected one and the rest. | `normal` on `ButtonTabUnselected`, with no box, so the selected tab stands out. |
+| `HudBar`, `HudBarGhost` | `ProgressBar` | A HUD bar's fill, and the ghost behind it that drains after a hit. | `background` and `fill` on both. `HudBar`'s `background` draws nothing, so the ghost shows through. |
+| `HudNumber`, `HudNumberCrit` | `Label` | Floating numbers, and the critical hit preset's. | `font_outline_color` and `outline_size` on both, and `font_color` on `HudNumberCrit`. |
+| `MenuBody` | `VBoxContainer` | The settings menu's tab contents. | Nothing. |
+| `PanelDialog` | `PanelContainer` | The panel behind each menu, alert and gameplay panel. | Nothing. |
+| `PanelSettingsHeader`, `PanelSettingsBody` | `PanelContainer` | The settings menu's tab bar and the area below it. | `panel` on both, drawing nothing. |
 
 `System` instances `system/theme/theme.tscn`, which fills the game's theme from kit's `ui/theme/base.tres` as `System` enters the tree. It adds only the items and base types the game's theme lacks, so the game defines just what it restyles, and an item it sets wins over kit's on the same type. Kit's base stays close to Godot's default look and sets no font sizes. The fill changes the game's theme in place rather than layering a copy over it, so the text size setting keeps resizing the theme every control reads. The editor runs no fill, so it previews kit's scenes in the game's theme alone, and the Inspector lists a variation only once the game's theme defines it.
 
-Godot reads a variation's own items before its base type's, so an item kit sets on a variation also wins over the game's item of that name on the base type. A game which styles `ProgressBar`'s `fill` still sees kit's on `HudBar` until it sets `fill` on `HudBar`. Kit sets items on `ButtonTabUnselected`, `HudBar`, `HudBarGhost`, `HudNumber`, `HudNumberCrit`, `PanelSettingsHeader` and `PanelSettingsBody`, most of them to tell a scene's parts apart, such as a HUD bar's fill from its ghost, so a game restyles those on the variation itself.
+Godot reads a variation's own items before its base type's, so an item kit sets on a variation also wins over the game's item of that name on the base type. A game which styles `ProgressBar`'s `fill` still sees kit's on `HudBar` until it sets `fill` on `HudBar`. Most of the items kit sets tell a scene's parts apart, such as a HUD bar's fill from its ghost, so a game restyles them on the variation itself.
 
 A kit control's own theme items live under a type named after its class, such as the constant `glyph_scale_percent` under `KitInputActionButton`. The control looks for the item on its own type variation first, so a game can set it for one variation, and then on the class's type.
 
