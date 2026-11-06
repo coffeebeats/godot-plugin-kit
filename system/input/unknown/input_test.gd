@@ -1,6 +1,6 @@
 ##
 ## Tests for the input system's Godot implementation, which draws glyphs from the game's
-## `glyph_sets`.
+## `glyph_sets` and `unknown_glyph`.
 ##
 
 extends GutTest
@@ -12,6 +12,7 @@ const KeycapTexture := preload("res://addons/std/input/godot/keycap_texture.gd")
 const PlatformScene := preload("res://premade/platform.tscn")
 const SystemInput := preload("res://system/input/input.gd")
 const SystemInputScene := preload("res://system/input/input.tscn")
+const Unknown := preload("glyphs/unknown.svg")
 
 # -- TEST METHODS -------------------------------------------------------------------- #
 
@@ -94,6 +95,42 @@ func test_glyphs_keyboard_arrow_draws_its_icon() -> void:
 	assert_is(glyph, KeycapTexture)
 	assert_eq(glyph.icon, ArrowUp)
 	assert_eq(glyph.label, "")
+
+
+func test_glyphs_joypad_button_with_no_art_draws_kits_unknown_glyph() -> void:
+	# Given: The input scene with kit's glyph sets and unknown glyph.
+	add_child_autofree(PlatformScene.instantiate())
+	add_child_autofree(SystemInputScene.instantiate())
+
+	# Given: A loaded set holding `ui_up`, which the engine binds to the d-pad's up.
+	var actions := _load_actions([&"ui_up"])
+
+	# When: A Steam Controller's glyph, whose set has no d-pad art, is drawn for it.
+	var glyph := _get_glyph(
+		actions, &"ui_up", StdInputDevice.DEVICE_TYPE_STEAM_CONTROLLER
+	)
+
+	# Then: The glyph is kit's unknown glyph.
+	assert_eq(glyph, Unknown)
+
+
+func test_glyphs_game_unknown_glyph_replaces_kits() -> void:
+	# Given: The input scene, with the game's own unknown glyph.
+	add_child_autofree(PlatformScene.instantiate())
+	var input: SystemInput = SystemInputScene.instantiate()
+	input.unknown_glyph = PlaceholderTexture2D.new()
+	add_child_autofree(input)
+
+	# Given: A loaded set holding `ui_up`, which the engine binds to the d-pad's up.
+	var actions := _load_actions([&"ui_up"])
+
+	# When: A Steam Controller's glyph, whose set has no d-pad art, is drawn for it.
+	var glyph := _get_glyph(
+		actions, &"ui_up", StdInputDevice.DEVICE_TYPE_STEAM_CONTROLLER
+	)
+
+	# Then: The glyph is the game's unknown glyph.
+	assert_eq(glyph, input.unknown_glyph)
 
 
 # -- TEST HOOKS ---------------------------------------------------------------------- #

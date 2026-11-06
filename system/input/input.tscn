@@ -10,6 +10,7 @@
 [ext_resource type="Resource" uid="uid://mdxuupb3ney" path="res://system/input/unknown/glyphs/steam_deck.tres" id="11_steam_deck"]
 [ext_resource type="Resource" uid="uid://b6swfasqq8m8i" path="res://system/input/unknown/glyphs/switch.tres" id="12_switch"]
 [ext_resource type="Resource" uid="uid://pya88dyjf32f" path="res://system/input/unknown/glyphs/steam_controller.tres" id="13_steam_controller"]
+[ext_resource type="Texture2D" uid="uid://blmivlx30mcpe" path="res://system/input/unknown/glyphs/unknown.svg" id="14_unknown"]
 [ext_resource type="Script" uid="uid://be11f4pqliry0" path="res://addons/std/condition/expression.gd" id="23_8ojx1"]
 [ext_resource type="Script" uid="uid://b48nei7xl0xrh" path="res://addons/std/condition/condition_loader.gd" id="24_hk8cf"]
 [ext_resource type="Resource" uid="uid://nggtxsyr5rs2" path="res://platform/storefront/steam_storefront_expression.tres" id="24_o5jdq"]
@@ -17,6 +18,7 @@
 [node name="Input" type="Node" unique_id=1621058833]
 script = ExtResource("1_sl0pi")
 glyph_sets = Array[ExtResource("6_set")]([ExtResource("7_keyboard"), ExtResource("8_mouse"), ExtResource("9_xbox"), ExtResource("10_playstation"), ExtResource("11_steam_deck"), ExtResource("12_switch"), ExtResource("13_steam_controller")])
+unknown_glyph = ExtResource("14_unknown")
 
 [node name="IfGodot" type="Node" parent="." unique_id=1140435662]
 script = ExtResource("24_hk8cf")

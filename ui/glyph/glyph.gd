@@ -16,6 +16,7 @@ signal glyph_updated(has_contents: bool)
 
 # -- DEPENDENCIES -------------------------------------------------------------------- #
 
+const GodotDeviceGlyphs := preload("res://addons/std/input/godot/device_glyphs.gd")
 const KeycapTexture := preload("res://addons/std/input/godot/keycap_texture.gd")
 const Signals := preload("res://addons/std/event/signal.gd")
 
@@ -130,10 +131,16 @@ const DEVICE_TYPE_UNKNOWN := StdInputDevice.DEVICE_TYPE_UNKNOWN
 
 ## show_origin_label_as_fallback_kbm controls whether to show the origin display name if
 ## there's no glyph icon available for the keyboard and mouse device.
+##
+## NOTE: The name also replaces the unknown glyph drawn for a bound origin with no art,
+## which still draws when the origin has no name.
 @export var show_origin_label_as_fallback_kbm: bool = true
 
 ## show_origin_label_as_fallback_joy controls whether to show the origin display name if
 ## there's no glyph icon available for joypad devices.
+##
+## NOTE: As with `show_origin_label_as_fallback_kbm`, the name also replaces an unknown
+## glyph.
 @export var show_origin_label_as_fallback_joy: bool = false
 
 ## origin_label_overrides is a lookup table of overrides for the origin label returned
@@ -161,6 +168,9 @@ const DEVICE_TYPE_UNKNOWN := StdInputDevice.DEVICE_TYPE_UNKNOWN
 ## Fallback properties apply when neither a glyph or a label (if configured) are found
 ## for the configured action. When fallbacks are used, *both* of the label and textures
 ## are used if set.
+##
+## NOTE: An unknown glyph counts as a glyph found, so while one is set these apply only
+## to a binding index with no origin bound.
 @export_subgroup("Fallback")
 
 ## fallback_label is a label to display when no glyph or label is found.
@@ -365,6 +375,32 @@ func _handle_update() -> void:
 	glyph_updated.emit(has_contents)
 
 
+## _is_unknown_glyph returns whether `texture` is an unknown glyph of the component
+## which draws `device_type`'s origins, its own or one of its glyph sets'.
+func _is_unknown_glyph(texture: Texture2D, device_type: DeviceType) -> bool:
+	if not texture:
+		return false
+
+	# NOTE: This picks the component as std's `slot_glyphs.gd` does, so it must change
+	# along with it.
+	var glyphs: StdInputDeviceGlyphs = (
+		_slot.glyphs_kbm if device_type == DEVICE_TYPE_KEYBOARD else _slot.glyphs_joy
+	)
+	if not glyphs:
+		return false
+
+	if texture == glyphs.unknown_glyph:
+		return true
+
+	var godot_glyphs := glyphs as GodotDeviceGlyphs
+	if godot_glyphs:
+		for glyph_set in godot_glyphs.glyph_sets:
+			if texture == glyph_set.unknown_glyph:
+				return true
+
+	return false
+
+
 func _update_glyph(device_type: DeviceType, index: int) -> bool:
 	var label_prev: String = label.text
 	label.text = ""
@@ -400,6 +436,13 @@ func _update_glyph(device_type: DeviceType, index: int) -> bool:
 			texture_rect.texture = null
 			label.text = keycap.label
 
+		# An unknown glyph gives way to the origin's name below, and draws again when no
+		# name shows.
+		var unknown: Texture2D = null
+		if _is_unknown_glyph(texture_rect.texture, device_type):
+			unknown = texture_rect.texture
+			texture_rect.texture = null
+
 		if (
 			texture_rect.texture == null
 			and label.text == ""
@@ -426,6 +469,9 @@ func _update_glyph(device_type: DeviceType, index: int) -> bool:
 			)
 
 			label.text = origin_label_overrides.get(origin_label, origin_label)
+
+		if texture_rect.texture == null and label.text == "":
+			texture_rect.texture = unknown
 
 	if not should_hide and texture_rect.texture == null and label.text == "":
 		label.text = fallback_label

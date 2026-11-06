@@ -215,6 +215,51 @@ func test_glyph_hide_if_cursor_visible_hides_keyboard_glyph() -> void:
 	assert_false(_is_glyph_shown(glyph))
 
 
+func test_glyph_key_with_no_art_shows_its_name_over_the_unknown_glyph() -> void:
+	# Given: A platform whose profile loaded, and the input scene with no key art.
+	add_child_autofree(PlatformScene.instantiate())
+	_add_input_without_keyboard_art()
+
+	# Given: A loaded set holding `ui_accept`, which the engine binds to keys.
+	var actions := _load_actions()
+
+	# Given: A keyboard glyph which shows a key's name when it has no art.
+	var glyph := _create_glyph(actions)
+	glyph.show_origin_label_as_fallback_kbm = true
+
+	# When: The glyph enters the tree and draws its key.
+	add_child_autofree(glyph)
+	await wait_process_frames(2)
+
+	# Then: The glyph shows the key's name in place of the unknown glyph.
+	var expected := _get_origin_label(actions, 0)
+	assert_ne(expected, "", "precondition")
+	assert_eq(glyph.label.text, expected)
+	assert_null(glyph.texture_rect.texture)
+
+
+func test_glyph_key_with_no_art_and_no_name_draws_the_unknown_glyph() -> void:
+	# Given: A platform whose profile loaded, and the input scene with no key art.
+	add_child_autofree(PlatformScene.instantiate())
+	var input := _add_input_without_keyboard_art()
+
+	# Given: A loaded set holding `ui_accept`, which the engine binds to keys.
+	var actions := _load_actions()
+
+	# Given: A keyboard glyph which shows no key names.
+	var glyph := _create_glyph(actions)
+	glyph.show_origin_label_as_fallback_kbm = false
+
+	# When: The glyph enters the tree and draws its key.
+	add_child_autofree(glyph)
+	await wait_process_frames(2)
+
+	# Then: The glyph draws the input system's unknown glyph and no label.
+	assert_not_null(input.unknown_glyph, "precondition")
+	assert_eq(glyph.texture_rect.texture, input.unknown_glyph)
+	assert_false(glyph.label.visible)
+
+
 func test_glyph_controller_prompt_lock_draws_the_connected_joypad_family() -> void:
 	# Given: A platform whose profile loaded, and the input scene with its slot.
 	add_child_autofree(PlatformScene.instantiate())
@@ -282,6 +327,21 @@ func _add_input_with_unabbreviated_keys() -> void:
 
 	input.glyph_sets = glyph_sets
 	add_child_autofree(input)
+
+
+## _add_input_without_keyboard_art adds the input scene with kit's glyph sets less its
+## keyboard set, so every key is a bound origin with no art.
+func _add_input_without_keyboard_art() -> SystemInput:
+	var input: SystemInput = SystemInputScene.instantiate()
+
+	var glyph_sets: Array[StdInputGlyphSet] = []
+	for glyph_set in input.glyph_sets:
+		if not glyph_set is StdInputGlyphSetKeyboardDrawn:
+			glyph_sets.append(glyph_set)
+
+	input.glyph_sets = glyph_sets
+	add_child_autofree(input)
+	return input
 
 
 func _create_glyph(actions: StdInputActionSet) -> KitInputGlyph:
