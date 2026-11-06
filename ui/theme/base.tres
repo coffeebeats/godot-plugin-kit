@@ -1,0 +1,49 @@
+[gd_resource type="Theme" format=3 uid="uid://de6hnqt60rtk3"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6fwwg"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_n44ah"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cdyu0"]
+bg_color = Color(0.36, 0.78, 0.36, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pnat2"]
+bg_color = Color(0.04, 0.04, 0.04, 0.75)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_46vrj"]
+bg_color = Color(0.92, 0.92, 0.92, 0.85)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gxbk8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_joo3t"]
+
+[resource]
+ButtonDialog/base_type = &"Button"
+ButtonMenu/base_type = &"Button"
+ButtonTabSelected/base_type = &"Button"
+ButtonTabUnselected/base_type = &"Button"
+ButtonTabUnselected/styles/normal = SubResource("StyleBoxEmpty_6fwwg")
+HudBar/base_type = &"ProgressBar"
+HudBar/styles/background = SubResource("StyleBoxEmpty_n44ah")
+HudBar/styles/fill = SubResource("StyleBoxFlat_cdyu0")
+HudBarGhost/base_type = &"ProgressBar"
+HudBarGhost/styles/background = SubResource("StyleBoxFlat_pnat2")
+HudBarGhost/styles/fill = SubResource("StyleBoxFlat_46vrj")
+HudNumber/base_type = &"Label"
+HudNumber/colors/font_outline_color = Color(0, 0, 0, 0.85)
+HudNumber/constants/outline_size = 6
+HudNumberCrit/base_type = &"Label"
+HudNumberCrit/colors/font_color = Color(1, 0.85, 0.35, 1)
+HudNumberCrit/colors/font_outline_color = Color(0.15, 0.05, 0, 0.9)
+HudNumberCrit/constants/outline_size = 8
+KitInputActionButton/constants/glyph_scale_percent = 100
+MenuBody/base_type = &"VBoxContainer"
+PanelDialog/base_type = &"PanelContainer"
+PanelSettingsBody/base_type = &"PanelContainer"
+PanelSettingsBody/styles/panel = SubResource("StyleBoxEmpty_gxbk8")
+PanelSettingsHeader/base_type = &"PanelContainer"
+PanelSettingsHeader/styles/panel = SubResource("StyleBoxEmpty_joo3t")

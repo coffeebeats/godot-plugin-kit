@@ -15,10 +15,6 @@
 [ext_resource type="PackedScene" uid="uid://ctabgr0up1scn" path="res://ui/menu/tab_group.tscn" id="13_tabs"]
 [ext_resource type="Script" uid="uid://dmvb2tblavngm" path="res://addons/std/input/action_set_layer.gd" id="14_layer"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_w1p03"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dhy4h"]
-
 [node name="SettingsMenu" type="Control" unique_id=28127552]
 layout_mode = 3
 anchors_preset = 15
@@ -64,7 +60,7 @@ layout_mode = 2
 
 [node name="Header" type="PanelContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=604388048]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_w1p03")
+theme_type_variation = &"PanelSettingsHeader"
 
 [node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Header" unique_id=1306826654]
 layout_mode = 2
@@ -102,7 +98,7 @@ glyph_scale = 2.0
 [node name="Body" type="PanelContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1489876437]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxEmpty_dhy4h")
+theme_type_variation = &"PanelSettingsBody"
 
 [node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Body" unique_id=1621647013]
 layout_mode = 2

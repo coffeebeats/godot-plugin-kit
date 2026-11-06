@@ -41,7 +41,7 @@ Each value the game owns is an export on a scene instanced in `System`:
 | `system/input/input.tscn` | `glyph_sets` | The glyph sets button prompts draw from, defaulting to kit's. See [Change the button prompts](#change-the-button-prompts). |
 | `system/input/input.tscn` | `unknown_glyph` | The glyph a prompt draws for a bound button with no art, defaulting to kit's "??" icon. Left empty, the prompt draws nothing for such a button. |
 | `system/setting/settings.tscn` | `menu_tabs` | The game's own settings menu tabs, keyed by their label's message ID. |
-| `system/setting/interface/font_scaling_observer.tscn` | `theme` | The font theme which the text scaling setting resizes. |
+| `system/setting/interface/font_scaling_observer.tscn` | `theme` | The game's theme, the one `[gui] theme/custom` names, which the text scaling setting resizes. |
 | `system/save/saves.tscn` | `schema` | The game's save data, required. |
 | `system/save/saves.tscn` | `slot_count` | The number of save slots, each shown in the save menu. |
 
@@ -126,6 +126,27 @@ For its own look, a game saves a copy of `keyboard.tres`, edits its `cap`, `font
 
 One cap serves the whole game. The settings menu's binding rows show labelled keys as plain text in the theme's font instead, and only their arrows keep the cap.
 
+### Style kit's scenes
+
+Kit's scenes take their look from type variations in the game's theme:
+
+| Variation | Base type | Styles |
+| --- | --- | --- |
+| `ButtonDialog` | `Button` | An alert's buttons. |
+| `ButtonMenu` | `Button` | The pause menu's buttons. |
+| `ButtonTabSelected`, `ButtonTabUnselected` | `Button` | The settings menu's tabs, the selected one and the rest. |
+| `HudBar`, `HudBarGhost` | `ProgressBar` | A HUD bar's fill, and the ghost behind it that drains after a hit. |
+| `HudNumber`, `HudNumberCrit` | `Label` | Floating numbers, and the critical hit preset's. |
+| `MenuBody` | `VBoxContainer` | The settings menu's tab contents. |
+| `PanelDialog` | `PanelContainer` | The panel behind each menu, alert and gameplay panel. |
+| `PanelSettingsHeader`, `PanelSettingsBody` | `PanelContainer` | The settings menu's tab bar and the area below it. |
+
+`System` instances `system/theme/theme.tscn`, which fills the game's theme from kit's `ui/theme/base.tres` as `System` enters the tree. It adds only the items and base types the game's theme lacks, so the game defines just what it restyles, and an item it sets wins over kit's on the same type. Kit's base stays close to Godot's default look and sets no font sizes. The fill changes the game's theme in place rather than layering a copy over it, so the text size setting keeps resizing the theme every control reads. The editor runs no fill, so it previews kit's scenes in the game's theme alone, and the Inspector lists a variation only once the game's theme defines it.
+
+Godot reads a variation's own items before its base type's, so an item kit sets on a variation also wins over the game's item of that name on the base type. A game which styles `ProgressBar`'s `fill` still sees kit's on `HudBar` until it sets `fill` on `HudBar`. Kit sets items on `ButtonTabUnselected`, `HudBar`, `HudBarGhost`, `HudNumber`, `HudNumberCrit`, `PanelSettingsHeader` and `PanelSettingsBody`, most of them to tell a scene's parts apart, such as a HUD bar's fill from its ghost, so a game restyles those on the variation itself.
+
+A kit control's own theme items live under a type named after its class, such as the constant `glyph_scale_percent` under `KitInputActionButton`. The control looks for the item on its own type variation first, so a game can set it for one variation, and then on the class's type.
+
 ### Configure the project
 
 Kit's scenes also read these project settings:
@@ -134,7 +155,7 @@ Kit's scenes also read these project settings:
 | --- | --- |
 | `[input]` | Defines `ui_tab_next`, `ui_tab_prev`, `ui_binding_stop` and `ui_toggle_menu`, which kit's menus name and Godot does not define. |
 | `[audio] buses/default_bus_layout` | Defines the buses `Master`, `music`, `sound_effects`, `voice`, `ui` and `game`. |
-| `[gui] theme/custom` | Defines the type variations kit's scenes name: `button_dialog`, `button_menu`, `button_tab_selected`, `button_tab_unselected`, `hud_bar`, `hud_bar_ghost`, `hud_number`, `hud_number_crit`, `menu_body` and `panel_dialog`. |
+| `[gui] theme/custom` | The game's theme, which kit fills with what its scenes need. See [Style kit's scenes](#style-kits-scenes). |
 | `[internationalization] locale/translations` | Lists every `addons/kit/locale/*.mo`, after the game's own catalogue, so a message the game defines overrides kit's. |
 
 ### Drive a running game
