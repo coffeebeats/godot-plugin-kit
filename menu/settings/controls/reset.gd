@@ -68,7 +68,7 @@ func _ready() -> void:
 
 	for binding in bindings:
 		assert(binding is Binding, "invalid state; missing binding")
-		assert(binding.glyph is StdInputGlyph, "invalid state; missing glyph")
+		assert(binding.glyph is KitInputGlyph, "invalid state; missing glyph")
 		assert(binding.glyph.action, "invalid state; missing action")
 		assert(
 			binding.glyph.action_set is StdInputActionSet,
