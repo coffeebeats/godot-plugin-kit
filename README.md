@@ -93,7 +93,7 @@ A panel's values are exports on its child nodes, which *Editable Children* on it
 | `StdPanel` | `close_on_hide`, `open_on_show`, `close_when_covered` | Hiding the panel closes it and showing it opens it, both on by default. A screen covering the map closes it only with `close_when_covered`. |
 | `StdPanel` | `sound_open`, `sound_close` | The sounds it plays as it opens and closes, none by default. |
 | `StdInputActionSetLoader` | `action_set_layers` | The game's layers over `Menu` holding what stays live. |
-| `WorldTracker2D`, `WorldTracker3D` | `map`, `target` | The map, and the node in its world the panel follows. Until `target` is set, the panel stays where it is. |
+| `WorldTracker2D`, `WorldTracker3D` | `map`, `target` | The map, and the node in its world the panel follows. Until `target` is set, the panel stays where it is. An open panel follows its target off-screen and stays open; to close it instead, connect the tracker's `target_exited_view` to `StdPanel`'s `close`. |
 | `WorldTracker2D`, `WorldTracker3D` | `offset`, `flip_at_edges`, `viewport_margin` | Where the panel sits from its target. With `flip_at_edges` on, the default, it moves to the target's far side rather than cross the screen's edge, staying `viewport_margin` inside it. |
 
 ### Change the button prompts
