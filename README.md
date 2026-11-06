@@ -71,9 +71,10 @@ Each menu is a finished screen, used in place:
 - **Settings:** push `menu/settings/screen.tres`, or list `menu/settings/pusher.tscn` in a screen's `attachment_scenes` to open it on `ui_toggle_menu`.
 - **Save slots:** push `menu/save/screen.tres` and await its `popped` signal, which carries the chosen slot's index.
 - **Pause:** list `menu/pause/pusher.tscn` in a gameplay screen's `attachment_scenes`.
+- **Alerts over gameplay:** a map opens `ui/menu/alert_gameplay.tscn` for a match's result, a game over or a disconnect, as [`ui/menu/README.md`](ui/menu/README.md) describes.
 - **Splash:** push `ui/splash/godot_screen.tres`, whose scene emits `advanced` once it is done. `ui/splash/splash.gd` makes a splash of any scene.
 
-For a different layout, assemble a menu from the scenes it is made of: the settings tabs and their `group` and `setting` rows, the `controls` tab, placed once per `device_category`, with its `action_set` groups, the save menu's `slot_button`, and the dialogs in `ui/menu/`.
+For a different layout, assemble a menu from the scenes it is made of: the settings tabs and their `group` and `setting` rows, the `controls` tab, placed once per `device_category`, with its `action_set` groups, the save menu's `slot_button`, and the dialogs in `ui/menu/`, whose [README](ui/menu/README.md) lists their values and what each one is for.
 
 ### Put UI inside gameplay
 
