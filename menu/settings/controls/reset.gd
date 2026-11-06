@@ -36,8 +36,8 @@ const DEVICE_TYPE_KEYBOARD := StdInputDevice.DEVICE_TYPE_KEYBOARD
 @export var device_category: StdInputDevice.DeviceType = DEVICE_TYPE_KEYBOARD
 
 ## linked_layers are layers over other sets which declare some of `action_set`'s
-## actions under their own names. A reset returns those actions' bindings in each of
-## them to their defaults too.
+## actions. A reset also returns those actions' bindings in each of them to their
+## defaults.
 ##
 ## NOTE: This property is only used if `action_set` is specified.
 @export var linked_layers: Array[StdInputActionSetLayer] = []
