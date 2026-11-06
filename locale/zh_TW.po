@@ -384,3 +384,7 @@ msgstr ""
 msgctxt "gamepad"
 msgid "Press any button now or %s to cancel."
 msgstr ""
+
+#. The name assistive technology reads for a button which performs a game action. Here, the '{origin}' placeholder will be replaced with the name of the key or controller button bound to the action, and '{action}' with the translated name of the action.
+msgid "{origin}, {action}"
+msgstr ""

@@ -81,7 +81,7 @@ A menu screen loads kit's `Menu` set, `system/input/actions/menu.tres`, which cl
 
 1. Kit's pause and settings pushers open on `ui_toggle_menu`, which `menu_options.tres` carries over `Menu`. For gameplay, the game writes an options layer over its set that holds `ui_toggle_menu` and lists it in the map root's `action_set_layers`, so Escape pauses through `menu/pause/pusher.tscn`. It also lists the layer in `Input.menu_options_layers`. Bindings save under a layer's name, so that list is how a rebind in the controls tabs' `MenuOptions` group reaches the game's layer. Nothing ties the game's layer to kit's, so a kit release whose pushers expect another action names it in its release notes.
 2. A menu over the world, such as a build or context menu, is a panel. Place `ui/panel/panel.tscn` in the map's `UI`, or `ui/panel/world_panel_2d.tscn` or `world_panel_3d.tscn` to follow a point in the world, put the game's buttons inside it, and open it through its `StdPanel` node or by showing it. While open, the panel keeps focus inside itself and loads kit's `Menu` set, so a rebind in the controls tabs' `Menu` group reaches it; the set before it comes back once it closes. Whatever stays live while it's open goes in a layer of the game's own with `Menu` as `parent`, listed in its loader's `action_set_layers` and in `Input.action_sets`. An action that does something only while the panel is open, such as a build menu's item keys, lives only in that layer, so it has one binding. A panel has no scrim; a menu that wants one is a screen.
-3. A button that doubles a bindable action, such as a build or a wave start, takes a `FocusHandler` and a `StdInputActionTrigger`; any other button connects `pressed`. The handler the action reaches validates it, since a key gets there whether or not the button is enabled.
+3. A button that doubles a bindable action, such as a build or a wave start, is an [action button](#add-an-action-button); any other button connects `pressed`. The handler the action reaches validates it, since a key gets there whether or not the button is enabled.
 4. A screen with a text field lists the `ui_text_*` actions in a layer of its own.
 
 A panel's values are exports on its child nodes, which *Editable Children* on its instance shows:
@@ -96,6 +96,20 @@ A panel's values are exports on its child nodes, which *Editable Children* on it
 | `StdInputActionSetLoader` | `action_set_layers` | The game's layers over `Menu` holding what stays live. |
 | `WorldTracker2D`, `WorldTracker3D` | `map`, `target` | The map, and the node in its world the panel follows. Until `target` is set, the panel stays where it is. An open panel follows its target off-screen and stays open; to close it instead, connect the tracker's `target_exited_view` to `StdPanel`'s `close`. |
 | `WorldTracker2D`, `WorldTracker3D` | `offset`, `flip_at_edges`, `viewport_margin` | Where the panel sits from its target. With `flip_at_edges` on, the default, it moves to the target's far side rather than cross the screen's edge, staying `viewport_margin` inside it. |
+
+### Add an action button
+
+`ui/input/action_button.tscn` is a `KitInputActionButton`, a `Button` that stands for one action. Its icon is the glyph of the key or button bound to the action, its text is the action's translated name, and a click raises the action, held for as long as the button is. The game sets these on its instance:
+
+| Export | Value |
+| --- | --- |
+| `action_set`, `action` | The action the button stands for. |
+| `binding_index`, `player_id` | The binding the glyph draws first and the player whose devices it follows, by default the primary binding and player 1. |
+| `raise_action` | On by default. Off, a click raises nothing, and the game connects `pressed` as on any button. |
+| `use_action_text` | On by default, so the text follows the player's language. Off, the button keeps the `text` the game sets. |
+| `focus_anchor` | Whether focus navigation lands on the button when its screen opens. |
+
+The glyph is as tall as a line of the button's text, so it grows with the text size setting, and it follows the Button prompts setting. To make every action button's glyph taller, the game's theme sets the integer constant `glyph_scale_percent` under the type `KitInputActionButton`, or under a button's own type variation. Assistive tech reads the button as the key's name and then its text, such as "Cross, Sell". For a glyph without a button, place `ui/glyph/glyph.tscn`, a `KitInputGlyph`, which sizes the same way from its `glyph_scale` export rather than the theme.
 
 ### Change the button prompts
 

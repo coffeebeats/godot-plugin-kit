@@ -382,3 +382,7 @@ msgstr "Press any key now or %s to cancel."
 msgctxt "gamepad"
 msgid "kit_options_controls_rebinder_bind_or_exit"
 msgstr "Press any button now or %s to cancel."
+
+#. The name assistive technology reads for a button which performs a game action. Here, the '{origin}' placeholder will be replaced with the name of the key or controller button bound to the action, and '{action}' with the translated name of the action.
+msgid "kit_input_action_name"
+msgstr "{origin}, {action}"
