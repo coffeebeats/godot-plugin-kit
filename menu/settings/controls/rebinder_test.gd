@@ -191,9 +191,11 @@ func test_rebinder_keyboard_rebind_with_joypad_active_prompts_the_keyboard() -> 
 	await _start_rebinding(_KEYBOARD)
 
 	# Then: The prompt shows the keyboard's cancel key.
-	var keycap := _prompt_glyph().texture_rect.texture as KeycapTexture
-	assert_not_null(keycap)
-	assert_eq(keycap.label, "Esc")
+	var glyph := _prompt_glyph().get_glyph()
+	assert_true(glyph.has_glyph())
+	assert_eq(
+		glyph.get_origin_label(), _cancel_label(StdInputDevice.DEVICE_TYPE_KEYBOARD)
+	)
 
 
 func test_rebinder_controller_rebind_with_keyboard_active_prompts_the_joypad() -> void:
@@ -204,9 +206,11 @@ func test_rebinder_controller_rebind_with_keyboard_active_prompts_the_joypad() -
 	await _start_rebinding(_CONTROLLER)
 
 	# Then: The prompt shows the joypad's cancel button.
-	var glyph := _prompt_glyph()
-	assert_eq(glyph.texture_rect.texture, _cancel_glyph(glyph))
-	assert_eq(glyph.label.text, "")
+	var glyph := _prompt_glyph().get_glyph()
+	assert_true(glyph.has_glyph())
+	assert_eq(
+		glyph.get_origin_label(), _cancel_label(StdInputDevice.DEVICE_TYPE_XBOX_ONE)
+	)
 
 
 func test_rebinder_controller_rebind_with_keyboard_active_binds_the_joypad() -> void:
@@ -579,17 +583,15 @@ func _bound_keycode(
 	return (binding as InputEventKey).keycode if binding is InputEventKey else KEY_NONE
 
 
-## _cancel_glyph returns the Xbox joypad's glyph for `ui_binding_stop`, drawn at
-## `glyph`'s size.
-func _cancel_glyph(glyph: KitInputGlyph) -> Texture2D:
+## _cancel_label returns the name of the origin which cancels a rebind on `device_type`.
+func _cancel_label(device_type: StdInputDevice.DeviceType) -> String:
 	return (
 		_slot
-		. get_action_glyph(
+		. get_action_origin_label(
 			MenuBindingActions,
 			_ACTION_STOP,
 			StdInputDeviceActions.BINDING_INDEX_PRIMARY,
-			glyph.custom_minimum_size,
-			StdInputDevice.DEVICE_TYPE_XBOX_ONE,
+			device_type,
 		)
 	)
 
