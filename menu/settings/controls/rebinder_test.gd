@@ -1,3 +1,5 @@
+# gdlint:ignore=max-public-methods
+
 ##
 ## Tests for the rebinder, which binds the next press from one device of the binding's
 ## category and cancels on any device's press, and for its prompt, which shows that
@@ -8,8 +10,10 @@ extends GutTest
 
 # -- DEPENDENCIES -------------------------------------------------------------------- #
 
+const ArrowUp := preload("res://system/input/unknown/glyphs/keyboard/arrow_up.svg")
 const Bindings := preload("res://addons/std/input/godot/binding.gd")
 const BindingScene := preload("binding.tscn")
+const KeycapTexture := preload("res://addons/std/input/godot/keycap_texture.gd")
 const MenuActions := preload("res://system/input/actions/menu.tres")
 const MenuBindingActions := preload("res://system/input/actions/menu_binding.tres")
 const PlatformScene := preload("res://premade/platform.tscn")
@@ -187,9 +191,9 @@ func test_rebinder_keyboard_rebind_with_joypad_active_prompts_the_keyboard() -> 
 	await _start_rebinding(_KEYBOARD)
 
 	# Then: The prompt shows the keyboard's cancel key.
-	var glyph := _prompt_glyph()
-	assert_eq(glyph.label.text, "Esc")
-	assert_null(glyph.texture_rect.texture)
+	var keycap := _prompt_glyph().texture_rect.texture as KeycapTexture
+	assert_not_null(keycap)
+	assert_eq(keycap.label, "Esc")
 
 
 func test_rebinder_controller_rebind_with_keyboard_active_prompts_the_joypad() -> void:
@@ -301,6 +305,46 @@ func test_rebinder_binding_row_press_rebinds_its_action_and_slot() -> void:
 
 	# Then: The primary binding is unchanged.
 	assert_null(_binding(StdInputDevice.DEVICE_TYPE_KEYBOARD))
+
+
+func test_rebinder_binding_row_key_shows_as_text() -> void:
+	# Given: A Controls tab row for the cancel action, which the keyboard binds to Esc.
+	var row: Control = BindingScene.instantiate()
+	row.scope = _scope
+	row.glyph.action_set = MenuBindingActions
+	row.glyph.action = _ACTION_STOP
+	row.glyph.player_id = 1
+
+	# When: The row enters the tree under the manager and draws its key.
+	var host := Control.new()
+	host.add_child(row)
+	_manager.add_child(host)
+	await wait_process_frames(2)
+
+	# Then: The row shows the key's abbreviation as text, with no keycap.
+	assert_null(row.glyph.texture_rect.texture)
+	assert_eq(row.glyph.label.text, "Esc")
+
+
+func test_rebinder_binding_row_arrow_key_keeps_its_keycap() -> void:
+	# Given: A Controls tab row for the menu's up action, which the engine binds to Up.
+	var row: Control = BindingScene.instantiate()
+	row.scope = _scope
+	row.glyph.action_set = MenuActions
+	row.glyph.action = &"ui_up"
+	row.glyph.player_id = 1
+
+	# When: The row enters the tree under the manager and draws its key.
+	var host := Control.new()
+	host.add_child(row)
+	_manager.add_child(host)
+	await wait_process_frames(2)
+
+	# Then: The row draws the arrow on its keycap, with no text.
+	var keycap: KeycapTexture = row.glyph.texture_rect.texture as KeycapTexture
+	assert_not_null(keycap)
+	assert_eq(keycap.icon, ArrowUp)
+	assert_eq(row.glyph.label.text, "")
 
 
 func test_split_placeholder_separates_the_text_around_the_placeholder() -> void:

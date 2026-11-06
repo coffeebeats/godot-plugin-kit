@@ -32,3 +32,4 @@ mouse_filter = 2
 [node name="Glyph" parent="CenterContainer" unique_id=1413248325 instance=ExtResource("1_67jty")]
 layout_mode = 2
 label_stylebox = null
+show_keys_as_labels = true

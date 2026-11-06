@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bs2yk443qpqe0"
-path="res://.godot/imported/arrow_down.png-3d57f3678f6afb353e8c6bb75ece7a95.ctex"
+uid="uid://dq0mft3padkgk"
+path="res://.godot/imported/arrow_left.svg-8857f62a687aa6ed8f7c67d61b161fcb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://system/input/unknown/glyphs/keyboard/arrow_down.png"
-dest_files=["res://.godot/imported/arrow_down.png-3d57f3678f6afb353e8c6bb75ece7a95.ctex"]
+source_file="res://system/input/unknown/glyphs/keyboard/arrow_left.svg"
+dest_files=["res://.godot/imported/arrow_left.svg-8857f62a687aa6ed8f7c67d61b161fcb.ctex"]
 
 [params]
 
@@ -38,3 +38,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false

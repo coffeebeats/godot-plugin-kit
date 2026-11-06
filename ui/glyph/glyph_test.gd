@@ -7,31 +7,62 @@ extends GutTest
 # -- DEPENDENCIES -------------------------------------------------------------------- #
 
 const GlyphScene := preload("glyph.tscn")
+const KeycapTexture := preload("res://addons/std/input/godot/keycap_texture.gd")
 const PlatformScene := preload("res://premade/platform.tscn")
+const SystemInput := preload("res://system/input/input.gd")
 const SystemInputScene := preload("res://system/input/input.tscn")
 
 # -- TEST METHODS -------------------------------------------------------------------- #
 
 
-func test_glyph_keyboard_label_fits_its_box_inside_the_glyph() -> void:
+func test_glyph_keyboard_key_draws_a_keycap_at_its_full_width() -> void:
 	# Given: A platform whose profile loaded, and the input scene with its slot.
 	add_child_autofree(PlatformScene.instantiate())
 	add_child_autofree(SystemInputScene.instantiate())
 
-	# Given: A loaded set holding `ui_accept`, which the engine binds to keys.
-	var actions := StdInputActionSet.new()
-	actions.name = &"Glyphs"
-	actions.actions_digital = [&"ui_accept"] as Array[StringName]
-	StdInputSlot.for_player(1).load_action_set(actions)
+	# Given: A loaded set holding `ui_accept`, which the engine binds to Enter.
+	var actions := _load_actions()
 
-	# Given: A keyboard glyph for `ui_accept` with no minimum size of its own.
-	var glyph: KitInputGlyph = GlyphScene.instantiate()
+	# Given: A keyboard glyph for `ui_accept` at the scene's size.
+	var glyph := _create_glyph(actions)
+
+	# When: The glyph enters the tree and draws its key.
+	add_child_autofree(glyph)
+	await wait_process_frames(2)
+
+	# Then: The glyph draws a keycap at its minimum height, wider than it is tall.
+	var keycap := glyph.texture_rect.texture as KeycapTexture
+	assert_not_null(keycap)
+	assert_eq(keycap.get_height(), roundi(glyph.custom_minimum_size.y))
+	assert_gt(keycap.get_width(), keycap.get_height())
+
+	# Then: The glyph is wide enough for the whole keycap.
+	assert_gte(glyph.get_combined_minimum_size().x, float(keycap.get_width()))
+
+
+func test_glyph_fallback_label_fits_its_box_inside_the_glyph() -> void:
+	# Given: A platform whose profile loaded, and the input scene with its slot.
+	add_child_autofree(PlatformScene.instantiate())
+	add_child_autofree(SystemInputScene.instantiate())
+
+	# Given: A loaded set holding `ui_accept`, which the engine binds to joypad A.
+	var actions := _load_actions()
+
+	# Given: A connected joypad, made active by a press of `ui_accept`.
+	var slot := StdInputSlot.for_player(1)
+	slot.joypad_monitor.joy_connected.emit(0, StdInputDevice.DEVICE_TYPE_XBOX_ONE)
+	_press_joypad_button(JOY_BUTTON_A)
+	assert_eq(slot.device_type, StdInputDevice.DEVICE_TYPE_XBOX_ONE, "precondition")
+
+	# Given: A glyph for the active device with no minimum size of its own.
+	var glyph := _create_glyph(actions)
 	glyph.custom_minimum_size = Vector2.ZERO
-	glyph.always_show_kbm = true
-	glyph.action_set = actions
-	glyph.action = &"ui_accept"
+	glyph.always_show_kbm = false
 
-	# When: The glyph enters the tree and draws its key's label.
+	# Given: A fallback label, which shows since the headless joypad has no glyph.
+	glyph.fallback_label = "--"
+
+	# When: The glyph enters the tree and draws its fallback label.
 	add_child_autofree(glyph)
 	await wait_process_frames(2)
 
@@ -46,9 +77,9 @@ func test_glyph_keyboard_label_fits_its_box_inside_the_glyph() -> void:
 
 
 func test_glyph_secondary_binding_draws_the_second_origin() -> void:
-	# Given: A platform whose profile loaded, and the input scene with its slot.
+	# Given: A platform whose profile loaded, and the input scene drawing keys by name.
 	add_child_autofree(PlatformScene.instantiate())
-	add_child_autofree(SystemInputScene.instantiate())
+	_add_input_with_unabbreviated_keys()
 
 	# Given: A loaded set holding `ui_accept`, which the engine binds to several keys.
 	var actions := _load_actions()
@@ -57,20 +88,20 @@ func test_glyph_secondary_binding_draws_the_second_origin() -> void:
 	var glyph := _create_glyph(actions)
 	glyph.binding_index = StdInputDeviceActions.BINDING_INDEX_SECONDARY
 
-	# When: The glyph enters the tree and draws its key's label.
+	# When: The glyph enters the tree and draws its key.
 	add_child_autofree(glyph)
 	await wait_process_frames(2)
 
-	# Then: The glyph shows the second origin's label, not the first's.
+	# Then: The glyph draws the second origin's key, not the first's.
 	var second := _get_origin_label(actions, 1)
 	assert_ne(second, _get_origin_label(actions, 0))
-	assert_eq(glyph.label.text, second)
+	assert_eq(_get_keycap_label(glyph), second)
 
 
 func test_glyph_cycle_interval_advances_to_the_next_origin() -> void:
-	# Given: A platform whose profile loaded, and the input scene with its slot.
+	# Given: A platform whose profile loaded, and the input scene drawing keys by name.
 	add_child_autofree(PlatformScene.instantiate())
-	add_child_autofree(SystemInputScene.instantiate())
+	_add_input_with_unabbreviated_keys()
 
 	# Given: A loaded set holding `ui_accept`, which the engine binds to several keys.
 	var actions := _load_actions()
@@ -85,11 +116,11 @@ func test_glyph_cycle_interval_advances_to_the_next_origin() -> void:
 
 	# Then: The glyph restarts at the first origin.
 	var first := _get_origin_label(actions, 0)
-	assert_eq(glyph.label.text, first)
+	assert_eq(_get_keycap_label(glyph), first)
 
 	# Then: Once the interval elapses, the glyph shows the second origin.
-	await wait_until(func(): return glyph.label.text != first, 1.0)
-	assert_eq(glyph.label.text, _get_origin_label(actions, 1))
+	await wait_until(func(): return _get_keycap_label(glyph) != first, 1.0)
+	assert_eq(_get_keycap_label(glyph), _get_origin_label(actions, 1))
 
 
 func test_glyph_origin_labels_changed_redraws_the_key_label() -> void:
@@ -100,21 +131,21 @@ func test_glyph_origin_labels_changed_redraws_the_key_label() -> void:
 	# Given: A loaded set holding `ui_accept`, which the engine binds to keys.
 	var actions := _load_actions()
 
-	# Given: A keyboard glyph drawing the first origin's label.
+	# Given: A keyboard glyph drawing the first origin's key.
 	var glyph := _create_glyph(actions)
 	add_child_autofree(glyph)
 	await wait_process_frames(2)
-	var expected := _get_origin_label(actions, 0)
-	assert_eq(glyph.label.text, expected, "precondition")
+	var expected := _get_keycap_label(glyph)
+	assert_ne(expected, "", "precondition")
 
-	# Given: A label left over from a previous keyboard layout or locale.
-	glyph.label.text = "Stale"
+	# Given: The glyph's drawn key is cleared.
+	glyph.texture_rect.texture = null
 
 	# When: The slot reports that its origins' labels changed.
 	StdInputSlot.for_player(1).origin_labels_changed.emit()
 
-	# Then: The glyph draws the current label again.
-	assert_eq(glyph.label.text, expected)
+	# Then: The glyph draws the current key again.
+	assert_eq(_get_keycap_label(glyph), expected)
 
 
 func test_glyph_hide_if_cursor_visible_keeps_joypad_glyph_shown() -> void:
@@ -234,17 +265,36 @@ func after_each() -> void:
 # -- PRIVATE METHODS ----------------------------------------------------------------- #
 
 
+## _add_input_with_unabbreviated_keys adds the input scene with kit's keyboard set
+## drawing each key by its own name, since "Enter" for "Kp Enter" would hide which of
+## `ui_accept`'s origins a glyph draws.
+func _add_input_with_unabbreviated_keys() -> void:
+	var input: SystemInput = SystemInputScene.instantiate()
+
+	var glyph_sets: Array[StdInputGlyphSet] = []
+	for glyph_set in input.glyph_sets:
+		if glyph_set is StdInputGlyphSetKeyboardDrawn:
+			glyph_set = glyph_set.duplicate()
+			var labels: Dictionary[String, String] = {}
+			glyph_set.labels = labels
+
+		glyph_sets.append(glyph_set)
+
+	input.glyph_sets = glyph_sets
+	add_child_autofree(input)
+
+
 func _create_glyph(actions: StdInputActionSet) -> KitInputGlyph:
 	var glyph: KitInputGlyph = GlyphScene.instantiate()
 	glyph.always_show_kbm = true
 	glyph.action_set = actions
 	glyph.action = &"ui_accept"
-
-	# NOTE: The scene shows "Kp Enter" as "Enter", which would hide which of
-	# `ui_accept`'s origins the glyph draws.
-	glyph.origin_label_overrides = {}
-
 	return glyph
+
+
+func _get_keycap_label(glyph: KitInputGlyph) -> String:
+	var keycap := glyph.texture_rect.texture as KeycapTexture
+	return keycap.label if keycap else ""
 
 
 func _get_origin_label(actions: StdInputActionSet, index: int) -> String:

@@ -16,6 +16,7 @@ signal glyph_updated(has_contents: bool)
 
 # -- DEPENDENCIES -------------------------------------------------------------------- #
 
+const KeycapTexture := preload("res://addons/std/input/godot/keycap_texture.gd")
 const Signals := preload("res://addons/std/event/signal.gd")
 
 # -- DEFINITIONS --------------------------------------------------------------------- #
@@ -151,6 +152,11 @@ const DEVICE_TYPE_UNKNOWN := StdInputDevice.DEVICE_TYPE_UNKNOWN
 ## NOTE: Both this stylebox and the default one set on `panel_container` will *only* be
 ## shown when an origin label is set.
 @export var label_stylebox: StyleBox = null
+
+## show_keys_as_labels controls whether a drawn key shows its keycap's label in `label`,
+## inside `label_stylebox`, in place of the keycap. A key drawn as an icon, such as an
+## arrow, keeps its keycap.
+@export var show_keys_as_labels: bool = false
 
 ## Fallback properties apply when neither a glyph or a label (if configured) are found
 ## for the configured action. When fallbacks are used, *both* of the label and textures
@@ -389,8 +395,14 @@ func _update_glyph(device_type: DeviceType, index: int) -> bool:
 			)
 		)
 
+		var keycap := texture_rect.texture as KeycapTexture
+		if show_keys_as_labels and keycap and not keycap.icon:
+			texture_rect.texture = null
+			label.text = keycap.label
+
 		if (
 			texture_rect.texture == null
+			and label.text == ""
 			and (
 				(
 					show_origin_label_as_fallback_kbm

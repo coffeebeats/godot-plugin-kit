@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://cqt14not5nr5d"]
 
+[ext_resource type="Script" uid="uid://d4i7ump8yqsva" path="res://system/input/unknown/input.gd" id="1_godot"]
 [ext_resource type="Script" uid="uid://c0mqssj1w0y7g" path="res://addons/std/setting/repository.gd" id="1_o5lxa"]
 [ext_resource type="Resource" uid="uid://cdtwq6ojt5vvn" path="res://system/input/scope.tres" id="2_wy44a"]
 [ext_resource type="Script" uid="uid://nyai4fsxk55t" path="res://platform/profile/writer.gd" id="3_fy3ns"]
@@ -11,19 +12,12 @@
 [ext_resource type="Script" uid="uid://cubujrqc1yi7d" path="res://addons/std/input/godot/joypad_monitor.gd" id="9_lnlo2"]
 [ext_resource type="Script" uid="uid://dgtvbskcmfogl" path="res://addons/std/input/godot/device_actions.gd" id="10_nwnd3"]
 [ext_resource type="Script" uid="uid://i8yrixerp3hs" path="res://addons/std/input/godot/device_glyphs.gd" id="11_jrs12"]
-[ext_resource type="Script" uid="uid://cn6840rmirwsn" path="res://addons/std/input/godot/glyph_set.gd" id="12_u23yc"]
-[ext_resource type="Resource" uid="uid://b44qdvqphojjq" path="res://system/input/unknown/glyphs/keyboard_arrows.tres" id="13_fgh4t"]
-[ext_resource type="Resource" uid="uid://m5xu4s56rbbb" path="res://system/input/unknown/glyphs/keyboard_label_only.tres" id="14_dt76g"]
-[ext_resource type="Resource" uid="uid://bip3qsb63vekp" path="res://system/input/unknown/glyphs/mouse.tres" id="15_eiij3"]
-[ext_resource type="Resource" uid="uid://c762oejwi8vb3" path="res://system/input/unknown/glyphs/xbox.tres" id="16_l7ind"]
-[ext_resource type="Resource" uid="uid://c2p72quwbedj7" path="res://system/input/unknown/glyphs/playstation.tres" id="17_68hgc"]
-[ext_resource type="Resource" uid="uid://mdxuupb3ney" path="res://system/input/unknown/glyphs/steam_deck.tres" id="18_prtsx"]
-[ext_resource type="Resource" uid="uid://b6swfasqq8m8i" path="res://system/input/unknown/glyphs/switch.tres" id="19_r1fof"]
-[ext_resource type="Resource" uid="uid://pya88dyjf32f" path="res://system/input/unknown/glyphs/steam_controller.tres" id="20_fkhpl"]
 [ext_resource type="Script" uid="uid://7kitoqcsdfhe" path="res://addons/std/input/godot/device_haptics.gd" id="21_wqjmf"]
 [ext_resource type="Resource" uid="uid://cqc0nf1n3dcrs" path="res://system/setting/controls/cursor_confined_property.tres" id="22_c0nf1"]
 
-[node name="Input" type="Node" unique_id=652922554]
+[node name="Input" type="Node" unique_id=652922554 node_paths=PackedStringArray("glyphs")]
+script = ExtResource("1_godot")
+glyphs = NodePath("Godot/Components/Glyphs")
 
 [node name="StdSettingsRepository" type="Node" parent="." unique_id=143911216]
 script = ExtResource("1_o5lxa")
@@ -73,7 +67,6 @@ scope = ExtResource("7_b8ikv")
 [node name="Glyphs" type="Node" parent="Godot/Components" unique_id=753274331]
 script = ExtResource("11_jrs12")
 scope = ExtResource("7_b8ikv")
-glyph_sets = Array[ExtResource("12_u23yc")]([ExtResource("13_fgh4t"), ExtResource("14_dt76g"), ExtResource("15_eiij3"), ExtResource("16_l7ind"), ExtResource("17_68hgc"), ExtResource("18_prtsx"), ExtResource("19_r1fof"), ExtResource("20_fkhpl")])
 
 [node name="Haptics" type="Node" parent="Godot/Components" unique_id=164391042]
 script = ExtResource("21_wqjmf")

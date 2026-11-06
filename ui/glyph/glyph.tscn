@@ -22,19 +22,6 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_t2ikv")
-origin_label_overrides = {
-"Backspace": "Back",
-"CapsLock": "Caps",
-"Command": "Cmd",
-"Delete": "Del",
-"Escape": "Esc",
-"Insert": "Ins",
-"Kp Enter": "Enter",
-"PageDown": "PgDn",
-"PageUp": "PgUp",
-"ScrollLock": "ScrLk",
-"Windows": "Win"
-}
 label_stylebox = ExtResource("2_lvgs8")
 label = NodePath("PanelContainer/MarginContainer/Label")
 panel_container = NodePath("PanelContainer")
