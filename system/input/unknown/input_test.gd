@@ -13,7 +13,11 @@ const PlatformScene := preload("res://premade/platform.tscn")
 const PlayStationCreate := preload("glyphs/playstation/create.png")
 const PlayStationShare := preload("glyphs/playstation/share.png")
 const SteamDeckView := preload("glyphs/steam_deck/view.png")
+const SwitchA := preload("glyphs/switch/a.png")
+const SwitchB := preload("glyphs/switch/b.png")
 const SwitchMinus := preload("glyphs/switch/minus.png")
+const SwitchX := preload("glyphs/switch/x.png")
+const SwitchY := preload("glyphs/switch/y.png")
 const SystemInput := preload("res://system/input/input.gd")
 const SystemInputScene := preload("res://system/input/input.tscn")
 const Unknown := preload("glyphs/unknown.svg")
@@ -214,6 +218,36 @@ func test_glyphs_back_draws_each_pads_own_button() -> void:
 			expected[device_type],
 			StdInputDevice.DeviceType.find_key(device_type),
 		)
+
+
+func test_glyphs_switch_face_buttons_draw_the_button_in_their_position() -> void:
+	# Given: The input scene with kit's glyph sets.
+	add_child_autofree(PlatformScene.instantiate())
+	add_child_autofree(SystemInputScene.instantiate())
+
+	# Given: Godot's face buttons, which go by position, and the Nintendo button in each.
+	var expected := {
+		JOY_BUTTON_A: SwitchB,
+		JOY_BUTTON_B: SwitchA,
+		JOY_BUTTON_X: SwitchY,
+		JOY_BUTTON_Y: SwitchX,
+	}
+
+	# Given: A loaded set holding an action on each face button.
+	var names: Array[StringName] = []
+	for button in expected:
+		names.append(StringName("glyphs_test_face_%d" % button))
+		_add_action(names[-1], button)
+	var actions := _load_actions(names)
+
+	for i in names.size():
+		# When: A Switch Pro controller's glyph is drawn for the action.
+		var glyph := _get_glyph(
+			actions, names[i], StdInputDevice.DEVICE_TYPE_SWITCH_PRO
+		)
+
+		# Then: The glyph is the Nintendo button in that position.
+		assert_eq(glyph, expected.values()[i], names[i])
 
 
 func test_glyph_sets_have_art_for_every_pad_origin_except_the_listed_gaps() -> void:
