@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="StdInputGlyphSetKeyboardDrawn" format=3 uid="uid://doesyuupu5p5t"]
+
+[ext_resource type="Texture2D" uid="uid://fley3p5lyvqk" path="res://system/input/unknown/glyphs/keyboard/arrow_up.svg" id="1_by870"]
+[ext_resource type="Texture2D" uid="uid://bfwiaw3cmpmk5" path="res://system/input/unknown/glyphs/keyboard/arrow_down.svg" id="2_5f20o"]
+[ext_resource type="Texture2D" uid="uid://dq0mft3padkgk" path="res://system/input/unknown/glyphs/keyboard/arrow_left.svg" id="3_e6o4h"]
+[ext_resource type="Texture2D" uid="uid://bjp6cn8qp5o8t" path="res://system/input/unknown/glyphs/keyboard/arrow_right.svg" id="4_a6p4d"]
+[ext_resource type="Script" uid="uid://dtauea0jrso3t" path="res://addons/std/input/godot/glyph_set_keyboard_drawn.gd" id="5_fsk1f"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jrxe0"]
+bg_color = Color(0.0940323, 0.0940324, 0.0940323, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[resource]
+script = ExtResource("5_fsk1f")
+cap = SubResource("StyleBoxFlat_jrxe0")
+min_width = 31.0
+labels = Dictionary[String, String]({
+"Backspace": "Back",
+"CapsLock": "Caps",
+"Command": "Cmd",
+"Delete": "Del",
+"Escape": "Esc",
+"Insert": "Ins",
+"Kp Enter": "Enter",
+"PageDown": "PgDn",
+"PageUp": "PgUp",
+"ScrollLock": "ScrLk",
+"Windows": "Win"
+})
+icons = Dictionary[int, Texture2D]({
+4194319: ExtResource("3_e6o4h"),
+4194320: ExtResource("1_by870"),
+4194321: ExtResource("4_a6p4d"),
+4194322: ExtResource("2_5f20o")
+})
+device_types = Array[int]([2])

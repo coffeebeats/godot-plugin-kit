@@ -84,6 +84,19 @@ func test_input_monitor_holds_godot_joypad_monitor() -> void:
 	assert_eq(monitor.godot_joypad_monitor, observer.godot_joypad_monitor)
 
 
+func test_input_godot_glyphs_hold_the_systems_glyph_sets() -> void:
+	# Given: A glyph set the game lists on the input system.
+	var glyph_set := StdInputGlyphSetKeyboard.new()
+	var glyph_sets: Array[StdInputGlyphSet] = [glyph_set]
+
+	# When: The Steam input scene enters the tree under the input system.
+	var input := _add_input([], [], glyph_sets)
+
+	# Then: The Godot glyphs component, which draws the keyboard, holds the set.
+	var glyphs: Node = input.get_node(^"Godot/Godot/Components/Glyphs")
+	assert_eq(glyphs.glyph_sets, glyph_sets)
+
+
 # -- TEST HOOKS ---------------------------------------------------------------------- #
 
 
@@ -102,17 +115,19 @@ func should_skip_script():
 
 
 ## _add_input adds a platform whose profile loaded, then the Steam input scene under an
-## input system listing `action_sets` and `menu_options_layers`, as the system's loader
-## places it on Steam builds.
+## input system listing `action_sets`, `menu_options_layers` and `glyph_sets`, as
+## the system's loader places it on Steam builds.
 func _add_input(
 	action_sets: Array[StdInputActionSet] = [],
 	menu_options_layers: Array[StdInputActionSetLayer] = [],
+	glyph_sets: Array[StdInputGlyphSet] = [],
 ) -> Node:
 	add_child_autofree(PlatformScene.instantiate())
 
 	var system := SystemInput.new()
 	system.action_sets = action_sets
 	system.menu_options_layers = menu_options_layers
+	system.glyph_sets = glyph_sets
 
 	var input := _input_scene.instantiate()
 	system.add_child(input)

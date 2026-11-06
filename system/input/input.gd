@@ -58,6 +58,14 @@ const MODULE_ID := &"input"
 ## focused_sound_group is the sound group used for focused UI elements.
 @export var focused_sound_group: StdSoundGroup = null
 
+## glyph_sets are the glyph sets prompts draw origins from, searched in order for the
+## first matching set with art for an origin, so a game's set placed ahead of kit's
+## replaces part of a family.
+##
+## NOTE: They're read once, when the input implementation loads. On Steam builds they
+## draw only the keyboard and the joypads Steam Input isn't driving.
+@export var glyph_sets: Array[StdInputGlyphSet] = []
+
 ## ui_navigation_cooldown is a wait period after a UI navigation press moves focus which
 ## must elapse before another one is accepted, so a key's repeat or a stick wavering at
 ## its deadzone can't race through a menu.

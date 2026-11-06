@@ -38,6 +38,7 @@ Each value the game owns is an export on a scene instanced in `System`:
 | --- | --- | --- |
 | `system/input/input.tscn` | `action_sets` | The game's action sets and its own layers, which the settings menu's Controller and Keyboard & Mouse tabs list for rebinding, leaving out those in `menu_options_layers`. On Steam builds, Steam Input also reads a controller's binding against them, so list every set and layer the game's manifest has, here or in `menu_options_layers`. |
 | `system/input/input.tscn` | `menu_options_layers` | The game's layers over its own sets that carry the actions of kit's `MenuOptions` layer, such as `ui_toggle_menu`. The controls tabs show those actions in the `MenuOptions` group, one row per action, and a rebind there writes to each layer that declares the action. The group shows no other action, so put any action of the game's own in a set or layer listed in `action_sets`. List each layer here and not in `action_sets`, where the tabs would give it a group whose rebinds reach only that layer. Steam Input reads them as it does `action_sets`. |
+| `system/input/input.tscn` | `glyph_sets` | The glyph sets button prompts draw from, defaulting to kit's. See [Change the button prompts](#change-the-button-prompts). |
 | `system/setting/settings.tscn` | `menu_tabs` | The game's own settings menu tabs, keyed by their label's message ID. |
 | `system/setting/interface/font_scaling_observer.tscn` | `theme` | The font theme which the text scaling setting resizes. |
 | `system/save/saves.tscn` | `schema` | The game's save data, required. |
@@ -82,6 +83,20 @@ A menu screen loads kit's `Menu` set, `system/input/actions/menu.tres`, which cl
 3. Kit's map scenes place the map's loader before `UI` in tree order, which is what keeps that order on an uncover; a map built another way must keep its loader ahead of its panels.
 4. A button that doubles a bindable action, such as a build or a wave start, takes a `FocusHandler` and a `StdInputActionTrigger`; any other button connects `pressed`. The handler the action reaches validates it, since a key gets there whether or not the button is enabled.
 5. A screen with a text field lists the `ui_text_*` actions in a layer of its own.
+
+### Change the button prompts
+
+A prompt draws an origin from the first set in `Input.glyph_sets` that matches the device and has art for it, moving on to the next matching set when one has none. To change part of a family, put a set with only that art ahead of kit's, such as one Xbox button. To change all of them, replace the list. On Steam builds the sets draw the keyboard and any pad Steam Input isn't driving, and Steam draws its own art for the rest.
+
+Kit draws every key the same way, from one keycap resource, `system/input/unknown/glyphs/keyboard.tres`:
+
+- Every key gets the same cap. Its height follows the prompt, so a key matches the pad glyph beside it. Its width grows with the label, from a square at `min_width`.
+- A printable key shows its label in the player's keyboard layout. A named key shows the abbreviation in `labels`, such as Esc or PgDn, and the arrows show the icons in `icons`.
+- Keys are drawn in the set's `font`. Left empty, that is Godot's fallback font, which `gui/theme/custom_font` replaces and a project theme doesn't, so a game whose font lives only in its theme sets `font` here.
+
+For its own look, a game saves a copy of `keyboard.tres`, edits its `cap`, `font`, `font_size`, `color`, `padding` and `min_width`, and lists the copy in place of kit's. `min_width` equals the natural height of a key, which is a line of the label plus twice the vertical padding, so change it along with the font or padding to keep single keys square. Kit's value fits Godot's built-in font at the default `font_size` and `padding`, so a game that sets `gui/theme/custom_font` recomputes it too.
+
+One cap serves the whole game. The settings menu's binding rows show labelled keys as plain text in the theme's font instead, and only their arrows keep the cap.
 
 ### Configure the project
 
