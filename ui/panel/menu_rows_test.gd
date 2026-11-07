@@ -1,6 +1,6 @@
 ##
-## Tests for the menu rows scene, holding action buttons inside a panel placed in the UI
-## of kit's 2D map template over the input system, and driven with real keys.
+## Tests for the menu rows scene. Each test fills it with action buttons inside a panel
+## in the UI of kit's 2D map template, and drives them with real keys.
 ##
 
 extends GutTest
@@ -55,8 +55,10 @@ func test_menu_rows_open_focuses_the_first_row_and_cancel_closes_it() -> void:
 	_press(KEY_ESCAPE)
 	await wait_process_frames(1)
 
-	# Then: The panel is closed, and the map's set is loaded again.
+	# Then: The panel is closed.
 	assert_false(panel.visible)
+
+	# Then: The map's set is loaded again.
 	assert_eq(slot.actions.get_action_set(slot.device_id), _gameplay)
 
 
@@ -107,8 +109,10 @@ func test_menu_rows_rebuilt_rows_give_focus_to_the_new_first_row() -> void:
 	await wait_process_frames(2)
 	get_viewport().gui_focus_changed.disconnect(record)
 
-	# Then: Focus never visited an old row, and the first new row holds it.
+	# Then: Focus never visited an old row.
 	assert_true(visits.filter(func(id: int) -> bool: return id in old_ids).is_empty())
+
+	# Then: The first new row holds focus.
 	assert_eq(_focus_owner(), first)
 
 
@@ -129,8 +133,10 @@ func after_each() -> void:
 
 
 func before_each() -> void:
-	# Given: A platform whose profile loaded, and the input scene with its slot.
+	# Given: A platform whose profile loaded.
 	add_child_autofree(PlatformScene.instantiate())
+
+	# Given: The input scene with its slot.
 	add_child_autofree(SystemInputScene.instantiate())
 
 	_gameplay = StdInputActionSet.new()

@@ -34,8 +34,8 @@ func _rank_rows() -> void:
 
 
 func _on_child_entered_tree(row: Node) -> void:
-	# NOTE: This runs after the row's `_enter_tree`, which may set `use_as_anchor`, and
-	# before the handler enters the tree and registers as an anchor.
+	# NOTE: This runs after the row's own `_enter_tree`, which may reset `use_as_anchor`,
+	# so the row can't undo it.
 	var handler := _get_focus_handler(row)
 	if handler:
 		handler.use_as_anchor = true
