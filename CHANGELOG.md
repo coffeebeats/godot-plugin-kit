@@ -1,5 +1,25 @@
 # Changelog
 
+## 4.0.0 (2026-11-07)
+
+## What's Changed
+* chore(addons)!: bump `std` to v8.0.0 by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/113
+* feat(input)!: add `menu_options_layers` and validate kit's and the game's action sets by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/115
+* feat(input)!: add `glyph_sets` and draw keys from one keycap resource by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/116
+* feat(ui): add panel scenes and `KitWorldTracker.flip_at_edges` by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/117
+* feat(input)!: add `unknown_glyph` and draw "??" for buttons with no art by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/118
+* feat(input)!: add Back art, layered glyph sets and positional PlayStation prompts by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/119
+* feat(ui): add `alert_gameplay.tscn`, an alert to open over gameplay by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/120
+* feat(ui)!: add `KitInputActionButton` and rebuild `KitInputGlyph` over std's glyph texture by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/121
+* feat(ui)!: fill the game's theme from kit's base theme and rename its variations to PascalCase by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/122
+* feat(menu): add `menu_setting_overrides`, so a game shows or hides kit's settings menu rows by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/124
+* chore(addons): bump `std` to v8.1.0 by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/125
+* feat(ui): add `menu_rows.tscn`, a panel's rows whose first usable one takes focus by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/123
+* feat(menu): add an Accessibility tab where the player picks how holds are performed by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/126
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v3.0.1...v4.0.0
+
 ## 3.0.1 (2026-11-01)
 
 ## What's Changed
