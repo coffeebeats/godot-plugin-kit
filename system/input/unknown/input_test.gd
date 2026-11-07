@@ -1,6 +1,7 @@
 ##
 ## Tests for the input system's Godot implementation, which draws glyphs from the game's
-## `glyph_sets` and `unknown_glyph`, and for the art in kit's own sets.
+## `glyph_sets` and `unknown_glyph` and runs holds in the player's chosen mode, and for
+## the art in kit's own sets.
 ##
 
 extends GutTest
@@ -8,6 +9,9 @@ extends GutTest
 # -- DEPENDENCIES -------------------------------------------------------------------- #
 
 const ArrowUp := preload("glyphs/keyboard/arrow_up.svg")
+const HoldModeProperty := preload(
+	"res://system/setting/controls/hold_mode_property.tres"
+)
 const KeycapTexture := preload("res://addons/std/input/godot/keycap_texture.gd")
 const PlatformScene := preload("res://premade/platform.tscn")
 const PlayStationCreate := preload("glyphs/playstation/create.png")
@@ -300,6 +304,40 @@ func test_glyph_sets_have_art_for_every_pad_origin_except_the_listed_gaps() -> v
 	assert_eq(mismatched, [] as Array[String])
 
 
+func test_slot_hold_mode_setting_chooses_a_declared_holds_mode() -> void:
+	# Given: The input scene, whose first player's slot reads kit's hold mode setting.
+	add_child_autofree(PlatformScene.instantiate())
+	add_child_autofree(SystemInputScene.instantiate())
+
+	var slot := StdInputSlot.for_player(1)
+	assert_eq(slot.hold_mode_property, HoldModeProperty)
+
+	# Given: A loaded set declaring a hold on `ui_accept`, in the game's `HOLD` mode.
+	_load_hold(&"ui_accept", StdInputActionHold.MODE_HOLD)
+
+	# When: The player chooses to tap holds.
+	HoldModeProperty.set_value(StdInputActionHold.MODE_TOGGLE)
+
+	# Then: The hold runs as a tap.
+	assert_eq(slot.get_action_hold_mode(&"ui_accept"), StdInputActionHold.MODE_TOGGLE)
+
+
+func test_slot_hold_mode_setting_at_game_default_runs_the_holds_own_mode() -> void:
+	# Given: The input scene, whose first player's slot reads kit's hold mode setting.
+	add_child_autofree(PlatformScene.instantiate())
+	add_child_autofree(SystemInputScene.instantiate())
+
+	# Given: A loaded set declaring a hold on `ui_accept`, in the game's `TOGGLE` mode.
+	_load_hold(&"ui_accept", StdInputActionHold.MODE_TOGGLE)
+
+	# When: The player leaves the setting at the game's default.
+	HoldModeProperty.set_value(StdInputActionHold.MODE_INHERIT)
+
+	# Then: The hold runs in its own mode.
+	var slot := StdInputSlot.for_player(1)
+	assert_eq(slot.get_action_hold_mode(&"ui_accept"), StdInputActionHold.MODE_TOGGLE)
+
+
 # -- TEST HOOKS ---------------------------------------------------------------------- #
 
 
@@ -312,6 +350,8 @@ func after_all() -> void:
 
 
 func after_each() -> void:
+	HoldModeProperty.set_value(StdInputActionHold.MODE_INHERIT)
+
 	# NOTE: The Godot backend keeps the loaded set across slots, so leave an empty one
 	# behind rather than a set whose actions a later test's input map lacks.
 	var slot := StdInputSlot.for_player(1)
@@ -381,3 +421,17 @@ func _load_actions(names: Array[StringName]) -> StdInputActionSet:
 	actions.actions_digital = names
 	StdInputSlot.for_player(1).load_action_set(actions)
 	return actions
+
+
+## _load_hold loads a set into the first player's slot which declares a hold on
+## `action`, running in `mode` unless a setting chooses otherwise.
+func _load_hold(action: StringName, mode: StdInputActionHold.Mode) -> void:
+	var hold := StdInputActionHold.new()
+	hold.action = action
+	hold.mode = mode
+
+	var actions := StdInputActionSet.new()
+	actions.name = &"Holds"
+	actions.actions_digital = [action]
+	actions.holds = [hold]
+	StdInputSlot.for_player(1).load_action_set(actions)

@@ -14,6 +14,7 @@
 [ext_resource type="Script" uid="uid://i8yrixerp3hs" path="res://addons/std/input/godot/device_glyphs.gd" id="11_jrs12"]
 [ext_resource type="Script" uid="uid://7kitoqcsdfhe" path="res://addons/std/input/godot/device_haptics.gd" id="21_wqjmf"]
 [ext_resource type="Resource" uid="uid://cqc0nf1n3dcrs" path="res://system/setting/controls/cursor_confined_property.tres" id="22_c0nf1"]
+[ext_resource type="Resource" uid="uid://cuuofq5fxrggs" path="res://system/setting/controls/hold_mode_property.tres" id="23_hold"]
 
 [node name="Input" type="Node" unique_id=652922554 node_paths=PackedStringArray("glyphs")]
 script = ExtResource("1_godot")
@@ -33,6 +34,7 @@ confined_property = ExtResource("22_c0nf1")
 script = ExtResource("4_l68v1")
 haptics_disabled_property = ExtResource("5_4h4lb")
 haptics_strength_property = ExtResource("6_6x4ah")
+hold_mode_property = ExtResource("23_hold")
 cursor = NodePath("../../InputCursor")
 joypad_monitor = NodePath("../../Godot/JoypadMonitor")
 actions_kbm = NodePath("../../Godot/Components/Actions")
