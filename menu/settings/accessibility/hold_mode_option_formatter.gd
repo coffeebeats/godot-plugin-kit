@@ -1,6 +1,5 @@
 ##
-## HoldModeOptionFormatter is a type which describes how to format a hold mode enum
-## value into a label.
+## HoldModeOptionFormatter labels each `StdInputActionHold.Mode` in the hold mode row.
 ##
 
 extends StdSettingsControllerOptionButtonFormatter

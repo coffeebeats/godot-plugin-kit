@@ -139,8 +139,10 @@ func test_menu_enter_tree_without_overrides_leaves_out_the_accessibility_tab() -
 	add_child(_menu)
 	await wait_process_frames(2)
 
-	# Then: The Accessibility tab is left out, with its label.
+	# Then: The Accessibility tab is left out.
 	assert_false(_menu.get_node(^"%TabContents").has_node(^"Accessibility"))
+
+	# Then: Its label is left out with it.
 	assert_does_not_have(_menu.get_node(^"%TabGroup").tabs, "kit_options_accessibility")
 
 	# Then: Kit's other tabs stay.
@@ -159,8 +161,10 @@ func test_prune_keeps_the_accessibility_tab_once_its_hold_row_shows() -> void:
 	var menu: Control = autofree(MenuScene.instantiate())
 	var kept: bool = menu._prune(accessibility, settings.get_shown_menu_settings())
 
-	# Then: The tab is kept, with the hold mode row.
+	# Then: The tab is kept.
 	assert_true(kept)
+
+	# Then: The hold mode row stays.
 	assert_true(accessibility.has_node(^"Holds/Mode"))
 
 

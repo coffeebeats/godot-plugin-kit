@@ -305,10 +305,11 @@ func test_glyph_sets_have_art_for_every_pad_origin_except_the_listed_gaps() -> v
 
 
 func test_slot_hold_mode_setting_chooses_a_declared_holds_mode() -> void:
-	# Given: The input scene, whose first player's slot reads kit's hold mode setting.
+	# Given: A platform and the input scene.
 	add_child_autofree(PlatformScene.instantiate())
 	add_child_autofree(SystemInputScene.instantiate())
 
+	# Then: The first player's slot reads kit's hold mode setting.
 	var slot := StdInputSlot.for_player(1)
 	assert_eq(slot.hold_mode_property, HoldModeProperty)
 
@@ -323,7 +324,7 @@ func test_slot_hold_mode_setting_chooses_a_declared_holds_mode() -> void:
 
 
 func test_slot_hold_mode_setting_at_game_default_runs_the_holds_own_mode() -> void:
-	# Given: The input scene, whose first player's slot reads kit's hold mode setting.
+	# Given: A platform and the input scene.
 	add_child_autofree(PlatformScene.instantiate())
 	add_child_autofree(SystemInputScene.instantiate())
 
@@ -423,8 +424,8 @@ func _load_actions(names: Array[StringName]) -> StdInputActionSet:
 	return actions
 
 
-## _load_hold loads a set into the first player's slot which declares a hold on
-## `action`, running in `mode` unless a setting chooses otherwise.
+## _load_hold loads into the first player's slot a set declaring a hold on `action`,
+## which runs in `mode` unless a setting chooses otherwise.
 func _load_hold(action: StringName, mode: StdInputActionHold.Mode) -> void:
 	var hold := StdInputActionHold.new()
 	hold.action = action

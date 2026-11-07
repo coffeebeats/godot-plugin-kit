@@ -54,11 +54,12 @@ func test_get_shown_menu_settings_applies_only_the_overrides() -> void:
 
 
 func test_get_shown_menu_settings_true_override_shows_a_default_off_row() -> void:
-	# Given: A settings system whose game shows the hold mode row, which kit leaves off.
+	# Given: Kit leaves the hold mode row off.
 	assert_false(
 		SystemSettings.MENU_SETTINGS[&"accessibility_holds_mode"], "precondition"
 	)
 
+	# Given: A settings system whose game shows it.
 	var settings: Node = autofree(SystemSettings.new())
 	settings.menu_setting_overrides[&"accessibility_holds_mode"] = true
 

@@ -384,7 +384,7 @@ msgstr ""
 msgid "Hold actions"
 msgstr ""
 
-#. Describes one possible option in the hold action setting; each action keeps the way the game designed it to be performed.
+#. Describes one possible option in the hold action setting; each action works the way the game designed it.
 msgctxt "hold_mode"
 msgid "Game default"
 msgstr ""

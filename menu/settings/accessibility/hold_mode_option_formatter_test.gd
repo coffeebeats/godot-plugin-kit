@@ -18,7 +18,9 @@ func test_hold_mode_options_offer_every_mode() -> void:
 	# When: The hold mode setting's options are read.
 	var options: PackedInt64Array = HoldModeOptionsProperty.get_value()
 
-	# Then: They offer every mode, so any stored value is among them.
+	# Then: They offer every mode.
+	#
+	# NOTE: The option button asserts that the stored value is among its options.
 	assert_eq(Array(options), StdInputActionHold.Mode.values())
 
 
@@ -33,4 +35,6 @@ func test_hold_mode_option_formatter_labels_each_mode_apart() -> void:
 
 	# Then: Each mode has a label of its own.
 	assert_eq(labels.size(), options.size())
+
+	# Then: No label is empty.
 	assert_does_not_have(labels, "")
