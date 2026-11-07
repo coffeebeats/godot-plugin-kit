@@ -7,6 +7,9 @@ extends GutTest
 
 # -- DEPENDENCIES -------------------------------------------------------------------- #
 
+const HoldModeProperty := preload(
+	"res://system/setting/controls/hold_mode_property.tres"
+)
 const PlatformScene := preload("res://premade/platform.tscn")
 const SystemInput := preload("res://system/input/input.gd")
 
@@ -111,6 +114,15 @@ func test_input_glyphs_hold_the_systems_unknown_glyph() -> void:
 	assert_eq(
 		input.get_node(^"Godot/Godot/Components/Glyphs").unknown_glyph, unknown_glyph
 	)
+
+
+func test_input_slot_reads_kits_hold_mode_setting() -> void:
+	# When: The Steam input scene enters the tree under the input system.
+	var input := _add_input()
+
+	# Then: The first player's slot, from the Godot input scene, reads the setting.
+	var slot: StdInputSlot = input.get_node(^"Godot/InputSlots/Player1")
+	assert_eq(slot.hold_mode_property, HoldModeProperty)
 
 
 # -- TEST HOOKS ---------------------------------------------------------------------- #

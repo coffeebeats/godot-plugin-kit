@@ -226,6 +226,10 @@ msgstr ""
 msgid "kit_options_keyboard_mouse"
 msgstr ""
 
+#. A tab within the game's options menu containing accessibility settings, such as how the player performs actions which ask them to hold a button.
+msgid "kit_options_accessibility"
+msgstr ""
+
 #. Used as a category name for a group of settings related to volume.
 msgid "kit_options_sound_volume"
 msgstr ""
@@ -367,6 +371,34 @@ msgstr ""
 
 #. Shown in place of a key or button in the controls settings, for an action with nothing bound at that slot.
 msgid "kit_options_controls_unbound"
+msgstr ""
+
+#. Used as a category name for settings about actions which ask the player to hold a button down.
+msgid "kit_options_accessibility_holds"
+msgstr ""
+
+#. Describes the setting which changes how the player performs actions which ask them to hold a button down.
+msgid "kit_options_accessibility_hold_mode"
+msgstr ""
+
+#. Describes one possible option in the hold action setting; each action works the way the game designed it.
+msgctxt "hold_mode"
+msgid "kit_options_accessibility_hold_mode_default"
+msgstr ""
+
+#. Describes one possible option in the hold action setting; the player holds the button down until the action completes.
+msgctxt "hold_mode"
+msgid "kit_options_accessibility_hold_mode_hold"
+msgstr ""
+
+#. Describes one possible option in the hold action setting; the player taps the button once and the action completes on its own, unless they tap again to cancel it.
+msgctxt "hold_mode"
+msgid "kit_options_accessibility_hold_mode_tap"
+msgstr ""
+
+#. Describes one possible option in the hold action setting; the action completes as soon as the player presses the button.
+msgctxt "hold_mode"
+msgid "kit_options_accessibility_hold_mode_press"
 msgstr ""
 
 #. Instructs the user that they will be updating the controller binding for the specified action. Here, the '%s' placeholder will be replaced with the translated name of the game action.

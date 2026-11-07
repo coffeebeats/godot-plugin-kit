@@ -41,6 +41,7 @@ const MENU_SETTINGS: Dictionary[StringName, bool] = {
 	&"keyboard_mouse_bindings_menu_tabbed": true,
 	&"keyboard_mouse_bindings_menu_options": true,
 	&"keyboard_mouse_bindings_menu_binding": true,
+	&"accessibility_holds_mode": false,
 }
 
 ## MODULE_ID is the ID the settings system registers under as a `KitModule`.

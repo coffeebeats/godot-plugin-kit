@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://b4tpyajxmxa7j"]
+
+[ext_resource type="PackedScene" uid="uid://bxxweem4spjs8" path="res://menu/settings/group.tscn" id="1_group"]
+[ext_resource type="PackedScene" uid="uid://dyoqungyuv513" path="res://menu/settings/setting.tscn" id="2_setting"]
+[ext_resource type="PackedScene" uid="uid://jqrnk34kfw5u" path="res://ui/input/option_button.tscn" id="3_option"]
+[ext_resource type="Script" uid="uid://luej4ay2fvde" path="res://addons/std/setting/controller_option_button_int.gd" id="4_controller"]
+[ext_resource type="Resource" uid="uid://cuuofq5fxrggs" path="res://system/setting/controls/hold_mode_property.tres" id="5_mode"]
+[ext_resource type="Resource" uid="uid://tskdebiqvvua" path="res://system/setting/controls/hold_mode_options_property.tres" id="6_options"]
+[ext_resource type="Resource" uid="uid://ngv62arg2coo" path="res://menu/settings/accessibility/hold_mode_option_formatter.tres" id="7_formatter"]
+
+[node name="Accessibility" type="VBoxContainer" unique_id=1489310374]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"MenuBody"
+
+[node name="Holds" parent="." unique_id=822904516 instance=ExtResource("1_group")]
+layout_mode = 2
+label = "kit_options_accessibility_holds"
+
+[node name="Mode" parent="Holds" unique_id=1960472785 instance=ExtResource("2_setting")]
+layout_mode = 2
+id = &"accessibility_holds_mode"
+label = "kit_options_accessibility_hold_mode"
+
+[node name="OptionButton" parent="Holds/Mode" unique_id=303152887 instance=ExtResource("3_option")]
+layout_mode = 2
+
+[node name="FocusHandler" parent="Holds/Mode/OptionButton" index="1" unique_id=1558508030]
+use_as_anchor = true
+
+[node name="StdSettingsControllerOptionButtonInt" type="Node" parent="Holds/Mode/OptionButton" unique_id=1105688421]
+script = ExtResource("4_controller")
+property = ExtResource("5_mode")
+options_property = ExtResource("6_options")
+formatter = ExtResource("7_formatter")
+
+[editable path="Holds/Mode/OptionButton"]

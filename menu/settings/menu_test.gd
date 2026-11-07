@@ -126,6 +126,48 @@ func test_menu_enter_tree_removes_each_tab_left_with_no_listed_row() -> void:
 	assert_false(keyboard.has_node(^"%MenuControls"))
 
 
+func test_menu_enter_tree_without_overrides_leaves_out_the_accessibility_tab() -> void:
+	# Given: A platform and the input scene with its slot.
+	add_child_autofree(PlatformScene.instantiate())
+	add_child_autofree(SystemInputScene.instantiate())
+
+	# Given: The settings component, whose game shows none of kit's hold rows.
+	add_child_autofree(SettingsSystem.new())
+
+	# When: The settings menu enters the tree.
+	_menu = MenuScene.instantiate()
+	add_child(_menu)
+	await wait_process_frames(2)
+
+	# Then: The Accessibility tab is left out.
+	assert_false(_menu.get_node(^"%TabContents").has_node(^"Accessibility"))
+
+	# Then: Its label is left out with it.
+	assert_does_not_have(_menu.get_node(^"%TabGroup").tabs, "kit_options_accessibility")
+
+	# Then: Kit's other tabs stay.
+	assert_true(_menu.get_node(^"%TabContents").has_node(^"KeyboardMouse"))
+
+
+func test_prune_keeps_the_accessibility_tab_once_its_hold_row_shows() -> void:
+	# Given: The Accessibility tab of a settings menu outside the tree.
+	var accessibility := _get_tab(&"Accessibility")
+
+	# Given: A game which shows the hold mode row.
+	var settings: Node = autofree(SettingsScene.instantiate())
+	settings.menu_setting_overrides[&"accessibility_holds_mode"] = true
+
+	# When: The tab is pruned to the rows the game shows.
+	var menu: Control = autofree(MenuScene.instantiate())
+	var kept: bool = menu._prune(accessibility, settings.get_shown_menu_settings())
+
+	# Then: The tab is kept.
+	assert_true(kept)
+
+	# Then: The hold mode row stays.
+	assert_true(accessibility.has_node(^"Holds/Mode"))
+
+
 func test_prune_leaves_out_an_unlisted_row() -> void:
 	# Given: The Sound tab of a settings menu outside the tree.
 	var sound := _get_tab(&"Sound")

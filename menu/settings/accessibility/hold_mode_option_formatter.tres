@@ -1,0 +1,6 @@
+[gd_resource type="Resource" format=3 uid="uid://ngv62arg2coo"]
+
+[ext_resource type="Script" uid="uid://csf2b14lljp44" path="res://menu/settings/accessibility/hold_mode_option_formatter.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")

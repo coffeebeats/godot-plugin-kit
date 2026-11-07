@@ -47,9 +47,27 @@ func test_get_shown_menu_settings_applies_only_the_overrides() -> void:
 
 	# Then: Every other row kit shows by default stays.
 	var others := SystemSettings.MENU_SETTINGS.keys().filter(
-		func(id: StringName) -> bool: return id != &"sound_volume_voice"
+		func(id: StringName) -> bool:
+			return SystemSettings.MENU_SETTINGS[id] and id != &"sound_volume_voice"
 	)
 	assert_eq(shown, others)
+
+
+func test_get_shown_menu_settings_true_override_shows_a_default_off_row() -> void:
+	# Given: Kit leaves the hold mode row off.
+	assert_false(
+		SystemSettings.MENU_SETTINGS[&"accessibility_holds_mode"], "precondition"
+	)
+
+	# Given: A settings system whose game shows it.
+	var settings: Node = autofree(SystemSettings.new())
+	settings.menu_setting_overrides[&"accessibility_holds_mode"] = true
+
+	# When: The ids the settings menu shows are read.
+	var shown: Array[StringName] = settings.get_shown_menu_settings()
+
+	# Then: The hold mode row is shown.
+	assert_has(shown, &"accessibility_holds_mode")
 
 
 func test_settings_ready_with_an_unknown_override_reports_it() -> void:
