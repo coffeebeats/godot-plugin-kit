@@ -153,7 +153,7 @@ func test_controls_tab_names_its_rebinding_groups_by_device() -> void:
 
 
 func test_controls_tab_pruned_by_the_menu_keeps_the_game_sets() -> void:
-	# Given: A keyboard and mouse tab, which the settings menu prunes as it enters.
+	# Given: A keyboard and mouse tab.
 	var controls: VBoxContainer = ControlsScene.instantiate()
 	controls.device_category = _KEYBOARD
 
@@ -164,6 +164,8 @@ func test_controls_tab_pruned_by_the_menu_keeps_the_game_sets() -> void:
 
 	# Given: The game lists neither the cursor setting nor kit's first rebinding group.
 	var shown: Array[StringName] = [&"keyboard_mouse_bindings_menu_options"]
+
+	# Given: The settings menu prunes the tab as it enters.
 	var menu: Control = autofree(MenuScene.instantiate())
 	controls.tree_entered.connect(menu._prune.bind(controls, shown), CONNECT_ONE_SHOT)
 
@@ -188,7 +190,7 @@ func test_controls_controller_tab_pruned_of_its_settings_anchors_a_binding() -> 
 	# Given: A connected joypad, so the controller tab's bindings take focus.
 	_connect_joypad()
 
-	# Given: A controller tab, which the settings menu prunes as it enters.
+	# Given: A controller tab.
 	var controls: VBoxContainer = ControlsScene.instantiate()
 	controls.device_category = _CONTROLLER
 
@@ -204,6 +206,7 @@ func test_controls_controller_tab_pruned_of_its_settings_anchors_a_binding() -> 
 
 	var shown: Array[StringName] = settings.get_shown_menu_settings()
 
+	# Given: The settings menu prunes the tab as it enters.
 	var menu: Control = autofree(MenuScene.instantiate())
 	controls.tree_entered.connect(menu._prune.bind(controls, shown), CONNECT_ONE_SHOT)
 

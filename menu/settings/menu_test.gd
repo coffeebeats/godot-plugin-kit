@@ -90,9 +90,11 @@ func test_menu_settings_names_every_kit_row_and_rebinding_group() -> void:
 
 
 func test_menu_enter_tree_removes_each_tab_left_with_no_listed_row() -> void:
-	# Given: A platform, the input scene with its slot, and the settings component.
+	# Given: A platform and the input scene with its slot.
 	add_child_autofree(PlatformScene.instantiate())
 	add_child_autofree(SystemInputScene.instantiate())
+
+	# Given: The settings component.
 	var settings: Node = add_child_autofree(SettingsSystem.new())
 
 	# Given: The game hides all of kit's rows but the text size and one rebinding group.
