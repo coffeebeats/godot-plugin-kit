@@ -31,9 +31,9 @@ const Signals := preload("res://addons/std/event/signal.gd")
 ## origin's name, as `{origin}`, and the button's text, as `{action}`.
 const MSGID_ACTION_NAME := &"kit_input_action_name"
 
-## MSGID_CANCEL is the button's text while a tapped toggle runs, since a second tap, or
-## a press of the hold's `cancel_action`, cancels it.
-const MSGID_CANCEL := &"kit_cancel"
+## MSGID_HOLD_CANCEL is the button's text while a tapped toggle runs, since a second
+## tap, or a press of the hold's `cancel_action`, cancels it.
+const MSGID_HOLD_CANCEL := &"kit_hold_cancel"
 
 ## MSGID_HOLD is the default `hold_text`, which formats the action's name as `{action}`.
 const MSGID_HOLD := &"kit_hold"
@@ -429,7 +429,7 @@ func _update_text() -> void:
 	var action_text := Locales.tr_action(action_set.name, action)
 
 	if _hold_tapped:
-		text = tr(MSGID_CANCEL)
+		text = tr(MSGID_HOLD_CANCEL)
 	elif _hold_mode == StdInputActionHold.MODE_HOLD and hold_text:
 		text = tr(hold_text).format({&"action": action_text})
 	else:
