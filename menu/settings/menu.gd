@@ -158,36 +158,43 @@ func _is_anchor(node: Node) -> bool:
 
 
 ## _prune frees each row and group under `tab` whose id is one of kit's that `shown`
-## lacks, then any group left with no row. It returns false if `tab` held some with an
-## id and none is left.
+## lacks, then any group left with no row, and anchors focus if it freed any. It
+## returns false if `tab` held some with an id and none is left.
 func _prune(tab: Node, shown: Array[StringName]) -> bool:
 	if not _has_listable(tab):
 		return true
 
-	_prune_children(tab, shown)
+	var freed := _prune_children(tab, shown)
 	if not _has_listable(tab):
 		return false
 
-	_anchor_first_row(tab)
+	if freed:
+		_anchor_first_row(tab)
+
 	return true
 
 
 ## _prune_children frees each row and group under `node` whose id is one of kit's that
-## `shown` lacks, then `node` itself if it is a group left with no row.
-func _prune_children(node: Node, shown: Array[StringName]) -> void:
+## `shown` lacks, then `node` itself if it is a group left with no row. It returns
+## whether it freed any.
+func _prune_children(node: Node, shown: Array[StringName]) -> bool:
+	var freed := false
 	var row_freed := false
 
 	for child in node.get_children():
 		var id := _get_id(child)
 		if id in SettingsSystem.MENU_SETTINGS and id not in shown:
 			row_freed = row_freed or child is Setting
+			freed = true
 			child.free()
 		else:
-			_prune_children(child, shown)
+			freed = _prune_children(child, shown) or freed
 
 	if row_freed and node is Group:
 		if not node.get_children().any(func(c): return c is Setting):
 			node.free()
+
+	return freed
 
 
 # -- SIGNAL HANDLERS ----------------------------------------------------------------- #
