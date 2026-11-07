@@ -60,7 +60,7 @@ func _enter_tree() -> void:
 	get_node(other).free()
 
 	# NOTE: The settings menu reads these ids once this returns, so it can leave out
-	# a rebinding group the game does not list in `menu_settings`.
+	# a rebinding group the game hides in `menu_setting_overrides`.
 	for group in get_node(^"%ActionSets").get_children():
 		if group is ActionSet:
 			group.device_category = device_category

@@ -198,11 +198,11 @@ func test_controls_controller_tab_pruned_of_its_settings_anchors_a_binding() -> 
 		&"controller_disable_vibration",
 		&"controller_vibration_strength",
 	]
-	var defaults: Node = autofree(SettingsScene.instantiate())
-	var shown: Array[StringName] = []
-	for id in defaults.menu_settings:
-		if id not in dropped:
-			shown.append(id)
+	var settings: Node = autofree(SettingsScene.instantiate())
+	for id in dropped:
+		settings.menu_setting_overrides[id] = false
+
+	var shown: Array[StringName] = settings.get_shown_menu_settings()
 
 	var menu: Control = autofree(MenuScene.instantiate())
 	controls.tree_entered.connect(menu._prune.bind(controls, shown), CONNECT_ONE_SHOT)

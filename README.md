@@ -41,7 +41,7 @@ Each value the game owns is an export on a scene instanced in `System`:
 | `system/input/input.tscn` | `glyph_sets` | The glyph sets button prompts draw from, defaulting to kit's. See [Change the button prompts](#change-the-button-prompts). |
 | `system/input/input.tscn` | `unknown_glyph` | The glyph a prompt draws for a bound button with no art, defaulting to kit's "??" icon. Left empty, the prompt draws nothing for such a button. |
 | `system/setting/settings.tscn` | `menu_tabs` | The game's own settings menu tabs, keyed by their label's message ID. |
-| `system/setting/settings.tscn` | `menu_settings` | The ids of kit's settings menu rows and rebinding groups the menu shows, defaulting to all of them. See [Pick the settings the menu shows](#pick-the-settings-the-menu-shows). |
+| `system/setting/settings.tscn` | `menu_setting_overrides` | Kit's settings menu rows and rebinding groups the game shows or hides, by id, where it differs from kit's default. See [Pick the settings the menu shows](#pick-the-settings-the-menu-shows). |
 | `system/setting/interface/font_scaling_observer.tscn` | `theme` | The game's theme, the one `[gui] theme/custom` names, which the text scaling setting resizes. |
 | `system/save/saves.tscn` | `schema` | The game's save data, required. |
 | `system/save/saves.tscn` | `slot_count` | The number of save slots, each shown in the save menu. |
@@ -79,9 +79,9 @@ For a different layout, assemble a menu from the scenes it is made of: the setti
 
 ### Pick the settings the menu shows
 
-The settings menu shows each of kit's rows whose id the `Settings` node's `menu_settings` lists. It defaults to every id kit ships, so a game deletes the ids of the rows it has no use for, such as `sound_volume_voice` in a game with no voice audio. A group left with no row is left out, and so is a tab left with none of kit's rows. The game's own tabs from `menu_tabs` always show. Leaving out a row hides only its control, and the observer in `System` keeps applying the stored value, or the default until the player changes it.
+Each of kit's settings menu rows has an id, and `MENU_SETTINGS` in `system/setting/settings.gd` says whether the menu shows it by default; every row kit ships today does. The `Settings` node's `menu_setting_overrides` holds only what the game changes, such as `sound_volume_voice: false` in a game with no voice audio, or `true` for a row kit leaves off until a game opts in. A row kit adds in a later version shows up, or stays off, by kit's default until the game overrides it, and an override naming an id kit no longer has logs a warning. A group left with no row is left out, and so is a tab left with none of kit's rows. The game's own tabs from `menu_tabs` always show. Leaving out a row hides only its control, and the observer in `System` keeps applying the stored value, or the default until the player changes it.
 
-The controls tabs list each of kit's menu action sets as a rebinding group whose rows follow the set's actions, so a game lists or drops the group as a whole. Its id names the tab and the set: `controller_bindings_<set>` or `keyboard_mouse_bindings_<set>`, with `<set>` one of `menu`, `menu_tabbed`, `menu_options` and `menu_binding`. A game's own action sets from `action_sets` show in every controls tab that shows. `controller_steam_configurator` is the row that opens Steam's binding panel while Steam Input drives the controller.
+The controls tabs list each of kit's menu action sets as a rebinding group whose rows follow the set's actions, so a game shows or hides the group as a whole. Its id names the tab and the set: `controller_bindings_<set>` or `keyboard_mouse_bindings_<set>`, with `<set>` one of `menu`, `menu_tabbed`, `menu_options` and `menu_binding`. A game's own action sets from `action_sets` show in every controls tab that shows. `controller_steam_configurator` is the row that opens Steam's binding panel while Steam Input drives the controller.
 
 Every property kit defines under `system/setting/`, with the row that shows it:
 

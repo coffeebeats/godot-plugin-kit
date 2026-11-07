@@ -4,7 +4,7 @@
 ##
 ## After kit's own tabs it shows the game's, read from the `Settings` system
 ## component's `menu_tabs`. Of kit's own rows and rebinding groups, it shows those the
-## component's `menu_settings` names.
+## component's `get_shown_menu_settings` returns.
 ##
 
 extends Control
@@ -28,11 +28,6 @@ const TabGroup := preload("../../ui/menu/tab_group.gd")
 
 var _tab_switch_muted: bool = false
 
-## _found_ids are the ids of the rows and groups the tabs held as they entered the tree.
-var _found_ids: Array[StringName] = []
-
-var _logger := StdLogger.create(&"menu/settings/menu")
-
 ## _tabs_left_out are the tab contents which `_ready` removes, as the game listed none
 ## of their rows or groups.
 var _tabs_left_out: Array[Node] = []
@@ -51,7 +46,7 @@ func _enter_tree() -> void:
 
 		# NOTE: A tab is pruned after its own `_enter_tree`, where the controls tab names
 		# its rebinding groups, and before its rows enter the tree.
-		var shown: Array[StringName] = settings.menu_settings
+		var shown := settings.get_shown_menu_settings()
 		var tab_group: TabGroup = get_node(^"%TabGroup")
 		for tab in tab_group.content.get_children():
 			tab.tree_entered.connect(
@@ -76,12 +71,6 @@ func _ready() -> void:
 		_tab_group.remove_tab(tab.get_index())
 
 	_tabs_left_out.clear()
-
-	for id in KitSystems.settings().menu_settings:
-		if id not in _found_ids:
-			_logger.warn("No settings row or group has the listed id.", {&"id": id})
-
-	_found_ids.clear()
 
 	Signals.connect_safe(_tab_group.tab_changed, _on_tab_changed)
 
@@ -128,16 +117,6 @@ func _anchor_first_row(tab: Node) -> void:
 		else:
 			anchor.use_as_anchor = true
 			anchor.priority = anchors.size() - i
-
-
-## _collect_ids appends the id of each row and group under `node` to `_found_ids`.
-func _collect_ids(node: Node) -> void:
-	for child in node.get_children():
-		var id := _get_id(child)
-		if id:
-			_found_ids.append(id)
-
-		_collect_ids(child)
 
 
 ## _find_anchors returns, in tree order, each focus handler under `node` and each
@@ -221,7 +200,5 @@ func _on_tab_changed(_index: int) -> void:
 
 
 func _on_tab_tree_entered(tab: Node, shown: Array[StringName]) -> void:
-	_collect_ids(tab)
-
 	if not _prune(tab, shown):
 		_tabs_left_out.append(tab)

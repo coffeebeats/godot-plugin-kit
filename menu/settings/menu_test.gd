@@ -64,7 +64,7 @@ func test_add_tabs_appends_the_game_tabs_after_kit_tabs_in_order() -> void:
 	assert_eq(tab_group.content.get_child(count + 1).name, &"Second")
 
 
-func test_menu_settings_lists_every_kit_row_and_rebinding_group() -> void:
+func test_menu_settings_names_every_kit_row_and_rebinding_group() -> void:
 	# Given: The ids of every row in kit's settings tabs.
 	var ids := _find_row_ids("res://menu/settings")
 	assert_gt(ids.size(), 0, "precondition")
@@ -79,14 +79,14 @@ func test_menu_settings_lists_every_kit_row_and_rebinding_group() -> void:
 		for group in controls.get_node(^"%ActionSets").get_children():
 			ids[controls._get_bindings_id(group.action_set)] = true
 
-	# When: The `Settings` scene's default list is read.
-	var shown: Array[StringName] = _get_default_shown()
+	# When: The `Settings` node's table of kit's rows and groups is read.
+	var named := SettingsSystem.MENU_SETTINGS.keys()
 
-	# Then: It lists each of them, and nothing else.
+	# Then: It names each of them, and nothing else.
 	for id: StringName in ids:
-		assert_has(shown, id)
+		assert_has(named, id)
 
-	assert_eq(shown.size(), ids.size())
+	assert_eq(named.size(), ids.size())
 
 
 func test_menu_enter_tree_removes_each_tab_left_with_no_listed_row() -> void:
@@ -95,11 +95,12 @@ func test_menu_enter_tree_removes_each_tab_left_with_no_listed_row() -> void:
 	add_child_autofree(SystemInputScene.instantiate())
 	var settings: Node = add_child_autofree(SettingsSystem.new())
 
-	# Given: The game lists the text size and one keyboard rebinding group.
-	var shown: Array[StringName] = [
+	# Given: The game hides all of kit's rows but the text size and one rebinding group.
+	var kept: Array[StringName] = [
 		&"interface_text_scaling", &"keyboard_mouse_bindings_menu_options"
 	]
-	settings.menu_settings = shown
+	for id in SettingsSystem.MENU_SETTINGS:
+		settings.menu_setting_overrides[id] = id in kept
 
 	# When: The settings menu enters the tree.
 	_menu = MenuScene.instantiate()
@@ -267,25 +268,20 @@ func _find_row_ids(path: String) -> Dictionary:
 	return found
 
 
-## _get_default_shown returns the `Settings` scene's default `menu_settings`.
-func _get_default_shown() -> Array[StringName]:
-	var settings: Node = autofree(SettingsScene.instantiate())
-	return settings.menu_settings
-
-
 ## _get_tab returns the tab content named `tab_name` of a menu outside the tree.
 func _get_tab(tab_name: StringName) -> Node:
 	var menu: Control = autofree(MenuScene.instantiate())
 	return menu.get_node(^"%TabContents").get_node(NodePath(tab_name))
 
 
-## _prune prunes `tab` to kit's default list without `dropped`, as the settings menu
-## prunes it, and returns whether the tab is kept.
+## _prune prunes `tab` as the settings menu does once the game hides `dropped`, and
+## returns whether the tab is kept.
 func _prune(tab: Node, dropped: Array[StringName]) -> bool:
-	var shown: Array[StringName] = []
-	for id in _get_default_shown():
-		if id not in dropped:
-			shown.append(id)
+	var settings: Node = autofree(SettingsScene.instantiate())
+	for id in dropped:
+		settings.menu_setting_overrides[id] = false
+
+	var shown: Array[StringName] = settings.get_shown_menu_settings()
 
 	var menu: Control = autofree(MenuScene.instantiate())
 	return menu._prune(tab, shown)
