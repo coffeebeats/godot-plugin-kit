@@ -1,3 +1,5 @@
+# gdlint:ignore=max-public-methods
+
 ##
 ## Tests for `KitInputActionButton`, through the scene a game places.
 ##
@@ -19,11 +21,23 @@ const SystemInputScene := preload("res://system/input/input.tscn")
 ## _ACTION is the action the buttons stand for, which the engine binds to Enter.
 const _ACTION := &"ui_accept"
 
+## _ACTION_CANCEL is the action which cancels the tests' toggles, which the engine binds
+## to Escape.
+const _ACTION_CANCEL := &"ui_cancel"
+
 ## _ACTION_UNBOUND is an action with no binding on any device.
 const _ACTION_UNBOUND := &"action_button_test_unbound"
 
 ## _ACTION_SET is the name of the set holding the tests' actions.
 const _ACTION_SET := &"ActionButtonTest"
+
+## _HOLD_DURATION is how long (in seconds) the tests' holds take to fill, long enough
+## that none fills during a test.
+const _HOLD_DURATION := 60.0
+
+const MODE_HOLD := StdInputActionHold.MODE_HOLD
+const MODE_PRESS := StdInputActionHold.MODE_PRESS
+const MODE_TOGGLE := StdInputActionHold.MODE_TOGGLE
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
@@ -217,6 +231,139 @@ func test_action_button_glyph_reads_the_button_prompts_setting() -> void:
 	assert_eq(button.get_glyph().device_type_override, GlyphTypeProperty)
 
 
+func test_action_button_hold_mode_shows_the_hold_text() -> void:
+	# Given: A translation of the action's name.
+	_add_action_translation("Confirm")
+
+	# Given: The action is a hold the player holds.
+	_declare_hold(MODE_HOLD)
+
+	# When: A button for the action enters the tree.
+	var button := _add_button()
+
+	# Then: Its text says to hold the action.
+	assert_eq(button.text, "Hold to Confirm")
+
+
+func test_action_button_hold_mode_with_empty_hold_text_shows_the_name() -> void:
+	# Given: A translation of the action's name.
+	_add_action_translation("Confirm")
+
+	# Given: The action is a hold the player holds.
+	_declare_hold(MODE_HOLD)
+
+	# When: A button for the action with no hold text enters the tree.
+	var button := _create_button()
+	button.hold_text = &""
+	add_child_autofree(button)
+
+	# Then: Its text is the action's name alone.
+	assert_eq(button.text, "Confirm")
+
+
+func test_action_button_hold_mode_fills_while_held_and_empties_on_release() -> void:
+	# Given: The action is a hold the player holds.
+	_declare_hold(MODE_HOLD)
+
+	# Given: A button for the action, mounted under real input.
+	var button := _create_button()
+	var input := await _mount(button)
+
+	# When: The action is held for a few frames.
+	input.press_action(_ACTION)
+	await wait_process_frames(3)
+
+	# Then: The button fills as far as the hold has.
+	var progress := _get_slot().get_action_hold_progress(_ACTION)
+	assert_gt(progress, 0.0, "precondition")
+	assert_eq(button._hold_progress, progress)
+
+	# When: The action is released before the hold fills.
+	input.release_action(_ACTION)
+
+	# Then: The fill empties.
+	assert_eq(button._hold_progress, 0.0)
+
+
+func test_action_button_toggle_mode_shows_the_cancel_after_a_tap() -> void:
+	# Given: A translation of the action's name.
+	_add_action_translation("Confirm")
+
+	# Given: The action is a hold the player toggles, with its own cancel action.
+	_declare_hold(MODE_TOGGLE, _ACTION_CANCEL)
+
+	# Given: A button for the action, mounted under real input.
+	var button := _create_button()
+	var input := await _mount(button)
+
+	# Then: Before a tap it shows the action's name and glyph.
+	assert_eq(button.text, "Confirm")
+	assert_eq(button.get_glyph().action, _ACTION)
+
+	# When: The action is tapped.
+	input.press_action(_ACTION)
+	input.release_action(_ACTION)
+
+	# Then: It shows how to cancel the running toggle.
+	assert_eq(button.text, "Cancel")
+	assert_eq(button.get_glyph().action, _ACTION_CANCEL)
+
+	# When: The action is tapped again, which cancels the toggle.
+	input.press_action(_ACTION)
+	input.release_action(_ACTION)
+
+	# Then: It shows the action's name and glyph again.
+	assert_eq(button.text, "Confirm")
+	assert_eq(button.get_glyph().action, _ACTION)
+
+
+func test_action_button_press_mode_shows_the_name_alone() -> void:
+	# Given: A translation of the action's name.
+	_add_action_translation("Confirm")
+
+	# Given: The action is a hold the player's setting runs on the press.
+	_declare_hold(MODE_PRESS)
+
+	# When: A button for the action enters the tree.
+	var button := _add_button()
+
+	# Then: Its text is the action's name alone.
+	assert_eq(button.text, "Confirm")
+
+
+func test_action_button_hold_declared_after_ready_shows_the_hold_text() -> void:
+	# Given: A translation of the action's name.
+	_add_action_translation("Confirm")
+
+	# Given: A button for the action, whose set declares no hold.
+	var button := _add_button()
+	assert_eq(button.text, "Confirm", "precondition")
+
+	# When: The action becomes a hold the player holds.
+	_declare_hold(MODE_HOLD)
+
+	# Then: Its text says to hold the action.
+	assert_eq(button.text, "Hold to Confirm")
+
+
+func test_action_button_mode_change_with_no_hold_running_updates_the_text() -> void:
+	# Given: A translation of the action's name.
+	_add_action_translation("Confirm")
+
+	# Given: The action is a hold the player holds, through its group's setting.
+	var mode := _declare_hold(MODE_HOLD)
+
+	# Given: A button for the action, saying to hold it.
+	var button := _add_button()
+	assert_eq(button.text, "Hold to Confirm", "precondition")
+
+	# When: The player changes the setting to toggle while nothing runs.
+	mode.set_value(MODE_TOGGLE)
+
+	# Then: Its text is the action's name alone.
+	assert_eq(button.text, "Confirm")
+
+
 # -- TEST HOOKS ---------------------------------------------------------------------- #
 
 
@@ -258,7 +405,9 @@ func before_each() -> void:
 	# Given: A loaded set holding the tests' actions.
 	_actions = StdInputActionSet.new()
 	_actions.name = _ACTION_SET
-	_actions.actions_digital = [_ACTION, _ACTION_UNBOUND] as Array[StringName]
+	_actions.actions_digital = (
+		[_ACTION, _ACTION_CANCEL, _ACTION_UNBOUND] as Array[StringName]
+	)
 	StdInputSlot.for_player(1).load_action_set(_actions)
 
 	# Given: Kit's English catalogue, which holds the accessible name's template.
@@ -289,6 +438,33 @@ func _add_translation(translation: Translation) -> void:
 	_translations.append(translation)
 
 
+## _declare_hold reloads the tests' set declaring `_ACTION` a hold which runs in `mode`,
+## cancelled by `cancel_action`. The mode comes from the hold's own setting, which
+## overrides any mode the player stored, and which the returned property holds.
+func _declare_hold(
+	mode: StdInputActionHold.Mode, cancel_action: StringName = &""
+) -> StdSettingsPropertyInt:
+	var property := StdSettingsPropertyInt.new()
+	property.category = &"action_button_test"
+	property.name = &"hold_mode"
+	property.scope = StdSettingsScope.new()
+	property.set_value(mode)
+
+	var hold := StdInputActionHold.new()
+	hold.action = _ACTION
+	hold.cancel_action = cancel_action
+	hold.duration = _HOLD_DURATION
+	hold.mode_override = property
+
+	_actions.holds = [hold] as Array[StdInputActionHold]
+
+	# NOTE: The slot ignores a load of the set it already has, so another goes first.
+	_get_slot().load_action_set(StdInputActionSet.new())
+	_get_slot().load_action_set(_actions)
+
+	return property
+
+
 func _create_button() -> KitInputActionButton:
 	var button: KitInputActionButton = ActionButtonScene.instantiate()
 	button.action_set = _actions
@@ -300,6 +476,10 @@ func _create_button() -> KitInputActionButton:
 func _get_line_height(button: Button) -> int:
 	var font := button.get_theme_font(&"font")
 	return roundi(font.get_height(button.get_theme_font_size(&"font_size")))
+
+
+func _get_slot() -> StdInputSlot:
+	return StdInputSlot.for_player(1)
 
 
 ## _mount mounts `button` at the root under a real mouse, sized to be clicked.
