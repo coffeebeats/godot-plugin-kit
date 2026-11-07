@@ -45,6 +45,33 @@ var _current: int = -1
 # -- PUBLIC METHODS ------------------------------------------------------------------ #
 
 
+## remove_tab removes the tab at `index`, its button, and the child of `content` at the
+## same index. If it was selected, the default tab is selected in its place.
+func remove_tab(index: int) -> void:
+	if index < 0 or index >= _buttons.size():
+		assert(false, "invalid argument: index out of range")
+		return
+
+	_buttons[index].free()
+	_buttons.remove_at(index)
+	tabs.remove_at(index)
+
+	if content is Node:
+		content.get_child(index).free()
+
+	if default_tab > index:
+		default_tab -= 1
+	else:
+		default_tab = default_tab  # Clamp to the remaining tabs.
+
+	if _current > index:
+		_current -= 1
+	elif _current == index:
+		_current = -1
+		if _buttons:
+			select(default_tab)
+
+
 ## select changes the active tab to the given index.
 func select(index: int) -> void:
 	if index < 0 or index >= _buttons.size():
@@ -102,7 +129,7 @@ func _ready() -> void:
 		button.text = tabs[i]
 		button.focus_mode = Control.FOCUS_NONE
 		button.custom_minimum_size.x = 160
-		button.pressed.connect(_on_tab_pressed.bind(i))
+		button.pressed.connect(_on_tab_pressed.bind(button))
 		add_child(button)
 		_buttons.append(button)
 		_apply_variation(button, theme_type_unselected)
@@ -153,5 +180,5 @@ func _sync_content() -> void:
 # -- SIGNAL HANDLERS ----------------------------------------------------------------- #
 
 
-func _on_tab_pressed(index: int) -> void:
-	select(index)
+func _on_tab_pressed(button: Button) -> void:
+	select(_buttons.find(button))
