@@ -47,6 +47,10 @@ const DEVICE_TYPE_KEYBOARD := StdInputDevice.DEVICE_TYPE_KEYBOARD
 ## `DEVICE_TYPE_GENERIC` for controllers.
 @export var device_category: StdInputDevice.DeviceType = DEVICE_TYPE_KEYBOARD
 
+## anchor_first_row is whether focus lands on the first row's primary binding as the
+## tab shows, which the settings menu sets when it leaves out the rows above the group.
+@export var anchor_first_row: bool = false
+
 @export_subgroup("Player")
 
 ## player_id is a player identifier which will be used to look up the action's input
@@ -131,6 +135,12 @@ func _generate_settings() -> void:
 		var reset := ResetScene.instantiate()
 		reset.scope = scope
 		reset.bindings.append_array([primary, secondary])
+
+		if anchor_first_row and not get_children().any(func(c): return c is Setting):
+			var handler: StdInputCursorFocusHandler = primary.get_node(
+				^"Prompt/FocusHandler"
+			)
+			handler.use_as_anchor = true
 
 		var setting := SettingScene.instantiate()
 		setting.label = Locales.tr_action(action_set.name, action)

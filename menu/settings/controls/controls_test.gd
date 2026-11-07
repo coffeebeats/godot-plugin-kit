@@ -12,9 +12,11 @@ const Bindings := preload("res://addons/std/input/godot/binding.gd")
 const BindingsScope := preload("res://system/input/unknown/bindings_scope.tres")
 const ControlsScene := preload("controls.tscn")
 const MenuOptions := preload("res://system/input/actions/menu_options.tres")
+const MenuScene := preload("res://menu/settings/menu.tscn")
 const PlatformScene := preload("res://premade/platform.tscn")
 const Rebinder := preload("rebinder.gd")
 const Reset := preload("reset.gd")
+const SettingsScene := preload("res://system/setting/settings.tscn")
 const SystemInputScene := preload("res://system/input/input.tscn")
 
 # -- DEFINITIONS --------------------------------------------------------------------- #
@@ -139,6 +141,80 @@ func test_controls_controller_tab_lists_only_controller_bindings_and_settings() 
 
 	# Then: No note asks for a controller.
 	assert_false(controls.get_node(^"%Disconnected").visible)
+
+
+func test_controls_tab_names_its_rebinding_groups_by_device() -> void:
+	# When: A controller tab enters the tree.
+	var controls := await _add_controls(_CONTROLLER)
+
+	# Then: Its options group is named for the controller tab.
+	var group: Node = controls.get_node(^"%MenuOptions")
+	assert_eq(group.id, &"controller_bindings_menu_options")
+
+
+func test_controls_tab_pruned_by_the_menu_keeps_the_game_sets() -> void:
+	# Given: A keyboard and mouse tab, which the settings menu prunes as it enters.
+	var controls: VBoxContainer = ControlsScene.instantiate()
+	controls.device_category = _KEYBOARD
+
+	# Given: A game action set, which the tab lists for rebinding.
+	var gameplay := StdInputActionSet.new()
+	gameplay.name = &"Gameplay"
+	KitSystems.input().action_sets = [gameplay] as Array[StdInputActionSet]
+
+	# Given: The game lists neither the cursor setting nor kit's first rebinding group.
+	var shown: Array[StringName] = [&"keyboard_mouse_bindings_menu_options"]
+	var menu: Control = autofree(MenuScene.instantiate())
+	controls.tree_entered.connect(menu._prune.bind(controls, shown), CONNECT_ONE_SHOT)
+
+	# When: The tab enters the tree.
+	add_child_autofree(controls)
+	await wait_process_frames(2)
+
+	# Then: The mouse group and kit's unlisted rebinding groups are left out.
+	assert_false(controls.has_node(^"Keyboard/Mouse"))
+	assert_false(controls.has_node(^"%MenuControls"))
+	assert_true(controls.has_node(^"%MenuOptions"))
+
+	# Then: The game's sets are still listed, above kit's.
+	var groups := controls.get_node(^"%ActionSets")
+	assert_eq(groups.get_child(0).action_set.name, &"Gameplay")
+
+	# Then: Focus lands on a control in the tab.
+	assert_not_null(StdInputCursorFocusHandler.get_focus_target(controls))
+
+
+func test_controls_controller_tab_pruned_of_its_settings_anchors_a_binding() -> void:
+	# Given: A connected joypad, so the controller tab's bindings take focus.
+	_connect_joypad()
+
+	# Given: A controller tab, which the settings menu prunes as it enters.
+	var controls: VBoxContainer = ControlsScene.instantiate()
+	controls.device_category = _CONTROLLER
+
+	# Given: The game lists none of the gamepad settings, without Steam Input.
+	var dropped: Array[StringName] = [
+		&"controller_button_prompt",
+		&"controller_disable_vibration",
+		&"controller_vibration_strength",
+	]
+	var defaults: Node = autofree(SettingsScene.instantiate())
+	var shown: Array[StringName] = []
+	for id in defaults.menu_settings:
+		if id not in dropped:
+			shown.append(id)
+
+	var menu: Control = autofree(MenuScene.instantiate())
+	controls.tree_entered.connect(menu._prune.bind(controls, shown), CONNECT_ONE_SHOT)
+
+	# When: The tab enters the tree.
+	add_child_autofree(controls)
+	await wait_process_frames(2)
+
+	# Then: Focus lands on a binding, past the hidden Steam configurator.
+	var target := StdInputCursorFocusHandler.get_focus_target(controls)
+	assert_not_null(target)
+	assert_true(controls.get_node(^"%ActionSets").is_ancestor_of(target))
 
 
 func test_controls_controller_tab_without_a_joypad_disables_rebinding() -> void:

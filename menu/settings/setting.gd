@@ -8,6 +8,11 @@ extends HBoxContainer
 
 # -- CONFIGURATION ------------------------------------------------------------------- #
 
+## id names this row in the `Settings` system node's `menu_settings`, which lists
+## what the settings menu shows. Left empty, the row isn't filtered by id, but it still
+## goes when the menu drops its group.
+@export var id: StringName = &""
+
 ## label is the display name for the setting property.
 @export var label: String = "":
 	set(value):

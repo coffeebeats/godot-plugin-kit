@@ -8,6 +8,11 @@ extends VBoxContainer
 
 # -- CONFIGURATION ------------------------------------------------------------------- #
 
+## id names this group in the `Settings` system node's `menu_settings`, which lists
+## what the settings menu shows. Left empty, the group isn't filtered by id, but the
+## menu still frees it once all its rows are dropped.
+@export var id: StringName = &""
+
 @export var label: String = "":
 	set(value):
 		label = value
