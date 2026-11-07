@@ -35,8 +35,13 @@ const _ACTION_SET := &"ActionButtonTest"
 ## that none fills during a test.
 const _HOLD_DURATION := 60.0
 
+## MODE_HOLD is the mode in which the player holds the action until the hold fills.
 const MODE_HOLD := StdInputActionHold.MODE_HOLD
+
+## MODE_PRESS is the mode in which the hold runs on the press alone.
 const MODE_PRESS := StdInputActionHold.MODE_PRESS
+
+## MODE_TOGGLE is the mode in which a tap starts the hold and a second tap cancels it.
 const MODE_TOGGLE := StdInputActionHold.MODE_TOGGLE
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
@@ -359,7 +364,7 @@ func test_action_button_press_mode_shows_the_name_alone() -> void:
 	# Given: A translation of the action's name.
 	_add_action_translation("Confirm")
 
-	# Given: The action is a hold the player's setting runs on the press.
+	# Given: The action is a hold which runs on the press.
 	_declare_hold(MODE_PRESS)
 
 	# When: A button for the action enters the tree.
@@ -388,7 +393,7 @@ func test_action_button_mode_change_with_no_hold_running_updates_the_text() -> v
 	# Given: A translation of the action's name.
 	_add_action_translation("Confirm")
 
-	# Given: The action is a hold the player holds, through its group's setting.
+	# Given: The action is a hold the player holds, through its own mode setting.
 	var mode := _declare_hold(MODE_HOLD)
 
 	# Given: A button for the action, saying to hold it.
@@ -524,6 +529,7 @@ func _get_line_height(button: Button) -> int:
 	return roundi(font.get_height(button.get_theme_font_size(&"font_size")))
 
 
+## _get_slot returns the slot of player 1, which the input scene adds.
 func _get_slot() -> StdInputSlot:
 	return StdInputSlot.for_player(1)
 

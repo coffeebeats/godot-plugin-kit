@@ -56,6 +56,8 @@ const THEME_HOLD_FILL_HEIGHT_PERCENT := &"hold_fill_height_percent"
 ## THEME_TYPE is the theme type holding the button's own theme items.
 const THEME_TYPE := &"KitInputActionButton"
 
+## _HOLD_FILL_COLOR_DEFAULT is the fill's color when no theme sets
+## `THEME_HOLD_FILL_COLOR`.
 const _HOLD_FILL_COLOR_DEFAULT := Color(1.0, 1.0, 1.0, 0.25)
 
 # -- CONFIGURATION ------------------------------------------------------------------- #
@@ -111,10 +113,9 @@ const _HOLD_FILL_COLOR_DEFAULT := Color(1.0, 1.0, 1.0, 0.25)
 		use_action_text = value
 		_update_text()
 
-## hold_text is the translation key of the text shown while `action` is a hold which
-## the player holds, with the action's name formatted in as `{action}`, such as "Hold
-## to {action}". Empty, the button shows the name alone and leaves the fill to say hold.
-## It applies only while `use_action_text` is on.
+## hold_text is the translation key of the text shown, while `use_action_text` is on,
+## when `action` is a hold the player holds, with the action's name as `{action}`.
+## Empty, the button shows the name alone.
 @export var hold_text: StringName = MSGID_HOLD:
 	set(value):
 		hold_text = value
@@ -416,9 +417,8 @@ func _update_slot() -> void:
 
 
 ## _update_text sets `text` while `use_action_text` is on, to the action's translated
-## name or the prompt its hold's mode shows. It waits for the tree, so a scene's own
-## `text` and `use_action_text` load first, and a button built in code has no text until
-## it enters the tree.
+## name or its hold's prompt. It waits for the tree, so a scene's own `text` and
+## `use_action_text` load first and a button built in code has no text until then.
 func _update_text() -> void:
 	if not _glyph or not is_inside_tree():
 		return
