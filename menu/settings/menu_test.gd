@@ -210,6 +210,22 @@ func test_prune_leaves_a_game_tab_alone() -> void:
 	assert_eq(tab.get_child_count(), 1)
 
 
+func test_prune_keeps_a_row_with_an_id_kit_does_not_name() -> void:
+	# Given: A game tab holding a row with the game's own id.
+	var tab: Node = autofree(VBoxContainer.new())
+	var row: Node = SettingScene.instantiate()
+	row.id = &"game_row"
+	tab.add_child(row)
+
+	# When: It is pruned to an empty list.
+	var menu: Control = autofree(MenuScene.instantiate())
+	var kept: bool = menu._prune(tab, [] as Array[StringName])
+
+	# Then: The tab and its row are kept.
+	assert_true(kept)
+	assert_eq(tab.get_child_count(), 1)
+
+
 # -- TEST HOOKS ---------------------------------------------------------------------- #
 
 

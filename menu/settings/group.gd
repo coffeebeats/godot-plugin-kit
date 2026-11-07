@@ -9,8 +9,9 @@ extends VBoxContainer
 # -- CONFIGURATION ------------------------------------------------------------------- #
 
 ## id names this group in the `Settings` system node's `MENU_SETTINGS`, which with its
-## `menu_setting_overrides` decides what the settings menu shows. Left empty, the group
-## isn't filtered by id, but the menu still frees it once all its rows are dropped.
+## `menu_setting_overrides` decides what the settings menu shows. Left empty, or set to
+## an id kit doesn't name, the group isn't filtered by id, but the menu still frees it
+## once all its rows are dropped.
 @export var id: StringName = &""
 
 @export var label: String = "":

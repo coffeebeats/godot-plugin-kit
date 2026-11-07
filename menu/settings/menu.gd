@@ -14,6 +14,7 @@ extends Control
 const ActionSet := preload("controls/action_set.gd")
 const Group := preload("group.gd")
 const Setting := preload("setting.gd")
+const SettingsSystem := preload("../../system/setting/settings.gd")
 const Signals := preload("res://addons/std/event/signal.gd")
 const TabGroup := preload("../../ui/menu/tab_group.gd")
 
@@ -156,8 +157,9 @@ func _is_anchor(node: Node) -> bool:
 	return node.anchor_first_row if node is ActionSet else node.use_as_anchor
 
 
-## _prune frees each row and group under `tab` whose id `shown` lacks, then any group
-## left with no row. It returns false if `tab` held some with an id and none is left.
+## _prune frees each row and group under `tab` whose id is one of kit's that `shown`
+## lacks, then any group left with no row. It returns false if `tab` held some with an
+## id and none is left.
 func _prune(tab: Node, shown: Array[StringName]) -> bool:
 	if not _has_listable(tab):
 		return true
@@ -170,14 +172,14 @@ func _prune(tab: Node, shown: Array[StringName]) -> bool:
 	return true
 
 
-## _prune_children frees each row and group under `node` whose id `shown` lacks, then
-## `node` itself if it is a group left with no row.
+## _prune_children frees each row and group under `node` whose id is one of kit's that
+## `shown` lacks, then `node` itself if it is a group left with no row.
 func _prune_children(node: Node, shown: Array[StringName]) -> void:
 	var row_freed := false
 
 	for child in node.get_children():
 		var id := _get_id(child)
-		if id and id not in shown:
+		if id in SettingsSystem.MENU_SETTINGS and id not in shown:
 			row_freed = row_freed or child is Setting
 			child.free()
 		else:
