@@ -69,7 +69,7 @@ const _HOLD_FILL_COLOR_DEFAULT := Color(1.0, 1.0, 1.0, 0.25)
 	set(value):
 		action_set = value
 		if _glyph:
-			_update_glyph_action()
+			_glyph.action_set = value
 			_update_text()
 
 ## action is the input action the button stands for.
@@ -77,6 +77,7 @@ const _HOLD_FILL_COLOR_DEFAULT := Color(1.0, 1.0, 1.0, 0.25)
 	set(value):
 		action = value
 		if _glyph:
+			_glyph.action = value
 			_reset_hold()
 			_update_hold()
 			_update_trigger()
@@ -253,23 +254,6 @@ func _validate_property(property: Dictionary) -> void:
 # -- PRIVATE METHODS ----------------------------------------------------------------- #
 
 
-## _get_declaring_action_set returns the slot's active set which declares `declared`,
-## or `action_set` when none does.
-func _get_declaring_action_set(declared: StringName) -> StdInputActionSet:
-	if not _slot:
-		return action_set
-
-	var loaded := _slot.actions.get_action_set(_slot.device_id)
-	if loaded and declared in loaded.list_action_names():
-		return loaded
-
-	for layer in _slot.list_action_set_layers():
-		if declared in layer.list_action_names():
-			return layer
-
-	return action_set
-
-
 ## _get_theme_color returns the theme color `item` from the button's own types, then
 ## `THEME_TYPE`, or `default` when neither has it.
 func _get_theme_color(item: StringName, default: Color) -> Color:
@@ -295,7 +279,6 @@ func _reset_hold() -> void:
 	_hold_progress = 0.0
 	_hold_tapped = false
 
-	_update_glyph_action()
 	_update_text()
 	queue_redraw()
 
@@ -363,27 +346,6 @@ func _update_accessibility_name() -> void:
 		)
 
 
-## _update_glyph_action draws the glyph of the hold's `cancel_action` while a tapped
-## toggle runs, from the set which declares it, and of `action` otherwise.
-func _update_glyph_action() -> void:
-	var drawn := action
-	var drawn_set := action_set
-	if _hold_tapped and _hold and _hold.cancel_action:
-		drawn = _hold.cancel_action
-		drawn_set = _get_declaring_action_set(drawn)
-
-	if _glyph.action == drawn and _glyph.action_set == drawn_set:
-		return
-
-	# NOTE: A host reads the texture as it changes, so the action and its set change
-	# together, never pairing an action with a set which lacks it.
-	_glyph.set_block_signals(true)
-	_glyph.action = drawn
-	_glyph.action_set = drawn_set
-	_glyph.set_block_signals(false)
-	_glyph.emit_changed()
-
-
 ## _update_hold reads the hold the slot runs on `action` and the mode it runs in, and
 ## shows them.
 func _update_hold() -> void:
@@ -400,7 +362,6 @@ func _update_hold() -> void:
 
 	_set_mode_properties(properties)
 
-	_update_glyph_action()
 	_update_text()
 
 
@@ -483,6 +444,4 @@ func _on_slot_action_hold_started(hold_action: StringName) -> void:
 		return
 
 	_hold_tapped = true
-
-	_update_glyph_action()
 	_update_text()

@@ -309,9 +309,9 @@ func test_action_button_toggle_mode_shows_the_cancel_after_a_tap() -> void:
 	input.press_action(_ACTION)
 	input.release_action(_ACTION)
 
-	# Then: It shows how to cancel the running toggle.
+	# Then: It says to cancel the running toggle, keeping the action's own glyph.
 	assert_eq(button.text, "Cancel")
-	assert_eq(button.get_glyph().action, _ACTION_CANCEL)
+	assert_eq(button.get_glyph().action, _ACTION)
 
 	# When: The action is tapped again, which cancels the toggle.
 	input.press_action(_ACTION)
@@ -320,44 +320,6 @@ func test_action_button_toggle_mode_shows_the_cancel_after_a_tap() -> void:
 	# Then: It shows the action's name and glyph again.
 	assert_eq(button.text, "Confirm")
 	assert_eq(button.get_glyph().action, _ACTION)
-
-
-func test_action_button_toggle_on_a_layer_draws_the_cancel_from_its_parent() -> void:
-	# Given: A loaded set which declares the cancel action alone.
-	var parent := StdInputActionSet.new()
-	parent.name = &"ActionButtonTestParent"
-	parent.actions_digital = [_ACTION_CANCEL] as Array[StringName]
-	_get_slot().load_action_set(parent)
-
-	# Given: A layer over it declaring the action a toggle, cancelled by that action.
-	var layer := StdInputActionSetLayer.new()
-	layer.name = &"ActionButtonTestLayer"
-	layer.parent = parent
-	layer.actions_digital = [_ACTION] as Array[StringName]
-	var hold := _create_hold(MODE_TOGGLE, _ACTION_CANCEL)
-	layer.holds = [hold] as Array[StdInputActionHold]
-	_get_slot().enable_action_set_layer(layer)
-
-	# Given: A button for the action on the layer, mounted under real input.
-	var button := _create_button()
-	button.action_set = layer
-	var input := await _mount(button)
-
-	# When: The action is tapped.
-	input.press_action(_ACTION)
-	input.release_action(_ACTION)
-
-	# Then: It draws the cancel action's glyph from the parent, which declares it.
-	assert_eq(button.get_glyph().action, _ACTION_CANCEL)
-	assert_eq(button.get_glyph().action_set, parent)
-
-	# When: The action is tapped again, which cancels the toggle.
-	input.press_action(_ACTION)
-	input.release_action(_ACTION)
-
-	# Then: It draws the action's glyph from the layer again.
-	assert_eq(button.get_glyph().action, _ACTION)
-	assert_eq(button.get_glyph().action_set, layer)
 
 
 func test_action_button_press_mode_shows_the_name_alone() -> void:
