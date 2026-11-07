@@ -317,6 +317,44 @@ func test_action_button_toggle_mode_shows_the_cancel_after_a_tap() -> void:
 	assert_eq(button.get_glyph().action, _ACTION)
 
 
+func test_action_button_toggle_on_a_layer_draws_the_cancel_from_its_parent() -> void:
+	# Given: A loaded set which declares the cancel action alone.
+	var parent := StdInputActionSet.new()
+	parent.name = &"ActionButtonTestParent"
+	parent.actions_digital = [_ACTION_CANCEL] as Array[StringName]
+	_get_slot().load_action_set(parent)
+
+	# Given: A layer over it declaring the action a toggle, cancelled by that action.
+	var layer := StdInputActionSetLayer.new()
+	layer.name = &"ActionButtonTestLayer"
+	layer.parent = parent
+	layer.actions_digital = [_ACTION] as Array[StringName]
+	var hold := _create_hold(MODE_TOGGLE, _ACTION_CANCEL)
+	layer.holds = [hold] as Array[StdInputActionHold]
+	_get_slot().enable_action_set_layer(layer)
+
+	# Given: A button for the action on the layer, mounted under real input.
+	var button := _create_button()
+	button.action_set = layer
+	var input := await _mount(button)
+
+	# When: The action is tapped.
+	input.press_action(_ACTION)
+	input.release_action(_ACTION)
+
+	# Then: It draws the cancel action's glyph from the parent, which declares it.
+	assert_eq(button.get_glyph().action, _ACTION_CANCEL)
+	assert_eq(button.get_glyph().action_set, parent)
+
+	# When: The action is tapped again, which cancels the toggle.
+	input.press_action(_ACTION)
+	input.release_action(_ACTION)
+
+	# Then: It draws the action's glyph from the layer again.
+	assert_eq(button.get_glyph().action, _ACTION)
+	assert_eq(button.get_glyph().action_set, layer)
+
+
 func test_action_button_press_mode_shows_the_name_alone() -> void:
 	# Given: A translation of the action's name.
 	_add_action_translation("Confirm")
@@ -439,11 +477,33 @@ func _add_translation(translation: Translation) -> void:
 
 
 ## _declare_hold reloads the tests' set declaring `_ACTION` a hold which runs in `mode`,
-## cancelled by `cancel_action`. The mode comes from the hold's own setting, which
-## overrides any mode the player stored, and which the returned property holds.
+## cancelled by `cancel_action`, and returns the hold's own mode setting.
 func _declare_hold(
 	mode: StdInputActionHold.Mode, cancel_action: StringName = &""
 ) -> StdSettingsPropertyInt:
+	var hold := _create_hold(mode, cancel_action)
+	_actions.holds = [hold] as Array[StdInputActionHold]
+
+	# NOTE: The slot ignores a load of the set it already has, so another goes first.
+	_get_slot().load_action_set(StdInputActionSet.new())
+	_get_slot().load_action_set(_actions)
+
+	return hold.mode_override
+
+
+func _create_button() -> KitInputActionButton:
+	var button: KitInputActionButton = ActionButtonScene.instantiate()
+	button.action_set = _actions
+	button.action = _ACTION
+	return button
+
+
+## _create_hold returns a hold on `_ACTION` which runs in `mode`, cancelled by
+## `cancel_action`. The mode comes from the hold's own setting, which overrides any mode
+## the player stored.
+func _create_hold(
+	mode: StdInputActionHold.Mode, cancel_action: StringName
+) -> StdInputActionHold:
 	var property := StdSettingsPropertyInt.new()
 	property.category = &"action_button_test"
 	property.name = &"hold_mode"
@@ -455,21 +515,7 @@ func _declare_hold(
 	hold.cancel_action = cancel_action
 	hold.duration = _HOLD_DURATION
 	hold.mode_override = property
-
-	_actions.holds = [hold] as Array[StdInputActionHold]
-
-	# NOTE: The slot ignores a load of the set it already has, so another goes first.
-	_get_slot().load_action_set(StdInputActionSet.new())
-	_get_slot().load_action_set(_actions)
-
-	return property
-
-
-func _create_button() -> KitInputActionButton:
-	var button: KitInputActionButton = ActionButtonScene.instantiate()
-	button.action_set = _actions
-	button.action = _ACTION
-	return button
+	return hold
 
 
 ## _get_line_height returns the height of a line of `button`'s text.
