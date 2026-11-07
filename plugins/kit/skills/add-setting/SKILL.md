@@ -21,6 +21,10 @@ Add a user-configurable setting to the project. This involves creating a setting
 - **The system scene** — the `[autoload]` entry named `System` in `project.godot`, holding the `Settings` instance and the game's observers. Usually `project/main/system.tscn`, which also fixes the game's source root as `project/`.
 - **The game's settings tabs** — the scenes `menu_tabs` on that `Settings` instance points at, keyed by each tab label's msgid.
 
+## Check kit's catalogue first
+
+The README section "Pick the settings the menu shows" in `addons/kit/README.md` lists every setting kit defines and the id of the row that shows it. If kit already defines the setting, add nothing; make sure the row's id is in `menu_settings` on the `Settings` instance in the system scene, and stop. Likewise, to hide one of kit's rows, delete its id there.
+
 ## Steps
 
 Kit's settings under `addons/kit/system/setting/` are the reference to copy from, never a place to add to: `addons/kit` is a submodule. A game's setting lives under `project/setting/`, and its observer is placed in the game's own system scene.
@@ -99,6 +103,8 @@ Kit's settings under `addons/kit/system/setting/` are the reference to copy from
                 property = <property .tres>
                 target = NodePath("../InputControl")  # for sliders
    ```
+
+   Leave `id` empty on the game's own groups and rows, since `menu_settings` picks only among kit's, and everything in the game's own tabs always shows.
 
    Follow the exact pattern in the reference `.tscn` files. Each node needs a `unique_id`, `layout_mode = 2`, and proper resource references.
 

@@ -34,6 +34,7 @@ LOCALE_DIR=locale godot-locale validate
 - A game uses kit's scenes in place and sets its own values on the instances it places, never by editing kit. Slice scenes so that holds, and list each value a game sets in `README.md`.
 - A folder's own `README.md`, such as `ui/menu/README.md`, details how its parts combine and why each value matters, so a game can assemble its own from them. The root `README.md` names the scene in one line and links there.
 - Kit's docs, comments and skills stay generic. Never name a particular game or project template; refer to a game's files as "usually `project/...`".
+- A new settings menu row gets an `id`, an entry in the `Settings` node's `menu_settings` and a row in the README's settings catalogue, so a game can find it and choose whether to show it.
 - `plugins/kit/` is the agent plugin released with the addon, holding the game skills and `godot-bridge`.
 
 ## Code Style

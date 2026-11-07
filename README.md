@@ -41,6 +41,7 @@ Each value the game owns is an export on a scene instanced in `System`:
 | `system/input/input.tscn` | `glyph_sets` | The glyph sets button prompts draw from, defaulting to kit's. See [Change the button prompts](#change-the-button-prompts). |
 | `system/input/input.tscn` | `unknown_glyph` | The glyph a prompt draws for a bound button with no art, defaulting to kit's "??" icon. Left empty, the prompt draws nothing for such a button. |
 | `system/setting/settings.tscn` | `menu_tabs` | The game's own settings menu tabs, keyed by their label's message ID. |
+| `system/setting/settings.tscn` | `menu_settings` | The ids of kit's settings menu rows and rebinding groups the menu shows, defaulting to all of them. See [Pick the settings the menu shows](#pick-the-settings-the-menu-shows). |
 | `system/setting/interface/font_scaling_observer.tscn` | `theme` | The game's theme, the one `[gui] theme/custom` names, which the text scaling setting resizes. |
 | `system/save/saves.tscn` | `schema` | The game's save data, required. |
 | `system/save/saves.tscn` | `slot_count` | The number of save slots, each shown in the save menu. |
@@ -75,6 +76,44 @@ Each menu is a finished screen, used in place:
 - **Splash:** push `ui/splash/godot_screen.tres`, whose scene emits `advanced` once it is done. `ui/splash/splash.gd` makes a splash of any scene.
 
 For a different layout, assemble a menu from the scenes it is made of: the settings tabs and their `group` and `setting` rows, the `controls` tab, placed once per `device_category`, with its `action_set` groups, the save menu's `slot_button`, and the dialogs in `ui/menu/`, whose [README](ui/menu/README.md) lists their values and what each one is for.
+
+### Pick the settings the menu shows
+
+The settings menu shows each of kit's rows whose id the `Settings` node's `menu_settings` lists. It defaults to every id kit ships, so a game deletes the ids of the rows it has no use for, such as `sound_volume_voice` in a game with no voice audio. A group left with no row is left out, and so is a tab left with none of kit's rows. The game's own tabs from `menu_tabs` always show. Leaving out a row hides only its control, and the observer in `System` keeps applying the stored value, or the default until the player changes it.
+
+The controls tabs list each of kit's menu action sets as a rebinding group whose rows follow the set's actions, so a game lists or drops the group as a whole. Its id names the tab and the set: `controller_bindings_<set>` or `keyboard_mouse_bindings_<set>`, with `<set>` one of `menu`, `menu_tabbed`, `menu_options` and `menu_binding`. A game's own action sets from `action_sets` show in every controls tab that shows. `controller_steam_configurator` is the row that opens Steam's binding panel while Steam Input drives the controller.
+
+Every property kit defines under `system/setting/`, with the row that shows it:
+
+| Property | Key | Scope | Type and default | Row id | Read by |
+| --- | --- | --- | --- | --- | --- |
+| `audio/volume/master_property.tres` | `audio/volume/master` | User | Float, 0 to 10, default 10 | `sound_volume_master` | The volume observer, on the `Master` bus. |
+| `audio/volume/sound_effects_property.tres` | `audio/volume/sound_effects` | User | Float, 0 to 10, default 10 | `sound_volume_sound_effects` | The volume observer, on the `sound_effects` and `ui` buses. |
+| `audio/volume/music_property.tres` | `audio/volume/music` | User | Float, 0 to 10, default 10 | `sound_volume_music` | The volume observer, on the `music` bus. |
+| `audio/volume/voice_property.tres` | `audio/volume/voice` | User | Float, 0 to 10, default 10 | `sound_volume_voice` | The volume observer, on the `voice` bus. |
+| `audio/device/output_property.tres` | `audio/device/output` | User | String, default `"Default"` | `sound_audio_device` | The sound device observer. |
+| `audio/device/output_options_property.tres` | `audio/device/output_options` | User | Read-only list of the output devices | `sound_audio_device` | The device row, as its choices. |
+| `audio/mute/background_property.tres` | `audio/mute/background` | User | Bool, default `true` | `sound_audio_bg_mute` | The mute observer, while the window is unfocused. |
+| `audio/mute/global.tres` | `audio/mute/global` | User | Bool, default `false` | None | The mute observer. |
+| `interface/language_property.tres` | `interface/language/language_code` | User | String, default the loaded locale closest to the system's | `interface_language_display` | The language observer. |
+| `interface/language_options_property.tres` | `interface/language/options` | User | Read-only list of the loaded locales | `interface_language_display` | The language row, as its choices. |
+| `interface/font_scaling_property.tres` | `interface/font_scaling` | User | Float, 0.5 to 2, default 1 | `interface_text_scaling` | The font scaling observer. |
+| `video/fullscreen.tres` | `display/fullscreen` | User | Bool, default `true` | `display_video_fullscreen` | The window observer. |
+| `video/borderless.tres` | `display/window/size/borderless` | Project | Bool, default `false` | `display_video_borderless` | The window observer. |
+| `video/window_mode_property.tres` | `display/window/size/mode` | Project | Int, default 3 (fullscreen) | None | The window observer. |
+| `video/frame_limit_property.tres` | `application/run/max_fps` | Project | Float, 60 to 240, default 120 | `display_video_fps_limit` | The FPS observer. |
+| `video/vsync_property.tres` | `display/window/vsync/vsync_mode` | Project | Bool, default `true` (adaptive) | `display_video_vsync` | The FPS observer. |
+| `video/msaa_3d_property.tres` | `display/msaa_3d` | User | Int, default 0 | None | `map/3d/scene.tscn`. |
+| `video/render_scale_property.tres` | `display/render_scale` | User | Float, 0.5 to 1, default 1 | None | `map/3d/scene.tscn`. |
+| `video/window_size_width.tres` | `display/window/size/window_width_override` | Project | Int, default 0 | None | Nothing in kit. |
+| `video/window_size_height.tres` | `display/window/size/window_height_override` | Project | Int, default 0 | None | Nothing in kit. |
+| `controls/glyph_type_property.tres` | `controls/glyph/type` | User | Int, default 0 (match the active device) | `controller_button_prompt` | Button prompts and binding rows. |
+| `controls/glyph_type_options_property.tres` | `controls/glyph/type_options` | User | List of glyph types | `controller_button_prompt` | The button prompt row, as its choices. |
+| `controls/haptics_disable_property.tres` | `controls/haptics/disable` | User | Bool, default `false` | `controller_disable_vibration` | The input system's rumble. |
+| `controls/haptics_strength_property.tres` | `controls/haptics/strength` | User | Float, 0 to 100, default 50 | `controller_vibration_strength` | The input system's rumble. |
+| `controls/cursor_confined_property.tres` | `controls/cursor/confined` | User | Bool, default `display/fullscreen`'s value until the player sets it | `keyboard_mouse_confine_cursor` | The input system's cursor. |
+
+A user setting is saved in the player's profile, and a project setting in Godot's project settings override file, which the engine reads at startup.
 
 ### Put UI inside gameplay
 
