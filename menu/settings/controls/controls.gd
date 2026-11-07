@@ -23,6 +23,12 @@ const Signals := preload("res://addons/std/event/signal.gd")
 const DEVICE_TYPE_GENERIC := StdInputDevice.DEVICE_TYPE_GENERIC
 const DEVICE_TYPE_KEYBOARD := StdInputDevice.DEVICE_TYPE_KEYBOARD
 
+## _TAB_IDS name each device category's tab in the ids of its rebinding groups.
+const _TAB_IDS: Dictionary[StdInputDevice.DeviceType, String] = {
+	DEVICE_TYPE_GENERIC: "controller",
+	DEVICE_TYPE_KEYBOARD: "keyboard_mouse",
+}
+
 # -- CONFIGURATION ------------------------------------------------------------------- #
 
 ## device_category is the category of device whose bindings the tab lists, either
@@ -53,9 +59,12 @@ func _enter_tree() -> void:
 	)
 	get_node(other).free()
 
+	# NOTE: The settings menu reads these ids once this returns, so it can leave out
+	# a rebinding group the game hides in `menu_setting_overrides`.
 	for group in get_node(^"%ActionSets").get_children():
 		if group is ActionSet:
 			group.device_category = device_category
+			group.id = _get_bindings_id(group.action_set)
 
 	get_node(^"%MenuOptions").linked_layers = KitSystems.input().menu_options_layers
 
@@ -83,7 +92,7 @@ func _add_action_sets(action_sets: Array[StdInputActionSet]) -> void:
 	assert(scope is StdSettingsScope, "invalid config; missing scope")
 
 	var container := get_node(^"%ActionSets")
-	var index := get_node(^"%MenuControls").get_index()
+	var index := 0
 
 	for action_set in action_sets:
 		var group := ActionSetScene.instantiate()
@@ -95,6 +104,13 @@ func _add_action_sets(action_sets: Array[StdInputActionSet]) -> void:
 		container.move_child(group, index)
 
 		index += 1
+
+
+## _get_bindings_id returns the id of the rebinding group listing `action_set` in
+## this tab, such as `controller_bindings_menu_options`.
+func _get_bindings_id(action_set: StdInputActionSet) -> StringName:
+	var tab: String = _TAB_IDS[device_category]
+	return StringName("%s_bindings_%s" % [tab, action_set.name.to_snake_case()])
 
 
 ## _update_disconnected shows the note asking for a controller while none is connected,

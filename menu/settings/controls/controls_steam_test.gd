@@ -45,8 +45,8 @@ func test_controls_controller_tab_with_steam_input_shows_the_configurator() -> v
 	assert_false(controls.get_node(^"%ActionSets").visible)
 
 	# Then: The configurator opens from the configurator setting's button.
-	var configurator := controls.get_node(
-		^"Controller/Steam/StdConditionParent/SteamConfigurator"
+	var configurator := steam_input.get_node(
+		^"Configurator/StdConditionParent/SteamConfigurator"
 	)
 	assert_true(configurator.is_inside_tree())
 	assert_eq(configurator.button, steam_input.get_node(^"Configurator/Prompt"))
