@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://1t043c1ypgcv"]
+
+[ext_resource type="Script" uid="uid://cqjqwm5tlcyk1" path="res://ui/panel/menu_rows.gd" id="1_rows"]
+
+[node name="MenuRows" type="VBoxContainer" unique_id=1140072746]
+script = ExtResource("1_rows")
