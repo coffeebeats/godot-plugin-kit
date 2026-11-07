@@ -228,6 +228,10 @@ msgstr ""
 msgid "Keyboard & Mouse"
 msgstr ""
 
+#. A tab within the game's options menu containing accessibility settings, such as how the player performs actions which ask them to hold a button.
+msgid "Accessibility"
+msgstr ""
+
 #. Used as a category name for a group of settings related to volume.
 msgid "Volume"
 msgstr ""
@@ -369,6 +373,34 @@ msgstr ""
 
 #. Shown in place of a key or button in the controls settings, for an action with nothing bound at that slot.
 msgid "--"
+msgstr ""
+
+#. Used as a category name for settings about actions which ask the player to hold a button down.
+msgid "Holds"
+msgstr ""
+
+#. Describes the setting which changes how the player performs actions which ask them to hold a button down.
+msgid "Hold actions"
+msgstr ""
+
+#. Describes one possible option in the hold action setting; each action keeps the way the game designed it to be performed.
+msgctxt "hold_mode"
+msgid "Game default"
+msgstr ""
+
+#. Describes one possible option in the hold action setting; the player holds the button down until the action completes.
+msgctxt "hold_mode"
+msgid "Hold"
+msgstr ""
+
+#. Describes one possible option in the hold action setting; the player taps the button once and the action completes on its own, unless they tap again to cancel it.
+msgctxt "hold_mode"
+msgid "Tap to toggle"
+msgstr ""
+
+#. Describes one possible option in the hold action setting; the action completes as soon as the player presses the button.
+msgctxt "hold_mode"
+msgid "Press"
 msgstr ""
 
 #. Instructs the user that they will be updating the controller binding for the specified action. Here, the '%s' placeholder will be replaced with the translated name of the game action.

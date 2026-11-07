@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://b4obsfsvns0ap" path="res://menu/settings/display/display.tscn" id="9_vwbdl"]
 [ext_resource type="PackedScene" uid="uid://bd5fo51o6asi2" path="res://menu/settings/controls/controls.tscn" id="10_46fy4"]
 [ext_resource type="PackedScene" uid="uid://bbsvnrhcyccl5" path="res://ui/menu/scrim.tscn" id="11_scrim"]
+[ext_resource type="PackedScene" uid="uid://b4tpyajxmxa7j" path="res://menu/settings/accessibility/accessibility.tscn" id="15_access"]
 [ext_resource type="PackedScene" uid="uid://dm7k3close1bt" path="res://ui/menu/button_close.tscn" id="12_close"]
 [ext_resource type="PackedScene" uid="uid://ctabgr0up1scn" path="res://ui/menu/tab_group.tscn" id="13_tabs"]
 [ext_resource type="Script" uid="uid://dmvb2tblavngm" path="res://addons/std/input/action_set_layer.gd" id="14_layer"]
@@ -83,7 +84,7 @@ glyph_scale = 2.0
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-tabs = ["kit_options_sound", "kit_options_interface", "kit_options_display", "kit_options_controller", "kit_options_keyboard_mouse"]
+tabs = ["kit_options_sound", "kit_options_interface", "kit_options_display", "kit_options_controller", "kit_options_keyboard_mouse", "kit_options_accessibility"]
 content = NodePath("../../../../Body/MarginContainer/ScrollContainer/TabContents")
 
 [node name="GlyphTabNext" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Header/MarginContainer/HBoxContainer" unique_id=1501074617 instance=ExtResource("5_xbtwd")]
@@ -137,6 +138,10 @@ device_category = 1
 visible = false
 layout_mode = 2
 device_category = 2
+
+[node name="Accessibility" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Body/MarginContainer/ScrollContainer/TabContents" unique_id=1734023962 instance=ExtResource("15_access")]
+visible = false
+layout_mode = 2
 
 [node name="CloseButton" parent="CenterContainer/PanelContainer" unique_id=833171423 instance=ExtResource("12_close")]
 layout_mode = 2
