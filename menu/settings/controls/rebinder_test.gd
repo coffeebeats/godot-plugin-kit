@@ -14,6 +14,7 @@ const ArrowUp := preload("res://system/input/unknown/glyphs/keyboard/arrow_up.sv
 const Bindings := preload("res://addons/std/input/godot/binding.gd")
 const BindingScene := preload("binding.tscn")
 const KeycapTexture := preload("res://addons/std/input/godot/keycap_texture.gd")
+const Locales := preload("res://locale/locales.gd")
 const MenuActions := preload("res://system/input/actions/menu.tres")
 const MenuBindingActions := preload("res://system/input/actions/menu_binding.tres")
 const PlatformScene := preload("res://premade/platform.tscn")
@@ -213,6 +214,27 @@ func test_rebinder_controller_rebind_with_keyboard_active_prompts_the_joypad() -
 	)
 
 
+func test_rebinder_title_names_the_action_being_bound() -> void:
+	# When: The rebinder opens for the keyboard's primary binding.
+	await _start_rebinding(_KEYBOARD)
+
+	# Then: The title fills the catalogue's `{action}` with the action's name.
+	var title: Label = Rebinder._instance.get_node(^"%Action")
+	var action_name := Locales.tr_action(_action_set.name, _ACTION)
+	assert_eq(title.text, "Bind “%s”" % action_name)
+
+
+func test_rebinder_instructions_split_around_the_cancel_glyph() -> void:
+	# When: The rebinder opens for the keyboard's primary binding.
+	await _start_rebinding(_KEYBOARD)
+
+	# Then: The instructions split at the catalogue's `{origin}`, either side of it.
+	var pre: Label = Rebinder._instance.get_node(^"%InstructionsPre")
+	var post: Label = Rebinder._instance.get_node(^"%InstructionsPost")
+	assert_eq(pre.text, "Press any key now or ")
+	assert_eq(post.text, " to cancel.")
+
+
 func test_rebinder_controller_rebind_with_keyboard_active_binds_the_joypad() -> void:
 	# Given: A joypad is connected, and a bound key makes the keyboard active.
 	await _activate_keyboard_beside_joypad()
@@ -409,7 +431,7 @@ func test_rebinder_binding_row_unbound_index_says_so_though_the_next_is_bound() 
 
 func test_split_placeholder_separates_the_text_around_the_placeholder() -> void:
 	# Given: A translated template carrying its placeholder.
-	var template := "Press any key now or %s to cancel."
+	var template := "Press any key now or {origin} to cancel."
 
 	# When: The template is split.
 	var parts := Rebinder._split_placeholder(template)

@@ -396,19 +396,19 @@ msgctxt "hold_mode"
 msgid "kit_options_accessibility_hold_mode_tap"
 msgstr "Tap to toggle"
 
-#. Instructs the user that they will be updating the controller binding for the specified action. Here, the '%s' placeholder will be replaced with the translated name of the game action.
+#. Instructs the user that they will be updating the binding for the specified action. Here, the '{action}' placeholder will be replaced with the translated name of the game action.
 msgid "kit_options_controls_rebinder_title"
-msgstr "Bind “%s”"
+msgstr "Bind “{action}”"
 
-#. Instructs the user that they should now press the new keyboard button or exit the operation. Here, the '%s' placeholder will be replaced with an icon of the controller button to press.
+#. Instructs the user that they should now press the new keyboard key or exit the operation. Here, the '{origin}' placeholder will be replaced with an icon of the key to press.
 msgctxt "keyboard"
 msgid "kit_options_controls_rebinder_bind_or_exit"
-msgstr "Press any key now or %s to cancel."
+msgstr "Press any key now or {origin} to cancel."
 
-#. Instructs the user that they should now press the new keyboard button or exit the operation. Here, the '%s' placeholder will be replaced with an icon of the controller button to press.
+#. Instructs the user that they should now press the new controller button or exit the operation. Here, the '{origin}' placeholder will be replaced with an icon of the controller button to press.
 msgctxt "gamepad"
 msgid "kit_options_controls_rebinder_bind_or_exit"
-msgstr "Press any button now or %s to cancel."
+msgstr "Press any button now or {origin} to cancel."
 
 #. The name assistive technology reads for a button which performs a game action. Here, the '{origin}' placeholder will be replaced with the name of the key or controller button bound to the action, and '{action}' with the translated name of the action.
 msgid "kit_input_action_name"
