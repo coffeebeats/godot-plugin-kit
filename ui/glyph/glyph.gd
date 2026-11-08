@@ -72,8 +72,9 @@ const DEVICE_TYPE_UNKNOWN := StdInputDevice.DEVICE_TYPE_UNKNOWN
 
 @export_group("Display")
 
-## glyph_scale is the glyph's height in lines of the theme's text.
-@export var glyph_scale: float = 1.0:
+## glyph_scale is the glyph's height in lines of the theme's text, `1.5` by default to
+## match the glyph of a `KitInputActionButton`.
+@export var glyph_scale: float = 1.5:
 	set(value):
 		glyph_scale = value
 		_update_size()

@@ -2,8 +2,8 @@
 ## KitInputActionButton is a `Button` which stands for an input action. Its icon is the
 ## glyph of the origin bound to the action, its text is the action's translated name,
 ## and a click raises the action, so a key, a click and synthetic input share one
-## handler. The glyph is as tall as a line of the button's text, so it follows the
-## player's text size.
+## handler. The glyph's height is a multiple of a line of the button's text, so it
+## follows the player's text size.
 ##
 ## When an active set declares the action a hold, the button shows what its
 ## `StdInputActionHoldMonitor` reports: `hold_text` for a hold the player holds, a
@@ -39,7 +39,7 @@ const MSGID_HOLD := &"kit_hold"
 
 ## THEME_GLYPH_SCALE_PERCENT is the theme constant giving the glyph's height as a
 ## percentage of a line of the button's text, read from the button's own types and then
-## `THEME_TYPE`; 100 when neither has it.
+## `THEME_TYPE`; `_GLYPH_SCALE_PERCENT_DEFAULT` when neither has it.
 const THEME_GLYPH_SCALE_PERCENT := &"glyph_scale_percent"
 
 ## THEME_HOLD_FILL_COLOR is the theme color of the fill a running hold draws over the
@@ -54,6 +54,10 @@ const THEME_HOLD_FILL_HEIGHT_PERCENT := &"hold_fill_height_percent"
 
 ## THEME_TYPE is the theme type holding the button's own theme items.
 const THEME_TYPE := &"KitInputActionButton"
+
+## _GLYPH_SCALE_PERCENT_DEFAULT is the glyph's height, as a percentage of a line of the
+## button's text, when no theme sets `THEME_GLYPH_SCALE_PERCENT`.
+const _GLYPH_SCALE_PERCENT_DEFAULT := 150
 
 ## _HOLD_FILL_COLOR_DEFAULT is the fill's color when no theme sets
 ## `THEME_HOLD_FILL_COLOR`.
@@ -289,7 +293,10 @@ func _update_accessibility_name() -> void:
 ## theme's `THEME_GLYPH_SCALE_PERCENT`.
 func _update_size() -> void:
 	var line := get_theme_font(&"font").get_height(get_theme_font_size(&"font_size"))
-	_glyph.size = roundi(line * _get_theme_int(THEME_GLYPH_SCALE_PERCENT, 100) / 100.0)
+	var percent := _get_theme_int(
+		THEME_GLYPH_SCALE_PERCENT, _GLYPH_SCALE_PERCENT_DEFAULT
+	)
+	_glyph.size = roundi(line * percent / 100.0)
 
 
 ## _update_text sets `text` while `use_action_text` is on, to the action's translated

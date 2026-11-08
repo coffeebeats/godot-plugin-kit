@@ -14,7 +14,7 @@ const SystemInputScene := preload("res://system/input/input.tscn")
 # -- TEST METHODS -------------------------------------------------------------------- #
 
 
-func test_glyph_keyboard_key_is_as_tall_as_a_line_of_text() -> void:
+func test_glyph_keyboard_key_is_one_and_a_half_lines_of_text_tall() -> void:
 	# Given: A platform whose profile loaded, and the input scene with its slot.
 	add_child_autofree(PlatformScene.instantiate())
 	add_child_autofree(SystemInputScene.instantiate())
@@ -29,10 +29,10 @@ func test_glyph_keyboard_key_is_as_tall_as_a_line_of_text() -> void:
 	add_child_autofree(glyph)
 	await wait_process_frames(1)
 
-	# Then: The key is as tall as a line of the theme's text, and wider than tall.
+	# Then: The key is one and a half lines of the theme's text tall, and wider than tall.
 	var texture := glyph.get_glyph()
 	assert_true(texture.has_glyph())
-	assert_eq(texture.get_height(), _get_line_height(glyph))
+	assert_eq(texture.get_height(), roundi(_get_line_height(glyph) * 1.5))
 	assert_gt(texture.get_width(), texture.get_height())
 
 	# Then: The glyph is as large as the key, so it doesn't spill onto a neighbour.
@@ -62,9 +62,9 @@ func test_glyph_keyboard_key_follows_the_text_size() -> void:
 	host.theme.default_font_size = 32
 	await wait_process_frames(1)
 
-	# Then: The key grows with the text, to a line of it.
+	# Then: The key grows with the text, to one and a half lines of it.
 	assert_gt(glyph.get_glyph().get_height(), before)
-	assert_eq(glyph.get_glyph().get_height(), _get_line_height(glyph))
+	assert_eq(glyph.get_glyph().get_height(), roundi(_get_line_height(glyph) * 1.5))
 
 
 func test_glyph_glyph_scale_multiplies_the_line_height() -> void:
@@ -296,9 +296,9 @@ func _create_glyph(actions: StdInputActionSet) -> KitInputGlyph:
 
 
 ## _get_line_height returns the height of a line of the theme's text at `control`.
-func _get_line_height(control: Control) -> int:
+func _get_line_height(control: Control) -> float:
 	var font := control.get_theme_default_font()
-	return roundi(font.get_height(control.get_theme_default_font_size()))
+	return font.get_height(control.get_theme_default_font_size())
 
 
 func _get_origin_label(actions: StdInputActionSet, index: int) -> String:

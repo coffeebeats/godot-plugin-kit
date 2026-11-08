@@ -165,7 +165,7 @@ func test_action_button_focus_anchor_reaches_the_focus_handler() -> void:
 	assert_eq(StdInputCursorFocusHandler.get_focus_target(host), button)
 
 
-func test_action_button_glyph_is_as_tall_as_a_line_of_text() -> void:
+func test_action_button_glyph_is_one_and_a_half_lines_of_text_tall() -> void:
 	# Given: A host whose theme sets a large font size.
 	var host := Control.new()
 	host.theme = Theme.new()
@@ -176,8 +176,8 @@ func test_action_button_glyph_is_as_tall_as_a_line_of_text() -> void:
 	var button := _create_button()
 	host.add_child(button)
 
-	# Then: The glyph is as tall as a line of the button's text.
-	assert_eq(button.get_glyph().get_height(), _get_line_height(button))
+	# Then: The glyph is one and a half lines of the button's text tall.
+	assert_eq(button.get_glyph().get_height(), roundi(_get_line_height(button) * 1.5))
 
 
 func test_action_button_glyph_scale_percent_makes_the_glyph_taller() -> void:
@@ -192,7 +192,7 @@ func test_action_button_glyph_scale_percent_makes_the_glyph_taller() -> void:
 	host.add_child(button)
 
 	# Then: The glyph is two lines of text tall.
-	assert_eq(button.get_glyph().get_height(), _get_line_height(button) * 2)
+	assert_eq(button.get_glyph().get_height(), roundi(_get_line_height(button) * 2.0))
 
 
 func test_action_button_accessibility_name_carries_the_origin_and_text() -> void:
@@ -480,9 +480,9 @@ func _create_hold(mode: StdInputActionHold.Mode) -> StdInputActionHold:
 
 
 ## _get_line_height returns the height of a line of `button`'s text.
-func _get_line_height(button: Button) -> int:
+func _get_line_height(button: Button) -> float:
 	var font := button.get_theme_font(&"font")
-	return roundi(font.get_height(button.get_theme_font_size(&"font_size")))
+	return font.get_height(button.get_theme_font_size(&"font_size"))
 
 
 ## _get_slot returns the slot of player 1, which the input scene adds.
