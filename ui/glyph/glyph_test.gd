@@ -15,8 +15,10 @@ const SystemInputScene := preload("res://system/input/input.tscn")
 
 
 func test_glyph_keyboard_key_is_one_and_a_half_lines_of_text_tall() -> void:
-	# Given: A platform whose profile loaded, and the input scene with its slot.
+	# Given: A platform whose profile loaded.
 	add_child_autofree(PlatformScene.instantiate())
+
+	# Given: The input scene, with its slot.
 	add_child_autofree(SystemInputScene.instantiate())
 
 	# Given: A loaded set holding `ui_accept`, which the engine binds to Enter.
@@ -40,19 +42,22 @@ func test_glyph_keyboard_key_is_one_and_a_half_lines_of_text_tall() -> void:
 
 
 func test_glyph_keyboard_key_follows_the_text_size() -> void:
-	# Given: A platform whose profile loaded, and the input scene with its slot.
+	# Given: A platform whose profile loaded.
 	add_child_autofree(PlatformScene.instantiate())
+
+	# Given: The input scene, with its slot.
 	add_child_autofree(SystemInputScene.instantiate())
 
 	# Given: A loaded set holding `ui_accept`, which the engine binds to Enter.
 	var actions := _load_actions()
 
-	# Given: A keyboard glyph in the tree under a theme, drawing its key.
+	# Given: A host whose theme sets the font size.
 	var host := Control.new()
 	host.theme = Theme.new()
 	host.theme.default_font_size = 16
 	add_child_autofree(host)
 
+	# Given: A keyboard glyph in the tree under it, drawing its key.
 	var glyph := _create_glyph(actions)
 	host.add_child(glyph)
 	await wait_process_frames(1)
@@ -68,8 +73,10 @@ func test_glyph_keyboard_key_follows_the_text_size() -> void:
 
 
 func test_glyph_glyph_scale_multiplies_the_line_height() -> void:
-	# Given: A platform whose profile loaded, and the input scene with its slot.
+	# Given: A platform whose profile loaded.
 	add_child_autofree(PlatformScene.instantiate())
+
+	# Given: The input scene, with its slot.
 	add_child_autofree(SystemInputScene.instantiate())
 
 	# Given: A loaded set holding `ui_accept`, which the engine binds to Enter.
@@ -88,8 +95,10 @@ func test_glyph_glyph_scale_multiplies_the_line_height() -> void:
 
 
 func test_glyph_secondary_binding_draws_the_second_origin() -> void:
-	# Given: A platform whose profile loaded, and the input scene with its slot.
+	# Given: A platform whose profile loaded.
 	add_child_autofree(PlatformScene.instantiate())
+
+	# Given: The input scene, with its slot.
 	add_child_autofree(SystemInputScene.instantiate())
 
 	# Given: A loaded set holding `ui_accept`, which the engine binds to several keys.
@@ -110,8 +119,10 @@ func test_glyph_secondary_binding_draws_the_second_origin() -> void:
 
 
 func test_glyph_cycle_interval_advances_to_the_next_origin() -> void:
-	# Given: A platform whose profile loaded, and the input scene drawing keys by name.
+	# Given: A platform whose profile loaded.
 	add_child_autofree(PlatformScene.instantiate())
+
+	# Given: The input scene, drawing keys by their full names.
 	_add_input_with_unabbreviated_keys()
 
 	# Given: A loaded set holding `ui_accept`, which the engine binds to several keys.
@@ -153,8 +164,10 @@ func test_glyph_always_show_kbm_and_joy_lock_the_device_type() -> void:
 
 
 func test_glyph_hide_if_cursor_visible_keeps_joypad_glyph_shown() -> void:
-	# Given: A platform whose profile loaded, and the input scene with its slot.
+	# Given: A platform whose profile loaded.
 	add_child_autofree(PlatformScene.instantiate())
+
+	# Given: The input scene, with its slot.
 	add_child_autofree(SystemInputScene.instantiate())
 
 	# Given: A loaded set holding `ui_accept`, which the engine binds to joypad A.
@@ -185,8 +198,10 @@ func test_glyph_hide_if_cursor_visible_keeps_joypad_glyph_shown() -> void:
 
 
 func test_glyph_hide_if_cursor_visible_hides_keyboard_glyph() -> void:
-	# Given: A platform whose profile loaded, and the input scene with its slot.
+	# Given: A platform whose profile loaded.
 	add_child_autofree(PlatformScene.instantiate())
+
+	# Given: The input scene, with its slot.
 	add_child_autofree(SystemInputScene.instantiate())
 
 	# Given: A loaded set holding `ui_accept`, which the engine binds to keys.
@@ -215,8 +230,10 @@ func test_glyph_hide_if_cursor_visible_hides_keyboard_glyph() -> void:
 
 
 func test_glyph_controller_prompt_lock_draws_the_connected_joypad_family() -> void:
-	# Given: A platform whose profile loaded, and the input scene with its slot.
+	# Given: A platform whose profile loaded.
 	add_child_autofree(PlatformScene.instantiate())
+
+	# Given: The input scene, with its slot.
 	add_child_autofree(SystemInputScene.instantiate())
 
 	# Given: A loaded set holding `ui_accept`, which the engine binds to Enter and A.
@@ -287,6 +304,7 @@ func _add_input_with_unabbreviated_keys() -> void:
 	add_child_autofree(input)
 
 
+## _create_glyph returns a keyboard glyph for `actions`' `ui_accept`, outside the tree.
 func _create_glyph(actions: StdInputActionSet) -> KitInputGlyph:
 	var glyph: KitInputGlyph = GlyphScene.instantiate()
 	glyph.always_show_kbm = true
@@ -301,6 +319,7 @@ func _get_line_height(control: Control) -> float:
 	return font.get_height(control.get_theme_default_font_size())
 
 
+## _get_origin_label returns the keyboard origin label of `ui_accept`'s binding `index`.
 func _get_origin_label(actions: StdInputActionSet, index: int) -> String:
 	return (
 		StdInputSlot
@@ -314,6 +333,7 @@ func _get_origin_label(actions: StdInputActionSet, index: int) -> String:
 	)
 
 
+## _load_actions loads a set holding `ui_accept` into player 1's slot and returns it.
 func _load_actions() -> StdInputActionSet:
 	var actions := StdInputActionSet.new()
 	actions.name = &"Glyphs"
@@ -322,6 +342,7 @@ func _load_actions() -> StdInputActionSet:
 	return actions
 
 
+## _press_joypad_button presses and releases `button` on joypad 0.
 func _press_joypad_button(button: JoyButton) -> void:
 	for pressed in [true, false]:
 		var event := InputEventJoypadButton.new()
@@ -332,6 +353,7 @@ func _press_joypad_button(button: JoyButton) -> void:
 		Input.flush_buffered_events()
 
 
+## _press_key presses and releases the key `keycode`.
 func _press_key(keycode: Key) -> void:
 	for pressed in [true, false]:
 		var event := InputEventKey.new()

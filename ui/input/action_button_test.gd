@@ -39,11 +39,14 @@ const MODE_TOGGLE := StdInputActionHold.MODE_TOGGLE
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
+## _actions is the set the tests load, holding their actions.
 var _actions: StdInputActionSet = null
 
 ## _mounted is the scene `_mount` mounted, freed before the input scene its focus
 ## handler reports to.
 var _mounted: StdTestInput = null
+
+## _translations are the translations the tests added, removed after each test.
 var _translations: Array[Translation] = []
 
 # -- TEST METHODS -------------------------------------------------------------------- #
@@ -134,9 +137,11 @@ func test_action_button_click_holds_the_action_until_released() -> void:
 
 
 func test_action_button_raise_action_off_raises_nothing_but_still_presses() -> void:
-	# Given: A button for the action which raises nothing, mounted under a real mouse.
+	# Given: A button for the action which raises nothing.
 	var button := _create_button()
 	button.raise_action = false
+
+	# Given: The button, mounted under a real mouse.
 	var input := await _mount(button)
 	watch_signals(button)
 
@@ -405,8 +410,10 @@ func before_all() -> void:
 
 
 func before_each() -> void:
-	# Given: A platform whose profile loaded, and the input scene with its slot.
+	# Given: A platform whose profile loaded.
 	add_child_autofree(PlatformScene.instantiate())
+
+	# Given: The input scene, with its slot.
 	add_child_autofree(SystemInputScene.instantiate())
 
 	# Given: A loaded set holding the tests' actions.
@@ -438,6 +445,7 @@ func _add_button() -> KitInputActionButton:
 	return button
 
 
+## _add_translation adds `translation` to the server until the test ends.
 func _add_translation(translation: Translation) -> void:
 	TranslationServer.add_translation(translation)
 	_translations.append(translation)
@@ -456,6 +464,7 @@ func _declare_hold(mode: StdInputActionHold.Mode) -> StdSettingsPropertyInt:
 	return hold.mode_override
 
 
+## _create_button returns a button for `_ACTION`, outside the tree.
 func _create_button() -> KitInputActionButton:
 	var button: KitInputActionButton = ActionButtonScene.instantiate()
 	button.action_set = _actions
