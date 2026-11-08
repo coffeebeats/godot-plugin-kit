@@ -421,5 +421,6 @@ msgid "Hold to {action}"
 msgstr ""
 
 #. The text of a button while a game action the player tapped is running on its own; tapping the button again cancels the action.
+msgctxt "hold"
 msgid "Cancel"
 msgstr ""

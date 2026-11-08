@@ -30,6 +30,10 @@ const Locales := preload("../../locale/locales.gd")
 ## origin's name, as `{origin}`, and the button's text, as `{action}`.
 const MSGID_ACTION_NAME := &"kit_input_action_name"
 
+## MSGCTXT_HOLD_CANCEL is the translation context of `MSGID_HOLD_CANCEL`, which keeps
+## its translation apart from the catalogue's other "Cancel" entries.
+const MSGCTXT_HOLD_CANCEL := &"hold"
+
 ## MSGID_HOLD_CANCEL is the button's text while a tapped toggle runs, since a second
 ## tap cancels it.
 const MSGID_HOLD_CANCEL := &"kit_hold_cancel"
@@ -312,7 +316,7 @@ func _update_text() -> void:
 	var action_text := Locales.tr_action(action_set.name, action)
 
 	if _hold_monitor.is_toggle_running():
-		text = tr(MSGID_HOLD_CANCEL)
+		text = tr(MSGID_HOLD_CANCEL, MSGCTXT_HOLD_CANCEL)
 	elif _hold_monitor.get_mode() == StdInputActionHold.MODE_HOLD and hold_text:
 		text = tr(hold_text).format({&"action": action_text})
 	else:
