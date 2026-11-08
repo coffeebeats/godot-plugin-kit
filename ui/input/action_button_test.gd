@@ -1,3 +1,5 @@
+# gdlint:ignore=max-public-methods
+
 ##
 ## Tests for `KitInputActionButton`, through the scene a game places.
 ##
@@ -25,13 +27,26 @@ const _ACTION_UNBOUND := &"action_button_test_unbound"
 ## _ACTION_SET is the name of the set holding the tests' actions.
 const _ACTION_SET := &"ActionButtonTest"
 
+## _HOLD_DURATION is how long (in seconds) the tests' holds take to fill, long enough
+## that none fills during a test.
+const _HOLD_DURATION := 60.0
+
+## MODE_HOLD is the mode in which the player holds the action until the hold fills.
+const MODE_HOLD := StdInputActionHold.MODE_HOLD
+
+## MODE_TOGGLE is the mode in which a tap starts the hold and a second tap cancels it.
+const MODE_TOGGLE := StdInputActionHold.MODE_TOGGLE
+
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
+## _actions is the set the tests load, holding their actions.
 var _actions: StdInputActionSet = null
 
 ## _mounted is the scene `_mount` mounted, freed before the input scene its focus
 ## handler reports to.
 var _mounted: StdTestInput = null
+
+## _translations are the translations the tests added, removed after each test.
 var _translations: Array[Translation] = []
 
 # -- TEST METHODS -------------------------------------------------------------------- #
@@ -122,9 +137,11 @@ func test_action_button_click_holds_the_action_until_released() -> void:
 
 
 func test_action_button_raise_action_off_raises_nothing_but_still_presses() -> void:
-	# Given: A button for the action which raises nothing, mounted under a real mouse.
+	# Given: A button for the action which raises nothing.
 	var button := _create_button()
 	button.raise_action = false
+
+	# Given: The button, mounted under a real mouse.
 	var input := await _mount(button)
 	watch_signals(button)
 
@@ -153,7 +170,7 @@ func test_action_button_focus_anchor_reaches_the_focus_handler() -> void:
 	assert_eq(StdInputCursorFocusHandler.get_focus_target(host), button)
 
 
-func test_action_button_glyph_is_as_tall_as_a_line_of_text() -> void:
+func test_action_button_glyph_is_one_and_a_half_lines_of_text_tall() -> void:
 	# Given: A host whose theme sets a large font size.
 	var host := Control.new()
 	host.theme = Theme.new()
@@ -164,8 +181,8 @@ func test_action_button_glyph_is_as_tall_as_a_line_of_text() -> void:
 	var button := _create_button()
 	host.add_child(button)
 
-	# Then: The glyph is as tall as a line of the button's text.
-	assert_eq(button.get_glyph().get_height(), _get_line_height(button))
+	# Then: The glyph is one and a half lines of the button's text tall.
+	assert_eq(button.get_glyph().get_height(), roundi(_get_line_height(button) * 1.5))
 
 
 func test_action_button_glyph_scale_percent_makes_the_glyph_taller() -> void:
@@ -180,7 +197,7 @@ func test_action_button_glyph_scale_percent_makes_the_glyph_taller() -> void:
 	host.add_child(button)
 
 	# Then: The glyph is two lines of text tall.
-	assert_eq(button.get_glyph().get_height(), _get_line_height(button) * 2)
+	assert_eq(button.get_glyph().get_height(), roundi(_get_line_height(button) * 2.0))
 
 
 func test_action_button_accessibility_name_carries_the_origin_and_text() -> void:
@@ -217,6 +234,148 @@ func test_action_button_glyph_reads_the_button_prompts_setting() -> void:
 	assert_eq(button.get_glyph().device_type_override, GlyphTypeProperty)
 
 
+func test_action_button_cycle_interval_reaches_the_glyph() -> void:
+	# Given: A button for the action.
+	var button: KitInputActionButton = autofree(_create_button())
+
+	# When: The button is set to cycle through the action's bindings.
+	button.cycle_interval = 1.5
+
+	# Then: Its glyph cycles at that interval.
+	assert_eq(button.get_glyph().cycle_interval, 1.5)
+
+
+func test_action_button_hold_monitor_follows_the_action_and_player() -> void:
+	# Given: A button for the action.
+	var button: KitInputActionButton = autofree(_create_button())
+
+	# When: The button is set to another player.
+	button.player_id = 2
+
+	# Then: Its monitor reports that player's hold of the action.
+	assert_eq(button.get_hold_monitor().action, _ACTION)
+	assert_eq(button.get_hold_monitor().player_id, 2)
+
+
+func test_action_button_hold_mode_shows_the_hold_text() -> void:
+	# Given: A translation of the action's name.
+	_add_action_translation("Confirm")
+
+	# Given: The action is a hold the player holds.
+	_declare_hold(MODE_HOLD)
+
+	# When: A button for the action enters the tree.
+	var button := _add_button()
+
+	# Then: Its text says to hold the action.
+	assert_eq(button.text, "Hold to Confirm")
+
+
+func test_action_button_hold_mode_with_empty_hold_text_shows_the_name() -> void:
+	# Given: A translation of the action's name.
+	_add_action_translation("Confirm")
+
+	# Given: The action is a hold the player holds.
+	_declare_hold(MODE_HOLD)
+
+	# When: A button for the action with no hold text enters the tree.
+	var button := _create_button()
+	button.hold_text = &""
+	add_child_autofree(button)
+
+	# Then: Its text is the action's name alone.
+	assert_eq(button.text, "Confirm")
+
+
+func test_action_button_hold_mode_fills_while_held_and_empties_on_release() -> void:
+	# Given: The action is a hold the player holds.
+	_declare_hold(MODE_HOLD)
+
+	# Given: A button for the action, mounted under real input.
+	var button := _create_button()
+	var input := await _mount(button)
+
+	# When: The action is held for a few frames.
+	input.press_action(_ACTION)
+	await wait_process_frames(3)
+
+	# Then: The button's monitor reports as far as the hold has filled.
+	var progress := _get_slot().get_action_hold_progress(_ACTION)
+	assert_gt(progress, 0.0, "precondition")
+	assert_eq(button.get_hold_monitor().get_progress(), progress)
+
+	# When: The action is released before the hold fills.
+	input.release_action(_ACTION)
+
+	# Then: The fill empties.
+	assert_eq(button.get_hold_monitor().get_progress(), 0.0)
+
+
+func test_action_button_toggle_mode_shows_the_cancel_after_a_tap() -> void:
+	# Given: A translation of the action's name.
+	_add_action_translation("Confirm")
+
+	# Given: The action is a hold the player toggles.
+	_declare_hold(MODE_TOGGLE)
+
+	# Given: A button for the action, mounted under real input.
+	var button := _create_button()
+	var input := await _mount(button)
+
+	# Then: Before a tap it shows the action's name and glyph.
+	assert_eq(button.text, "Confirm")
+	assert_eq(button.get_glyph().action, _ACTION)
+
+	# When: The action is tapped.
+	input.press_action(_ACTION)
+	input.release_action(_ACTION)
+
+	# Then: It says to cancel the running toggle, keeping the action's own glyph.
+	assert_eq(button.text, "Cancel")
+	assert_eq(button.get_glyph().action, _ACTION)
+
+	# When: The action is tapped again, which cancels the toggle.
+	input.press_action(_ACTION)
+	input.release_action(_ACTION)
+
+	# Then: It shows the action's name and glyph again.
+	assert_eq(button.text, "Confirm")
+	assert_eq(button.get_glyph().action, _ACTION)
+
+
+func test_action_button_hold_declared_after_ready_shows_the_hold_text() -> void:
+	# Given: A translation of the action's name.
+	_add_action_translation("Confirm")
+
+	# Given: A button for the action, whose set declares no hold.
+	var button := _add_button()
+	assert_eq(button.text, "Confirm", "precondition")
+
+	# When: The action becomes a hold the player holds.
+	_declare_hold(MODE_HOLD)
+
+	# Then: Its text says to hold the action.
+	assert_eq(button.text, "Hold to Confirm")
+
+
+func test_action_button_mode_change_with_no_hold_running_updates_the_text() -> void:
+	# Given: A translation of the action's name.
+	_add_action_translation("Confirm")
+
+	# Given: The action is a hold the player holds, through its own mode setting.
+	var mode := _declare_hold(MODE_HOLD)
+
+	# Given: A button for the action, saying to hold it.
+	var button := _add_button()
+	assert_eq(button.text, "Hold to Confirm", "precondition")
+
+	# When: The player changes the setting to toggle while nothing runs.
+	mode.set_value(MODE_TOGGLE)
+
+	# Then: Its text is the action's name alone.
+	assert_eq(button.text, "Confirm")
+
+
 # -- TEST HOOKS ---------------------------------------------------------------------- #
 
 
@@ -251,8 +410,10 @@ func before_all() -> void:
 
 
 func before_each() -> void:
-	# Given: A platform whose profile loaded, and the input scene with its slot.
+	# Given: A platform whose profile loaded.
 	add_child_autofree(PlatformScene.instantiate())
+
+	# Given: The input scene, with its slot.
 	add_child_autofree(SystemInputScene.instantiate())
 
 	# Given: A loaded set holding the tests' actions.
@@ -284,11 +445,26 @@ func _add_button() -> KitInputActionButton:
 	return button
 
 
+## _add_translation adds `translation` to the server until the test ends.
 func _add_translation(translation: Translation) -> void:
 	TranslationServer.add_translation(translation)
 	_translations.append(translation)
 
 
+## _declare_hold reloads the tests' set declaring `_ACTION` a hold which runs in `mode`,
+## and returns the hold's own mode setting.
+func _declare_hold(mode: StdInputActionHold.Mode) -> StdSettingsPropertyInt:
+	var hold := _create_hold(mode)
+	_actions.holds = [hold] as Array[StdInputActionHold]
+
+	# NOTE: The slot ignores a load of the set it already has, so another goes first.
+	_get_slot().load_action_set(StdInputActionSet.new())
+	_get_slot().load_action_set(_actions)
+
+	return hold.mode_override
+
+
+## _create_button returns a button for `_ACTION`, outside the tree.
 func _create_button() -> KitInputActionButton:
 	var button: KitInputActionButton = ActionButtonScene.instantiate()
 	button.action_set = _actions
@@ -296,10 +472,31 @@ func _create_button() -> KitInputActionButton:
 	return button
 
 
+## _create_hold returns a hold on `_ACTION` which runs in `mode`. The mode comes from
+## the hold's own setting, which overrides any mode the player stored.
+func _create_hold(mode: StdInputActionHold.Mode) -> StdInputActionHold:
+	var property := StdSettingsPropertyInt.new()
+	property.category = &"action_button_test"
+	property.name = &"hold_mode"
+	property.scope = StdSettingsScope.new()
+	property.set_value(mode)
+
+	var hold := StdInputActionHold.new()
+	hold.action = _ACTION
+	hold.duration = _HOLD_DURATION
+	hold.mode_override = property
+	return hold
+
+
 ## _get_line_height returns the height of a line of `button`'s text.
-func _get_line_height(button: Button) -> int:
+func _get_line_height(button: Button) -> float:
 	var font := button.get_theme_font(&"font")
-	return roundi(font.get_height(button.get_theme_font_size(&"font_size")))
+	return font.get_height(button.get_theme_font_size(&"font_size"))
+
+
+## _get_slot returns the slot of player 1, which the input scene adds.
+func _get_slot() -> StdInputSlot:
+	return StdInputSlot.for_player(1)
 
 
 ## _mount mounts `button` at the root under a real mouse, sized to be clicked.

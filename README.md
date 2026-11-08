@@ -149,11 +149,17 @@ A panel's values are exports on its child nodes, which *Editable Children* on it
 | --- | --- |
 | `action_set`, `action` | The action the button stands for. |
 | `binding_index`, `player_id` | The binding the glyph draws first and the player whose devices it follows, by default the primary binding and player 1. |
+| `cycle_interval` | Seconds each bound origin shows before the glyph moves to the next, so the player sees every binding. `0`, the default, shows the first alone. |
 | `raise_action` | On by default. Off, a click raises nothing, and the game connects `pressed` as on any button. |
 | `use_action_text` | On by default, so the text follows the player's language. Off, the button keeps the `text` the game sets. |
+| `hold_text` | The translation key of the text shown while the action is a hold the player holds, with the action's name as `{action}`. Kit's `kit_hold` reads "Hold to {action}"; empty shows the name alone. |
 | `focus_anchor` | Whether focus navigation lands on the button when its screen opens. |
 
-The glyph is as tall as a line of the button's text, so it grows with the text size setting, and it follows the Button prompts setting. To make every action button's glyph taller, the game's theme sets the integer constant `glyph_scale_percent` under the type `KitInputActionButton`, or under a button's own type variation. Assistive tech reads the button as the key's name and then its text, such as "Cross, Sell". For a glyph without a button, place `ui/glyph/glyph.tscn`, a `KitInputGlyph`, which sizes the same way from its `glyph_scale` export rather than the theme.
+The glyph is one and a half lines of the button's text tall, so it grows with the text size setting, and it follows the Button prompts setting. To resize every action button's glyph, the game's theme sets the integer constant `glyph_scale_percent` (150 in kit's base theme) under the type `KitInputActionButton`, or under a button's own type variation. Assistive tech reads the button as the key's name and then its text, such as "Cross, Sell". For a glyph without a button, place `ui/glyph/glyph.tscn`, a `KitInputGlyph`, which sizes the same way from its `glyph_scale` export, 1.5 by default, rather than the theme.
+
+When an action set lists the action in `holds`, the button follows the mode the hold runs in, which the player's `accessibility_holds_mode` setting can change while the game runs. Held, it shows `hold_text`, and a fill crosses the button as the hold fills. Tapped to toggle, it shows the action's name until the tap. While the hold then fills on its own, it shows `kit_hold_cancel` ("Cancel") beside its own glyph, since a second tap cancels it. The text changes width, so a row of buttons shifts with it. The button reads all of this from a `StdInputActionHoldMonitor`, which `get_hold_monitor()` returns. A game that builds its own prompt places a monitor of its own instead.
+
+The fill is the theme color `hold_fill_color`, translucent white in kit's base theme. It covers the bottom `hold_fill_height_percent` percent of the button, 100 by default, so a small value draws a bar along the bottom edge. Both sit under `KitInputActionButton` as `glyph_scale_percent` does. In a right-to-left layout the fill grows from the right. A game that sets its own text keeps it, and only the fill and glyph change.
 
 ### Change the button prompts
 

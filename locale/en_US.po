@@ -413,3 +413,12 @@ msgstr "Press any button now or {origin} to cancel."
 #. The name assistive technology reads for a button which performs a game action. Here, the '{origin}' placeholder will be replaced with the name of the key or controller button bound to the action, and '{action}' with the translated name of the action.
 msgid "kit_input_action_name"
 msgstr "{origin}, {action}"
+
+#. The text of a button which performs a game action the player must hold the button down to confirm. Here, the '{action}' placeholder will be replaced with the translated name of the action.
+msgid "kit_hold"
+msgstr "Hold to {action}"
+
+#. The text of a button while a game action the player tapped is running on its own; tapping the button again cancels the action.
+msgctxt "hold"
+msgid "kit_hold_cancel"
+msgstr "Cancel"
