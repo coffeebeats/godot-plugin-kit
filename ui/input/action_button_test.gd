@@ -229,6 +229,17 @@ func test_action_button_glyph_reads_the_button_prompts_setting() -> void:
 	assert_eq(button.get_glyph().device_type_override, GlyphTypeProperty)
 
 
+func test_action_button_cycle_interval_reaches_the_glyph() -> void:
+	# Given: A button for the action.
+	var button: KitInputActionButton = autofree(_create_button())
+
+	# When: The button is set to cycle through the action's bindings.
+	button.cycle_interval = 1.5
+
+	# Then: Its glyph cycles at that interval.
+	assert_eq(button.get_glyph().cycle_interval, 1.5)
+
+
 func test_action_button_hold_monitor_follows_the_action_and_player() -> void:
 	# Given: A button for the action.
 	var button: KitInputActionButton = autofree(_create_button())

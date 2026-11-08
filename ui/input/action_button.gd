@@ -89,6 +89,15 @@ const _HOLD_FILL_COLOR_DEFAULT := Color(1.0, 1.0, 1.0, 0.25)
 		if _glyph:
 			_glyph.binding_index = value
 
+## cycle_interval is the time in seconds each origin bound to the action is shown before
+## the glyph advances to the next, starting over from `binding_index`, so a player sees
+## every binding; `0` shows the first alone.
+@export var cycle_interval: float = 0.0:
+	set(value):
+		cycle_interval = value
+		if _glyph:
+			_glyph.cycle_interval = value
+
 ## player_id selects the player whose `StdInputSlot` supplies the bindings and runs the
 ## action's hold.
 @export var player_id: int = 1:

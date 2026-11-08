@@ -24,6 +24,7 @@ Add a `KitInputActionButton` to one of the game's scenes. The button's icon is t
    - `focus_anchor = true` on the one button focus navigation lands on when the screen opens, except on a row of `ui/panel/menu_rows.tscn`, since that scene focuses its first usable row itself
    - `use_action_text = false` and a `text` of the game's own only where the button's label isn't the action's name
    - `raise_action = false` only where a click should run the game's own code instead of raising the action, which the game connects to `pressed`
+   - `cycle_interval`, such as `1.5`, only where the player should see each of the action's bindings in turn
 
    Leave `icon` alone, since the button draws the glyph there itself.
 

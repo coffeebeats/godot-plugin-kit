@@ -149,6 +149,7 @@ A panel's values are exports on its child nodes, which *Editable Children* on it
 | --- | --- |
 | `action_set`, `action` | The action the button stands for. |
 | `binding_index`, `player_id` | The binding the glyph draws first and the player whose devices it follows, by default the primary binding and player 1. |
+| `cycle_interval` | Seconds each bound origin shows before the glyph moves to the next, so the player sees every binding. `0`, the default, shows the first alone. |
 | `raise_action` | On by default. Off, a click raises nothing, and the game connects `pressed` as on any button. |
 | `use_action_text` | On by default, so the text follows the player's language. Off, the button keeps the `text` the game sets. |
 | `hold_text` | The translation key of the text shown while the action is a hold the player holds, with the action's name as `{action}`. Kit's `kit_hold` reads "Hold to {action}"; empty shows the name alone. |
