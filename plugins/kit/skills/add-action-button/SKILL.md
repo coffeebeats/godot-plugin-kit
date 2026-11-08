@@ -29,13 +29,17 @@ Add a `KitInputActionButton` to one of the game's scenes. The button's icon is t
 
 4. **Make the action's handler validate it.** Whatever handles the action checks that it can run, such as whether the player can afford the build, because a key reaches the handler whether or not the button is enabled. Disabling the button only greys out the click. Don't connect the button's `pressed` to the same logic, since the raised action already runs it, and a second connection would run it twice.
 
-5. **Size the glyph through the theme, if needed.** The glyph is as tall as a line of the button's text. To make every action button's glyph taller, set the integer constant `glyph_scale_percent` under the type `KitInputActionButton` in the game's theme, such as `150`. A button with a `theme_type_variation` reads the constant from that variation first.
+5. **If the action is a hold, let the button show it.** When the set lists the action in `holds`, the button follows the mode the player picks in kit's Accessibility tab: "Hold to <name>" and a fill while held, or "Cancel" beside the action's own glyph while a tapped toggle fills, since a second tap cancels it. Set `hold_text` to another translation key formatted with `{action}`, or to empty for the name alone. The handler acts on the slot's `action_hold_triggered` for the action, not its raw press. Turn on `accessibility_holds_mode` in the `Settings` node's `menu_setting_overrides` if the game hasn't, so the player can pick the mode.
 
-6. **Run `godot --import --headless`** to check that the scene loads. Then run the game with the `run-game` skill and press the bound key to confirm it reaches the handler.
+6. **Size the glyph and fill through the theme, if needed.** The glyph is as tall as a line of the button's text. To make every action button's glyph taller, set the integer constant `glyph_scale_percent` under the type `KitInputActionButton` in the game's theme, such as `150`. The hold's fill is the color `hold_fill_color` over the button's lower `hold_fill_height_percent` percent, so a small value draws a bar along the bottom edge. A button with a `theme_type_variation` reads each item from that variation first.
+
+7. **Run `godot --import --headless`** to check that the scene loads. Then run the game with the `run-game` skill and press the bound key to confirm it reaches the handler.
 
 ## Key reference files
 
-- `addons/kit/ui/input/action_button.gd`: the button's exports and theme constant
+- `addons/kit/ui/input/action_button.gd`: the button's exports and theme items
+- `addons/std/input/action_hold.gd`: a hold's modes and `duration`
+- `addons/std/input/action_hold_monitor.gd`: the hold state the button shows, for a prompt the game builds itself
 - `addons/kit/ui/glyph/glyph.tscn`: a `KitInputGlyph`, for a glyph shown without a button
 - `addons/std/input/action_trigger.gd`: how a click raises and holds the action
 - `addons/kit/locale/locales.gd`: `tr_action()`, which names the action
