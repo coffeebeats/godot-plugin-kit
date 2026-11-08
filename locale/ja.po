@@ -398,11 +398,6 @@ msgctxt "hold_mode"
 msgid "Tap to toggle"
 msgstr ""
 
-#. Describes one possible option in the hold action setting; the action completes as soon as the player presses the button.
-msgctxt "hold_mode"
-msgid "Press"
-msgstr ""
-
 #. Instructs the user that they will be updating the controller binding for the specified action. Here, the '%s' placeholder will be replaced with the translated name of the game action.
 msgid "Bind “%s”"
 msgstr ""

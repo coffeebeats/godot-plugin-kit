@@ -5,7 +5,7 @@
 
 [resource]
 script = ExtResource("2_script")
-default = PackedInt64Array(0, 1, 2, 3)
+default = PackedInt64Array(0, 1, 2)
 category = &"controls"
 name = &"hold/mode_options"
 readonly = true
