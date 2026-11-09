@@ -5,6 +5,7 @@
 [resource]
 script = ExtResource("1_k6eal")
 device_types = Array[int]([5])
+translation_context = &"steam_controller"
 joy_buttons = Dictionary[int, StringName]({
 5: &"kit_input_origin_steam",
 6: &"kit_input_origin_start"

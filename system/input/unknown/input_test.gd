@@ -425,6 +425,23 @@ func test_origin_names_have_english_text_for_every_key() -> void:
 	assert_eq(missing, [] as Array[String])
 
 
+func test_origin_names_each_translate_in_a_context() -> void:
+	# Given: Kit's origin names, read from the input scene.
+	var input: SystemInput = autofree(SystemInputScene.instantiate())
+
+	# When: The names without a context are listed.
+	var uncontexted: Array[String] = []
+	for names: StdInputOriginNames in input.origin_names:
+		if not names.translation_context:
+			uncontexted.append(names.resource_path)
+
+	# Then: Every names resource has a context.
+	#
+	# NOTE: A translator sees only the English text, so a name such as "LS" needs its
+	# family beside it, and the empty context is shared with kit's other strings.
+	assert_eq(uncontexted, [] as Array[String])
+
+
 func test_slot_hold_mode_setting_chooses_a_declared_holds_mode() -> void:
 	# Given: A platform and the input scene.
 	add_child_autofree(PlatformScene.instantiate())

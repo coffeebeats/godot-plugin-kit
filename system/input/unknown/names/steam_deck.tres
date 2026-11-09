@@ -5,6 +5,7 @@
 [resource]
 script = ExtResource("1_1i0r3")
 device_types = Array[int]([6])
+translation_context = &"steam_deck"
 joy_buttons = Dictionary[int, StringName]({
 4: &"kit_input_origin_view",
 5: &"kit_input_origin_steam",

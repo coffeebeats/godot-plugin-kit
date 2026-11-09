@@ -423,103 +423,133 @@ msgctxt "hold"
 msgid "kit_hold_cancel"
 msgstr "Cancel"
 
-#. The name of a controller's A face button.
+#. The name of a controller's bottom face button, labelled A on an Xbox controller.
+msgctxt "gamepad"
 msgid "kit_input_origin_a"
 msgstr "A"
 
-#. The name of a controller's B face button.
+#. The name of a controller's right face button, labelled B on an Xbox controller.
+msgctxt "gamepad"
 msgid "kit_input_origin_b"
 msgstr "B"
 
-#. The name of a controller's X face button.
+#. The name of a controller's left face button, labelled X on an Xbox controller.
+msgctxt "gamepad"
 msgid "kit_input_origin_x"
 msgstr "X"
 
-#. The name of a controller's Y face button.
+#. The name of a controller's top face button, labelled Y on an Xbox controller.
+msgctxt "gamepad"
 msgid "kit_input_origin_y"
 msgstr "Y"
 
-#. The name of an Xbox 360 controller's or Steam Controller's Back button.
+#. The name of a controller's Back button, as an Xbox 360 controller labels it.
+msgctxt "gamepad"
 msgid "kit_input_origin_back"
 msgstr "Back"
 
-#. The name of an Xbox controller's or Steam Deck's Menu button.
+#. The name of a controller's Menu button, as an Xbox controller labels it.
+msgctxt "gamepad"
 msgid "kit_input_origin_menu"
 msgstr "Menu"
 
-#. The name of an Xbox controller's left stick, pressed in like a button.
+#. The name of a controller's left stick, pressed in like a button, as an Xbox controller labels it.
+msgctxt "gamepad"
 msgid "kit_input_origin_ls"
 msgstr "LS"
 
-#. The name of an Xbox controller's right stick, pressed in like a button.
+#. The name of a controller's right stick, pressed in like a button, as an Xbox controller labels it.
+msgctxt "gamepad"
 msgid "kit_input_origin_rs"
 msgstr "RS"
 
-#. The name of an Xbox controller's left bumper.
+#. The name of a controller's left bumper, as an Xbox controller labels it.
+msgctxt "gamepad"
 msgid "kit_input_origin_lb"
 msgstr "LB"
 
-#. The name of an Xbox controller's right bumper.
+#. The name of a controller's right bumper, as an Xbox controller labels it.
+msgctxt "gamepad"
 msgid "kit_input_origin_rb"
 msgstr "RB"
 
 #. The name of a controller's directional pad, pressed up.
+msgctxt "gamepad"
 msgid "kit_input_origin_dpad_up"
 msgstr "D-pad Up"
 
 #. The name of a controller's directional pad, pressed down.
+msgctxt "gamepad"
 msgid "kit_input_origin_dpad_down"
 msgstr "D-pad Down"
 
 #. The name of a controller's directional pad, pressed left.
+msgctxt "gamepad"
 msgid "kit_input_origin_dpad_left"
 msgstr "D-pad Left"
 
 #. The name of a controller's directional pad, pressed right.
+msgctxt "gamepad"
 msgid "kit_input_origin_dpad_right"
 msgstr "D-pad Right"
 
 #. The name of a controller's left stick, pushed left.
+msgctxt "gamepad"
 msgid "kit_input_origin_left_stick_left"
 msgstr "Left Stick Left"
 
 #. The name of a controller's left stick, pushed up.
+msgctxt "gamepad"
 msgid "kit_input_origin_left_stick_up"
 msgstr "Left Stick Up"
 
 #. The name of a controller's right stick, pushed left.
+msgctxt "gamepad"
 msgid "kit_input_origin_right_stick_left"
 msgstr "Right Stick Left"
 
 #. The name of a controller's right stick, pushed up.
+msgctxt "gamepad"
 msgid "kit_input_origin_right_stick_up"
 msgstr "Right Stick Up"
 
 #. The name of a controller's left stick, pushed right.
+msgctxt "gamepad"
 msgid "kit_input_origin_left_stick_right"
 msgstr "Left Stick Right"
 
 #. The name of a controller's left stick, pushed down.
+msgctxt "gamepad"
 msgid "kit_input_origin_left_stick_down"
 msgstr "Left Stick Down"
 
 #. The name of a controller's right stick, pushed right.
+msgctxt "gamepad"
 msgid "kit_input_origin_right_stick_right"
 msgstr "Right Stick Right"
 
 #. The name of a controller's right stick, pushed down.
+msgctxt "gamepad"
 msgid "kit_input_origin_right_stick_down"
 msgstr "Right Stick Down"
 
-#. The name of an Xbox controller's left trigger.
+#. The name of a controller's left trigger, as an Xbox controller labels it.
+msgctxt "gamepad"
 msgid "kit_input_origin_lt"
 msgstr "LT"
 
-#. The name of an Xbox controller's right trigger.
+#. The name of a controller's right trigger, as an Xbox controller labels it.
+msgctxt "gamepad"
 msgid "kit_input_origin_rt"
 msgstr "RT"
 
-#. The name of an Xbox controller's View button.
+#. The name of an Xbox One or Xbox Series controller's View button.
+msgctxt "xbox"
+msgid "kit_input_origin_view"
+msgstr "View"
+
+#. The name of a Steam Deck's View button.
+msgctxt "steam_deck"
 msgid "kit_input_origin_view"
 msgstr "View"
 
@@ -613,75 +643,118 @@ msgctxt "playstation"
 msgid "kit_input_origin_r2"
 msgstr "R2"
 
-#. The name of a Steam Deck's or Steam Controller's Steam button.
+#. The name of a Steam Deck's Steam button.
+msgctxt "steam_deck"
 msgid "kit_input_origin_steam"
 msgstr "Steam"
 
 #. The name of a Steam Deck's left stick, pressed in like a button.
+msgctxt "steam_deck"
 msgid "kit_input_origin_l3"
 msgstr "L3"
 
 #. The name of a Steam Deck's right stick, pressed in like a button.
+msgctxt "steam_deck"
 msgid "kit_input_origin_r3"
 msgstr "R3"
 
 #. The name of a Steam Deck's L1 button.
+msgctxt "steam_deck"
 msgid "kit_input_origin_l1"
 msgstr "L1"
 
 #. The name of a Steam Deck's R1 button.
+msgctxt "steam_deck"
 msgid "kit_input_origin_r1"
 msgstr "R1"
 
 #. The name of a Steam Deck's L2 button.
+msgctxt "steam_deck"
 msgid "kit_input_origin_l2"
 msgstr "L2"
 
 #. The name of a Steam Deck's R2 button.
+msgctxt "steam_deck"
 msgid "kit_input_origin_r2"
 msgstr "R2"
 
+#. The name of a Steam Controller's Steam button.
+msgctxt "steam_controller"
+msgid "kit_input_origin_steam"
+msgstr "Steam"
+
 #. The name of a Steam Controller's Start button.
+msgctxt "steam_controller"
 msgid "kit_input_origin_start"
 msgstr "Start"
 
+#. The name of a Nintendo Switch controller's A button, the right face button.
+msgctxt "switch"
+msgid "kit_input_origin_a"
+msgstr "A"
+
+#. The name of a Nintendo Switch controller's B button, the bottom face button.
+msgctxt "switch"
+msgid "kit_input_origin_b"
+msgstr "B"
+
+#. The name of a Nintendo Switch controller's X button, the top face button.
+msgctxt "switch"
+msgid "kit_input_origin_x"
+msgstr "X"
+
+#. The name of a Nintendo Switch controller's Y button, the left face button.
+msgctxt "switch"
+msgid "kit_input_origin_y"
+msgstr "Y"
+
 #. The name of a Nintendo Switch controller's − (minus) button.
+msgctxt "switch"
 msgid "kit_input_origin_minus"
 msgstr "−"
 
 #. The name of a Nintendo Switch controller's HOME button.
+msgctxt "switch"
 msgid "kit_input_origin_home"
 msgstr "Home"
 
 #. The name of a Nintendo Switch controller's + (plus) button.
+msgctxt "switch"
 msgid "kit_input_origin_plus"
 msgstr "+"
 
 #. The name of a Nintendo Switch controller's left stick, pressed in like a button.
+msgctxt "switch"
 msgid "kit_input_origin_left_stick"
 msgstr "Left Stick"
 
 #. The name of a Nintendo Switch controller's right stick, pressed in like a button.
+msgctxt "switch"
 msgid "kit_input_origin_right_stick"
 msgstr "Right Stick"
 
 #. The name of a Nintendo Switch controller's L button.
+msgctxt "switch"
 msgid "kit_input_origin_l"
 msgstr "L"
 
 #. The name of a Nintendo Switch controller's R button.
+msgctxt "switch"
 msgid "kit_input_origin_r"
 msgstr "R"
 
 #. The name of a Nintendo Switch controller's Capture button.
+msgctxt "switch"
 msgid "kit_input_origin_capture"
 msgstr "Capture"
 
 #. The name of a Nintendo Switch controller's ZL button.
+msgctxt "switch"
 msgid "kit_input_origin_zl"
 msgstr "ZL"
 
 #. The name of a Nintendo Switch controller's ZR button.
+msgctxt "switch"
 msgid "kit_input_origin_zr"
 msgstr "ZR"
 

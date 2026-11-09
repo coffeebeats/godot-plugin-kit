@@ -5,6 +5,7 @@
 [resource]
 script = ExtResource("1_gtdwo")
 device_types = Array[int]([7, 8, 9])
+translation_context = &"switch"
 joy_buttons = Dictionary[int, StringName]({
 0: &"kit_input_origin_b",
 1: &"kit_input_origin_a",

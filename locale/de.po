@@ -426,103 +426,133 @@ msgctxt "hold"
 msgid "Cancel"
 msgstr ""
 
-#. The name of a controller's A face button.
+#. The name of a controller's bottom face button, labelled A on an Xbox controller.
+msgctxt "gamepad"
 msgid "A"
 msgstr ""
 
-#. The name of a controller's B face button.
+#. The name of a controller's right face button, labelled B on an Xbox controller.
+msgctxt "gamepad"
 msgid "B"
 msgstr ""
 
-#. The name of a controller's X face button.
+#. The name of a controller's left face button, labelled X on an Xbox controller.
+msgctxt "gamepad"
 msgid "X"
 msgstr ""
 
-#. The name of a controller's Y face button.
+#. The name of a controller's top face button, labelled Y on an Xbox controller.
+msgctxt "gamepad"
 msgid "Y"
 msgstr ""
 
-#. The name of an Xbox 360 controller's or Steam Controller's Back button.
+#. The name of a controller's Back button, as an Xbox 360 controller labels it.
+msgctxt "gamepad"
 msgid "Back"
 msgstr ""
 
-#. The name of an Xbox controller's or Steam Deck's Menu button.
+#. The name of a controller's Menu button, as an Xbox controller labels it.
+msgctxt "gamepad"
 msgid "Menu"
 msgstr ""
 
-#. The name of an Xbox controller's left stick, pressed in like a button.
+#. The name of a controller's left stick, pressed in like a button, as an Xbox controller labels it.
+msgctxt "gamepad"
 msgid "LS"
 msgstr ""
 
-#. The name of an Xbox controller's right stick, pressed in like a button.
+#. The name of a controller's right stick, pressed in like a button, as an Xbox controller labels it.
+msgctxt "gamepad"
 msgid "RS"
 msgstr ""
 
-#. The name of an Xbox controller's left bumper.
+#. The name of a controller's left bumper, as an Xbox controller labels it.
+msgctxt "gamepad"
 msgid "LB"
 msgstr ""
 
-#. The name of an Xbox controller's right bumper.
+#. The name of a controller's right bumper, as an Xbox controller labels it.
+msgctxt "gamepad"
 msgid "RB"
 msgstr ""
 
 #. The name of a controller's directional pad, pressed up.
+msgctxt "gamepad"
 msgid "D-pad Up"
 msgstr ""
 
 #. The name of a controller's directional pad, pressed down.
+msgctxt "gamepad"
 msgid "D-pad Down"
 msgstr ""
 
 #. The name of a controller's directional pad, pressed left.
+msgctxt "gamepad"
 msgid "D-pad Left"
 msgstr ""
 
 #. The name of a controller's directional pad, pressed right.
+msgctxt "gamepad"
 msgid "D-pad Right"
 msgstr ""
 
 #. The name of a controller's left stick, pushed left.
+msgctxt "gamepad"
 msgid "Left Stick Left"
 msgstr ""
 
 #. The name of a controller's left stick, pushed up.
+msgctxt "gamepad"
 msgid "Left Stick Up"
 msgstr ""
 
 #. The name of a controller's right stick, pushed left.
+msgctxt "gamepad"
 msgid "Right Stick Left"
 msgstr ""
 
 #. The name of a controller's right stick, pushed up.
+msgctxt "gamepad"
 msgid "Right Stick Up"
 msgstr ""
 
 #. The name of a controller's left stick, pushed right.
+msgctxt "gamepad"
 msgid "Left Stick Right"
 msgstr ""
 
 #. The name of a controller's left stick, pushed down.
+msgctxt "gamepad"
 msgid "Left Stick Down"
 msgstr ""
 
 #. The name of a controller's right stick, pushed right.
+msgctxt "gamepad"
 msgid "Right Stick Right"
 msgstr ""
 
 #. The name of a controller's right stick, pushed down.
+msgctxt "gamepad"
 msgid "Right Stick Down"
 msgstr ""
 
-#. The name of an Xbox controller's left trigger.
+#. The name of a controller's left trigger, as an Xbox controller labels it.
+msgctxt "gamepad"
 msgid "LT"
 msgstr ""
 
-#. The name of an Xbox controller's right trigger.
+#. The name of a controller's right trigger, as an Xbox controller labels it.
+msgctxt "gamepad"
 msgid "RT"
 msgstr ""
 
-#. The name of an Xbox controller's View button.
+#. The name of an Xbox One or Xbox Series controller's View button.
+msgctxt "xbox"
+msgid "View"
+msgstr ""
+
+#. The name of a Steam Deck's View button.
+msgctxt "steam_deck"
 msgid "View"
 msgstr ""
 
@@ -617,75 +647,118 @@ msgctxt "playstation"
 msgid "R2"
 msgstr ""
 
-#. The name of a Steam Deck's or Steam Controller's Steam button.
+#. The name of a Steam Deck's Steam button.
+msgctxt "steam_deck"
 msgid "Steam"
 msgstr ""
 
 #. The name of a Steam Deck's left stick, pressed in like a button.
+msgctxt "steam_deck"
 msgid "L3"
 msgstr ""
 
 #. The name of a Steam Deck's right stick, pressed in like a button.
+msgctxt "steam_deck"
 msgid "R3"
 msgstr ""
 
 #. The name of a Steam Deck's L1 button.
+msgctxt "steam_deck"
 msgid "L1"
 msgstr ""
 
 #. The name of a Steam Deck's R1 button.
+msgctxt "steam_deck"
 msgid "R1"
 msgstr ""
 
 #. The name of a Steam Deck's L2 button.
+msgctxt "steam_deck"
 msgid "L2"
 msgstr ""
 
 #. The name of a Steam Deck's R2 button.
+msgctxt "steam_deck"
 msgid "R2"
 msgstr ""
 
+#. The name of a Steam Controller's Steam button.
+msgctxt "steam_controller"
+msgid "Steam"
+msgstr ""
+
 #. The name of a Steam Controller's Start button.
+msgctxt "steam_controller"
 msgid "Start"
 msgstr ""
 
+#. The name of a Nintendo Switch controller's A button, the right face button.
+msgctxt "switch"
+msgid "A"
+msgstr ""
+
+#. The name of a Nintendo Switch controller's B button, the bottom face button.
+msgctxt "switch"
+msgid "B"
+msgstr ""
+
+#. The name of a Nintendo Switch controller's X button, the top face button.
+msgctxt "switch"
+msgid "X"
+msgstr ""
+
+#. The name of a Nintendo Switch controller's Y button, the left face button.
+msgctxt "switch"
+msgid "Y"
+msgstr ""
+
 #. The name of a Nintendo Switch controller's − (minus) button.
+msgctxt "switch"
 msgid "−"
 msgstr ""
 
 #. The name of a Nintendo Switch controller's HOME button.
+msgctxt "switch"
 msgid "Home"
 msgstr ""
 
 #. The name of a Nintendo Switch controller's + (plus) button.
+msgctxt "switch"
 msgid "+"
 msgstr ""
 
 #. The name of a Nintendo Switch controller's left stick, pressed in like a button.
+msgctxt "switch"
 msgid "Left Stick"
 msgstr ""
 
 #. The name of a Nintendo Switch controller's right stick, pressed in like a button.
+msgctxt "switch"
 msgid "Right Stick"
 msgstr ""
 
 #. The name of a Nintendo Switch controller's L button.
+msgctxt "switch"
 msgid "L"
 msgstr ""
 
 #. The name of a Nintendo Switch controller's R button.
+msgctxt "switch"
 msgid "R"
 msgstr ""
 
 #. The name of a Nintendo Switch controller's Capture button.
+msgctxt "switch"
 msgid "Capture"
 msgstr ""
 
 #. The name of a Nintendo Switch controller's ZL button.
+msgctxt "switch"
 msgid "ZL"
 msgstr ""
 
 #. The name of a Nintendo Switch controller's ZR button.
+msgctxt "switch"
 msgid "ZR"
 msgstr ""
 
