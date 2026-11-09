@@ -25,7 +25,7 @@ This skill is for HUD that follows an entity. For HUD that stays in one place on
 
    A name plate is a plain `Label` — there is no `HudLabel`, because a `Label` is already the whole feature. Damage and a critical hit are **two `KitHudNumbers` instances with different styles** (`style_damage.tres`, `style_crit.tres`), not one element with a flag.
 
-   When no stock element fits, even with another style resource, build one with the `add-hud-element` skill first, then come back here to place it.
+   Look in `project/ui/hud/` for elements the game has already built, and instance them the same way. When neither a stock element nor one of the game's fits, even with another style resource, build one with the `add-hud-element` skill first, then come back here to place it.
 
 2. **Attach a script to the group root**, extending `KitHudGroup`, that names the elements:
 

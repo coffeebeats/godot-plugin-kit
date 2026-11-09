@@ -9,7 +9,7 @@ A HUD element is a plain `Control` with its own typed API, its tunables in a sty
 
 An element lives in an entity's HUD group, and the `add-entity-hud` skill places it there once it is built. A HUD that stays in one place on screen, such as a resource count, needs neither skill; see "Lay out the HUD" in `addons/kit/README.md`.
 
-Before starting, check that a stock element with a different style resource does not already do this. Damage and critical numbers are one element with two styles, not two elements.
+Before starting, check that a stock element with a different style resource does not already do this, and that the game has no element in `project/ui/hud/` that does. Damage and critical numbers are one element with two styles, not two elements.
 
 ## Steps
 
