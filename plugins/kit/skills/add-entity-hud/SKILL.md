@@ -1,6 +1,6 @@
 ---
 name: add-entity-hud
-description: Give a world entity a HUD — a health bar, name plate, floating combat numbers or an off-screen indicator that follow it on screen. Use when an entity in a map's SubViewport needs anything drawn above it.
+description: Give a world entity a HUD — a health bar, name plate, floating combat numbers or an off-screen indicator that follow it on screen. Use when an entity in a map's SubViewport needs anything drawn above it. To build a new kind of element first, use add-hud-element.
 user-invocable: true
 argument-hint: "<entity_scene> [elements: bar|numbers|indicator]"
 ---
@@ -8,6 +8,8 @@ argument-hint: "<entity_scene> [elements: bar|numbers|indicator]"
 Author a HUD group scene for one kind of entity, then point a `KitHudAnchor` on the entity at it. The layer mounts the group, a `KitWorldTracker` keeps it over the entity, and the entity calls typed methods on the elements themselves.
 
 Four words: **layer** (the plane, one per map, already in every template), **anchor** (the node you add to the entity), **group** (the scene of elements that entity gets), **elements**. You author the group and the anchor; the layer and the tracker are already built.
+
+This skill is for HUD that follows an entity. For HUD that stays in one place on screen, such as a resource count or a wave counter, don't use a group or an anchor. Build a scene of the game's own in the map's `UI`, following the section "Lay out the HUD" in `addons/kit/README.md`.
 
 ## Steps
 
@@ -22,6 +24,8 @@ Four words: **layer** (the plane, one per map, already in every template), **anc
    | `KitHudIndicator` | `addons/kit/ui/hud/indicator/indicator.tscn` | none; it aims itself |
 
    A name plate is a plain `Label` — there is no `HudLabel`, because a `Label` is already the whole feature. Damage and a critical hit are **two `KitHudNumbers` instances with different styles** (`style_damage.tres`, `style_crit.tres`), not one element with a flag.
+
+   Look in `project/ui/hud/` for elements the game has already built, and instance them the same way. When neither a stock element nor one of the game's fits, even with another style resource, build one with the `add-hud-element` skill first, then come back here to place it.
 
 2. **Attach a script to the group root**, extending `KitHudGroup`, that names the elements:
 
@@ -83,4 +87,3 @@ Four words: **layer** (the plane, one per map, already in every template), **anc
 - `addons/kit/ui/hud/bar/`, `numbers/`, `indicator/` — the stock elements and their style resources
 - `ui/hud/layer_test.gd`, `group_test.gd` in `coffeebeats/godot-plugin-kit` — the wiring, built by hand, as executable reference; tests do not ship in `addons/kit`
 - `addons/kit/ui/tracker/world_tracker.gd` — the tracker's own exports and signals
-- To add a new **kind** of element rather than use a stock one, use the `add-hud-element` skill.
