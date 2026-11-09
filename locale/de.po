@@ -602,10 +602,9 @@ msgid "PS"
 msgstr ""
 
 #. The name of a PlayStation controller's Options button.
-#, fuzzy
 msgctxt "playstation"
 msgid "Options"
-msgstr "Optionen"
+msgstr ""
 
 #. The name of a PlayStation controller's left stick, pressed in like a button.
 msgctxt "playstation"
@@ -793,10 +792,9 @@ msgid "Insert"
 msgstr ""
 
 #. The name of the Delete key on a keyboard.
-#, fuzzy
 msgctxt "keyboard"
 msgid "Delete"
-msgstr "Löschen"
+msgstr ""
 
 #. The name of the Pause key on a keyboard.
 msgctxt "keyboard"
