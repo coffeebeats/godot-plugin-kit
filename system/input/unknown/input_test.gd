@@ -1,3 +1,4 @@
+# gdlint:ignore=max-public-methods
 ##
 ## Tests for the input system's Godot implementation, which draws glyphs from the game's
 ## `glyph_sets` and `unknown_glyph`, names origins from its `origin_names` and runs
