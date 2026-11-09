@@ -33,7 +33,6 @@ const XboxView := preload("glyphs/xbox/view.png")
 ## _GAPS_ON_EVERY_PAD lists the buttons no set of kit's has art for, which draw the
 ## unknown glyph on every joypad.
 const _GAPS_ON_EVERY_PAD := [
-	JOY_BUTTON_GUIDE,
 	JOY_BUTTON_PADDLE1,
 	JOY_BUTTON_PADDLE2,
 	JOY_BUTTON_PADDLE3,
@@ -47,9 +46,9 @@ const _GAPS_ON_EVERY_PAD := [
 
 ## _GAPS lists, by joypad type, the further buttons kit's sets have no art for.
 const _GAPS := {
-	StdInputDevice.DEVICE_TYPE_GENERIC: [JOY_BUTTON_TOUCHPAD],
-	StdInputDevice.DEVICE_TYPE_PS_4: [],
-	StdInputDevice.DEVICE_TYPE_PS_5: [],
+	StdInputDevice.DEVICE_TYPE_GENERIC: [JOY_BUTTON_GUIDE, JOY_BUTTON_TOUCHPAD],
+	StdInputDevice.DEVICE_TYPE_PS_4: [JOY_BUTTON_GUIDE],
+	StdInputDevice.DEVICE_TYPE_PS_5: [JOY_BUTTON_GUIDE],
 	StdInputDevice.DEVICE_TYPE_STEAM_CONTROLLER:
 	[
 		JOY_BUTTON_DPAD_UP,
@@ -60,13 +59,11 @@ const _GAPS := {
 		JOY_BUTTON_TOUCHPAD,
 	],
 	StdInputDevice.DEVICE_TYPE_STEAM_DECK: [JOY_BUTTON_MISC1, JOY_BUTTON_TOUCHPAD],
-	StdInputDevice.DEVICE_TYPE_SWITCH_JOY_CON_PAIR:
-	[JOY_BUTTON_MISC1, JOY_BUTTON_TOUCHPAD],
-	StdInputDevice.DEVICE_TYPE_SWITCH_JOY_CON_SINGLE:
-	[JOY_BUTTON_MISC1, JOY_BUTTON_TOUCHPAD],
-	StdInputDevice.DEVICE_TYPE_SWITCH_PRO: [JOY_BUTTON_MISC1, JOY_BUTTON_TOUCHPAD],
-	StdInputDevice.DEVICE_TYPE_XBOX_360: [JOY_BUTTON_TOUCHPAD],
-	StdInputDevice.DEVICE_TYPE_XBOX_ONE: [JOY_BUTTON_TOUCHPAD],
+	StdInputDevice.DEVICE_TYPE_SWITCH_JOY_CON_PAIR: [JOY_BUTTON_TOUCHPAD],
+	StdInputDevice.DEVICE_TYPE_SWITCH_JOY_CON_SINGLE: [JOY_BUTTON_TOUCHPAD],
+	StdInputDevice.DEVICE_TYPE_SWITCH_PRO: [JOY_BUTTON_TOUCHPAD],
+	StdInputDevice.DEVICE_TYPE_XBOX_360: [JOY_BUTTON_GUIDE, JOY_BUTTON_TOUCHPAD],
+	StdInputDevice.DEVICE_TYPE_XBOX_ONE: [JOY_BUTTON_GUIDE, JOY_BUTTON_TOUCHPAD],
 }
 
 # -- INITIALIZATION ------------------------------------------------------------------ #

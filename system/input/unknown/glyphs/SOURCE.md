@@ -6,8 +6,8 @@ The PNGs in these folders come from Nicolae "Xelu" Berbece's [Free Controller & 
 | --- | --- |
 | `mouse` | `Keyboard & Mouse/Dark`, and `simple.png` from `Keyboard & Mouse/Blanks` |
 | `playstation` | `PS5`; `share.png` from `Others/PS4`, and the face buttons from `Others/Positional Prompts` |
-| `steam_controller` | `Others/Steam` |
-| `steam_deck` | `Steam Deck`; `view.png` is `SteamDeck_Inventory.png` |
+| `steam_controller` | `Others/Steam`; `steam.png` is `Steam_System.png` |
+| `steam_deck` | `Steam Deck`; `view.png` is `SteamDeck_Inventory.png` and `steam.png` is `SteamDeck_Steam.png` |
 | `switch` | `Switch` |
 | `xbox` | `Xbox Series`; the bumpers and sticks from `Others/Amazon Luna`, and `back.png` from `Others/Xbox 360` |
 

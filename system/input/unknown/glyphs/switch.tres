@@ -17,6 +17,10 @@
 [ext_resource type="Texture2D" uid="uid://dbie1xd72stuc" path="res://system/input/unknown/glyphs/switch/x.png" id="14_7u3p7"]
 [ext_resource type="Texture2D" uid="uid://s3mdlv46dsy1" path="res://system/input/unknown/glyphs/switch/y.png" id="15_31t52"]
 [ext_resource type="Texture2D" uid="uid://drf8wrtlnh8vn" path="res://system/input/unknown/glyphs/switch/minus.png" id="16_minus"]
+[ext_resource type="Texture2D" uid="uid://do54jgw311222" path="res://system/input/unknown/glyphs/switch/home.png" id="20_home"]
+[ext_resource type="Texture2D" uid="uid://dacqgyhntgynn" path="res://system/input/unknown/glyphs/switch/l_stick_click.png" id="21_l_stick_click"]
+[ext_resource type="Texture2D" uid="uid://bnexod5xtennp" path="res://system/input/unknown/glyphs/switch/r_stick_click.png" id="22_r_stick_click"]
+[ext_resource type="Texture2D" uid="uid://bjq23jodptaro" path="res://system/input/unknown/glyphs/switch/capture.png" id="23_capture"]
 
 [resource]
 script = ExtResource("1_6j68a")
@@ -34,8 +38,8 @@ button_x = ExtResource("15_31t52")
 button_y = ExtResource("14_7u3p7")
 button_back = ExtResource("16_minus")
 button_start = ExtResource("11_sgkau")
-button_stick_left = ExtResource("7_y060g")
-button_stick_right = ExtResource("8_togvw")
+button_stick_left = ExtResource("21_l_stick_click")
+button_stick_right = ExtResource("22_r_stick_click")
 button_shoulder_left = ExtResource("9_su2db")
 button_shoulder_right = ExtResource("10_vubpx")
 button_dpad_up = ExtResource("6_k7i0a")
@@ -44,4 +48,6 @@ button_dpad_left = ExtResource("4_purxs")
 button_dpad_right = ExtResource("5_uk68r")
 analog_trigger_left = ExtResource("1_ipwnw")
 analog_trigger_right = ExtResource("2_1qrox")
+button_guide = ExtResource("20_home")
+button_misc = ExtResource("23_capture")
 device_types = Array[int]([7, 8, 9])
