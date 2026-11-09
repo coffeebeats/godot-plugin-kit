@@ -1,13 +1,15 @@
 ---
 name: add-hud-element
-description: Add a new kind of HUD element — a status icon strip, a cast bar, a stack counter — alongside the stock KitHudBar, KitHudNumbers and KitHudIndicator. Use when no stock element fits; to place existing elements on an entity, use add-entity-hud instead.
+description: Build a new kind of element for an entity's HUD group, such as a status icon strip, a cast bar or a buff stack counter, beside the stock KitHudBar, KitHudNumbers and KitHudIndicator. Use only when no stock element fits; add-entity-hud places elements, new or stock, on an entity.
 user-invocable: true
 argument-hint: "<element_name> [what it shows]"
 ---
 
 A HUD element is a plain `Control` with its own typed API, its tunables in a style `Resource`, and its colors from a theme type variation. There is **no shared base class**, because nothing is common enough to justify one — so a new kind needs no change to `KitHudLayer`, `KitHudGroup` or any other element, and cannot be blocked by one.
 
-Before starting, check that a stock element with a different style resource does not already do this. Damage and critical numbers are one element with two styles, not two elements.
+An element lives in an entity's HUD group, and the `add-entity-hud` skill places it there once it is built. A HUD that stays in one place on screen, such as a resource count, needs neither skill; see "Lay out the HUD" in `addons/kit/README.md`.
+
+Before starting, check that a stock element with a different style resource does not already do this, and that the game has no element in `project/ui/hud/` that does. Damage and critical numbers are one element with two styles, not two elements.
 
 ## Steps
 
@@ -44,7 +46,7 @@ Before starting, check that a stock element with a different style resource does
 
 7. **Verify.** `gdformat --check`, `gdlint`, `godot-check` (its own skill has the form to run it by where it is not on `PATH`), then GUT (see AGENTS.md Commands). For anything whose point is how it looks or moves, confirm it on a live game with the `run-game` skill; `godot-bridge state --filter Hud` reports every element's class, rect and visibility.
 
-8. **List the element** in the stock-element table of the `add-entity-hud` skill, so the next session placing a HUD finds it without reading the directory. `AGENTS.md` names no elements and does not change.
+8. **Place it** with the `add-entity-hud` skill, instancing `project/ui/hud/<element>/<element>.tscn` in the group as you would a stock element. That skill's table lists only kit's elements, and the game never edits it.
 
 ## Key reference files
 

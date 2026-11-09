@@ -142,6 +142,45 @@ A panel's values are exports on its child nodes, which *Editable Children* on it
 | `WorldTracker2D`, `WorldTracker3D` | `map`, `target` | The map, and the node in its world the panel follows. Until `target` is set, the panel stays where it is. An open panel follows its target off-screen and stays open; to close it instead, connect the tracker's `target_exited_view` to `StdPanel`'s `close`. |
 | `WorldTracker2D`, `WorldTracker3D` | `offset`, `flip_at_edges`, `viewport_margin` | Where the panel sits from its target. With `flip_at_edges` on, the default, it moves to the target's far side rather than cross the screen's edge, staying `viewport_margin` inside it. |
 
+### Lay out the HUD
+
+A map's `UI` holds two kinds of HUD.
+
+A HUD that follows an entity, such as a health bar or floating damage numbers, is a group scene inheriting `ui/hud/group_2d.tscn` or `ui/hud/group_3d.tscn`, which a `KitHudAnchor2D` or `KitHudAnchor3D` on the entity mounts on the map's `Hud` layer. The `add-entity-hud` skill walks through it, and `add-hud-element` adds a new kind of element.
+
+The game sets these on the anchor, and on the root and tracker of its group scene. The layer sets the tracker's `map` and `target` itself, so the group scene leaves them empty.
+
+| Node | Export | Value |
+| --- | --- | --- |
+| `KitHudAnchor2D`, `KitHudAnchor3D` | `group_scene` | The group scene to mount, required. |
+| `KitHudAnchor2D`, `KitHudAnchor3D` | `target` | The node the group follows, the anchor's parent when unset. Point it at a `Marker2D` or `Marker3D` to follow a point beside the entity. |
+| `KitHudGroup` | `hide_offscreen` | Hides the group while its entity is off-screen, on by default. An off-screen indicator turns it off and the tracker's `clamped` on. |
+| `WorldTracker2D`, `WorldTracker3D` | `offset` | Where the group sits from its target, in screen pixels, 24 above it in both group scenes. In 3D it doesn't hold a height above a receding entity; a `Marker3D` as the anchor's `target` does. |
+| `WorldTracker2D`, `WorldTracker3D` | `clamped`, `flip_at_edges`, `viewport_margin` | With `clamped` on, the group pins to the screen's edge while its entity is off it. With `flip_at_edges` on, it moves to the target's far side rather than cross the edge. Both are off by default, and either keeps `viewport_margin` inside the edge. |
+
+A HUD that stays in place on screen, such as resources, a wave counter or a row of action buttons, is a scene of the game's own, usually under `project/ui/hud/`, placed in the map's `UI` after `Hud`. Kit ships no layout for it, since each game's differs and Godot's anchors already hold one at any window size:
+
+- Make the scene's root a `Control` with the *Full Rect* layout preset, so it covers the screen. Anchors measure from a piece's parent, not the screen, so a root left at its default size puts every piece's edge at that small rectangle's, not the window's.
+- Anchor each piece to the edge or corner it belongs to, with a layout preset such as *Top Right*. Its offsets then measure from that edge, so an inset set there holds when the window changes shape. A piece placed by offset alone keeps its distance from the top-left corner, and drifts away from the right and bottom edges as they move.
+- Point each piece's grow direction toward the middle of the screen, *Begin* on a right or bottom edge and *Both* where it's centered on an edge, so a piece whose content grows, such as a count gaining a digit, extends inward rather than off the screen. A container sizes itself to its content, while a plain `Control` needs a minimum size.
+- Set `mouse_filter` to *Ignore* on the scene's root and on every piece that takes no click. Containers and a `TextureRect` default to *Pass*, which keeps a click from reaching the world beneath.
+
+An icon beside a count is an `HBoxContainer` holding a `TextureRect` and a `Label`. Set the icon's `expand_mode` to *Fit Width Proportional* so it matches the text's height.
+
+Give the scene's root a script that finds its pieces by unique name and exposes typed setters, as a `KitHudGroup` does for an entity's elements, minus the tracker:
+
+```gdscript
+class_name MatchHud
+extends Control
+
+@onready var _gold: Label = %Gold
+
+func set_gold(amount: int) -> void:
+	_gold.text = str(amount)
+```
+
+The map's script calls the setters from its own `_ready` or later. A parent readies after its children, so the HUD is ready by then. A node in the world readies before `UI`, so it reaches the HUD through the map. The HUD's buttons signal up to the map, and an [action button](#add-an-action-button) raises its action itself.
+
 ### Add an action button
 
 `ui/input/action_button.tscn` is a `KitInputActionButton`, a `Button` that stands for one action. Its icon is the glyph of the key or button bound to the action, its text is the action's translated name, and a click raises the action, held for as long as the button is. The game sets these on its instance:
