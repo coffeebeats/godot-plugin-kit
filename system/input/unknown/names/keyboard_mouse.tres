@@ -1,0 +1,46 @@
+[gd_resource type="Resource" script_class="StdInputOriginNames" format=3 uid="uid://di25kntaxwics"]
+
+[ext_resource type="Script" uid="uid://nxd2embtjvoe" path="res://addons/std/input/godot/origin_names.gd" id="1_3r6gf"]
+
+[resource]
+script = ExtResource("1_3r6gf")
+device_types = Array[int]([2])
+translation_context = &"keyboard"
+mouse_buttons = Dictionary[int, StringName]({
+1: &"kit_input_origin_mouse_left",
+2: &"kit_input_origin_mouse_right",
+3: &"kit_input_origin_mouse_middle",
+4: &"kit_input_origin_mouse_wheel_up",
+5: &"kit_input_origin_mouse_wheel_down",
+6: &"kit_input_origin_mouse_wheel_left",
+7: &"kit_input_origin_mouse_wheel_right",
+8: &"kit_input_origin_mouse_button_4",
+9: &"kit_input_origin_mouse_button_5"
+})
+keyboard_keys = Dictionary[int, StringName]({
+32: &"kit_input_origin_key_space",
+4194305: &"kit_input_origin_key_escape",
+4194306: &"kit_input_origin_key_tab",
+4194308: &"kit_input_origin_key_backspace",
+4194309: &"kit_input_origin_key_enter",
+4194310: &"kit_input_origin_key_keypad_enter",
+4194311: &"kit_input_origin_key_insert",
+4194312: &"kit_input_origin_key_delete",
+4194313: &"kit_input_origin_key_pause",
+4194314: &"kit_input_origin_key_print_screen",
+4194317: &"kit_input_origin_key_home",
+4194318: &"kit_input_origin_key_end",
+4194319: &"kit_input_origin_key_left",
+4194320: &"kit_input_origin_key_up",
+4194321: &"kit_input_origin_key_right",
+4194322: &"kit_input_origin_key_down",
+4194323: &"kit_input_origin_key_page_up",
+4194324: &"kit_input_origin_key_page_down",
+4194325: &"kit_input_origin_key_shift",
+4194326: &"kit_input_origin_key_ctrl",
+4194328: &"kit_input_origin_key_alt",
+4194329: &"kit_input_origin_key_caps_lock",
+4194330: &"kit_input_origin_key_num_lock",
+4194331: &"kit_input_origin_key_scroll_lock",
+4194370: &"kit_input_origin_key_menu"
+})

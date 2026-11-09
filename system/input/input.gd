@@ -69,6 +69,14 @@ const MODULE_ID := &"input"
 ## draw only the keyboard and the joypads Steam Input isn't driving.
 @export var glyph_sets: Array[StdInputGlyphSet] = []
 
+## origin_names are the translation keys naming each origin, which a screen reader reads
+## for a prompt, searched as `glyph_sets` are, so a game's names placed ahead of kit's
+## replace part of a family. Each value must be a key with a translation, not the text.
+##
+## NOTE: They're read once, when the input implementation loads. On Steam builds they
+## name only the keyboard and the joypads Steam Input isn't driving.
+@export var origin_names: Array[StdInputOriginNames] = []
+
 ## unknown_glyph is the glyph prompts draw for a bound origin with no art, in the glyph
 ## sets or in Steam Input. A prompt showing origin names shows the name instead where
 ## the origin has one. Left empty, such a prompt shows its label instead.

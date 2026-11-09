@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="StdInputOriginNames" format=3 uid="uid://dx7uquo15ksb8"]
+
+[ext_resource type="Script" uid="uid://nxd2embtjvoe" path="res://addons/std/input/godot/origin_names.gd" id="1_1i0r3"]
+
+[resource]
+script = ExtResource("1_1i0r3")
+device_types = Array[int]([6])
+joy_buttons = Dictionary[int, StringName]({
+4: &"kit_input_origin_view",
+5: &"kit_input_origin_steam",
+7: &"kit_input_origin_l3",
+8: &"kit_input_origin_r3",
+9: &"kit_input_origin_l1",
+10: &"kit_input_origin_r1"
+})
+joy_axes_positive = Dictionary[int, StringName]({
+4: &"kit_input_origin_l2",
+5: &"kit_input_origin_r2"
+})

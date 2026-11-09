@@ -42,6 +42,10 @@ const MODE_TOGGLE := StdInputActionHold.MODE_TOGGLE
 ## _actions is the set the tests load, holding their actions.
 var _actions: StdInputActionSet = null
 
+## _catalogue is kit's English catalogue, holding the accessible name's template and the
+## origins' names, loaded for every test.
+var _catalogue: Translation = null
+
 ## _mounted is the scene `_mount` mounted, freed before the input scene its focus
 ## handler reports to.
 var _mounted: StdTestInput = null
@@ -383,6 +387,8 @@ func after_all() -> void:
 	InputMap.erase_action(_ACTION_UNBOUND)
 	ProjectSettings.set_setting(&"input/" + _ACTION_UNBOUND, null)
 
+	TranslationServer.remove_translation(_catalogue)
+
 
 func after_each() -> void:
 	if is_instance_valid(_mounted):
@@ -408,6 +414,11 @@ func before_all() -> void:
 	)
 	InputMap.add_action(_ACTION_UNBOUND)
 
+	# NOTE: A button renames itself while its slot leaves the tree, so the catalogue stays
+	# loaded until every test's buttons are freed.
+	_catalogue = load("res://locale/en_US.mo")
+	TranslationServer.add_translation(_catalogue)
+
 
 func before_each() -> void:
 	# Given: A platform whose profile loaded.
@@ -421,9 +432,6 @@ func before_each() -> void:
 	_actions.name = _ACTION_SET
 	_actions.actions_digital = [_ACTION, _ACTION_UNBOUND] as Array[StringName]
 	StdInputSlot.for_player(1).load_action_set(_actions)
-
-	# Given: Kit's English catalogue, which holds the accessible name's template.
-	_add_translation(load("res://locale/en_US.mo"))
 
 
 # -- PRIVATE METHODS ----------------------------------------------------------------- #

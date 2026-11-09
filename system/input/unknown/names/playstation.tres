@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="StdInputOriginNames" format=3 uid="uid://cgrv3ku6pd5pw"]
+
+[ext_resource type="Script" uid="uid://nxd2embtjvoe" path="res://addons/std/input/godot/origin_names.gd" id="1_whvqq"]
+
+[resource]
+script = ExtResource("1_whvqq")
+device_types = Array[int]([3, 4])
+translation_context = &"playstation"
+joy_buttons = Dictionary[int, StringName]({
+0: &"kit_input_origin_cross",
+1: &"kit_input_origin_circle",
+2: &"kit_input_origin_square",
+3: &"kit_input_origin_triangle",
+4: &"kit_input_origin_create",
+5: &"kit_input_origin_ps",
+6: &"kit_input_origin_options",
+7: &"kit_input_origin_l3",
+8: &"kit_input_origin_r3",
+9: &"kit_input_origin_l1",
+10: &"kit_input_origin_r1",
+15: &"kit_input_origin_mute",
+20: &"kit_input_origin_touch_pad"
+})
+joy_axes_positive = Dictionary[int, StringName]({
+4: &"kit_input_origin_l2",
+5: &"kit_input_origin_r2"
+})
