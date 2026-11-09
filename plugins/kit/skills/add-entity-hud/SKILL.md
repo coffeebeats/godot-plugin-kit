@@ -9,7 +9,7 @@ Author a HUD group scene for one kind of entity, then point a `KitHudAnchor` on 
 
 Four words: **layer** (the plane, one per map, already in every template), **anchor** (the node you add to the entity), **group** (the scene of elements that entity gets), **elements**. You author the group and the anchor; the layer and the tracker are already built.
 
-A HUD that stays in place on screen rather than following an entity, such as a resource count or a wave counter, is a scene of the game's own in the map's `UI`, not a group. See "Lay out the HUD" in kit's README.
+This skill is for HUD that follows an entity. For HUD that stays in one place on screen, such as a resource count or a wave counter, don't use a group or an anchor. Build a scene of the game's own in the map's `UI`, following the section "Lay out the HUD" in `addons/kit/README.md`.
 
 ## Steps
 
