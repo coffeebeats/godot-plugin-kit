@@ -158,28 +158,7 @@ The game sets these on the anchor, and on the root and tracker of its group scen
 | `WorldTracker2D`, `WorldTracker3D` | `offset` | Where the group sits from its target, in screen pixels, 24 above it in both group scenes. In 3D it doesn't hold a height above a receding entity; a `Marker3D` as the anchor's `target` does. |
 | `WorldTracker2D`, `WorldTracker3D` | `clamped`, `flip_at_edges`, `viewport_margin` | With `clamped` on, the group pins to the screen's edge while its entity is off it. With `flip_at_edges` on, it moves to the target's far side rather than cross the edge. Both are off by default, and either keeps `viewport_margin` inside the edge. |
 
-A HUD that stays in place on screen, such as resources, a wave counter or a row of action buttons, is a scene of the game's own, usually under `project/ui/hud/`, placed in the map's `UI` after `Hud`. Kit ships no layout for it, since each game's differs and Godot's anchors already hold one at any window size:
-
-- Make the scene's root a `Control` with the *Full Rect* layout preset, so it covers the screen. Anchors measure from a piece's parent, not the screen, so a root left at its default size puts every piece's edge at that small rectangle's, not the window's.
-- Anchor each piece to the edge or corner it belongs to, with a layout preset such as *Top Right*. Its offsets then measure from that edge, so an inset set there holds when the window changes shape. A piece placed by offset alone keeps its distance from the top-left corner, and drifts away from the right and bottom edges as they move.
-- Point each piece's grow direction toward the middle of the screen, *Begin* on a right or bottom edge and *Both* where it's centered on an edge, so a piece whose content grows, such as a count gaining a digit, extends inward rather than off the screen. A container sizes itself to its content, while a plain `Control` needs a minimum size.
-- Set `mouse_filter` to *Ignore* on the scene's root and on every piece that takes no click. Containers and a `TextureRect` default to *Pass*, which keeps a click from reaching the world beneath.
-
-An icon beside a count is an `HBoxContainer` holding a `TextureRect` and a `Label`. Set the icon's `expand_mode` to *Fit Width Proportional* so it matches the text's height.
-
-Give the scene's root a script that finds its pieces by unique name and exposes typed setters, as a `KitHudGroup` does for an entity's elements, minus the tracker:
-
-```gdscript
-class_name MatchHud
-extends Control
-
-@onready var _gold: Label = %Gold
-
-func set_gold(amount: int) -> void:
-	_gold.text = str(amount)
-```
-
-The map's script calls the setters from its own `_ready` or later. A parent readies after its children, so the HUD is ready by then. A node in the world readies before `UI`, so it reaches the HUD through the map. The HUD's buttons signal up to the map, and an [action button](#add-an-action-button) raises its action itself.
+A HUD that stays in place on screen, such as resources or a wave counter, is a scene of the game's own, placed in the map's `UI` after `Hud`. Set `mouse_filter` to *Ignore* on every part of it that takes no click, so clicks reach the world. A world node signals up to the map, and the map's script calls down to the HUD. The map reads starting values in its own `_ready`, when everything below it is ready, and a world node signals only later changes.
 
 ### Add an action button
 
