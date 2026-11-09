@@ -758,6 +758,139 @@ msgctxt "switch"
 msgid "kit_input_origin_zr"
 msgstr "ZR"
 
+#. The name of a single Nintendo Switch Joy-Con's bottom face button, held sideways.
+msgctxt "joy_con"
+msgid "kit_input_origin_face_bottom"
+msgstr "Bottom Button"
+
+#. The name of a single Nintendo Switch Joy-Con's right face button, held sideways.
+msgctxt "joy_con"
+msgid "kit_input_origin_face_right"
+msgstr "Right Button"
+
+#. The name of a single Nintendo Switch Joy-Con's left face button, held sideways.
+msgctxt "joy_con"
+msgid "kit_input_origin_face_left"
+msgstr "Left Button"
+
+#. The name of a single Nintendo Switch Joy-Con's top face button, held sideways.
+msgctxt "joy_con"
+msgid "kit_input_origin_face_top"
+msgstr "Top Button"
+
+#. The name of a single right Nintendo Switch Joy-Con's A button, the bottom face
+#. button when held sideways.
+msgctxt "joy_con"
+msgid "kit_input_origin_a"
+msgstr "A"
+
+#. The name of a single right Nintendo Switch Joy-Con's X button, the right face
+#. button when held sideways.
+msgctxt "joy_con"
+msgid "kit_input_origin_x"
+msgstr "X"
+
+#. The name of a single right Nintendo Switch Joy-Con's B button, the left face
+#. button when held sideways.
+msgctxt "joy_con"
+msgid "kit_input_origin_b"
+msgstr "B"
+
+#. The name of a single right Nintendo Switch Joy-Con's Y button, the top face
+#. button when held sideways.
+msgctxt "joy_con"
+msgid "kit_input_origin_y"
+msgstr "Y"
+
+#. The name of the right Joy-Con's SR button, on its rail, in a pair of Nintendo
+#. Switch Joy-Cons.
+msgctxt "joy_con"
+msgid "kit_input_origin_right_sr"
+msgstr "Right SR"
+
+#. The name of the left Joy-Con's SL button, on its rail, in a pair of Nintendo
+#. Switch Joy-Cons.
+msgctxt "joy_con"
+msgid "kit_input_origin_left_sl"
+msgstr "Left SL"
+
+#. The name of the right Joy-Con's SL button, on its rail, in a pair of Nintendo
+#. Switch Joy-Cons.
+msgctxt "joy_con"
+msgid "kit_input_origin_right_sl"
+msgstr "Right SL"
+
+#. The name of the left Joy-Con's SR button, on its rail, in a pair of Nintendo
+#. Switch Joy-Cons.
+msgctxt "joy_con"
+msgid "kit_input_origin_left_sr"
+msgstr "Left SR"
+
+#. The name of a single Nintendo Switch Joy-Con's SL button, on its rail.
+msgctxt "joy_con"
+msgid "kit_input_origin_sl"
+msgstr "SL"
+
+#. The name of a single Nintendo Switch Joy-Con's SR button, on its rail.
+msgctxt "joy_con"
+msgid "kit_input_origin_sr"
+msgstr "SR"
+
+#. The name of a single left Nintendo Switch Joy-Con's L button.
+msgctxt "joy_con"
+msgid "kit_input_origin_l"
+msgstr "L"
+
+#. The name of a single left Nintendo Switch Joy-Con's ZL button.
+msgctxt "joy_con"
+msgid "kit_input_origin_zl"
+msgstr "ZL"
+
+#. The name of a single right Nintendo Switch Joy-Con's R button.
+msgctxt "joy_con"
+msgid "kit_input_origin_r"
+msgstr "R"
+
+#. The name of a single right Nintendo Switch Joy-Con's ZR button.
+msgctxt "joy_con"
+msgid "kit_input_origin_zr"
+msgstr "ZR"
+
+#. The name of a single left Nintendo Switch Joy-Con's − (minus) button.
+msgctxt "joy_con"
+msgid "kit_input_origin_minus"
+msgstr "−"
+
+#. The name of a single left Nintendo Switch Joy-Con's Capture button.
+msgctxt "joy_con"
+msgid "kit_input_origin_capture"
+msgstr "Capture"
+
+#. The name of a single right Nintendo Switch Joy-Con's stick, pressed in like a button.
+msgctxt "joy_con"
+msgid "kit_input_origin_right_stick"
+msgstr "Right Stick"
+
+#. The name of a single right Nintendo Switch Joy-Con's stick, pushed left.
+msgctxt "joy_con"
+msgid "kit_input_origin_right_stick_left"
+msgstr "Right Stick Left"
+
+#. The name of a single right Nintendo Switch Joy-Con's stick, pushed right.
+msgctxt "joy_con"
+msgid "kit_input_origin_right_stick_right"
+msgstr "Right Stick Right"
+
+#. The name of a single right Nintendo Switch Joy-Con's stick, pushed up.
+msgctxt "joy_con"
+msgid "kit_input_origin_right_stick_up"
+msgstr "Right Stick Up"
+
+#. The name of a single right Nintendo Switch Joy-Con's stick, pushed down.
+msgctxt "joy_con"
+msgid "kit_input_origin_right_stick_down"
+msgstr "Right Stick Down"
+
 #. The name of the Escape key on a keyboard.
 msgctxt "keyboard"
 msgid "kit_input_origin_key_escape"

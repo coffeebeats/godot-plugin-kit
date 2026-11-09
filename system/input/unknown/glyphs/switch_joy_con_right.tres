@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="StdInputGlyphSetJoy" format=3 uid="uid://cdsh2allerliu"]
+
+[ext_resource type="Script" uid="uid://dwegvnph8yf3c" path="res://addons/std/input/godot/glyph_set_joy.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://dcharff8s8a2a" path="res://system/input/unknown/glyphs/switch/r_stick.png" id="2_stick"]
+[ext_resource type="Texture2D" uid="uid://cnjl3afoi4k27" path="res://system/input/unknown/glyphs/switch/a.png" id="10_a"]
+[ext_resource type="Texture2D" uid="uid://dbie1xd72stuc" path="res://system/input/unknown/glyphs/switch/x.png" id="11_x"]
+[ext_resource type="Texture2D" uid="uid://cu1vyt5nbcbi3" path="res://system/input/unknown/glyphs/switch/b.png" id="12_b"]
+[ext_resource type="Texture2D" uid="uid://s3mdlv46dsy1" path="res://system/input/unknown/glyphs/switch/y.png" id="13_y"]
+[ext_resource type="Texture2D" uid="uid://bnexod5xtennp" path="res://system/input/unknown/glyphs/switch/r_stick_click.png" id="14_r_stick_click"]
+
+[resource]
+script = ExtResource("1_script")
+stick_left_direction_up = ExtResource("2_stick")
+stick_left_direction_down = ExtResource("2_stick")
+stick_left_direction_left = ExtResource("2_stick")
+stick_left_direction_right = ExtResource("2_stick")
+button_stick_left = ExtResource("14_r_stick_click")
+button_a = ExtResource("10_a")
+button_b = ExtResource("11_x")
+button_x = ExtResource("12_b")
+button_y = ExtResource("13_y")
+device_types = Array[int]([14])

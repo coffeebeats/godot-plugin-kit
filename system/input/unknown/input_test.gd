@@ -1,3 +1,4 @@
+# gdlint:ignore=max-public-methods
 ##
 ## Tests for the input system's Godot implementation, which draws glyphs from the game's
 ## `glyph_sets` and `unknown_glyph`, names origins from its `origin_names` and runs
@@ -18,10 +19,29 @@ const PlayStationCreate := preload("glyphs/playstation/create.png")
 const PlayStationShare := preload("glyphs/playstation/share.png")
 const SteamDeckView := preload("glyphs/steam_deck/view.png")
 const SwitchA := preload("glyphs/switch/a.png")
+const SwitchArrowDown := preload("glyphs/switch/arrow_down.png")
+const SwitchArrowLeft := preload("glyphs/switch/arrow_left.png")
+const SwitchArrowRight := preload("glyphs/switch/arrow_right.png")
+const SwitchArrowUp := preload("glyphs/switch/arrow_up.png")
 const SwitchB := preload("glyphs/switch/b.png")
+const SwitchCapture := preload("glyphs/switch/capture.png")
+const SwitchFaceDown := preload("glyphs/switch/face_down.png")
+const SwitchFaceLeft := preload("glyphs/switch/face_left.png")
+const SwitchFaceRight := preload("glyphs/switch/face_right.png")
+const SwitchFaceUp := preload("glyphs/switch/face_up.png")
+const SwitchHome := preload("glyphs/switch/home.png")
+const SwitchL := preload("glyphs/switch/l.png")
+const SwitchLStickClick := preload("glyphs/switch/l_stick_click.png")
 const SwitchMinus := preload("glyphs/switch/minus.png")
+const SwitchPlus := preload("glyphs/switch/plus.png")
+const SwitchR := preload("glyphs/switch/r.png")
+const SwitchRStickClick := preload("glyphs/switch/r_stick_click.png")
+const SwitchSl := preload("glyphs/switch/sl.svg")
+const SwitchSr := preload("glyphs/switch/sr.svg")
 const SwitchX := preload("glyphs/switch/x.png")
 const SwitchY := preload("glyphs/switch/y.png")
+const SwitchZl := preload("glyphs/switch/zl.png")
+const SwitchZr := preload("glyphs/switch/zr.png")
 const SystemInput := preload("res://system/input/input.gd")
 const SystemInputScene := preload("res://system/input/input.tscn")
 const Unknown := preload("glyphs/unknown.svg")
@@ -30,14 +50,19 @@ const XboxView := preload("glyphs/xbox/view.png")
 
 # -- DEFINITIONS --------------------------------------------------------------------- #
 
-## _GAPS_ON_EVERY_PAD lists the buttons no set of kit's has art for, which draw the
-## unknown glyph on every joypad.
-const _GAPS_ON_EVERY_PAD := [
-	JOY_BUTTON_GUIDE,
+## _GAPS_BESIDE_JOY_CONS lists the buttons kit's sets have art for only on Joy-Cons,
+## where Godot reports a single one's L, R, ZL and ZR, or a pair's SL and SR, as
+## paddles.
+const _GAPS_BESIDE_JOY_CONS := [
 	JOY_BUTTON_PADDLE1,
 	JOY_BUTTON_PADDLE2,
 	JOY_BUTTON_PADDLE3,
 	JOY_BUTTON_PADDLE4,
+]
+
+## _GAPS_ON_EVERY_PAD lists the buttons no set of kit's has art for, which draw the
+## unknown glyph on every joypad.
+const _GAPS_ON_EVERY_PAD := [
 	JOY_BUTTON_MISC2,
 	JOY_BUTTON_MISC3,
 	JOY_BUTTON_MISC4,
@@ -45,11 +70,30 @@ const _GAPS_ON_EVERY_PAD := [
 	JOY_BUTTON_MISC6,
 ]
 
+## _SIDED_JOY_CON_BUTTONS lists, in order, the buttons a sideways single Joy-Con draws
+## or names by its side: the face buttons bottom, right, left and top, Start, Guide,
+## the stick, SL, SR, then the paddles it reports for L, ZL, R and ZR.
+const _SIDED_JOY_CON_BUTTONS: Array[JoyButton] = [
+	JOY_BUTTON_A,
+	JOY_BUTTON_B,
+	JOY_BUTTON_X,
+	JOY_BUTTON_Y,
+	JOY_BUTTON_START,
+	JOY_BUTTON_GUIDE,
+	JOY_BUTTON_LEFT_STICK,
+	JOY_BUTTON_LEFT_SHOULDER,
+	JOY_BUTTON_RIGHT_SHOULDER,
+	JOY_BUTTON_PADDLE2,
+	JOY_BUTTON_PADDLE4,
+	JOY_BUTTON_PADDLE1,
+	JOY_BUTTON_PADDLE3,
+]
+
 ## _GAPS lists, by joypad type, the further buttons kit's sets have no art for.
 const _GAPS := {
-	StdInputDevice.DEVICE_TYPE_GENERIC: [JOY_BUTTON_TOUCHPAD],
-	StdInputDevice.DEVICE_TYPE_PS_4: [],
-	StdInputDevice.DEVICE_TYPE_PS_5: [],
+	StdInputDevice.DEVICE_TYPE_GENERIC: [JOY_BUTTON_GUIDE, JOY_BUTTON_TOUCHPAD],
+	StdInputDevice.DEVICE_TYPE_PS_4: [JOY_BUTTON_GUIDE],
+	StdInputDevice.DEVICE_TYPE_PS_5: [JOY_BUTTON_GUIDE],
 	StdInputDevice.DEVICE_TYPE_STEAM_CONTROLLER:
 	[
 		JOY_BUTTON_DPAD_UP,
@@ -60,13 +104,13 @@ const _GAPS := {
 		JOY_BUTTON_TOUCHPAD,
 	],
 	StdInputDevice.DEVICE_TYPE_STEAM_DECK: [JOY_BUTTON_MISC1, JOY_BUTTON_TOUCHPAD],
-	StdInputDevice.DEVICE_TYPE_SWITCH_JOY_CON_PAIR:
-	[JOY_BUTTON_MISC1, JOY_BUTTON_TOUCHPAD],
-	StdInputDevice.DEVICE_TYPE_SWITCH_JOY_CON_SINGLE:
-	[JOY_BUTTON_MISC1, JOY_BUTTON_TOUCHPAD],
-	StdInputDevice.DEVICE_TYPE_SWITCH_PRO: [JOY_BUTTON_MISC1, JOY_BUTTON_TOUCHPAD],
-	StdInputDevice.DEVICE_TYPE_XBOX_360: [JOY_BUTTON_TOUCHPAD],
-	StdInputDevice.DEVICE_TYPE_XBOX_ONE: [JOY_BUTTON_TOUCHPAD],
+	StdInputDevice.DEVICE_TYPE_SWITCH_JOY_CON_PAIR: [JOY_BUTTON_TOUCHPAD],
+	StdInputDevice.DEVICE_TYPE_SWITCH_JOY_CON_SINGLE: [JOY_BUTTON_TOUCHPAD],
+	StdInputDevice.DEVICE_TYPE_SWITCH_JOY_CON_LEFT: [JOY_BUTTON_TOUCHPAD],
+	StdInputDevice.DEVICE_TYPE_SWITCH_JOY_CON_RIGHT: [JOY_BUTTON_TOUCHPAD],
+	StdInputDevice.DEVICE_TYPE_SWITCH_PRO: [JOY_BUTTON_TOUCHPAD],
+	StdInputDevice.DEVICE_TYPE_XBOX_360: [JOY_BUTTON_GUIDE, JOY_BUTTON_TOUCHPAD],
+	StdInputDevice.DEVICE_TYPE_XBOX_ONE: [JOY_BUTTON_GUIDE, JOY_BUTTON_TOUCHPAD],
 }
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
@@ -258,6 +302,132 @@ func test_glyphs_switch_face_buttons_draw_the_button_in_their_position() -> void
 		assert_eq(glyph, expected.values()[i], names[i])
 
 
+func test_glyphs_joy_con_pair_draws_and_names_each_rail_button() -> void:
+	# Given: The input scene with kit's glyph sets and origin names.
+	add_child_autofree(PlatformScene.instantiate())
+	add_child_autofree(SystemInputScene.instantiate())
+
+	# Given: Each rail button's paddle on a pair of Joy-Cons, with its art and name.
+	var expected := {
+		JOY_BUTTON_PADDLE1: [SwitchSr, "Right SR"],
+		JOY_BUTTON_PADDLE2: [SwitchSl, "Left SL"],
+		JOY_BUTTON_PADDLE3: [SwitchSl, "Right SL"],
+		JOY_BUTTON_PADDLE4: [SwitchSr, "Left SR"],
+	}
+
+	# Given: A loaded set holding an action on each paddle.
+	var names: Array[StringName] = []
+	for button in expected:
+		names.append(StringName("glyphs_test_rail_%d" % button))
+		_add_action(names[-1], button)
+	var actions := _load_actions(names)
+
+	for i in names.size():
+		# When: The pair's glyph and label are read for the action.
+		var pair := StdInputDevice.DEVICE_TYPE_SWITCH_JOY_CON_PAIR
+		var got := [
+			_get_glyph(actions, names[i], pair), _get_label(actions, names[i], pair)
+		]
+
+		# Then: The paddle draws its rail button and names its Joy-Con.
+		assert_eq(got, expected.values()[i], names[i])
+
+
+func test_glyphs_unsided_joy_con_face_buttons_draw_their_position() -> void:
+	# Given: The input scene with kit's glyph sets.
+	add_child_autofree(PlatformScene.instantiate())
+	add_child_autofree(SystemInputScene.instantiate())
+
+	# Given: Godot's face buttons and the position each takes on a sideways Joy-Con.
+	#
+	# NOTE: A left Joy-Con's buttons are arrows and a right one's letters turn with it,
+	# so only the position names the same button on both sides.
+	var expected := {
+		JOY_BUTTON_A: SwitchFaceDown,
+		JOY_BUTTON_B: SwitchFaceRight,
+		JOY_BUTTON_X: SwitchFaceLeft,
+		JOY_BUTTON_Y: SwitchFaceUp,
+	}
+
+	# Given: A loaded set holding an action on each face button.
+	var names: Array[StringName] = []
+	for button in expected:
+		names.append(StringName("glyphs_test_face_%d" % button))
+		_add_action(names[-1], button)
+	var actions := _load_actions(names)
+
+	for i in names.size():
+		# When: The glyph of a single Joy-Con of unknown side is drawn for the action.
+		var glyph := _get_glyph(
+			actions, names[i], StdInputDevice.DEVICE_TYPE_SWITCH_JOY_CON_SINGLE
+		)
+
+		# Then: The glyph marks the button's position.
+		assert_eq(glyph, expected.values()[i], names[i])
+
+
+func test_glyphs_single_joy_con_draws_each_sides_own_buttons() -> void:
+	# Given: The input scene with kit's glyph sets.
+	add_child_autofree(PlatformScene.instantiate())
+	add_child_autofree(SystemInputScene.instantiate())
+
+	# Given: A loaded set holding an action on each button that differs by side.
+	var buttons := _SIDED_JOY_CON_BUTTONS
+	var names: Array[StringName] = []
+	for button in buttons:
+		names.append(StringName("glyphs_test_sided_%d" % button))
+		_add_action(names[-1], button)
+	var actions := _load_actions(names)
+
+	# Given: The art each side has for those buttons, as Godot reports them sideways.
+	var expected := {
+		StdInputDevice.DEVICE_TYPE_SWITCH_JOY_CON_LEFT:
+		[
+			SwitchArrowDown,
+			SwitchArrowRight,
+			SwitchArrowLeft,
+			SwitchArrowUp,
+			SwitchMinus,
+			SwitchCapture,
+			SwitchLStickClick,
+			SwitchSl,
+			SwitchSr,
+			SwitchL,
+			SwitchZl,
+			SwitchR,
+			SwitchZr,
+		],
+		StdInputDevice.DEVICE_TYPE_SWITCH_JOY_CON_RIGHT:
+		[
+			SwitchA,
+			SwitchX,
+			SwitchB,
+			SwitchY,
+			SwitchPlus,
+			SwitchHome,
+			SwitchRStickClick,
+			SwitchSl,
+			SwitchSr,
+			SwitchL,
+			SwitchZl,
+			SwitchR,
+			SwitchZr,
+		],
+	}
+
+	for device_type in expected:
+		for i in names.size():
+			# When: The side's glyph is drawn for the action.
+			var glyph := _get_glyph(actions, names[i], device_type)
+
+			# Then: The glyph is that side's own button.
+			assert_eq(
+				glyph,
+				expected[device_type][i],
+				"%s: %s" % [StdInputDevice.DeviceType.find_key(device_type), names[i]],
+			)
+
+
 func test_glyph_sets_have_art_for_every_pad_origin_except_the_listed_gaps() -> void:
 	# Given: Kit's glyph sets, read from the input scene.
 	var input: SystemInput = autofree(SystemInputScene.instantiate())
@@ -282,6 +452,17 @@ func test_glyph_sets_have_art_for_every_pad_origin_except_the_listed_gaps() -> v
 			func(glyph_set): return glyph_set.matches(device_type)
 		)
 		var gaps: Array = _GAPS_ON_EVERY_PAD + _GAPS.get(device_type, [])
+		if not (
+			StdInputDevice
+			. is_device_type_listed(
+				device_type,
+				[
+					StdInputDevice.DEVICE_TYPE_SWITCH_JOY_CON_PAIR,
+					StdInputDevice.DEVICE_TYPE_SWITCH_JOY_CON_SINGLE,
+				]
+			)
+		):
+			gaps += _GAPS_BESIDE_JOY_CONS
 
 		for event in _list_pad_origins():
 			var has_art := sets.any(
@@ -326,6 +507,8 @@ func test_labels_name_each_pads_own_buttons() -> void:
 		StdInputDevice.DEVICE_TYPE_PS_4: ["Cross", "Share"],
 		StdInputDevice.DEVICE_TYPE_PS_5: ["Cross", "Create"],
 		StdInputDevice.DEVICE_TYPE_SWITCH_PRO: ["B", "−"],
+		StdInputDevice.DEVICE_TYPE_SWITCH_JOY_CON_PAIR: ["B", "−"],
+		StdInputDevice.DEVICE_TYPE_SWITCH_JOY_CON_SINGLE: ["Bottom Button", "−"],
 		StdInputDevice.DEVICE_TYPE_STEAM_DECK: ["A", "View"],
 		StdInputDevice.DEVICE_TYPE_STEAM_CONTROLLER: ["A", "Back"],
 	}
@@ -338,6 +521,66 @@ func test_labels_name_each_pads_own_buttons() -> void:
 		]
 
 		# Then: Each button reads as that pad names it.
+		assert_eq(
+			got, expected[device_type], StdInputDevice.DeviceType.find_key(device_type)
+		)
+
+
+func test_labels_name_each_single_joy_con_sides_own_buttons() -> void:
+	# Given: The input scene with kit's origin names.
+	add_child_autofree(PlatformScene.instantiate())
+	add_child_autofree(SystemInputScene.instantiate())
+
+	# Given: A loaded set holding an action on each button that differs by side.
+	var names: Array[StringName] = []
+	for button in _SIDED_JOY_CON_BUTTONS:
+		names.append(StringName("labels_test_sided_%d" % button))
+		_add_action(names[-1], button)
+	var actions := _load_actions(names)
+
+	# Given: Each side's names for those buttons, as Godot reports them sideways.
+	var expected := {
+		StdInputDevice.DEVICE_TYPE_SWITCH_JOY_CON_LEFT:
+		[
+			"Bottom Button",
+			"Right Button",
+			"Left Button",
+			"Top Button",
+			"−",
+			"Capture",
+			"Left Stick",
+			"SL",
+			"SR",
+			"L",
+			"ZL",
+			"R",
+			"ZR",
+		],
+		StdInputDevice.DEVICE_TYPE_SWITCH_JOY_CON_RIGHT:
+		[
+			"A",
+			"X",
+			"B",
+			"Y",
+			"+",
+			"Home",
+			"Right Stick",
+			"SL",
+			"SR",
+			"L",
+			"ZL",
+			"R",
+			"ZR"
+		],
+	}
+
+	for device_type in expected:
+		# When: The side's labels are read for each action.
+		var got := names.map(
+			func(action): return _get_label(actions, action, device_type)
+		)
+
+		# Then: Each button reads as that side names it.
 		assert_eq(
 			got, expected[device_type], StdInputDevice.DeviceType.find_key(device_type)
 		)

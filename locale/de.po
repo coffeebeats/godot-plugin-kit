@@ -761,6 +761,139 @@ msgctxt "switch"
 msgid "ZR"
 msgstr ""
 
+#. The name of a single Nintendo Switch Joy-Con's bottom face button, held sideways.
+msgctxt "joy_con"
+msgid "Bottom Button"
+msgstr ""
+
+#. The name of a single Nintendo Switch Joy-Con's right face button, held sideways.
+msgctxt "joy_con"
+msgid "Right Button"
+msgstr ""
+
+#. The name of a single Nintendo Switch Joy-Con's left face button, held sideways.
+msgctxt "joy_con"
+msgid "Left Button"
+msgstr ""
+
+#. The name of a single Nintendo Switch Joy-Con's top face button, held sideways.
+msgctxt "joy_con"
+msgid "Top Button"
+msgstr ""
+
+#. The name of a single right Nintendo Switch Joy-Con's A button, the bottom face
+#. button when held sideways.
+msgctxt "joy_con"
+msgid "A"
+msgstr ""
+
+#. The name of a single right Nintendo Switch Joy-Con's X button, the right face
+#. button when held sideways.
+msgctxt "joy_con"
+msgid "X"
+msgstr ""
+
+#. The name of a single right Nintendo Switch Joy-Con's B button, the left face
+#. button when held sideways.
+msgctxt "joy_con"
+msgid "B"
+msgstr ""
+
+#. The name of a single right Nintendo Switch Joy-Con's Y button, the top face
+#. button when held sideways.
+msgctxt "joy_con"
+msgid "Y"
+msgstr ""
+
+#. The name of the right Joy-Con's SR button, on its rail, in a pair of Nintendo
+#. Switch Joy-Cons.
+msgctxt "joy_con"
+msgid "Right SR"
+msgstr ""
+
+#. The name of the left Joy-Con's SL button, on its rail, in a pair of Nintendo
+#. Switch Joy-Cons.
+msgctxt "joy_con"
+msgid "Left SL"
+msgstr ""
+
+#. The name of the right Joy-Con's SL button, on its rail, in a pair of Nintendo
+#. Switch Joy-Cons.
+msgctxt "joy_con"
+msgid "Right SL"
+msgstr ""
+
+#. The name of the left Joy-Con's SR button, on its rail, in a pair of Nintendo
+#. Switch Joy-Cons.
+msgctxt "joy_con"
+msgid "Left SR"
+msgstr ""
+
+#. The name of a single Nintendo Switch Joy-Con's SL button, on its rail.
+msgctxt "joy_con"
+msgid "SL"
+msgstr ""
+
+#. The name of a single Nintendo Switch Joy-Con's SR button, on its rail.
+msgctxt "joy_con"
+msgid "SR"
+msgstr ""
+
+#. The name of a single left Nintendo Switch Joy-Con's L button.
+msgctxt "joy_con"
+msgid "L"
+msgstr ""
+
+#. The name of a single left Nintendo Switch Joy-Con's ZL button.
+msgctxt "joy_con"
+msgid "ZL"
+msgstr ""
+
+#. The name of a single right Nintendo Switch Joy-Con's R button.
+msgctxt "joy_con"
+msgid "R"
+msgstr ""
+
+#. The name of a single right Nintendo Switch Joy-Con's ZR button.
+msgctxt "joy_con"
+msgid "ZR"
+msgstr ""
+
+#. The name of a single left Nintendo Switch Joy-Con's − (minus) button.
+msgctxt "joy_con"
+msgid "−"
+msgstr ""
+
+#. The name of a single left Nintendo Switch Joy-Con's Capture button.
+msgctxt "joy_con"
+msgid "Capture"
+msgstr ""
+
+#. The name of a single right Nintendo Switch Joy-Con's stick, pressed in like a button.
+msgctxt "joy_con"
+msgid "Right Stick"
+msgstr ""
+
+#. The name of a single right Nintendo Switch Joy-Con's stick, pushed left.
+msgctxt "joy_con"
+msgid "Right Stick Left"
+msgstr ""
+
+#. The name of a single right Nintendo Switch Joy-Con's stick, pushed right.
+msgctxt "joy_con"
+msgid "Right Stick Right"
+msgstr ""
+
+#. The name of a single right Nintendo Switch Joy-Con's stick, pushed up.
+msgctxt "joy_con"
+msgid "Right Stick Up"
+msgstr ""
+
+#. The name of a single right Nintendo Switch Joy-Con's stick, pushed down.
+msgctxt "joy_con"
+msgid "Right Stick Down"
+msgstr ""
+
 #. The name of the Escape key on a keyboard.
 msgctxt "keyboard"
 msgid "Escape"

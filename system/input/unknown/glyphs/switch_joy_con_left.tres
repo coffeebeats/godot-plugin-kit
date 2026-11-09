@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="StdInputGlyphSetJoy" format=3 uid="uid://ccb356f57265c"]
+
+[ext_resource type="Script" uid="uid://dwegvnph8yf3c" path="res://addons/std/input/godot/glyph_set_joy.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://bjq23jodptaro" path="res://system/input/unknown/glyphs/switch/capture.png" id="2_button_guide"]
+[ext_resource type="Texture2D" uid="uid://drf8wrtlnh8vn" path="res://system/input/unknown/glyphs/switch/minus.png" id="3_button_start"]
+[ext_resource type="Texture2D" uid="uid://c2hla7uhakywu" path="res://system/input/unknown/glyphs/switch/arrow_down.png" id="10_arrow_down"]
+[ext_resource type="Texture2D" uid="uid://bkwn5iy8aham5" path="res://system/input/unknown/glyphs/switch/arrow_right.png" id="11_arrow_right"]
+[ext_resource type="Texture2D" uid="uid://dpx8aake4xj4n" path="res://system/input/unknown/glyphs/switch/arrow_left.png" id="12_arrow_left"]
+[ext_resource type="Texture2D" uid="uid://dmaoyeloru4ph" path="res://system/input/unknown/glyphs/switch/arrow_up.png" id="13_arrow_up"]
+
+[resource]
+script = ExtResource("1_script")
+button_guide = ExtResource("2_button_guide")
+button_start = ExtResource("3_button_start")
+button_a = ExtResource("10_arrow_down")
+button_b = ExtResource("11_arrow_right")
+button_x = ExtResource("12_arrow_left")
+button_y = ExtResource("13_arrow_up")
+device_types = Array[int]([13])

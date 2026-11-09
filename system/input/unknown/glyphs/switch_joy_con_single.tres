@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="StdInputGlyphSetJoy" format=3 uid="uid://cgcwcyoylompt"]
+
+[ext_resource type="Script" uid="uid://dwegvnph8yf3c" path="res://addons/std/input/godot/glyph_set_joy.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://is1ab2kmcawc" path="res://system/input/unknown/glyphs/switch/face_down.png" id="2_button_a"]
+[ext_resource type="Texture2D" uid="uid://clo44mwi57e51" path="res://system/input/unknown/glyphs/switch/face_right.png" id="3_button_b"]
+[ext_resource type="Texture2D" uid="uid://gcnw4d5iogmr" path="res://system/input/unknown/glyphs/switch/face_left.png" id="4_button_x"]
+[ext_resource type="Texture2D" uid="uid://dej2lpu6tkpky" path="res://system/input/unknown/glyphs/switch/face_up.png" id="5_button_y"]
+[ext_resource type="Texture2D" uid="uid://b5cerur3tdwof" path="res://system/input/unknown/glyphs/switch/sl.svg" id="6_shoulder_left"]
+[ext_resource type="Texture2D" uid="uid://boiee040rubv8" path="res://system/input/unknown/glyphs/switch/sr.svg" id="7_shoulder_right"]
+[ext_resource type="Texture2D" uid="uid://c6cufff5t35h3" path="res://system/input/unknown/glyphs/switch/r.png" id="8_paddle_1"]
+[ext_resource type="Texture2D" uid="uid://ctjemcbaq6ry4" path="res://system/input/unknown/glyphs/switch/l.png" id="9_paddle_2"]
+[ext_resource type="Texture2D" uid="uid://dlbr5uewaobwh" path="res://system/input/unknown/glyphs/switch/zr.png" id="10_paddle_3"]
+[ext_resource type="Texture2D" uid="uid://bcfobf86fsu6q" path="res://system/input/unknown/glyphs/switch/zl.png" id="11_paddle_4"]
+
+[resource]
+script = ExtResource("1_script")
+button_a = ExtResource("2_button_a")
+button_b = ExtResource("3_button_b")
+button_x = ExtResource("4_button_x")
+button_y = ExtResource("5_button_y")
+button_shoulder_left = ExtResource("6_shoulder_left")
+button_shoulder_right = ExtResource("7_shoulder_right")
+button_paddle_1 = ExtResource("8_paddle_1")
+button_paddle_2 = ExtResource("9_paddle_2")
+button_paddle_3 = ExtResource("10_paddle_3")
+button_paddle_4 = ExtResource("11_paddle_4")
+device_types = Array[int]([8])
