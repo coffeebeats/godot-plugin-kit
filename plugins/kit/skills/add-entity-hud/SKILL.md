@@ -1,6 +1,6 @@
 ---
 name: add-entity-hud
-description: Give a world entity a HUD — a health bar, name plate, floating combat numbers or an off-screen indicator that follow it on screen. Use when an entity in a map's SubViewport needs anything drawn above it.
+description: Give a world entity a HUD — a health bar, name plate, floating combat numbers or an off-screen indicator that follow it on screen. Use when an entity in a map's SubViewport needs anything drawn above it. To build a new kind of element first, use add-hud-element.
 user-invocable: true
 argument-hint: "<entity_scene> [elements: bar|numbers|indicator]"
 ---
@@ -24,6 +24,8 @@ This skill is for HUD that follows an entity. For HUD that stays in one place on
    | `KitHudIndicator` | `addons/kit/ui/hud/indicator/indicator.tscn` | none; it aims itself |
 
    A name plate is a plain `Label` — there is no `HudLabel`, because a `Label` is already the whole feature. Damage and a critical hit are **two `KitHudNumbers` instances with different styles** (`style_damage.tres`, `style_crit.tres`), not one element with a flag.
+
+   When no stock element fits, even with another style resource, build one with the `add-hud-element` skill first, then come back here to place it.
 
 2. **Attach a script to the group root**, extending `KitHudGroup`, that names the elements:
 
@@ -85,4 +87,3 @@ This skill is for HUD that follows an entity. For HUD that stays in one place on
 - `addons/kit/ui/hud/bar/`, `numbers/`, `indicator/` — the stock elements and their style resources
 - `ui/hud/layer_test.gd`, `group_test.gd` in `coffeebeats/godot-plugin-kit` — the wiring, built by hand, as executable reference; tests do not ship in `addons/kit`
 - `addons/kit/ui/tracker/world_tracker.gd` — the tracker's own exports and signals
-- To add a new **kind** of element rather than use a stock one, use the `add-hud-element` skill.
