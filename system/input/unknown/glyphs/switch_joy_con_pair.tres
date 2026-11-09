@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="StdInputGlyphSetJoy" format=3 uid="uid://diibwsx72xyfy"]
+
+[ext_resource type="Script" uid="uid://dwegvnph8yf3c" path="res://addons/std/input/godot/glyph_set_joy.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://b5cerur3tdwof" path="res://system/input/unknown/glyphs/switch/sl.svg" id="2_sl"]
+[ext_resource type="Texture2D" uid="uid://boiee040rubv8" path="res://system/input/unknown/glyphs/switch/sr.svg" id="3_sr"]
+
+[resource]
+script = ExtResource("1_script")
+button_paddle_1 = ExtResource("3_sr")
+button_paddle_2 = ExtResource("2_sl")
+button_paddle_3 = ExtResource("2_sl")
+button_paddle_4 = ExtResource("3_sr")
+device_types = Array[int]([7])
