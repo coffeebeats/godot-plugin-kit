@@ -158,7 +158,7 @@ The game sets these on the anchor, and on the root and tracker of its group scen
 | `WorldTracker2D`, `WorldTracker3D` | `offset` | Where the group sits from its target, in screen pixels, 24 above it in both group scenes. In 3D it doesn't hold a height above a receding entity; a `Marker3D` as the anchor's `target` does. |
 | `WorldTracker2D`, `WorldTracker3D` | `clamped`, `flip_at_edges`, `viewport_margin` | With `clamped` on, the group pins to the screen's edge while its entity is off it. With `flip_at_edges` on, it moves to the target's far side rather than cross the edge. Both are off by default, and either keeps `viewport_margin` inside the edge. |
 
-A HUD that stays in place on screen, such as resources or a wave counter, is a scene of the game's own, placed in the map's `UI` after `Hud`. Set `mouse_filter` to *Ignore* on every part of it that takes no click, so clicks reach the world. A world node signals up to the map, and the map's script calls down to the HUD.
+A HUD that stays in place on screen, such as resources or a wave counter, is a scene of the game's own, placed in the map's `UI` after `Hud`. Set `mouse_filter` to *Ignore* on every part of it that takes no click, so clicks reach the world. A world node signals up to the map, and the map's script calls down to the HUD. The map reads starting values in its own `_ready`, when everything below it is ready, and a world node signals only later changes.
 
 ### Add an action button
 
