@@ -9,6 +9,8 @@ Author a HUD group scene for one kind of entity, then point a `KitHudAnchor` on 
 
 Four words: **layer** (the plane, one per map, already in every template), **anchor** (the node you add to the entity), **group** (the scene of elements that entity gets), **elements**. You author the group and the anchor; the layer and the tracker are already built.
 
+A HUD that stays in place on screen rather than following an entity, such as a resource count or a wave counter, is a scene of the game's own in the map's `UI`, not a group. See "Lay out the HUD" in kit's README.
+
 ## Steps
 
 1. **Author the group scene.** `New Inherited Scene` from `addons/kit/ui/hud/group_2d.tscn` (or `group_3d.tscn`), saved beside the entity as `<entity>_hud.tscn`. It arrives with a `KitHudGroup` root and a `KitWorldTracker2D`/`3D` child already wired.
