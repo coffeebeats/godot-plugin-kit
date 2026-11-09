@@ -71,6 +71,7 @@ const _GAPS := {
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
+## _added_actions are the actions the tests registered, removed once they all end.
 var _added_actions: Array[StringName] = []
 
 # -- TEST METHODS -------------------------------------------------------------------- #
@@ -316,10 +317,10 @@ func test_slot_hold_mode_setting_chooses_a_declared_holds_mode() -> void:
 	# Given: A loaded set declaring a hold on `ui_accept`, in the game's `HOLD` mode.
 	_load_hold(&"ui_accept", StdInputActionHold.MODE_HOLD)
 
-	# When: The player chooses to tap holds.
+	# When: The player chooses to toggle holds.
 	HoldModeProperty.set_value(StdInputActionHold.MODE_TOGGLE)
 
-	# Then: The hold runs as a tap.
+	# Then: The hold runs as a toggle.
 	assert_eq(slot.get_action_hold_mode(&"ui_accept"), StdInputActionHold.MODE_TOGGLE)
 
 
@@ -382,6 +383,8 @@ func _add_action(action: StringName, button: JoyButton) -> void:
 	_added_actions.append(action)
 
 
+## _get_glyph returns the glyph a `device_type` device draws for `action`'s primary
+## binding in `actions`.
 func _get_glyph(
 	actions: StdInputActionSet,
 	action: StringName,
@@ -392,6 +395,8 @@ func _get_glyph(
 	)
 
 
+## _list_pad_origins returns an event for every joypad button, each stick direction and
+## each pulled trigger.
 func _list_pad_origins() -> Array[InputEvent]:
 	var origins: Array[InputEvent] = []
 
@@ -416,6 +421,8 @@ func _list_pad_origins() -> Array[InputEvent]:
 	return origins
 
 
+## _load_actions loads a set holding the digital actions `names` into the first player's
+## slot and returns it.
 func _load_actions(names: Array[StringName]) -> StdInputActionSet:
 	var actions := StdInputActionSet.new()
 	actions.name = &"Glyphs"

@@ -22,7 +22,10 @@ const _ACTIONS: Array[StringName] = [&"ui_accept", &"ui_focus_next", &"ui_focus_
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
+## _gameplay is the game's set, which the mounted map loads.
 var _gameplay: StdInputActionSet = null
+
+## _input is the real input `_mount` mounted the map under.
 var _input: StdTestInput = null
 
 # -- TEST METHODS -------------------------------------------------------------------- #
@@ -139,6 +142,7 @@ func before_each() -> void:
 	# Given: The input scene with its slot.
 	add_child_autofree(SystemInputScene.instantiate())
 
+	# Given: The game's set, which the map loads.
 	_gameplay = StdInputActionSet.new()
 	_gameplay.name = &"Gameplay"
 

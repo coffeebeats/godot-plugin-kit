@@ -6,14 +6,16 @@ extends KitModule
 
 # -- SIGNALS ------------------------------------------------------------------------- #
 
+## about_to_grab_focus is emitted when `node` is about to grab focus, with `trigger` the
+## input action that caused it, or empty if no action did.
 signal about_to_grab_focus(node: Control, trigger: StringName)
 
 ## cursor_visibility_changed is emitted when the visibility of the application's cursor
 ## changes.
 signal cursor_visibility_changed(visible: bool)
 
-## focus_root_changed is emitted when the focus root changes. Note that `root` may be
-## `null` if the root focus was cleared.
+## focus_root_changed is emitted when the focus root changes, with `root` as `null` if
+## the focus root was cleared.
 signal focus_root_changed(root: Control)
 
 # -- DEPENDENCIES -------------------------------------------------------------------- #
@@ -33,6 +35,7 @@ const SplashActions := preload("actions/splash.tres")
 
 # -- DEFINITIONS --------------------------------------------------------------------- #
 
+## GROUP_INPUT_SHIM is the group holding the one input system node in the tree.
 const GROUP_INPUT_SHIM := &"system/input:shim"
 
 ## MODULE_ID is the ID the input system registers under as a `KitModule`.
@@ -83,6 +86,7 @@ const MODULE_ID := &"input"
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
+## _cursor is the scene's one input cursor, found once the node is ready.
 var _cursor: StdInputCursor = null
 
 ## _ui_navigation_cooldown_end is the time, in milliseconds since launch, at which
@@ -109,14 +113,14 @@ func get_input_slot(player_id: int = 1) -> StdInputSlot:
 	return StdInputSlot.for_player(player_id)
 
 
-## is_cursor_visible returns whether the cursor is currently visible. This can be used
-## to check whether focus-based navigation is in effect.
+## is_cursor_visible returns whether the cursor is currently visible, so it tells
+## whether focus-based navigation is in effect.
 func is_cursor_visible() -> bool:
 	return _cursor.get_is_visible()
 
 
 ## is_using_focus_ui_navigation returns whether the game is currently using focus-based
-## UI navigation (i.e. the mouse cursor is hidden).
+## UI navigation, which it does while the mouse cursor is hidden.
 func is_using_focus_ui_navigation() -> bool:
 	return not _cursor.get_is_visible()
 
