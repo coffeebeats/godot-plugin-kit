@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="StdInputOriginNames" format=3 uid="uid://cfahqagrvkss8"]
+
+[ext_resource type="Script" uid="uid://nxd2embtjvoe" path="res://addons/std/input/godot/origin_names.gd" id="1_k6eal"]
+
+[resource]
+script = ExtResource("1_k6eal")
+device_types = Array[int]([5])
+translation_context = &"steam_controller"
+joy_buttons = Dictionary[int, StringName]({
+5: &"kit_input_origin_steam",
+6: &"kit_input_origin_start"
+})

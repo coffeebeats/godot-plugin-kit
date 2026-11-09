@@ -22,8 +22,14 @@ const _ACTIONS: Array[StringName] = [&"ui_accept", &"ui_focus_next", &"ui_focus_
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
+## _gameplay is the game's set, which the mounted map loads.
 var _gameplay: StdInputActionSet = null
+
+## _input is the real input `_mount` mounted the map under.
 var _input: StdTestInput = null
+
+## _translations holds kit's shipped catalogues while the tests run.
+var _translations: Array[Translation] = []
 
 # -- TEST METHODS -------------------------------------------------------------------- #
 
@@ -119,6 +125,13 @@ func test_menu_rows_rebuilt_rows_give_focus_to_the_new_first_row() -> void:
 # -- TEST HOOKS ---------------------------------------------------------------------- #
 
 
+func after_all() -> void:
+	for translation in _translations:
+		TranslationServer.remove_translation(translation)
+
+	_translations.clear()
+
+
 func after_each() -> void:
 	# NOTE: The game frees its main scene before the input autoload, so the mounted map
 	# goes first here too, while the slot its loaders hold still exists.
@@ -132,6 +145,18 @@ func after_each() -> void:
 		slot.load_action_set(StdInputActionSet.new())
 
 
+func before_all() -> void:
+	# NOTE: Kit names origins with translation keys, and kit's project lists no
+	# catalogues, so this loads the shipped ones the way a game's project settings would.
+	for path in DirAccess.get_files_at("res://locale"):
+		if not path.ends_with(".mo"):
+			continue
+
+		var translation: Translation = load("res://locale".path_join(path))
+		TranslationServer.add_translation(translation)
+		_translations.append(translation)
+
+
 func before_each() -> void:
 	# Given: A platform whose profile loaded.
 	add_child_autofree(PlatformScene.instantiate())
@@ -139,6 +164,7 @@ func before_each() -> void:
 	# Given: The input scene with its slot.
 	add_child_autofree(SystemInputScene.instantiate())
 
+	# Given: The game's set, which the map loads.
 	_gameplay = StdInputActionSet.new()
 	_gameplay.name = &"Gameplay"
 

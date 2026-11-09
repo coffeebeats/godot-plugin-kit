@@ -1,7 +1,7 @@
 ##
 ## Tests for the input system's Godot implementation, which draws glyphs from the game's
-## `glyph_sets` and `unknown_glyph` and runs holds in the player's chosen mode, and for
-## the art in kit's own sets.
+## `glyph_sets` and `unknown_glyph`, names origins from its `origin_names` and runs
+## holds in the player's chosen mode, and for the art and names in kit's own sets.
 ##
 
 extends GutTest
@@ -71,7 +71,11 @@ const _GAPS := {
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
+## _added_actions are the actions the tests registered, removed once they all end.
 var _added_actions: Array[StringName] = []
+
+## _translations holds kit's shipped catalogues while the tests run.
+var _translations: Array[Translation] = []
 
 # -- TEST METHODS -------------------------------------------------------------------- #
 
@@ -304,6 +308,140 @@ func test_glyph_sets_have_art_for_every_pad_origin_except_the_listed_gaps() -> v
 	assert_eq(mismatched, [] as Array[String])
 
 
+func test_labels_name_each_pads_own_buttons() -> void:
+	# Given: The input scene with kit's origin names.
+	add_child_autofree(PlatformScene.instantiate())
+	add_child_autofree(SystemInputScene.instantiate())
+
+	# Given: A loaded set holding an action on the south face button and on Back.
+	_add_action(&"labels_test_south", JOY_BUTTON_A)
+	_add_action(&"labels_test_back", JOY_BUTTON_BACK)
+	var actions := _load_actions([&"labels_test_south", &"labels_test_back"])
+
+	# Given: Each pad's names for the two buttons, with the south button positional.
+	var expected := {
+		StdInputDevice.DEVICE_TYPE_GENERIC: ["A", "Back"],
+		StdInputDevice.DEVICE_TYPE_XBOX_360: ["A", "Back"],
+		StdInputDevice.DEVICE_TYPE_XBOX_ONE: ["A", "View"],
+		StdInputDevice.DEVICE_TYPE_PS_4: ["Cross", "Share"],
+		StdInputDevice.DEVICE_TYPE_PS_5: ["Cross", "Create"],
+		StdInputDevice.DEVICE_TYPE_SWITCH_PRO: ["B", "−"],
+		StdInputDevice.DEVICE_TYPE_STEAM_DECK: ["A", "View"],
+		StdInputDevice.DEVICE_TYPE_STEAM_CONTROLLER: ["A", "Back"],
+	}
+
+	for device_type in expected:
+		# When: The pad's labels are read for both actions.
+		var got := [
+			_get_label(actions, &"labels_test_south", device_type),
+			_get_label(actions, &"labels_test_back", device_type),
+		]
+
+		# Then: Each button reads as that pad names it.
+		assert_eq(
+			got, expected[device_type], StdInputDevice.DeviceType.find_key(device_type)
+		)
+
+
+func test_labels_leave_a_button_a_pad_lacks_unnamed() -> void:
+	# Given: The input scene with kit's origin names.
+	add_child_autofree(PlatformScene.instantiate())
+	add_child_autofree(SystemInputScene.instantiate())
+
+	# Given: A loaded set holding an action on the misc button, which not every pad has.
+	_add_action(&"labels_test_misc", JOY_BUTTON_MISC1)
+	var actions := _load_actions([&"labels_test_misc"])
+
+	# Given: Each pad's name for the button, empty where the pad has none.
+	var expected := {
+		StdInputDevice.DEVICE_TYPE_XBOX_ONE: "Share",
+		StdInputDevice.DEVICE_TYPE_PS_5: "Mute",
+		StdInputDevice.DEVICE_TYPE_SWITCH_PRO: "Capture",
+		StdInputDevice.DEVICE_TYPE_STEAM_DECK: "",
+		StdInputDevice.DEVICE_TYPE_STEAM_CONTROLLER: "",
+	}
+
+	for device_type in expected:
+		# When: The pad's label is read for the action.
+		var got := _get_label(actions, &"labels_test_misc", device_type)
+
+		# Then: The button reads as that pad names it, or not at all.
+		assert_eq(
+			got, expected[device_type], StdInputDevice.DeviceType.find_key(device_type)
+		)
+
+
+func test_labels_name_a_mouse_button_and_a_named_key() -> void:
+	# Given: The input scene with kit's origin names.
+	add_child_autofree(PlatformScene.instantiate())
+	add_child_autofree(SystemInputScene.instantiate())
+
+	# Given: An action on the left mouse button.
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_LEFT
+	_add_action_event(&"labels_test_click", click)
+
+	# Given: A loaded set holding it and `ui_accept`, which the engine binds to Enter.
+	var actions := _load_actions([&"labels_test_click", &"ui_accept"])
+
+	# When: The keyboard's labels are read for both actions.
+	var got_click := _get_label(
+		actions, &"labels_test_click", StdInputDevice.DEVICE_TYPE_KEYBOARD
+	)
+	var got_accept := _get_label(
+		actions, &"ui_accept", StdInputDevice.DEVICE_TYPE_KEYBOARD
+	)
+
+	# Then: The mouse button and the key are named.
+	assert_eq(got_click, "Left Mouse Button")
+	assert_eq(got_accept, "Enter")
+
+
+func test_origin_names_have_english_text_for_every_key() -> void:
+	# Given: Kit's origin names, read from the input scene.
+	var input: SystemInput = autofree(SystemInputScene.instantiate())
+
+	# Given: Kit's English catalogue, which any other locale falls back to.
+	#
+	# NOTE: This reads the hand-edited catalogue rather than the compiled one, so a key
+	# can't pass on a stale `.mo`.
+	var english: Translation = load("res://locale/en_US.po")
+
+	# When: Each key in each of kit's names is looked up in its names' context.
+	var missing: Array[String] = []
+	for names: StdInputOriginNames in input.origin_names:
+		var keys: Array = (
+			names.joy_buttons.values()
+			+ names.joy_axes_negative.values()
+			+ names.joy_axes_positive.values()
+			+ names.mouse_buttons.values()
+			+ names.keyboard_keys.values()
+		)
+		for key in keys:
+			if not english.get_message(key, names.translation_context):
+				missing.append("%s (%s)" % [key, names.translation_context])
+
+	# Then: Every key has English text.
+	assert_eq(missing, [] as Array[String])
+
+
+func test_origin_names_each_translate_in_a_context() -> void:
+	# Given: Kit's origin names, read from the input scene.
+	var input: SystemInput = autofree(SystemInputScene.instantiate())
+
+	# When: The names without a context are listed.
+	var uncontexted: Array[String] = []
+	for names: StdInputOriginNames in input.origin_names:
+		if not names.translation_context:
+			uncontexted.append(names.resource_path)
+
+	# Then: Every names resource has a context.
+	#
+	# NOTE: A translator sees only the English text, so a name such as "LS" needs its
+	# family beside it, and the empty context is shared with kit's other strings.
+	assert_eq(uncontexted, [] as Array[String])
+
+
 func test_slot_hold_mode_setting_chooses_a_declared_holds_mode() -> void:
 	# Given: A platform and the input scene.
 	add_child_autofree(PlatformScene.instantiate())
@@ -316,10 +454,10 @@ func test_slot_hold_mode_setting_chooses_a_declared_holds_mode() -> void:
 	# Given: A loaded set declaring a hold on `ui_accept`, in the game's `HOLD` mode.
 	_load_hold(&"ui_accept", StdInputActionHold.MODE_HOLD)
 
-	# When: The player chooses to tap holds.
+	# When: The player chooses to toggle holds.
 	HoldModeProperty.set_value(StdInputActionHold.MODE_TOGGLE)
 
-	# Then: The hold runs as a tap.
+	# Then: The hold runs as a toggle.
 	assert_eq(slot.get_action_hold_mode(&"ui_accept"), StdInputActionHold.MODE_TOGGLE)
 
 
@@ -349,6 +487,11 @@ func after_all() -> void:
 
 	_added_actions.clear()
 
+	for translation in _translations:
+		TranslationServer.remove_translation(translation)
+
+	_translations.clear()
+
 
 func after_each() -> void:
 	HoldModeProperty.set_value(StdInputActionHold.MODE_INHERIT)
@@ -360,18 +503,36 @@ func after_each() -> void:
 		slot.load_action_set(StdInputActionSet.new())
 
 
+func before_all() -> void:
+	# NOTE: Kit's names are translation keys, and kit's project lists no catalogues, so
+	# this loads the shipped ones the way a game's project settings would.
+	for path in DirAccess.get_files_at("res://locale"):
+		if not path.ends_with(".mo"):
+			continue
+
+		var translation: Translation = load("res://locale".path_join(path))
+		TranslationServer.add_translation(translation)
+		_translations.append(translation)
+
+
 # -- PRIVATE METHODS ----------------------------------------------------------------- #
 
 
 ## _add_action registers `action` with `button` as its default binding, unless it's
+## already registered.
+func _add_action(action: StringName, button: JoyButton) -> void:
+	var event := InputEventJoypadButton.new()
+	event.button_index = button
+	_add_action_event(action, event)
+
+
+## _add_action_event registers `action` with `event` as its default binding, unless it's
 ## already registered. std reads an action's defaults from the project settings, so the
 ## action is added there as well as to the input map.
-func _add_action(action: StringName, button: JoyButton) -> void:
+func _add_action_event(action: StringName, event: InputEvent) -> void:
 	if ProjectSettings.has_setting(&"input/" + action):
 		return
 
-	var event := InputEventJoypadButton.new()
-	event.button_index = button
 	ProjectSettings.set_setting(
 		&"input/" + action, {"deadzone": 0.5, "events": [event]}
 	)
@@ -382,6 +543,8 @@ func _add_action(action: StringName, button: JoyButton) -> void:
 	_added_actions.append(action)
 
 
+## _get_glyph returns the glyph a `device_type` device draws for `action`'s primary
+## binding in `actions`.
 func _get_glyph(
 	actions: StdInputActionSet,
 	action: StringName,
@@ -392,6 +555,20 @@ func _get_glyph(
 	)
 
 
+## _get_label returns the name a `device_type` device gives `action`'s primary binding
+## in `actions`, or an empty string if it has none.
+func _get_label(
+	actions: StdInputActionSet,
+	action: StringName,
+	device_type: StdInputDevice.DeviceType,
+) -> String:
+	return StdInputSlot.for_player(1).get_action_origin_label(
+		actions, action, 0, device_type
+	)
+
+
+## _list_pad_origins returns an event for every joypad button, each stick direction and
+## each pulled trigger.
 func _list_pad_origins() -> Array[InputEvent]:
 	var origins: Array[InputEvent] = []
 
@@ -416,6 +593,8 @@ func _list_pad_origins() -> Array[InputEvent]:
 	return origins
 
 
+## _load_actions loads a set holding the digital actions `names` into the first player's
+## slot and returns it.
 func _load_actions(names: Array[StringName]) -> StdInputActionSet:
 	var actions := StdInputActionSet.new()
 	actions.name = &"Glyphs"

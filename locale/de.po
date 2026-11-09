@@ -425,3 +425,510 @@ msgstr ""
 msgctxt "hold"
 msgid "Cancel"
 msgstr ""
+
+#. The name of a controller's bottom face button, labelled A on an Xbox controller.
+msgctxt "gamepad"
+msgid "A"
+msgstr ""
+
+#. The name of a controller's right face button, labelled B on an Xbox controller.
+msgctxt "gamepad"
+msgid "B"
+msgstr ""
+
+#. The name of a controller's left face button, labelled X on an Xbox controller.
+msgctxt "gamepad"
+msgid "X"
+msgstr ""
+
+#. The name of a controller's top face button, labelled Y on an Xbox controller.
+msgctxt "gamepad"
+msgid "Y"
+msgstr ""
+
+#. The name of a controller's Back button, as an Xbox 360 controller labels it.
+msgctxt "gamepad"
+msgid "Back"
+msgstr ""
+
+#. The name of a controller's Menu button, as an Xbox controller labels it.
+msgctxt "gamepad"
+msgid "Menu"
+msgstr ""
+
+#. The name of a controller's left stick, pressed in like a button, as an Xbox controller labels it.
+msgctxt "gamepad"
+msgid "LS"
+msgstr ""
+
+#. The name of a controller's right stick, pressed in like a button, as an Xbox controller labels it.
+msgctxt "gamepad"
+msgid "RS"
+msgstr ""
+
+#. The name of a controller's left bumper, as an Xbox controller labels it.
+msgctxt "gamepad"
+msgid "LB"
+msgstr ""
+
+#. The name of a controller's right bumper, as an Xbox controller labels it.
+msgctxt "gamepad"
+msgid "RB"
+msgstr ""
+
+#. The name of a controller's directional pad, pressed up.
+msgctxt "gamepad"
+msgid "D-pad Up"
+msgstr ""
+
+#. The name of a controller's directional pad, pressed down.
+msgctxt "gamepad"
+msgid "D-pad Down"
+msgstr ""
+
+#. The name of a controller's directional pad, pressed left.
+msgctxt "gamepad"
+msgid "D-pad Left"
+msgstr ""
+
+#. The name of a controller's directional pad, pressed right.
+msgctxt "gamepad"
+msgid "D-pad Right"
+msgstr ""
+
+#. The name of a controller's left stick, pushed left.
+msgctxt "gamepad"
+msgid "Left Stick Left"
+msgstr ""
+
+#. The name of a controller's left stick, pushed up.
+msgctxt "gamepad"
+msgid "Left Stick Up"
+msgstr ""
+
+#. The name of a controller's right stick, pushed left.
+msgctxt "gamepad"
+msgid "Right Stick Left"
+msgstr ""
+
+#. The name of a controller's right stick, pushed up.
+msgctxt "gamepad"
+msgid "Right Stick Up"
+msgstr ""
+
+#. The name of a controller's left stick, pushed right.
+msgctxt "gamepad"
+msgid "Left Stick Right"
+msgstr ""
+
+#. The name of a controller's left stick, pushed down.
+msgctxt "gamepad"
+msgid "Left Stick Down"
+msgstr ""
+
+#. The name of a controller's right stick, pushed right.
+msgctxt "gamepad"
+msgid "Right Stick Right"
+msgstr ""
+
+#. The name of a controller's right stick, pushed down.
+msgctxt "gamepad"
+msgid "Right Stick Down"
+msgstr ""
+
+#. The name of a controller's left trigger, as an Xbox controller labels it.
+msgctxt "gamepad"
+msgid "LT"
+msgstr ""
+
+#. The name of a controller's right trigger, as an Xbox controller labels it.
+msgctxt "gamepad"
+msgid "RT"
+msgstr ""
+
+#. The name of an Xbox One or Xbox Series controller's View button.
+msgctxt "xbox"
+msgid "View"
+msgstr ""
+
+#. The name of a Steam Deck's View button.
+msgctxt "steam_deck"
+msgid "View"
+msgstr ""
+
+#. The name of an Xbox controller's Xbox button.
+msgctxt "xbox"
+msgid "Xbox"
+msgstr ""
+
+#. The name of an Xbox controller's Share button.
+msgctxt "xbox"
+msgid "Share"
+msgstr ""
+
+#. The name of a PlayStation 4 controller's Share button.
+msgctxt "playstation"
+msgid "Share"
+msgstr ""
+
+#. The name of a PlayStation controller's Cross button.
+msgctxt "playstation"
+msgid "Cross"
+msgstr ""
+
+#. The name of a PlayStation controller's Circle button.
+msgctxt "playstation"
+msgid "Circle"
+msgstr ""
+
+#. The name of a PlayStation controller's Square button.
+msgctxt "playstation"
+msgid "Square"
+msgstr ""
+
+#. The name of a PlayStation controller's Triangle button.
+msgctxt "playstation"
+msgid "Triangle"
+msgstr ""
+
+#. The name of a PlayStation controller's Create button.
+msgctxt "playstation"
+msgid "Create"
+msgstr ""
+
+#. The name of a PlayStation controller's PS button.
+msgctxt "playstation"
+msgid "PS"
+msgstr ""
+
+#. The name of a PlayStation controller's Options button.
+#, fuzzy
+msgctxt "playstation"
+msgid "Options"
+msgstr "Optionen"
+
+#. The name of a PlayStation controller's left stick, pressed in like a button.
+msgctxt "playstation"
+msgid "L3"
+msgstr ""
+
+#. The name of a PlayStation controller's right stick, pressed in like a button.
+msgctxt "playstation"
+msgid "R3"
+msgstr ""
+
+#. The name of a PlayStation controller's L1 button.
+msgctxt "playstation"
+msgid "L1"
+msgstr ""
+
+#. The name of a PlayStation controller's R1 button.
+msgctxt "playstation"
+msgid "R1"
+msgstr ""
+
+#. The name of a PlayStation controller's Mute button.
+msgctxt "playstation"
+msgid "Mute"
+msgstr ""
+
+#. The name of a PlayStation controller's touch pad, pressed like a button.
+msgctxt "playstation"
+msgid "Touch Pad"
+msgstr ""
+
+#. The name of a PlayStation controller's L2 button.
+msgctxt "playstation"
+msgid "L2"
+msgstr ""
+
+#. The name of a PlayStation controller's R2 button.
+msgctxt "playstation"
+msgid "R2"
+msgstr ""
+
+#. The name of a Steam Deck's Steam button.
+msgctxt "steam_deck"
+msgid "Steam"
+msgstr ""
+
+#. The name of a Steam Deck's left stick, pressed in like a button.
+msgctxt "steam_deck"
+msgid "L3"
+msgstr ""
+
+#. The name of a Steam Deck's right stick, pressed in like a button.
+msgctxt "steam_deck"
+msgid "R3"
+msgstr ""
+
+#. The name of a Steam Deck's L1 button.
+msgctxt "steam_deck"
+msgid "L1"
+msgstr ""
+
+#. The name of a Steam Deck's R1 button.
+msgctxt "steam_deck"
+msgid "R1"
+msgstr ""
+
+#. The name of a Steam Deck's L2 button.
+msgctxt "steam_deck"
+msgid "L2"
+msgstr ""
+
+#. The name of a Steam Deck's R2 button.
+msgctxt "steam_deck"
+msgid "R2"
+msgstr ""
+
+#. The name of a Steam Controller's Steam button.
+msgctxt "steam_controller"
+msgid "Steam"
+msgstr ""
+
+#. The name of a Steam Controller's Start button.
+msgctxt "steam_controller"
+msgid "Start"
+msgstr ""
+
+#. The name of a Nintendo Switch controller's A button, the right face button.
+msgctxt "switch"
+msgid "A"
+msgstr ""
+
+#. The name of a Nintendo Switch controller's B button, the bottom face button.
+msgctxt "switch"
+msgid "B"
+msgstr ""
+
+#. The name of a Nintendo Switch controller's X button, the top face button.
+msgctxt "switch"
+msgid "X"
+msgstr ""
+
+#. The name of a Nintendo Switch controller's Y button, the left face button.
+msgctxt "switch"
+msgid "Y"
+msgstr ""
+
+#. The name of a Nintendo Switch controller's − (minus) button.
+msgctxt "switch"
+msgid "−"
+msgstr ""
+
+#. The name of a Nintendo Switch controller's HOME button.
+msgctxt "switch"
+msgid "Home"
+msgstr ""
+
+#. The name of a Nintendo Switch controller's + (plus) button.
+msgctxt "switch"
+msgid "+"
+msgstr ""
+
+#. The name of a Nintendo Switch controller's left stick, pressed in like a button.
+msgctxt "switch"
+msgid "Left Stick"
+msgstr ""
+
+#. The name of a Nintendo Switch controller's right stick, pressed in like a button.
+msgctxt "switch"
+msgid "Right Stick"
+msgstr ""
+
+#. The name of a Nintendo Switch controller's L button.
+msgctxt "switch"
+msgid "L"
+msgstr ""
+
+#. The name of a Nintendo Switch controller's R button.
+msgctxt "switch"
+msgid "R"
+msgstr ""
+
+#. The name of a Nintendo Switch controller's Capture button.
+msgctxt "switch"
+msgid "Capture"
+msgstr ""
+
+#. The name of a Nintendo Switch controller's ZL button.
+msgctxt "switch"
+msgid "ZL"
+msgstr ""
+
+#. The name of a Nintendo Switch controller's ZR button.
+msgctxt "switch"
+msgid "ZR"
+msgstr ""
+
+#. The name of the Escape key on a keyboard.
+msgctxt "keyboard"
+msgid "Escape"
+msgstr ""
+
+#. The name of the Tab key on a keyboard.
+msgctxt "keyboard"
+msgid "Tab"
+msgstr ""
+
+#. The name of the Backspace key on a keyboard.
+msgctxt "keyboard"
+msgid "Backspace"
+msgstr ""
+
+#. The name of the Enter key on a keyboard.
+msgctxt "keyboard"
+msgid "Enter"
+msgstr ""
+
+#. The name of the Keypad Enter key on a keyboard.
+msgctxt "keyboard"
+msgid "Keypad Enter"
+msgstr ""
+
+#. The name of the Insert key on a keyboard.
+msgctxt "keyboard"
+msgid "Insert"
+msgstr ""
+
+#. The name of the Delete key on a keyboard.
+#, fuzzy
+msgctxt "keyboard"
+msgid "Delete"
+msgstr "Löschen"
+
+#. The name of the Pause key on a keyboard.
+msgctxt "keyboard"
+msgid "Pause"
+msgstr ""
+
+#. The name of the Print Screen key on a keyboard.
+msgctxt "keyboard"
+msgid "Print Screen"
+msgstr ""
+
+#. The name of the Home key on a keyboard.
+msgctxt "keyboard"
+msgid "Home"
+msgstr ""
+
+#. The name of the End key on a keyboard.
+msgctxt "keyboard"
+msgid "End"
+msgstr ""
+
+#. The name of the Left Arrow key on a keyboard.
+msgctxt "keyboard"
+msgid "Left Arrow"
+msgstr ""
+
+#. The name of the Up Arrow key on a keyboard.
+msgctxt "keyboard"
+msgid "Up Arrow"
+msgstr ""
+
+#. The name of the Right Arrow key on a keyboard.
+msgctxt "keyboard"
+msgid "Right Arrow"
+msgstr ""
+
+#. The name of the Down Arrow key on a keyboard.
+msgctxt "keyboard"
+msgid "Down Arrow"
+msgstr ""
+
+#. The name of the Page Up key on a keyboard.
+msgctxt "keyboard"
+msgid "Page Up"
+msgstr ""
+
+#. The name of the Page Down key on a keyboard.
+msgctxt "keyboard"
+msgid "Page Down"
+msgstr ""
+
+#. The name of the Shift key on a keyboard.
+msgctxt "keyboard"
+msgid "Shift"
+msgstr ""
+
+#. The name of the Ctrl key on a keyboard.
+msgctxt "keyboard"
+msgid "Ctrl"
+msgstr ""
+
+#. The name of the Alt key on a keyboard.
+msgctxt "keyboard"
+msgid "Alt"
+msgstr ""
+
+#. The name of the Caps Lock key on a keyboard.
+msgctxt "keyboard"
+msgid "Caps Lock"
+msgstr ""
+
+#. The name of the Num Lock key on a keyboard.
+msgctxt "keyboard"
+msgid "Num Lock"
+msgstr ""
+
+#. The name of the Scroll Lock key on a keyboard.
+msgctxt "keyboard"
+msgid "Scroll Lock"
+msgstr ""
+
+#. The name of the Menu key on a keyboard.
+msgctxt "keyboard"
+msgid "Menu"
+msgstr ""
+
+#. The name of the Space key on a keyboard.
+msgctxt "keyboard"
+msgid "Space"
+msgstr ""
+
+#. The name of a mouse's left button.
+msgctxt "keyboard"
+msgid "Left Mouse Button"
+msgstr ""
+
+#. The name of a mouse's right button.
+msgctxt "keyboard"
+msgid "Right Mouse Button"
+msgstr ""
+
+#. The name of a mouse's middle button, often its wheel pressed in.
+msgctxt "keyboard"
+msgid "Middle Mouse Button"
+msgstr ""
+
+#. The name of a mouse's wheel, scrolled up.
+msgctxt "keyboard"
+msgid "Mouse Wheel Up"
+msgstr ""
+
+#. The name of a mouse's wheel, scrolled down.
+msgctxt "keyboard"
+msgid "Mouse Wheel Down"
+msgstr ""
+
+#. The name of a mouse's wheel, tilted left.
+msgctxt "keyboard"
+msgid "Mouse Wheel Left"
+msgstr ""
+
+#. The name of a mouse's wheel, tilted right.
+msgctxt "keyboard"
+msgid "Mouse Wheel Right"
+msgstr ""
+
+#. The name of a mouse's first extra button, usually on its side for going back.
+msgctxt "keyboard"
+msgid "Mouse Button 4"
+msgstr ""
+
+#. The name of a mouse's second extra button, usually on its side for going forward.
+msgctxt "keyboard"
+msgid "Mouse Button 5"
+msgstr ""

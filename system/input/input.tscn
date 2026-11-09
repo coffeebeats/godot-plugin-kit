@@ -16,10 +16,21 @@
 [ext_resource type="Script" uid="uid://be11f4pqliry0" path="res://addons/std/condition/expression.gd" id="23_8ojx1"]
 [ext_resource type="Script" uid="uid://b48nei7xl0xrh" path="res://addons/std/condition/condition_loader.gd" id="24_hk8cf"]
 [ext_resource type="Resource" uid="uid://nggtxsyr5rs2" path="res://platform/storefront/steam_storefront_expression.tres" id="24_o5jdq"]
+[ext_resource type="Script" uid="uid://nxd2embtjvoe" path="res://addons/std/input/godot/origin_names.gd" id="25_names"]
+[ext_resource type="Resource" uid="uid://di25kntaxwics" path="res://system/input/unknown/names/keyboard_mouse.tres" id="26_names_keyboard_mouse"]
+[ext_resource type="Resource" uid="uid://be2hyhw3avc58" path="res://system/input/unknown/names/xbox_one.tres" id="27_names_xbox_one"]
+[ext_resource type="Resource" uid="uid://d3r63t440i1ww" path="res://system/input/unknown/names/xbox.tres" id="28_names_xbox"]
+[ext_resource type="Resource" uid="uid://bkcopqjvtjhc3" path="res://system/input/unknown/names/playstation_4.tres" id="29_names_playstation_4"]
+[ext_resource type="Resource" uid="uid://cgrv3ku6pd5pw" path="res://system/input/unknown/names/playstation.tres" id="30_names_playstation"]
+[ext_resource type="Resource" uid="uid://dx7uquo15ksb8" path="res://system/input/unknown/names/steam_deck.tres" id="31_names_steam_deck"]
+[ext_resource type="Resource" uid="uid://ivujfb5todyq" path="res://system/input/unknown/names/switch.tres" id="32_names_switch"]
+[ext_resource type="Resource" uid="uid://cfahqagrvkss8" path="res://system/input/unknown/names/steam_controller.tres" id="33_names_steam_controller"]
+[ext_resource type="Resource" uid="uid://burk1gvj6ixrx" path="res://system/input/unknown/names/default.tres" id="34_names_default"]
 
 [node name="Input" type="Node" unique_id=1621058833]
 script = ExtResource("1_sl0pi")
 glyph_sets = Array[ExtResource("6_set")]([ExtResource("7_keyboard"), ExtResource("8_mouse"), ExtResource("15_xbox_one"), ExtResource("9_xbox"), ExtResource("16_playstation_4"), ExtResource("10_playstation"), ExtResource("11_steam_deck"), ExtResource("12_switch"), ExtResource("13_steam_controller")])
+origin_names = Array[ExtResource("25_names")]([ExtResource("26_names_keyboard_mouse"), ExtResource("27_names_xbox_one"), ExtResource("28_names_xbox"), ExtResource("29_names_playstation_4"), ExtResource("30_names_playstation"), ExtResource("31_names_steam_deck"), ExtResource("32_names_switch"), ExtResource("33_names_steam_controller"), ExtResource("34_names_default")])
 unknown_glyph = ExtResource("14_unknown")
 
 [node name="IfGodot" type="Node" parent="." unique_id=1140435662]

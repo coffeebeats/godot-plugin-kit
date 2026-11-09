@@ -100,6 +100,19 @@ func test_input_godot_glyphs_hold_the_systems_glyph_sets() -> void:
 	assert_eq(glyphs.glyph_sets, glyph_sets)
 
 
+func test_input_godot_glyphs_hold_the_systems_origin_names() -> void:
+	# Given: Origin names the game lists on the input system.
+	var names := StdInputOriginNames.new()
+	var origin_names: Array[StdInputOriginNames] = [names]
+
+	# When: The Steam input scene enters the tree under the input system.
+	var input := _add_input([], [], [], null, origin_names)
+
+	# Then: The Godot glyphs component, which names the keyboard, holds the names.
+	var glyphs: Node = input.get_node(^"Godot/Godot/Components/Glyphs")
+	assert_eq(glyphs.origin_names, origin_names)
+
+
 func test_input_glyphs_hold_the_systems_unknown_glyph() -> void:
 	# Given: An unknown glyph the game sets on the input system.
 	var unknown_glyph := PlaceholderTexture2D.new()
@@ -143,13 +156,14 @@ func should_skip_script():
 
 
 ## _add_input adds a platform whose profile loaded, then the Steam input scene under an
-## input system listing `action_sets`, `menu_options_layers`, `glyph_sets` and
-## `unknown_glyph`, as the system's loader places it on Steam builds.
+## input system listing `action_sets`, `menu_options_layers`, `glyph_sets`,
+## `unknown_glyph` and `origin_names`, as the system's loader places it on Steam builds.
 func _add_input(
 	action_sets: Array[StdInputActionSet] = [],
 	menu_options_layers: Array[StdInputActionSetLayer] = [],
 	glyph_sets: Array[StdInputGlyphSet] = [],
 	unknown_glyph: Texture2D = null,
+	origin_names: Array[StdInputOriginNames] = [],
 ) -> Node:
 	add_child_autofree(PlatformScene.instantiate())
 
@@ -158,6 +172,7 @@ func _add_input(
 	system.menu_options_layers = menu_options_layers
 	system.glyph_sets = glyph_sets
 	system.unknown_glyph = unknown_glyph
+	system.origin_names = origin_names
 
 	var input := _input_scene.instantiate()
 	system.add_child(input)

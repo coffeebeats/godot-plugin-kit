@@ -11,6 +11,11 @@ const PlatformScene := preload("res://premade/platform.tscn")
 const SystemInput := preload("res://system/input/input.gd")
 const SystemInputScene := preload("res://system/input/input.tscn")
 
+# -- INITIALIZATION ------------------------------------------------------------------ #
+
+## _translations holds kit's shipped catalogues while the tests run.
+var _translations: Array[Translation] = []
+
 # -- TEST METHODS -------------------------------------------------------------------- #
 
 
@@ -274,12 +279,31 @@ func test_glyph_controller_prompt_lock_draws_the_connected_joypad_family() -> vo
 # -- TEST HOOKS ---------------------------------------------------------------------- #
 
 
+func after_all() -> void:
+	for translation in _translations:
+		TranslationServer.remove_translation(translation)
+
+	_translations.clear()
+
+
 func after_each() -> void:
 	# NOTE: The Godot backend keeps the loaded set across slots, so leave an empty one
 	# behind rather than a set whose actions a later test's input map lacks.
 	var slot := StdInputSlot.for_player(1)
 	if slot:
 		slot.load_action_set(StdInputActionSet.new())
+
+
+func before_all() -> void:
+	# NOTE: Kit names origins with translation keys, and kit's project lists no
+	# catalogues, so this loads the shipped ones the way a game's project settings would.
+	for path in DirAccess.get_files_at("res://locale"):
+		if not path.ends_with(".mo"):
+			continue
+
+		var translation: Translation = load("res://locale".path_join(path))
+		TranslationServer.add_translation(translation)
+		_translations.append(translation)
 
 
 # -- PRIVATE METHODS ----------------------------------------------------------------- #
