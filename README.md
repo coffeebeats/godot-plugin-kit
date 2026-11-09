@@ -173,13 +173,20 @@ Give the scene's root a script that finds its pieces by unique name and exposes 
 class_name MatchHud
 extends Control
 
+var _gold_amount := 0
+
 @onready var _gold: Label = %Gold
 
 func set_gold(amount: int) -> void:
-	_gold.text = str(amount)
+	_gold_amount = amount
+	if is_node_ready():
+		_gold.text = str(amount)
+
+func _ready() -> void:
+	_gold.text = str(_gold_amount)
 ```
 
-The map's script calls the setters from its own `_ready` or later. A parent readies after its children, so the HUD is ready by then. A node in the world readies before `UI`, so it reaches the HUD through the map. The HUD's buttons signal up to the map, and an [action button](#add-an-action-button) raises its action itself.
+Each setter stores its value and applies it once the HUD is ready, as `KitHudBar.set_value` does, since a node in the world readies before `UI`. That node readies before the map too, so the map's script looks the HUD up by unique name, such as `%MatchHud`, when it calls a setter rather than with `@onready`, and the node can then reach the HUD through the map even from its own `_ready`. The HUD's buttons signal up to the map, and an [action button](#add-an-action-button) raises its action itself.
 
 ### Add an action button
 
