@@ -27,6 +27,13 @@ var _logger := StdLogger.create(&"system/setting/language")
 # -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
 
 
+func _notification(what: int) -> void:
+	# NOTE: Steam reports no change to the game's language, so it's re-read whenever the
+	# player may have changed it, which is while the window was unfocused.
+	if what == NOTIFICATION_APPLICATION_FOCUS_IN and is_node_ready():
+		language_property.refresh_default()
+
+
 func _ready() -> void:
 	assert(language_property is LanguageProperty, "invalid config: missing property")
 	assert(
