@@ -10,6 +10,17 @@ const Provider := preload("provider.gd")
 const Storefront := preload("storefront.gd")
 const StorefrontScene := preload("storefront.tscn")
 
+# -- DEFINITIONS --------------------------------------------------------------------- #
+
+
+## StubProvider is a storefront implementation naming German.
+class StubProvider:
+	extends Provider
+
+	func get_locale() -> String:
+		return "de"
+
+
 # -- TEST METHODS -------------------------------------------------------------------- #
 
 
@@ -70,6 +81,29 @@ func test_storefront_ready_with_two_implementations_fails_module() -> void:
 
 	# Then: The failure is logged.
 	assert_push_error("Kit module failed to load.")
+
+
+func test_find_locale_with_default_implementation_returns_empty() -> void:
+	# Given: The storefront scene, whose loader places the default implementation.
+	add_child_autofree(StorefrontScene.instantiate())
+
+	# When: The storefront's locale is found.
+	var locale := Storefront.find_locale()
+
+	# Then: There is none, so the system's language applies.
+	assert_eq(locale, "")
+
+
+func test_find_locale_with_two_implementations_returns_empty() -> void:
+	# Given: Two implementations, as when a build sets two storefront features.
+	add_child_autofree(StubProvider.new())
+	add_child_autofree(StubProvider.new())
+
+	# When: The storefront's locale is found.
+	var locale := Storefront.find_locale()
+
+	# Then: There is none, since neither can be trusted.
+	assert_eq(locale, "")
 
 
 # -- PRIVATE METHODS ----------------------------------------------------------------- #
