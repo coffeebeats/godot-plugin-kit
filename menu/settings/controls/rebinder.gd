@@ -25,9 +25,8 @@ const GROUP_REBINDER := &"menu/settings:rebinder"
 const DEVICE_TYPE_GENERIC := StdInputDevice.DEVICE_TYPE_GENERIC
 const DEVICE_TYPE_KEYBOARD := StdInputDevice.DEVICE_TYPE_KEYBOARD
 
-# NOTE: This scene is loaded, never preloaded. It holds this script, so a preload makes
-# a cycle, and the cycle deadlocks when `StdScreenLoader` loads the settings menu and
-# this scene, its dependency, on two threads at once.
+# NOTE: Never preload this scene. `StdScreenLoader` loads it on one thread and the
+# settings menu on another, and a preload of a scene still loading can fail or hang.
 const _SCENE_PATH := "uid://dm1yyvkqdxmqe"
 
 const MSGCTXT_REBINDER_KEYBOARD := &"keyboard"
