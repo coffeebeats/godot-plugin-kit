@@ -17,7 +17,6 @@ const Signals := preload("res://addons/std/event/signal.gd")
 const Locales := preload("../../../locale/locales.gd")
 const Screens := preload("../../../ui/menu/screens.gd")
 const Rebinder := preload("rebinder.gd")
-const RebinderScene := preload("rebinder.tscn")
 
 # -- DEFINITIONS --------------------------------------------------------------------- #
 
@@ -25,6 +24,11 @@ const GROUP_REBINDER := &"menu/settings:rebinder"
 
 const DEVICE_TYPE_GENERIC := StdInputDevice.DEVICE_TYPE_GENERIC
 const DEVICE_TYPE_KEYBOARD := StdInputDevice.DEVICE_TYPE_KEYBOARD
+
+# NOTE: This scene is loaded, never preloaded. It holds this script, so a preload makes
+# a cycle, and the cycle deadlocks when `StdScreenLoader` loads the settings menu and
+# this scene, its dependency, on two threads at once.
+const _SCENE_PATH := "uid://dm1yyvkqdxmqe"
 
 const MSGCTXT_REBINDER_KEYBOARD := &"keyboard"
 const MSGCTXT_REBINDER_GAMEPAD := &"gamepad"
@@ -117,7 +121,7 @@ static func start_rebinding(
 		return false
 
 	if not _instance:
-		_instance = RebinderScene.instantiate()
+		_instance = load(_SCENE_PATH).instantiate()
 
 	_instance._cursor_was_visible = KitSystems.input().is_cursor_visible()
 
