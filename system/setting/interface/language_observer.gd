@@ -28,8 +28,8 @@ var _logger := StdLogger.create(&"system/setting/language")
 
 
 func _notification(what: int) -> void:
-	# NOTE: Steam reports no change to the game's language, so it's re-read whenever the
-	# player may have changed it, which is while the window was unfocused.
+	# NOTE: Steam sends no callback when the player changes the game's language in its
+	# window, so the language is read again each time focus returns to the game.
 	if what == NOTIFICATION_APPLICATION_FOCUS_IN and is_node_ready():
 		language_property.refresh_default()
 

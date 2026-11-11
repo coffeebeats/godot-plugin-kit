@@ -99,7 +99,7 @@ func test_refresh_default_storefront_locale_changed_follows_it() -> void:
 	watch_signals(_language)
 	_language.refresh_default()
 
-	# Then: The language is French, and its observers hear so.
+	# Then: The language is French, and its observers are told.
 	assert_eq(_language.get_value(), "fr")
 	assert_signal_emitted_with_parameters(_language, "value_changed", ["fr"])
 

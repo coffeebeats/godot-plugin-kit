@@ -69,10 +69,9 @@ static func to_locale(code: String) -> String:
 # -- PUBLIC METHODS (OVERRIDES) ------------------------------------------------------ #
 
 
-## get_locale returns the locale of the language Steam has for the game, which is the
-## player's choice in the game's Steam properties or else Steam's own language. It
-## returns an empty string if Steam failed to start, if the game lists fewer than two
-## languages in Steamworks, or if Steam names a language `LOCALES` lacks.
+## get_locale returns the locale of the player's pick in the game's Steam properties, or
+## else of Steam's own language. It returns an empty string if Steam failed to start,
+## the game lists fewer than two languages, or `LOCALES` lacks the language Steam names.
 func get_locale() -> String:
 	if not _is_initialized:
 		return ""

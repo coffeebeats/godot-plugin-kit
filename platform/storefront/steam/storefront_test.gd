@@ -1,6 +1,6 @@
 ##
-## Tests for how the Steam storefront reads Steam's language for the game: the check on
-## the game's language list, and the mapping from Steam's language codes to locales.
+## Tests for how the Steam storefront checks the game's language list and maps Steam's
+## language codes to locales.
 ##
 
 extends GutTest
@@ -29,7 +29,7 @@ func test_has_language_choice_one_language_returns_false() -> void:
 
 
 func test_has_language_choice_no_languages_returns_false() -> void:
-	# When: A game listing no languages is checked, as Spacewar does.
+	# When: A game listing no languages is checked.
 	var has_choice := SteamStorefront.has_language_choice("")
 
 	# Then: Steam isn't trusted.
