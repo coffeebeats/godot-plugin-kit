@@ -12,7 +12,6 @@ grow_vertical = 2
 script = ExtResource("1_8gfwc")
 
 [node name="FocusHandler" parent="." unique_id=1405551856 instance=ExtResource("2_lulcq")]
-layout_mode = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1415989997]
 layout_mode = 1

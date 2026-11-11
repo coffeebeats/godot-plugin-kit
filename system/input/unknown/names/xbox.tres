@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="StdInputOriginNames" format=3 uid="uid://d3r63t440i1ww"]
+
+[ext_resource type="Script" uid="uid://nxd2embtjvoe" path="res://addons/std/input/godot/origin_names.gd" id="1_mkmml"]
+
+[resource]
+script = ExtResource("1_mkmml")
+device_types = Array[int]([1, 11, 12])
+translation_context = &"xbox"
+joy_buttons = Dictionary[int, StringName]({
+5: &"kit_input_origin_xbox",
+15: &"kit_input_origin_share"
+})

@@ -9,9 +9,12 @@
 [ext_resource type="Resource" uid="uid://cpq2onm572rax" path="res://addons/kit/system/debug/editor_run_expression.tres" id="6_dbg1f"]
 [ext_resource type="Resource" uid="uid://qhsnu8axd0er" path="res://addons/kit/ui/input/focus_handler_sound_group.tres" id="7_f0cus"]
 [ext_resource type="PackedScene" uid="uid://cj4555ox05li8" path="res://addons/kit/system/setting/interface/font_scaling_observer.tscn" id="9_f0nts"]
+[ext_resource type="PackedScene" uid="uid://bb53maji3qq05" path="res://addons/kit/system/theme/theme.tscn" id="10_theme"]
 
 [node name="System" type="Node" unique_id=754977886]
 process_mode = 3
+
+[node name="Theme" parent="." unique_id=1907146683 instance=ExtResource("10_theme")]
 
 [node name="Input" parent="." unique_id=1658786168 instance=ExtResource("2_u77o4")]
 focused_sound_group = ExtResource("7_f0cus")

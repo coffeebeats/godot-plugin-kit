@@ -1,8 +1,10 @@
 [gd_resource type="Resource" script_class="StdInputActionSetLayer" format=3 uid="uid://bcsts082smqrp"]
 
 [ext_resource type="Script" uid="uid://dmvb2tblavngm" path="res://addons/std/input/action_set_layer.gd" id="1_wuq6f"]
+[ext_resource type="Resource" uid="uid://ldk7k2w5uvks" path="res://addons/kit/system/input/actions/menu.tres" id="2_menu"]
 
 [resource]
 script = ExtResource("1_wuq6f")
+parent = ExtResource("2_menu")
 name = &"MenuOptions"
 actions_digital = Array[StringName]([&"ui_toggle_menu"])

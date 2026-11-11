@@ -8,8 +8,8 @@
 ##
 ##     _hud.health.set_value(health, max_health)
 ##
-## Timing comes from its `KitHudBarStyle`; colors come from the `hud_bar` and
-## `hud_bar_ghost` theme type variations.
+## Timing comes from its `KitHudBarStyle`; colors come from the `HudBar` and
+## `HudBarGhost` theme type variations.
 ##
 
 class_name KitHudBar

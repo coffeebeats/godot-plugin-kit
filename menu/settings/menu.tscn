@@ -11,13 +11,10 @@
 [ext_resource type="PackedScene" uid="uid://b4obsfsvns0ap" path="res://addons/kit/menu/settings/display/display.tscn" id="9_vwbdl"]
 [ext_resource type="PackedScene" uid="uid://bd5fo51o6asi2" path="res://addons/kit/menu/settings/controls/controls.tscn" id="10_46fy4"]
 [ext_resource type="PackedScene" uid="uid://bbsvnrhcyccl5" path="res://addons/kit/ui/menu/scrim.tscn" id="11_scrim"]
+[ext_resource type="PackedScene" uid="uid://b4tpyajxmxa7j" path="res://addons/kit/menu/settings/accessibility/accessibility.tscn" id="15_access"]
 [ext_resource type="PackedScene" uid="uid://dm7k3close1bt" path="res://addons/kit/ui/menu/button_close.tscn" id="12_close"]
 [ext_resource type="PackedScene" uid="uid://ctabgr0up1scn" path="res://addons/kit/ui/menu/tab_group.tscn" id="13_tabs"]
 [ext_resource type="Script" uid="uid://dmvb2tblavngm" path="res://addons/std/input/action_set_layer.gd" id="14_layer"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_w1p03"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dhy4h"]
 
 [node name="SettingsMenu" type="Control" unique_id=28127552]
 layout_mode = 3
@@ -32,10 +29,7 @@ tab_switch_sound_event = ExtResource("3_gh6u1")
 [node name="Scrim" parent="." unique_id=722204747 instance=ExtResource("11_scrim")]
 layout_mode = 1
 
-[node name="StdInputActionSetLoader" type="Control" parent="." unique_id=212166736]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="StdInputActionSetLoader" type="Node" parent="." unique_id=212166736]
 script = ExtResource("3_m4kg3")
 action_set = ExtResource("3_7ixv1")
 action_set_layers = Array[ExtResource("14_layer")]([ExtResource("4_s0nl3")])
@@ -52,7 +46,7 @@ mouse_filter = 2
 [node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=440196034]
 custom_minimum_size = Vector2(1440, 648)
 layout_mode = 2
-theme_type_variation = &"panel_dialog"
+theme_type_variation = &"PanelDialog"
 
 [node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer" unique_id=1526864236]
 layout_mode = 2
@@ -67,7 +61,7 @@ layout_mode = 2
 
 [node name="Header" type="PanelContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=604388048]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_w1p03")
+theme_type_variation = &"PanelSettingsHeader"
 
 [node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Header" unique_id=1306826654]
 layout_mode = 2
@@ -84,12 +78,13 @@ size_flags_horizontal = 10
 hide_if_cursor_visible = true
 action_set = ExtResource("4_s0nl3")
 action = &"ui_tab_prev"
+glyph_scale = 2.0
 
 [node name="TabGroup" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Header/MarginContainer/HBoxContainer" unique_id=891982953 node_paths=PackedStringArray("content") instance=ExtResource("13_tabs")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-tabs = ["kit_options_sound", "kit_options_interface", "kit_options_display", "kit_options_controller", "kit_options_keyboard_mouse"]
+tabs = ["kit_options_sound", "kit_options_interface", "kit_options_display", "kit_options_controller", "kit_options_keyboard_mouse", "kit_options_accessibility"]
 content = NodePath("../../../../Body/MarginContainer/ScrollContainer/TabContents")
 
 [node name="GlyphTabNext" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Header/MarginContainer/HBoxContainer" unique_id=1501074617 instance=ExtResource("5_xbtwd")]
@@ -99,11 +94,12 @@ size_flags_horizontal = 2
 hide_if_cursor_visible = true
 action_set = ExtResource("4_s0nl3")
 action = &"ui_tab_next"
+glyph_scale = 2.0
 
 [node name="Body" type="PanelContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1489876437]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxEmpty_dhy4h")
+theme_type_variation = &"PanelSettingsBody"
 
 [node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Body" unique_id=1621647013]
 layout_mode = 2
@@ -142,6 +138,10 @@ device_category = 1
 visible = false
 layout_mode = 2
 device_category = 2
+
+[node name="Accessibility" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Body/MarginContainer/ScrollContainer/TabContents" unique_id=1734023962 instance=ExtResource("15_access")]
+visible = false
+layout_mode = 2
 
 [node name="CloseButton" parent="CenterContainer/PanelContainer" unique_id=833171423 instance=ExtResource("12_close")]
 layout_mode = 2

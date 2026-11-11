@@ -21,10 +21,7 @@ hud = NodePath("UI/Hud")
 feel = NodePath("Feel")
 action_set_loader = NodePath("StdInputActionSetLoader")
 
-[node name="StdInputActionSetLoader" type="Control" parent="." unique_id=1805366389]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="StdInputActionSetLoader" type="Node" parent="." unique_id=1805366389]
 script = ExtResource("4_loader")
 
 [node name="Settings" type="Node" parent="." unique_id=1002660069]

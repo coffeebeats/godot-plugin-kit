@@ -36,9 +36,14 @@ Each value the game owns is an export on a scene instanced in `System`:
 
 | Scene | Export | Value |
 | --- | --- | --- |
-| `system/input/input.tscn` | `action_sets` | The game's action sets and layers, which the settings menu's Controller and Keyboard & Mouse tabs list for rebinding. On Steam builds, Steam Input also reads a controller's binding against them, so list every set the game's manifest has. |
+| `system/input/input.tscn` | `action_sets` | The game's action sets and its own layers, which the settings menu's Controller and Keyboard & Mouse tabs list for rebinding, leaving out those in `menu_options_layers`. On Steam builds, Steam Input also reads a controller's binding against them, so list every set and layer the game's manifest has, here or in `menu_options_layers`. |
+| `system/input/input.tscn` | `menu_options_layers` | The game's layers over its own sets that carry the actions of kit's `MenuOptions` layer, such as `ui_toggle_menu`. The controls tabs show those actions in the `MenuOptions` group, one row per action, and a rebind there writes to each layer that declares the action. The group shows no other action, so put any action of the game's own in a set or layer listed in `action_sets`. List each layer here and not in `action_sets`, where the tabs would give it a group whose rebinds reach only that layer. Steam Input reads them as it does `action_sets`. |
+| `system/input/input.tscn` | `glyph_sets` | The glyph sets button prompts draw from, defaulting to kit's. See [Change the button prompts](#change-the-button-prompts). |
+| `system/input/input.tscn` | `origin_names` | The names a screen reader reads for each button and key in a prompt, defaulting to kit's. See [Name the button prompts](#name-the-button-prompts). |
+| `system/input/input.tscn` | `unknown_glyph` | The glyph a prompt draws for a bound button with no art, defaulting to kit's "??" icon. Left empty, the prompt draws nothing for such a button. |
 | `system/setting/settings.tscn` | `menu_tabs` | The game's own settings menu tabs, keyed by their label's message ID. |
-| `system/setting/interface/font_scaling_observer.tscn` | `theme` | The font theme which the text scaling setting resizes. |
+| `system/setting/settings.tscn` | `menu_setting_overrides` | Kit's settings menu rows and rebinding groups the game shows or hides, by id, where it differs from kit's default. See [Pick the settings the menu shows](#pick-the-settings-the-menu-shows). |
+| `system/setting/interface/font_scaling_observer.tscn` | `theme` | The game's theme, the one `[gui] theme/custom` names, which the text scaling setting resizes. |
 | `system/save/saves.tscn` | `schema` | The game's save data, required. |
 | `system/save/saves.tscn` | `slot_count` | The number of save slots, each shown in the save menu. |
 
@@ -48,6 +53,8 @@ Two values are set from code instead, since no export in `System` can reach or h
 - `KitPauseMenu.return_to_main_menu`, the game's way back to its main menu. The pause menu offers returning only once it is set.
 
 A build tagged `storefront:steam` loads the Steam storefront, profile and input, and every other build loads the default ones. An export preset sets the tag in `custom_features`, and an editor run in *Debug > Customize Run Instances*.
+
+On a Steam build, the language setting defaults to the language the player picked in the game's Steam properties, or else to Steam's own. Steam names only a language the game lists as a base language in Steamworks, and names English for a player whose language isn't listed, even where the game has a catalogue for it. So keep that list in step with the game's catalogues. A game listing fewer than two languages there gives Steam no choice to report, so kit ignores Steam and uses the system's language. The player can change the game's language in Steam while it runs, so kit reads it again whenever the window regains focus. A language the player picks in the game's settings is always saved and always wins. Every other build, and a Steam build whose client isn't running, defaults to the system's language.
 
 ### Check that the modules loaded
 
@@ -68,19 +75,153 @@ Each menu is a finished screen, used in place:
 - **Settings:** push `menu/settings/screen.tres`, or list `menu/settings/pusher.tscn` in a screen's `attachment_scenes` to open it on `ui_toggle_menu`.
 - **Save slots:** push `menu/save/screen.tres` and await its `popped` signal, which carries the chosen slot's index.
 - **Pause:** list `menu/pause/pusher.tscn` in a gameplay screen's `attachment_scenes`.
+- **Alerts over gameplay:** a map opens `ui/menu/alert_gameplay.tscn` for a match's result, a game over or a disconnect, as [`ui/menu/README.md`](ui/menu/README.md) describes.
 - **Splash:** push `ui/splash/godot_screen.tres`, whose scene emits `advanced` once it is done. `ui/splash/splash.gd` makes a splash of any scene.
 
-For a different layout, assemble a menu from the scenes it is made of: the settings tabs and their `group` and `setting` rows, the `controls` tab, placed once per `device_category`, with its `action_set` groups, the save menu's `slot_button`, and the dialogs in `ui/menu/`.
+For a different layout, assemble a menu from the scenes it is made of: the settings tabs and their `group` and `setting` rows, the `controls` tab, placed once per `device_category`, with its `action_set` groups, the save menu's `slot_button`, and the dialogs in `ui/menu/`, whose [README](ui/menu/README.md) lists their values and what each one is for.
+
+### Pick the settings the menu shows
+
+Each of kit's settings menu rows has an id, and `MENU_SETTINGS` in `system/setting/settings.gd` says whether the menu shows it by default; every row kit ships does, except the hold row below. The `Settings` node's `menu_setting_overrides` holds only what the game changes, such as `sound_volume_voice: false` in a game with no voice audio, or `true` for a row kit leaves off until a game opts in. A row kit adds in a later version shows up, or stays off, by kit's default until the game overrides it, and an override naming an id kit no longer has logs a warning. A group left with no row is left out, and so is a tab left with none of kit's rows. The game's own tabs from `menu_tabs` always show. Leaving out a row hides only its control, and the observer in `System` keeps applying the stored value, which is the default if the player never set one.
+
+The controls tabs list each of kit's menu action sets as a rebinding group whose rows follow the set's actions, so a game shows or hides the group as a whole. Its id names the tab and the set: `controller_bindings_<set>` or `keyboard_mouse_bindings_<set>`, with `<set>` one of `menu`, `menu_tabbed`, `menu_options` and `menu_binding`. A game's own action sets from `action_sets` show in every controls tab that shows. `controller_steam_configurator` is the row that opens Steam's binding panel while Steam Input drives the controller.
+
+`accessibility_holds_mode`, the Accessibility tab's only row, lets the player choose whether every hold the game lists in an action set's `holds` is held or tapped to toggle. Kit's input scenes give its property to the first player's slot as `hold_mode_property`. The row is off by default, so a game without holds never sees the tab, and a game that has holds turns it on with `accessibility_holds_mode: true`. Until the player picks a mode, each hold runs in its own `mode`. A choice they made while the row showed still applies if the game hides the row later. To give a group of holds a choice of its own, a game adds a property, defaulting to `0` (`INHERIT`) and offering it, and sets it as each hold's `mode_override`, so the group follows the player's general choice until they pick one for it. A player can then keep holding the game's destructive confirms while its other holds toggle.
+
+Every property kit defines under `system/setting/`, with the row that shows it:
+
+| Property | Key | Scope | Type and default | Row id | Read by |
+| --- | --- | --- | --- | --- | --- |
+| `audio/volume/master_property.tres` | `audio/volume/master` | User | Float, 0 to 10, default 10 | `sound_volume_master` | The volume observer, on the `Master` bus. |
+| `audio/volume/sound_effects_property.tres` | `audio/volume/sound_effects` | User | Float, 0 to 10, default 10 | `sound_volume_sound_effects` | The volume observer, on the `sound_effects` and `ui` buses. |
+| `audio/volume/music_property.tres` | `audio/volume/music` | User | Float, 0 to 10, default 10 | `sound_volume_music` | The volume observer, on the `music` bus. |
+| `audio/volume/voice_property.tres` | `audio/volume/voice` | User | Float, 0 to 10, default 10 | `sound_volume_voice` | The volume observer, on the `voice` bus. |
+| `audio/device/output_property.tres` | `audio/device/output` | User | String, default `"Default"` | `sound_audio_device` | The sound device observer. |
+| `audio/device/output_options_property.tres` | `audio/device/output_options` | User | Read-only list of the output devices | `sound_audio_device` | The device row, as its choices. |
+| `audio/mute/background_property.tres` | `audio/mute/background` | User | Bool, default `true` | `sound_audio_bg_mute` | The mute observer, while the window is unfocused. |
+| `audio/mute/global.tres` | `audio/mute/global` | User | Bool, default `false` | None | The mute observer. |
+| `interface/language_property.tres` | `interface/language/language_code` | User | String, default the loaded locale closest to the storefront's language for the game, or else the system's | `interface_language_display` | The language observer. |
+| `interface/language_options_property.tres` | `interface/language/options` | User | Read-only list of the loaded locales | `interface_language_display` | The language row, as its choices. |
+| `interface/font_scaling_property.tres` | `interface/font_scaling` | User | Float, 0.5 to 2, default 1 | `interface_text_scaling` | The font scaling observer. |
+| `video/fullscreen.tres` | `display/fullscreen` | User | Bool, default `true` | `display_video_fullscreen` | The window observer. |
+| `video/borderless.tres` | `display/window/size/borderless` | Project | Bool, default `false` | `display_video_borderless` | The window observer. |
+| `video/window_mode_property.tres` | `display/window/size/mode` | Project | Int, default 3 (fullscreen) | None | The window observer. |
+| `video/frame_limit_property.tres` | `application/run/max_fps` | Project | Float, 60 to 240, default 120 | `display_video_fps_limit` | The FPS observer. |
+| `video/vsync_property.tres` | `display/window/vsync/vsync_mode` | Project | Bool, default `true` (adaptive) | `display_video_vsync` | The FPS observer. |
+| `video/msaa_3d_property.tres` | `display/msaa_3d` | User | Int, default 0 | None | `map/3d/scene.tscn`. |
+| `video/render_scale_property.tres` | `display/render_scale` | User | Float, 0.5 to 1, default 1 | None | `map/3d/scene.tscn`. |
+| `video/window_size_width.tres` | `display/window/size/window_width_override` | Project | Int, default 0 | None | Nothing in kit. |
+| `video/window_size_height.tres` | `display/window/size/window_height_override` | Project | Int, default 0 | None | Nothing in kit. |
+| `controls/glyph_type_property.tres` | `controls/glyph/type` | User | Int, default 0 (match the active device) | `controller_button_prompt` | Button prompts and binding rows. |
+| `controls/glyph_type_options_property.tres` | `controls/glyph/type_options` | User | List of glyph types | `controller_button_prompt` | The button prompt row, as its choices. |
+| `controls/haptics_disable_property.tres` | `controls/haptics/disable` | User | Bool, default `false` | `controller_disable_vibration` | The input system's rumble. |
+| `controls/haptics_strength_property.tres` | `controls/haptics/strength` | User | Float, 0 to 100, default 50 | `controller_vibration_strength` | The input system's rumble. |
+| `controls/cursor_confined_property.tres` | `controls/cursor/confined` | User | Bool, default `display/fullscreen`'s value until the player sets it | `keyboard_mouse_confine_cursor` | The input system's cursor. |
+| `controls/hold_mode_property.tres` | `controls/hold/mode` | User | Int, default 0 (each hold's own mode) | `accessibility_holds_mode` | The first player's input slot, for every hold. |
+| `controls/hold_mode_options_property.tres` | `controls/hold/mode_options` | User | Read-only list of the three `StdInputActionHold.Mode` values | `accessibility_holds_mode` | The hold row, as its choices. |
+
+A user setting is saved in the player's profile, and a project setting in Godot's project settings override file, which the engine reads at startup.
 
 ### Put UI inside gameplay
 
-A menu screen loads kit's `Menu` set, `system/input/actions/menu.tres`, which clears every other binding and carries the `ui_*` navigation actions, and enables the layers it needs over it. `menu_options.tres` carries `ui_toggle_menu` and names no parent set, so a gameplay screen enables the same layer over the game's own set, and the player rebinds it once. Navigation inside gameplay takes a layer the game owns.
+A menu screen loads kit's `Menu` set, `system/input/actions/menu.tres`, which clears every other binding and carries the `ui_*` navigation actions, and enables the layers it needs over it. Kit ships only the sets and layers its own scenes load, and each of its layers names `Menu` as its `parent`. A layer over the game's own set belongs to the game, which writes it in its own input directory, usually `project/input/actions/`, under a name of its own, since every set and layer needs a unique name.
 
-1. The map's root lists `menu_options.tres` in `action_set_layers`, so Escape pauses through `menu/pause/pusher.tscn`.
-2. A panel over the world, such as a build menu, carries its own `StdInputActionSetLoader`, with `active_while` set to `VISIBLE` and a game layer in `action_set_layers` that holds the `ui_*` actions the panel needs. The layer names the game's set as `parent`, and the game lists it in `Input.action_sets` so the controls tabs offer its bindings, which are saved apart from the `Menu` set's. Arrows, Enter and the gamepad navigate it while it shows, and because its layer is enabled after the map's, Escape reaches it as `ui_cancel` until it hides. The loader is a `Control`; under a container give it `mouse_filter = IGNORE`, or it covers the panel's buttons.
-3. Kit's map scenes place the map's loader before `UI` in tree order, which is what keeps that order on an uncover; a map built another way must keep its loader ahead of its panels.
-4. A button that doubles a bindable action, such as a build or a wave start, takes a `FocusHandler` and a `StdInputActionTrigger`; any other button connects `pressed`. The handler the action reaches validates it, since a key gets there whether or not the button is enabled.
-5. A screen with a text field lists the `ui_text_*` actions in a layer of its own.
+1. Kit's pause and settings pushers open on `ui_toggle_menu`, which `menu_options.tres` carries over `Menu`. For gameplay, the game writes an options layer over its set that holds `ui_toggle_menu` and lists it in the map root's `action_set_layers`, so Escape pauses through `menu/pause/pusher.tscn`. It also lists the layer in `Input.menu_options_layers`. Bindings save under a layer's name, so that list is how a rebind in the controls tabs' `MenuOptions` group reaches the game's layer. Nothing ties the game's layer to kit's, so a kit release whose pushers expect another action names it in its release notes.
+2. A menu over the world, such as a build or context menu, is a panel. Place `ui/panel/panel.tscn` in the map's `UI`, or `ui/panel/world_panel_2d.tscn` or `world_panel_3d.tscn` to follow a point in the world, put the game's buttons inside it, and open it through its `StdPanel` node or by showing it. For rows of buttons, such as a build menu's items, put `ui/panel/menu_rows.tscn` inside the panel, as [`ui/panel/README.md`](ui/panel/README.md) describes. While open, the panel keeps focus inside itself and loads kit's `Menu` set, so a rebind in the controls tabs' `Menu` group reaches it; the set before it comes back once it closes. Whatever stays live while it's open goes in a layer of the game's own with `Menu` as `parent`, listed in its loader's `action_set_layers` and in `Input.action_sets`. An action that does something only while the panel is open, such as a build menu's item keys, lives only in that layer, so it has one binding. A panel has no scrim; a menu that wants one is a screen.
+3. A button that doubles a bindable action, such as a build or a wave start, is an [action button](#add-an-action-button); any other button connects `pressed`. The handler the action reaches validates it, since a key gets there whether or not the button is enabled.
+4. A screen with a text field lists the `ui_text_*` actions in a layer of its own.
+
+A panel's values are exports on its child nodes, which *Editable Children* on its instance shows:
+
+| Node | Export | Value |
+| --- | --- | --- |
+| `StdPanel` | `transition` | How the panel opens and closes, or `transition_open` and `transition_close` for each. Without one it opens and closes instantly. |
+| `StdPanel` | `close_actions` | The actions that close it, `ui_cancel` by default. |
+| `StdPanel` | `click_outside_to_close` | The mouse buttons whose press outside it closes it, the left one by default. The press still reaches what it lands on, so a HUD button beside the panel closes it and is pressed. |
+| `StdPanel` | `close_on_hide`, `open_on_show`, `close_when_covered` | Hiding the panel closes it and showing it opens it, both on by default. A screen covering the map closes it only with `close_when_covered`. |
+| `StdPanel` | `sound_open`, `sound_close` | The sounds it plays as it opens and closes, none by default. |
+| `StdInputActionSetLoader` | `action_set_layers` | The game's layers over `Menu` holding what stays live. |
+| `WorldTracker2D`, `WorldTracker3D` | `map`, `target` | The map, and the node in its world the panel follows. Until `target` is set, the panel stays where it is. An open panel follows its target off-screen and stays open; to close it instead, connect the tracker's `target_exited_view` to `StdPanel`'s `close`. |
+| `WorldTracker2D`, `WorldTracker3D` | `offset`, `flip_at_edges`, `viewport_margin` | Where the panel sits from its target. With `flip_at_edges` on, the default, it moves to the target's far side rather than cross the screen's edge, staying `viewport_margin` inside it. |
+
+### Lay out the HUD
+
+A map's `UI` holds two kinds of HUD.
+
+A HUD that follows an entity, such as a health bar or floating damage numbers, is a group scene inheriting `ui/hud/group_2d.tscn` or `ui/hud/group_3d.tscn`, which a `KitHudAnchor2D` or `KitHudAnchor3D` on the entity mounts on the map's `Hud` layer. The `add-entity-hud` skill walks through it, and `add-hud-element` adds a new kind of element.
+
+The game sets these on the anchor, and on the root and tracker of its group scene. The layer sets the tracker's `map` and `target` itself, so the group scene leaves them empty.
+
+| Node | Export | Value |
+| --- | --- | --- |
+| `KitHudAnchor2D`, `KitHudAnchor3D` | `group_scene` | The group scene to mount, required. |
+| `KitHudAnchor2D`, `KitHudAnchor3D` | `target` | The node the group follows, the anchor's parent when unset. Point it at a `Marker2D` or `Marker3D` to follow a point beside the entity. |
+| `KitHudGroup` | `hide_offscreen` | Hides the group while its entity is off-screen, on by default. An off-screen indicator turns it off and the tracker's `clamped` on. |
+| `WorldTracker2D`, `WorldTracker3D` | `offset` | Where the group sits from its target, in screen pixels, 24 above it in both group scenes. In 3D it doesn't hold a height above a receding entity; a `Marker3D` as the anchor's `target` does. |
+| `WorldTracker2D`, `WorldTracker3D` | `clamped`, `flip_at_edges`, `viewport_margin` | With `clamped` on, the group pins to the screen's edge while its entity is off it. With `flip_at_edges` on, it moves to the target's far side rather than cross the edge. Both are off by default, and either keeps `viewport_margin` inside the edge. |
+
+A HUD that stays in place on screen, such as resources or a wave counter, is a scene of the game's own, placed in the map's `UI` after `Hud`. Set `mouse_filter` to *Ignore* on every part of it that takes no click, so clicks reach the world. A world node signals up to the map, and the map's script calls down to the HUD. The map reads starting values in its own `_ready`, when everything below it is ready, and a world node signals only later changes.
+
+### Add an action button
+
+`ui/input/action_button.tscn` is a `KitInputActionButton`, a `Button` that stands for one action. Its icon is the glyph of the key or button bound to the action, its text is the action's translated name, and a click raises the action, held for as long as the button is. The game sets these on its instance:
+
+| Export | Value |
+| --- | --- |
+| `action_set`, `action` | The action the button stands for. |
+| `binding_index`, `player_id` | The binding the glyph draws first and the player whose devices it follows, by default the primary binding and player 1. |
+| `cycle_interval` | Seconds each bound origin shows before the glyph moves to the next, so the player sees every binding. `0`, the default, shows the first alone. |
+| `raise_action` | On by default. Off, a click raises nothing, and the game connects `pressed` as on any button. |
+| `use_action_text` | On by default, so the text follows the player's language. Off, the button keeps the `text` the game sets. |
+| `hold_text` | The translation key of the text shown while the action is a hold the player holds, with the action's name as `{action}`. Kit's `kit_hold` reads "Hold to {action}"; empty shows the name alone. |
+| `focus_anchor` | Whether focus navigation lands on the button when its screen opens. |
+
+The glyph is one and a half lines of the button's text tall, so it grows with the text size setting, and it follows the Button prompts setting. To resize every action button's glyph, the game's theme sets the integer constant `glyph_scale_percent` (150 in kit's base theme) under the type `KitInputActionButton`, or under a button's own type variation. Assistive tech reads the button as the key's name and then its text, such as "Cross, Sell". For a glyph without a button, place `ui/glyph/glyph.tscn`, a `KitInputGlyph`, which sizes the same way from its `glyph_scale` export, 1.5 by default, rather than the theme.
+
+When an action set lists the action in `holds`, the button follows the mode the hold runs in, which the player's `accessibility_holds_mode` setting can change while the game runs. Held, it shows `hold_text`, and a fill crosses the button as the hold fills. Tapped to toggle, it shows the action's name until the tap. While the hold then fills on its own, it shows `kit_hold_cancel` ("Cancel") beside its own glyph, since a second tap cancels it. The text changes width, so a row of buttons shifts with it. The button reads all of this from a `StdInputActionHoldMonitor`, which `get_hold_monitor()` returns. A game that builds its own prompt places a monitor of its own instead.
+
+The fill is the theme color `hold_fill_color`, translucent white in kit's base theme. It covers the bottom `hold_fill_height_percent` percent of the button, 100 by default, so a small value draws a bar along the bottom edge. Both sit under `KitInputActionButton` as `glyph_scale_percent` does. In a right-to-left layout the fill grows from the right. A game that sets its own text keeps it, and only the fill and glyph change.
+
+### Change the button prompts
+
+A prompt draws an origin from the first set in `Input.glyph_sets` that matches the device and has art for it, moving on to the next matching set when one has none. To change part of a family, put a set with only that art ahead of kit's, such as one Xbox button. Kit's own families layer the same way, with `xbox_one.tres` holding only View ahead of `xbox.tres`, `playstation_4.tres` only Share ahead of `playstation.tres`, and three sets for a single Joy-Con held sideways ahead of `switch.tres`. `switch_joy_con_left.tres` and `switch_joy_con_right.tres` hold the buttons that differ by side, such as the left's arrows or the right's turned letters on the face buttons, and `switch_joy_con_single.tres` holds SL, SR, the paddles Godot reports for L, ZL, R and ZR, and face buttons drawn by position for a Joy-Con whose side isn't known. `switch_joy_con_pair.tres` sits there too, holding the rail buttons a pair of Joy-Cons reports as paddles. To change all of them, replace the list, keeping those six ahead of their families and the left and right Joy-Con sets ahead of `switch_joy_con_single.tres`, so a side's own buttons win over its positional faces. Kit's art comes from the CC0 pack named in `system/input/unknown/glyphs/SOURCE.md`, which has matching art for most pads. On Steam builds the sets draw the keyboard and any pad Steam Input isn't driving, and Steam draws its own art for the rest. A bound button with no art in any matching set, or with no image in Steam, draws `Input.unknown_glyph`.
+
+Kit draws every key the same way, from one keycap resource, `system/input/unknown/glyphs/keyboard.tres`:
+
+- Every key gets the same cap. Its height follows the prompt, so a key matches the pad glyph beside it. Its width grows with the label, from a square at `min_width`.
+- A printable key shows its label in the player's keyboard layout. A named key shows the abbreviation in `labels`, such as Esc or PgDn, and the arrows show the icons in `icons`.
+- Keys are drawn in the set's `font`. Left empty, that is Godot's fallback font, which `gui/theme/custom_font` replaces and a project theme doesn't, so a game whose font lives only in its theme sets `font` here.
+
+For its own look, a game saves a copy of `keyboard.tres`, edits its `cap`, `font`, `font_size`, `color`, `padding` and `min_width`, and lists the copy in place of kit's. `min_width` equals the natural height of a key, which is a line of the label plus twice the vertical padding, so change it along with the font or padding to keep single keys square. Kit's value fits Godot's built-in font at the default `font_size` and `padding`, so a game that sets `gui/theme/custom_font` recomputes it too.
+
+One cap serves the whole game. The settings menu's binding rows show labelled keys as plain text in the theme's font instead, and only their arrows keep the cap.
+
+### Style kit's scenes
+
+Kit's scenes take their look from type variations in the game's theme:
+
+| Variation | Base type | Styles | Kit sets |
+| --- | --- | --- | --- |
+| `ButtonDialog` | `Button` | An alert's buttons. | Nothing. |
+| `ButtonMenu` | `Button` | The pause menu's buttons. | Nothing. |
+| `ButtonTabSelected`, `ButtonTabUnselected` | `Button` | The settings menu's tabs, the selected one and the rest. | `normal` on `ButtonTabUnselected`, with no box, so the selected tab stands out. |
+| `HudBar`, `HudBarGhost` | `ProgressBar` | A HUD bar's fill, and the ghost behind it that drains after a hit. | `background` and `fill` on both. `HudBar`'s `background` draws nothing, so the ghost shows through. |
+| `HudNumber`, `HudNumberCrit` | `Label` | Floating numbers, and the critical hit preset's. | `font_outline_color` and `outline_size` on both, and `font_color` on `HudNumberCrit`. |
+| `MenuBody` | `VBoxContainer` | The settings menu's tab contents. | Nothing. |
+| `PanelDialog` | `PanelContainer` | The panel behind each menu, alert and gameplay panel. | Nothing. |
+| `PanelSettingsHeader`, `PanelSettingsBody` | `PanelContainer` | The settings menu's tab bar and the area below it. | `panel` on both, drawing nothing. |
+
+`System` instances `system/theme/theme.tscn`, which fills the game's theme from kit's `ui/theme/base.tres` as `System` enters the tree. It adds only the items and base types the game's theme lacks, so the game defines just what it restyles, and an item it sets wins over kit's on the same type. Kit's base stays close to Godot's default look and sets no font sizes. The fill changes the game's theme in place rather than layering a copy over it, so the text size setting keeps resizing the theme every control reads. The editor runs no fill, so it previews kit's scenes in the game's theme alone, and the Inspector lists a variation only once the game's theme defines it.
+
+Godot reads a variation's own items before its base type's, so an item kit sets on a variation also wins over the game's item of that name on the base type. A game which styles `ProgressBar`'s `fill` still sees kit's on `HudBar` until it sets `fill` on `HudBar`. Most of the items kit sets tell a scene's parts apart, such as a HUD bar's fill from its ghost, so a game restyles them on the variation itself.
+
+A kit control's own theme items live under a type named after its class, such as the constant `glyph_scale_percent` under `KitInputActionButton`. The control looks for the item on its own type variation first, so a game can set it for one variation, and then on the class's type.
+
+### Name the button prompts
+
+A prompt names an origin, such as "Cross" in a screen reader's "Cross, Sell". The name comes from the first resource in `Input.origin_names` that matches the device and has an entry for the origin, the same search `glyph_sets` gets. Each resource is a `StdInputOriginNames` mapping buttons, stick directions, triggers, mouse buttons and keys to translation keys, translated in its `translation_context`. Kit's resources sit in `system/input/unknown/names/`: `default.tres` matches every pad, the family resources ahead of it rename what each pad calls differently, and `keyboard_mouse.tres` names the mouse buttons and the named keys, such as Enter. Keep `playstation_4.tres` ahead of `playstation.tres` and `switch_joy_con_right.tres` ahead of `switch_joy_con_single.tres`, which also matches a right Joy-Con and names its face buttons by position. Keep `switch_joy_con_left.tres`, `switch_joy_con_right.tres` and `switch_joy_con_single.tres` ahead of `switch.tres`, which also matches a Joy-Con held alone and names its buttons as a Pro Controller does, such as Home for a left Joy-Con's Capture. A key with no entry keeps its label in the player's keyboard layout, and a pad button with no entry has no name. On Steam builds the names cover the keyboard and any pad Steam Input isn't driving, and Steam names the rest, in English whatever language the player or Steam has picked.
+
+To rename an origin, put a resource with only that entry ahead of kit's, with a key from the game's own catalogue. To translate one of kit's names differently, give the game's catalogue the same key and context, such as `kit_input_origin_share` in the context `xbox`. Every value must be a translation key with a translation. A key that translates to itself asserts in debug builds and counts as no entry in release builds, so a game must list kit's catalogues in the table below.
 
 ### Configure the project
 
@@ -90,7 +231,7 @@ Kit's scenes also read these project settings:
 | --- | --- |
 | `[input]` | Defines `ui_tab_next`, `ui_tab_prev`, `ui_binding_stop` and `ui_toggle_menu`, which kit's menus name and Godot does not define. |
 | `[audio] buses/default_bus_layout` | Defines the buses `Master`, `music`, `sound_effects`, `voice`, `ui` and `game`. |
-| `[gui] theme/custom` | Defines the type variations kit's scenes name: `button_dialog`, `button_menu`, `button_tab_selected`, `button_tab_unselected`, `hud_bar`, `hud_bar_ghost`, `hud_number`, `hud_number_crit`, `menu_body` and `panel_dialog`. |
+| `[gui] theme/custom` | The game's theme, which kit fills with what its scenes need. See [Style kit's scenes](#style-kits-scenes). |
 | `[internationalization] locale/translations` | Lists every `addons/kit/locale/*.mo`, after the game's own catalogue, so a message the game defines overrides kit's. |
 
 ### Drive a running game
@@ -105,7 +246,7 @@ Game code becomes visible to it by defining `_get_debug_state() -> Dictionary` o
 
 This repository is also a plugin marketplace holding one plugin, [`kit`](./plugins/kit). [Claude Code](https://code.claude.com/docs/en/plugin-marketplaces) and Codex both read it, from the same `.claude-plugin/` files. Nothing is published anywhere; a repository references it by GitHub path. The plugin carries the skills that describe this addon:
 
-- `add-setting`, `add-save-field`, `add-input-action`, `add-sound` and `add-translation`, which extend a game built on kit. Each reads what the game owns out of its `project.godot` rather than assuming a layout.
+- `add-setting`, `add-save-field`, `add-input-action`, `add-action-button`, `add-sound` and `add-translation`, which extend a game built on kit. Each reads what the game owns out of its `project.godot` rather than assuming a layout.
 - `add-entity-hud` and `add-hud-element`, for the HUD.
 - `run-game`, and the `godot-bridge` it drives a live game with, through the debug bridge above.
 

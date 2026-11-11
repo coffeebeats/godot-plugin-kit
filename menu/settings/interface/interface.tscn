@@ -17,7 +17,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_type_variation = &"menu_body"
+theme_type_variation = &"MenuBody"
 
 [node name="Language" parent="." unique_id=1777292867 instance=ExtResource("1_o8m7n")]
 layout_mode = 2
@@ -25,6 +25,7 @@ label = "kit_options_interface_language"
 
 [node name="DisplayLanguage" parent="Language" unique_id=1312976655 instance=ExtResource("2_a2kj5")]
 layout_mode = 2
+id = &"interface_language_display"
 label = "kit_options_interface_language_display"
 
 [node name="OptionButton" parent="Language/DisplayLanguage" unique_id=23357598 instance=ExtResource("3_hhi86")]
@@ -45,6 +46,7 @@ label = "kit_options_interface_text"
 
 [node name="TextScaling" parent="Text" unique_id=1267319990 instance=ExtResource("2_a2kj5")]
 layout_mode = 2
+id = &"interface_text_scaling"
 label = "kit_options_interface_text_scaling"
 
 [node name="Slider" parent="Text/TextScaling" unique_id=1781153115 instance=ExtResource("2_81g61")]

@@ -19,6 +19,7 @@
 [ext_resource type="Script" uid="uid://dwegvnph8yf3c" path="res://addons/std/input/godot/glyph_set_joy.gd" id="17_p3bob"]
 [ext_resource type="Texture2D" uid="uid://bxip8fryjqus7" path="res://addons/kit/system/input/unknown/glyphs/xbox/l_stick.png" id="18_qayur"]
 [ext_resource type="Texture2D" uid="uid://cyi6ihf0l0wwl" path="res://addons/kit/system/input/unknown/glyphs/xbox/r_stick.png" id="19_qjb2e"]
+[ext_resource type="Texture2D" uid="uid://c73d4r70xfvw7" path="res://addons/kit/system/input/unknown/glyphs/xbox/back.png" id="20_back"]
 
 [resource]
 script = ExtResource("17_p3bob")
@@ -34,6 +35,7 @@ button_a = ExtResource("3_u2uyu")
 button_b = ExtResource("4_g8x15")
 button_x = ExtResource("15_vuy1d")
 button_y = ExtResource("16_m37b1")
+button_back = ExtResource("20_back")
 button_start = ExtResource("12_5jtqp")
 button_stick_left = ExtResource("13_o0u4k")
 button_stick_right = ExtResource("14_wm25q")

@@ -21,6 +21,7 @@
 [ext_resource type="Texture2D" uid="uid://7bm5lltgt8l0" path="res://addons/kit/system/input/unknown/glyphs/steam_controller/right_track_left.png" id="19_joutl"]
 [ext_resource type="Texture2D" uid="uid://d2q71kl5lb532" path="res://addons/kit/system/input/unknown/glyphs/steam_controller/right_track_right.png" id="20_7gcg8"]
 [ext_resource type="Texture2D" uid="uid://0cl3mtb27hlo" path="res://addons/kit/system/input/unknown/glyphs/steam_controller/right_track_up.png" id="21_60243"]
+[ext_resource type="Texture2D" uid="uid://bna7tiaq2lwoe" path="res://addons/kit/system/input/unknown/glyphs/steam_controller/steam.png" id="30_steam"]
 
 [resource]
 script = ExtResource("1_lmx2p")
@@ -44,4 +45,5 @@ button_shoulder_left = ExtResource("6_nwftv")
 button_shoulder_right = ExtResource("7_wxk66")
 analog_trigger_left = ExtResource("1_teasb")
 analog_trigger_right = ExtResource("2_vjbuo")
+button_guide = ExtResource("30_steam")
 device_types = Array[int]([5])

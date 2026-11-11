@@ -2,12 +2,44 @@
 
 [ext_resource type="Script" uid="uid://c53ct064cin6g" path="res://addons/kit/system/input/input.gd" id="1_sl0pi"]
 [ext_resource type="Resource" uid="uid://ci7xn7gttsuu2" path="res://addons/kit/platform/storefront/unknown_storefront_expression.tres" id="5_gdf77"]
+[ext_resource type="Script" uid="uid://cn6840rmirwsn" path="res://addons/std/input/godot/glyph_set.gd" id="6_set"]
+[ext_resource type="Resource" uid="uid://doesyuupu5p5t" path="res://addons/kit/system/input/unknown/glyphs/keyboard.tres" id="7_keyboard"]
+[ext_resource type="Resource" uid="uid://bip3qsb63vekp" path="res://addons/kit/system/input/unknown/glyphs/mouse.tres" id="8_mouse"]
+[ext_resource type="Resource" uid="uid://c762oejwi8vb3" path="res://addons/kit/system/input/unknown/glyphs/xbox.tres" id="9_xbox"]
+[ext_resource type="Resource" uid="uid://c2p72quwbedj7" path="res://addons/kit/system/input/unknown/glyphs/playstation.tres" id="10_playstation"]
+[ext_resource type="Resource" uid="uid://mdxuupb3ney" path="res://addons/kit/system/input/unknown/glyphs/steam_deck.tres" id="11_steam_deck"]
+[ext_resource type="Resource" uid="uid://b6swfasqq8m8i" path="res://addons/kit/system/input/unknown/glyphs/switch.tres" id="12_switch"]
+[ext_resource type="Resource" uid="uid://pya88dyjf32f" path="res://addons/kit/system/input/unknown/glyphs/steam_controller.tres" id="13_steam_controller"]
+[ext_resource type="Texture2D" uid="uid://blmivlx30mcpe" path="res://addons/kit/system/input/unknown/glyphs/unknown.svg" id="14_unknown"]
+[ext_resource type="Resource" uid="uid://o0us77poqr45" path="res://addons/kit/system/input/unknown/glyphs/xbox_one.tres" id="15_xbox_one"]
+[ext_resource type="Resource" uid="uid://dgjrcvfvcfppd" path="res://addons/kit/system/input/unknown/glyphs/playstation_4.tres" id="16_playstation_4"]
+[ext_resource type="Resource" uid="uid://cgcwcyoylompt" path="res://addons/kit/system/input/unknown/glyphs/switch_joy_con_single.tres" id="17_switch_joy_con_single"]
 [ext_resource type="Script" uid="uid://be11f4pqliry0" path="res://addons/std/condition/expression.gd" id="23_8ojx1"]
 [ext_resource type="Script" uid="uid://b48nei7xl0xrh" path="res://addons/std/condition/condition_loader.gd" id="24_hk8cf"]
 [ext_resource type="Resource" uid="uid://nggtxsyr5rs2" path="res://addons/kit/platform/storefront/steam_storefront_expression.tres" id="24_o5jdq"]
+[ext_resource type="Script" uid="uid://nxd2embtjvoe" path="res://addons/std/input/godot/origin_names.gd" id="25_names"]
+[ext_resource type="Resource" uid="uid://di25kntaxwics" path="res://addons/kit/system/input/unknown/names/keyboard_mouse.tres" id="26_names_keyboard_mouse"]
+[ext_resource type="Resource" uid="uid://be2hyhw3avc58" path="res://addons/kit/system/input/unknown/names/xbox_one.tres" id="27_names_xbox_one"]
+[ext_resource type="Resource" uid="uid://d3r63t440i1ww" path="res://addons/kit/system/input/unknown/names/xbox.tres" id="28_names_xbox"]
+[ext_resource type="Resource" uid="uid://bkcopqjvtjhc3" path="res://addons/kit/system/input/unknown/names/playstation_4.tres" id="29_names_playstation_4"]
+[ext_resource type="Resource" uid="uid://cgrv3ku6pd5pw" path="res://addons/kit/system/input/unknown/names/playstation.tres" id="30_names_playstation"]
+[ext_resource type="Resource" uid="uid://dx7uquo15ksb8" path="res://addons/kit/system/input/unknown/names/steam_deck.tres" id="31_names_steam_deck"]
+[ext_resource type="Resource" uid="uid://ivujfb5todyq" path="res://addons/kit/system/input/unknown/names/switch.tres" id="32_names_switch"]
+[ext_resource type="Resource" uid="uid://cfahqagrvkss8" path="res://addons/kit/system/input/unknown/names/steam_controller.tres" id="33_names_steam_controller"]
+[ext_resource type="Resource" uid="uid://burk1gvj6ixrx" path="res://addons/kit/system/input/unknown/names/default.tres" id="34_names_default"]
+[ext_resource type="Resource" uid="uid://dqwcbt52citaq" path="res://addons/kit/system/input/unknown/names/switch_joy_con_single.tres" id="35_names_switch_joy_con_single"]
+[ext_resource type="Resource" uid="uid://ccb356f57265c" path="res://addons/kit/system/input/unknown/glyphs/switch_joy_con_left.tres" id="36_switch_joy_con_left"]
+[ext_resource type="Resource" uid="uid://cdsh2allerliu" path="res://addons/kit/system/input/unknown/glyphs/switch_joy_con_right.tres" id="37_switch_joy_con_right"]
+[ext_resource type="Resource" uid="uid://88kpt66ul8v4" path="res://addons/kit/system/input/unknown/names/switch_joy_con_left.tres" id="38_names_switch_joy_con_left"]
+[ext_resource type="Resource" uid="uid://chr33gg6rm0kw" path="res://addons/kit/system/input/unknown/names/switch_joy_con_right.tres" id="39_names_switch_joy_con_right"]
+[ext_resource type="Resource" uid="uid://diibwsx72xyfy" path="res://addons/kit/system/input/unknown/glyphs/switch_joy_con_pair.tres" id="40_switch_joy_con_pair"]
+[ext_resource type="Resource" uid="uid://8i4oq0sqhjnd" path="res://addons/kit/system/input/unknown/names/switch_joy_con_pair.tres" id="41_names_switch_joy_con_pair"]
 
 [node name="Input" type="Node" unique_id=1621058833]
 script = ExtResource("1_sl0pi")
+glyph_sets = Array[ExtResource("6_set")]([ExtResource("7_keyboard"), ExtResource("8_mouse"), ExtResource("15_xbox_one"), ExtResource("9_xbox"), ExtResource("16_playstation_4"), ExtResource("10_playstation"), ExtResource("11_steam_deck"), ExtResource("36_switch_joy_con_left"), ExtResource("37_switch_joy_con_right"), ExtResource("17_switch_joy_con_single"), ExtResource("40_switch_joy_con_pair"), ExtResource("12_switch"), ExtResource("13_steam_controller")])
+origin_names = Array[ExtResource("25_names")]([ExtResource("26_names_keyboard_mouse"), ExtResource("27_names_xbox_one"), ExtResource("28_names_xbox"), ExtResource("29_names_playstation_4"), ExtResource("30_names_playstation"), ExtResource("31_names_steam_deck"), ExtResource("38_names_switch_joy_con_left"), ExtResource("39_names_switch_joy_con_right"), ExtResource("35_names_switch_joy_con_single"), ExtResource("41_names_switch_joy_con_pair"), ExtResource("32_names_switch"), ExtResource("33_names_steam_controller"), ExtResource("34_names_default")])
+unknown_glyph = ExtResource("14_unknown")
 
 [node name="IfGodot" type="Node" parent="." unique_id=1140435662]
 script = ExtResource("24_hk8cf")

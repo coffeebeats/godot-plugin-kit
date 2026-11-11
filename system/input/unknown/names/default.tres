@@ -1,0 +1,38 @@
+[gd_resource type="Resource" script_class="StdInputOriginNames" format=3 uid="uid://burk1gvj6ixrx"]
+
+[ext_resource type="Script" uid="uid://nxd2embtjvoe" path="res://addons/std/input/godot/origin_names.gd" id="1_kd562"]
+
+[resource]
+script = ExtResource("1_kd562")
+device_types = Array[int]([1, 3, 4, 5, 6, 7, 8, 9, 11, 12])
+translation_context = &"gamepad"
+joy_buttons = Dictionary[int, StringName]({
+0: &"kit_input_origin_a",
+1: &"kit_input_origin_b",
+2: &"kit_input_origin_x",
+3: &"kit_input_origin_y",
+4: &"kit_input_origin_back",
+6: &"kit_input_origin_menu",
+7: &"kit_input_origin_ls",
+8: &"kit_input_origin_rs",
+9: &"kit_input_origin_lb",
+10: &"kit_input_origin_rb",
+11: &"kit_input_origin_dpad_up",
+12: &"kit_input_origin_dpad_down",
+13: &"kit_input_origin_dpad_left",
+14: &"kit_input_origin_dpad_right"
+})
+joy_axes_negative = Dictionary[int, StringName]({
+0: &"kit_input_origin_left_stick_left",
+1: &"kit_input_origin_left_stick_up",
+2: &"kit_input_origin_right_stick_left",
+3: &"kit_input_origin_right_stick_up"
+})
+joy_axes_positive = Dictionary[int, StringName]({
+0: &"kit_input_origin_left_stick_right",
+1: &"kit_input_origin_left_stick_down",
+2: &"kit_input_origin_right_stick_right",
+3: &"kit_input_origin_right_stick_down",
+4: &"kit_input_origin_lt",
+5: &"kit_input_origin_rt"
+})

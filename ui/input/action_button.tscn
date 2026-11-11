@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://bx0km0f1utuen"]
+
+[ext_resource type="Script" uid="uid://dk3faprav468d" path="res://addons/kit/ui/input/action_button.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://11thq3wp16vi" path="res://addons/kit/ui/input/focus_handler.tscn" id="2_focus"]
+
+[node name="ActionButton" type="Button" unique_id=1884207562]
+action_mode = 0
+script = ExtResource("1_script")
+
+[node name="FocusHandler" parent="." unique_id=1219538841 instance=ExtResource("2_focus")]

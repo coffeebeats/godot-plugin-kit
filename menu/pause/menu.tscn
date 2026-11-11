@@ -24,10 +24,7 @@ confirm_quit_scene = ExtResource("10_quit")
 confirm_return_scene = ExtResource("11_return")
 settings_screen = ExtResource("8_settings")
 
-[node name="StdInputActionSetLoader" type="Control" parent="."]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="StdInputActionSetLoader" type="Node" parent="."]
 script = ExtResource("5_loader")
 action_set = ExtResource("6_menu")
 action_set_layers = Array[ExtResource("9_layer")]([ExtResource("7_opts")])
@@ -52,7 +49,7 @@ mouse_filter = 2
 [node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
 custom_minimum_size = Vector2(480, 0)
 layout_mode = 2
-theme_type_variation = &"panel_dialog"
+theme_type_variation = &"PanelDialog"
 
 [node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer"]
 layout_mode = 2
@@ -73,39 +70,35 @@ horizontal_alignment = 1
 [node name="Resume" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"button_menu"
+theme_type_variation = &"ButtonMenu"
 text = "kit_pause_resume"
 
 [node name="FocusHandler" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Resume" instance=ExtResource("3_focus")]
-layout_mode = 0
 use_as_anchor = true
 
 [node name="Options" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"button_menu"
+theme_type_variation = &"ButtonMenu"
 text = "kit_pause_options"
 
 [node name="FocusHandler" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Options" instance=ExtResource("3_focus")]
-layout_mode = 0
 
 [node name="Return" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"button_menu"
+theme_type_variation = &"ButtonMenu"
 text = "kit_pause_return_to_menu"
 
 [node name="FocusHandler" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Return" instance=ExtResource("3_focus")]
-layout_mode = 0
 
 [node name="Quit" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"button_menu"
+theme_type_variation = &"ButtonMenu"
 text = "kit_pause_quit"
 
 [node name="FocusHandler" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/Quit" instance=ExtResource("3_focus")]
-layout_mode = 0
 
 [node name="CloseButton" parent="CenterContainer/PanelContainer" instance=ExtResource("4_close")]
 layout_mode = 2

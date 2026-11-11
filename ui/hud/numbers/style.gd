@@ -17,8 +17,8 @@ extends Resource
 @export var format: String = "%d"
 
 ## theme_variation is the theme type variation the label uses, which is where its font
-## and color live. See `hud_number` in the game's theme.
-@export var theme_variation: StringName = &"hud_number"
+## and color live. See `HudNumber` in the game's theme.
+@export var theme_variation: StringName = &"HudNumber"
 
 @export_group("Motion")
 

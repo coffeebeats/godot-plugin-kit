@@ -35,6 +35,13 @@ const DEVICE_TYPE_KEYBOARD := StdInputDevice.DEVICE_TYPE_KEYBOARD
 ## resets its own device's binding.
 @export var device_category: StdInputDevice.DeviceType = DEVICE_TYPE_KEYBOARD
 
+## linked_layers are layers over other sets which declare some of `action_set`'s
+## actions. A reset also returns those actions' bindings in each of them to their
+## defaults.
+##
+## NOTE: This property is only used if `action_set` is specified.
+@export var linked_layers: Array[StdInputActionSetLayer] = []
+
 @export_subgroup("Bindings ")
 
 ## bindings is a list of `Binding`-typed nodes which this `Reset` node will apply to.
@@ -68,33 +75,43 @@ func _ready() -> void:
 
 	for binding in bindings:
 		assert(binding is Binding, "invalid state; missing binding")
-		assert(binding.glyph is StdInputGlyph, "invalid state; missing glyph")
-		assert(binding.glyph.action, "invalid state; missing action")
+		assert(binding.action, "invalid state; missing action")
 		assert(
-			binding.glyph.action_set is StdInputActionSet,
+			binding.action_set is StdInputActionSet,
 			"invalid state; missing action set",
 		)
 
 		assert(
-			(
-				not _prefix_category
-				or binding.glyph.action_set.name + "/" == _prefix_category
-			),
+			not _prefix_category or binding.action_set.name + "/" == _prefix_category,
 			"invalid config; conflicting binding",
 		)
-		_prefix_category = binding.glyph.action_set.name + "/"
+		_prefix_category = binding.action_set.name + "/"
 
 		assert(
-			not _prefix_key or binding.glyph.action + "/" == _prefix_key,
+			not _prefix_key or binding.action + "/" == _prefix_key,
 			"invalid config; conflicting binding",
 		)
-		_prefix_key = binding.glyph.action + "/"
+		_prefix_key = binding.action + "/"
 
 	# Defer this call so parent nodes can set properties on this one.
 	call_deferred(&"_update_visibility")
 
 
 # -- PRIVATE METHODS ----------------------------------------------------------------- #
+
+
+## _reset_linked_layers returns the bindings of `action_set`'s actions in each of
+## `linked_layers` to their defaults, leaving the layers' other actions alone.
+func _reset_linked_layers() -> void:
+	for layer in linked_layers:
+		var actions := layer.list_action_names()
+
+		for action in action_set.list_action_names():
+			if action not in actions or action in action_set.actions_analog_2d:
+				continue
+
+			for index in StdInputDeviceActions.BindingIndex.values():
+				Bindings.reset_action(scope, layer, action, device_category, index)
 
 
 func _update_visibility() -> void:
@@ -132,6 +149,7 @@ func _on_pressed() -> void:
 		_is_update_handled = true
 
 		Bindings.reset_all_actions(scope, action_set, device_category)
+		_reset_linked_layers()
 
 		next_focus = find_valid_focus_neighbor(SIDE_BOTTOM)
 	else:

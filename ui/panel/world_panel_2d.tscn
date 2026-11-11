@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://dleh832co10ux"]
+
+[ext_resource type="PackedScene" uid="uid://bk8s5mg16rk2s" path="res://addons/kit/ui/panel/panel.tscn" id="1_panel"]
+[ext_resource type="Script" uid="uid://bqy620qm37s1n" path="res://addons/kit/ui/tracker/world_tracker_2d.gd" id="2_tracker"]
+
+[node name="WorldPanel2D" instance=ExtResource("1_panel")]
+
+[node name="WorldTracker2D" type="Node" parent="." unique_id=1704338739]
+script = ExtResource("2_tracker")
+flip_at_edges = true

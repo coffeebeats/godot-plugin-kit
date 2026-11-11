@@ -18,6 +18,8 @@
 [ext_resource type="Texture2D" uid="uid://cws74ctsqhkua" path="res://addons/kit/system/input/unknown/glyphs/steam_deck/r_stick_click.png" id="13_byrtc"]
 [ext_resource type="Texture2D" uid="uid://ckjboum82csef" path="res://addons/kit/system/input/unknown/glyphs/steam_deck/l_stick.png" id="13_jep03"]
 [ext_resource type="Texture2D" uid="uid://5oosfttwvisa" path="res://addons/kit/system/input/unknown/glyphs/steam_deck/r_stick.png" id="14_m5kwb"]
+[ext_resource type="Texture2D" uid="uid://bo6x16bhxx8v5" path="res://addons/kit/system/input/unknown/glyphs/steam_deck/view.png" id="15_view"]
+[ext_resource type="Texture2D" uid="uid://b1ovf2sbcmbsk" path="res://addons/kit/system/input/unknown/glyphs/steam_deck/steam.png" id="30_steam"]
 
 [resource]
 script = ExtResource("1_c61uw")
@@ -33,6 +35,7 @@ button_a = ExtResource("2_hnc1u")
 button_b = ExtResource("3_hbqia")
 button_x = ExtResource("10_luid8")
 button_y = ExtResource("11_0ssnp")
+button_back = ExtResource("15_view")
 button_start = ExtResource("9_k87da")
 button_stick_left = ExtResource("12_lnhpf")
 button_stick_right = ExtResource("13_byrtc")
@@ -44,4 +47,5 @@ button_dpad_left = ExtResource("5_pkxcd")
 button_dpad_right = ExtResource("6_anql0")
 analog_trigger_left = ExtResource("1_bos43")
 analog_trigger_right = ExtResource("2_w078o")
+button_guide = ExtResource("30_steam")
 device_types = Array[int]([6])

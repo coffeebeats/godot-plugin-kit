@@ -1,0 +1,351 @@
+##
+## KitInputActionButton is a `Button` which stands for an input action. Its icon is the
+## glyph of the origin bound to the action, its text is the action's translated name,
+## and a click raises the action, so a key, a click and synthetic input share one
+## handler. The glyph's height is a multiple of a line of the button's text, so it
+## follows the player's text size.
+##
+## When an active set declares the action a hold, the button shows what its
+## `StdInputActionHoldMonitor` reports: `hold_text` for a hold the player holds, a
+## cancel prompt while a tapped toggle runs, and a fill as the hold fills.
+##
+## NOTE: The handler the action reaches validates it, since a key gets there whether or
+## not the button is enabled.
+##
+
+@tool
+class_name KitInputActionButton
+extends Button
+
+# -- DEPENDENCIES -------------------------------------------------------------------- #
+
+const GlyphTypeProperty := preload(
+	"res://system/setting/controls/glyph_type_property.tres"
+)
+const Locales := preload("../../locale/locales.gd")
+
+# -- DEFINITIONS --------------------------------------------------------------------- #
+
+## MSGID_ACTION_NAME is the template for the button's accessible name, which joins the
+## origin's name, as `{origin}`, and the button's text, as `{action}`.
+const MSGID_ACTION_NAME := &"kit_input_action_name"
+
+## MSGCTXT_HOLD_CANCEL is the translation context of `MSGID_HOLD_CANCEL`, which keeps
+## its translation apart from the catalogue's other "Cancel" entries.
+const MSGCTXT_HOLD_CANCEL := &"hold"
+
+## MSGID_HOLD_CANCEL is the button's text while a tapped toggle runs, since a second
+## tap cancels it.
+const MSGID_HOLD_CANCEL := &"kit_hold_cancel"
+
+## MSGID_HOLD is the default `hold_text`, which formats the action's name as `{action}`.
+const MSGID_HOLD := &"kit_hold"
+
+## THEME_GLYPH_SCALE_PERCENT is the theme constant giving the glyph's height as a
+## percentage of a line of the button's text, read from the button's own types and then
+## `THEME_TYPE`; `_GLYPH_SCALE_PERCENT_DEFAULT` when neither has it.
+const THEME_GLYPH_SCALE_PERCENT := &"glyph_scale_percent"
+
+## THEME_HOLD_FILL_COLOR is the theme color of the fill a running hold draws over the
+## button, read as `THEME_GLYPH_SCALE_PERCENT` is; translucent white when neither type
+## has it.
+const THEME_HOLD_FILL_COLOR := &"hold_fill_color"
+
+## THEME_HOLD_FILL_HEIGHT_PERCENT is the theme constant giving the fill's height as a
+## percentage of the button's, rising from its bottom edge, read as
+## `THEME_GLYPH_SCALE_PERCENT` is; 100, covering the button, when neither type has it.
+const THEME_HOLD_FILL_HEIGHT_PERCENT := &"hold_fill_height_percent"
+
+## THEME_TYPE is the theme type holding the button's own theme items.
+const THEME_TYPE := &"KitInputActionButton"
+
+## _GLYPH_SCALE_PERCENT_DEFAULT is the glyph's height, as a percentage of a line of the
+## button's text, when no theme sets `THEME_GLYPH_SCALE_PERCENT`.
+const _GLYPH_SCALE_PERCENT_DEFAULT := 150
+
+## _HOLD_FILL_COLOR_DEFAULT is the fill's color when no theme sets
+## `THEME_HOLD_FILL_COLOR`.
+const _HOLD_FILL_COLOR_DEFAULT := Color(1.0, 1.0, 1.0, 0.25)
+
+# -- CONFIGURATION ------------------------------------------------------------------- #
+
+@export_subgroup("Action")
+
+## action_set is the action set which defines `action`.
+@export var action_set: StdInputActionSet = null:
+	set(value):
+		action_set = value
+		if _glyph:
+			_glyph.action_set = value
+			_update_text()
+
+## action is the input action the button stands for.
+@export var action := &"":
+	set(value):
+		action = value
+		if _glyph:
+			_glyph.action = value
+			_hold_monitor.action = value
+			_update_text()
+			_update_trigger()
+
+## binding_index is the binding (e.g. primary or secondary) whose glyph is drawn first.
+## An unbound index is skipped, so the button draws the next binding instead.
+@export var binding_index: int = 0:
+	set(value):
+		binding_index = value
+		if _glyph:
+			_glyph.binding_index = value
+
+## cycle_interval is the time in seconds each origin bound to the action is shown before
+## the glyph advances to the next, starting over from `binding_index`, so a player sees
+## every binding; `0` shows the first alone.
+@export var cycle_interval: float = 0.0:
+	set(value):
+		cycle_interval = value
+		if _glyph:
+			_glyph.cycle_interval = value
+
+## player_id selects the player whose `StdInputSlot` supplies the bindings and runs the
+## action's hold.
+@export var player_id: int = 1:
+	set(value):
+		player_id = value
+		if _glyph:
+			_glyph.player_id = value
+			_hold_monitor.player_id = value
+
+@export_subgroup("Behavior")
+
+## raise_action is whether a click raises `action`, held for as long as the button is.
+## Off, the button raises nothing and a game connects `pressed` as on any button.
+@export var raise_action: bool = true:
+	set(value):
+		raise_action = value
+		_update_trigger()
+
+## use_action_text is whether `text` is the action's translated name, following the
+## player's language. Off, the button keeps the `text` a game sets.
+@export var use_action_text: bool = true:
+	set(value):
+		use_action_text = value
+		_update_text()
+
+## hold_text is the translation key of the text shown, while `use_action_text` is on,
+## when `action` is a hold the player holds, with the action's name as `{action}`.
+## Empty, the button shows the name alone.
+@export var hold_text: StringName = MSGID_HOLD:
+	set(value):
+		hold_text = value
+		_update_text()
+
+## focus_anchor is whether focus navigation may land on the button when its screen
+## opens. It takes effect when the button enters the tree.
+@export var focus_anchor: bool = false
+
+# -- INITIALIZATION ------------------------------------------------------------------ #
+
+## _glyph is the texture which draws the action's glyph as `icon`.
+var _glyph: StdInputGlyphTexture = null
+
+## _hold_monitor reports the hold of `action`, which the text and fill show.
+var _hold_monitor: StdInputActionHoldMonitor = null
+
+## _trigger raises `action` on a click while `raise_action` is on.
+var _trigger: StdInputActionTrigger = null
+
+# -- PUBLIC METHODS ------------------------------------------------------------------ #
+
+
+## get_glyph returns the texture which draws the action's glyph as `icon`.
+func get_glyph() -> StdInputGlyphTexture:
+	return _glyph
+
+
+## get_hold_monitor returns the monitor reporting the hold of `action`, whose `changed`
+## a game connects to show more of the hold than the button does.
+func get_hold_monitor() -> StdInputActionHoldMonitor:
+	return _hold_monitor
+
+
+# -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
+
+
+func _draw() -> void:
+	var progress := _hold_monitor.get_progress() if _hold_monitor else 0.0
+	if progress <= 0.0:
+		return
+
+	var percent := clampi(_get_theme_int(THEME_HOLD_FILL_HEIGHT_PERCENT, 100), 0, 100)
+	var fill := Vector2(size.x * progress, size.y * percent / 100.0)
+	var x := size.x - fill.x if is_layout_rtl() else 0.0
+
+	draw_rect(
+		Rect2(Vector2(x, size.y - fill.y), fill),
+		_get_theme_color(THEME_HOLD_FILL_COLOR, _HOLD_FILL_COLOR_DEFAULT),
+	)
+
+
+func _enter_tree() -> void:
+	# NOTE: The handler registers as an anchor when it enters the tree, just after this.
+	var handler := get_node_or_null(^"FocusHandler") as StdInputCursorFocusHandler
+	if handler:
+		handler.use_as_anchor = focus_anchor
+
+
+func _get_configuration_warnings() -> PackedStringArray:
+	var warnings := PackedStringArray()
+
+	if not action_set is StdInputActionSet:
+		warnings.append("missing action set")
+
+	elif not action:
+		warnings.append("missing action")
+
+	elif action not in action_set.list_action_names():
+		warnings.append("invalid action; not in action set")
+
+	return warnings
+
+
+func _init() -> void:
+	if Engine.is_editor_hint():
+		return
+
+	_glyph = StdInputGlyphTexture.new()
+	_glyph.device_type_override = GlyphTypeProperty
+	_glyph.changed.connect(_update_accessibility_name)
+	icon = _glyph
+
+	_hold_monitor = StdInputActionHoldMonitor.new()
+	_hold_monitor.changed.connect(_on_hold_monitor_changed)
+	add_child(_hold_monitor, false, INTERNAL_MODE_FRONT)
+
+
+func _notification(what: int) -> void:
+	if not _glyph:
+		return
+
+	match what:
+		NOTIFICATION_THEME_CHANGED:
+			_update_size()
+		NOTIFICATION_TRANSLATION_CHANGED:
+			_update_text()
+		NOTIFICATION_ACCESSIBILITY_UPDATE:
+			# NOTE: A game's own `text` reaches the name here, which Godot sends only while
+			# assistive tech is listening.
+			_update_accessibility_name()
+
+
+func _ready() -> void:
+	if Engine.is_editor_hint():
+		return
+
+	_update_text()
+	_update_trigger()
+
+	# NOTE: This binds the texture to the player's slot and draws it.
+	_glyph.update()
+
+
+func _validate_property(property: Dictionary) -> void:
+	# NOTE: The glyph is the icon, so an icon set in a scene would only be replaced.
+	if property[&"name"] == &"icon":
+		property[&"usage"] = PROPERTY_USAGE_NONE
+
+
+# -- PRIVATE METHODS ----------------------------------------------------------------- #
+
+
+## _get_theme_color returns the theme color `item` from the button's own types, then
+## `THEME_TYPE`, or `default` when neither has it.
+func _get_theme_color(item: StringName, default: Color) -> Color:
+	for theme_type in [&"", THEME_TYPE]:
+		if has_theme_color(item, theme_type):
+			return get_theme_color(item, theme_type)
+
+	return default
+
+
+## _get_theme_int returns the theme constant `item` from the button's own types, then
+## `THEME_TYPE`, or `default` when neither has it.
+func _get_theme_int(item: StringName, default: int) -> int:
+	for theme_type in [&"", THEME_TYPE]:
+		if has_theme_constant(item, theme_type):
+			return get_theme_constant(item, theme_type)
+
+	return default
+
+
+## _update_accessibility_name names the button by the origin bound to the action and
+## its text, such as "Cross, Sell". With no origin it clears the name, so assistive tech
+## reads the text alone.
+func _update_accessibility_name() -> void:
+	var origin := _glyph.get_origin_label()
+
+	if not origin:
+		accessibility_name = ""
+	elif not text:
+		accessibility_name = origin
+	else:
+		accessibility_name = tr(MSGID_ACTION_NAME).format(
+			{&"origin": origin, &"action": text}
+		)
+
+
+## _update_size sets the glyph's height to a line of the button's text, times the
+## theme's `THEME_GLYPH_SCALE_PERCENT`.
+func _update_size() -> void:
+	var line := get_theme_font(&"font").get_height(get_theme_font_size(&"font_size"))
+	var percent := _get_theme_int(
+		THEME_GLYPH_SCALE_PERCENT, _GLYPH_SCALE_PERCENT_DEFAULT
+	)
+	_glyph.size = roundi(line * percent / 100.0)
+
+
+## _update_text sets `text` while `use_action_text` is on, to the action's translated
+## name or its hold's prompt. It waits for the tree, so a scene's own `text` and
+## `use_action_text` load first and a button built in code has no text until then.
+func _update_text() -> void:
+	if not _glyph or not is_inside_tree():
+		return
+
+	if not use_action_text or not action_set or not action:
+		return
+
+	var action_text := Locales.tr_action(action_set.name, action)
+
+	if _hold_monitor.is_toggle_running():
+		text = tr(MSGID_HOLD_CANCEL, MSGCTXT_HOLD_CANCEL)
+	elif _hold_monitor.get_mode() == StdInputActionHold.MODE_HOLD and hold_text:
+		text = tr(hold_text).format({&"action": action_text})
+	else:
+		text = action_text
+
+	_update_accessibility_name()
+
+
+## _update_trigger adds the trigger which raises `action` while `raise_action` is on,
+## and removes it otherwise. A trigger removed while held releases the action.
+func _update_trigger() -> void:
+	if not _glyph or not is_inside_tree():
+		return
+
+	var wanted := raise_action and action != &""
+
+	if _trigger and (not wanted or _trigger.action != action):
+		_trigger.free()
+		_trigger = null
+
+	if wanted and not _trigger:
+		_trigger = StdInputActionTrigger.new()
+		_trigger.action = action
+		add_child(_trigger, false, INTERNAL_MODE_BACK)
+
+
+# -- SIGNAL HANDLERS ----------------------------------------------------------------- #
+
+
+func _on_hold_monitor_changed() -> void:
+	_update_text()
+	queue_redraw()

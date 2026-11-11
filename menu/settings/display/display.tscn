@@ -17,7 +17,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_type_variation = &"menu_body"
+theme_type_variation = &"MenuBody"
 
 [node name="Video" parent="." unique_id=1276744746 instance=ExtResource("1_xfdfg")]
 layout_mode = 2
@@ -25,6 +25,7 @@ label = "kit_options_display_video"
 
 [node name="Fullscreen" parent="Video" unique_id=1371738798 instance=ExtResource("2_gb8tg")]
 layout_mode = 2
+id = &"display_video_fullscreen"
 label = "kit_options_display_video_fullscreen"
 
 [node name="Checkbox" parent="Video/Fullscreen" unique_id=524245280 instance=ExtResource("3_mhfj1")]
@@ -39,6 +40,7 @@ property = ExtResource("5_ik6tg")
 
 [node name="Borderless" parent="Video" unique_id=1779355016 instance=ExtResource("2_gb8tg")]
 layout_mode = 2
+id = &"display_video_borderless"
 label = "kit_options_display_video_borderless"
 
 [node name="Checkbox" parent="Video/Borderless" unique_id=387059088 instance=ExtResource("3_mhfj1")]
@@ -50,6 +52,7 @@ property = ExtResource("6_51jay")
 
 [node name="MaxFrameLimit" parent="Video" unique_id=750168819 instance=ExtResource("2_gb8tg")]
 layout_mode = 2
+id = &"display_video_fps_limit"
 label = "kit_options_display_video_fps_limit"
 
 [node name="Slider" parent="Video/MaxFrameLimit" unique_id=1460944528 instance=ExtResource("7_bou38")]
@@ -62,6 +65,7 @@ target = NodePath("../HSlider")
 
 [node name="Vsync" parent="Video" unique_id=1393891559 instance=ExtResource("2_gb8tg")]
 layout_mode = 2
+id = &"display_video_vsync"
 label = "kit_options_display_video_vsync"
 
 [node name="Checkbox" parent="Video/Vsync" unique_id=460128563 instance=ExtResource("3_mhfj1")]

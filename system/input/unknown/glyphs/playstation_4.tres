@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="StdInputGlyphSetJoy" format=3 uid="uid://dgjrcvfvcfppd"]
+
+[ext_resource type="Script" uid="uid://dwegvnph8yf3c" path="res://addons/std/input/godot/glyph_set_joy.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://023cvwaubowp" path="res://addons/kit/system/input/unknown/glyphs/playstation/share.png" id="2_button_back"]
+
+[resource]
+script = ExtResource("1_script")
+button_back = ExtResource("2_button_back")
+device_types = Array[int]([3])

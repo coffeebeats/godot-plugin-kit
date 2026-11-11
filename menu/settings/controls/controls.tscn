@@ -47,35 +47,21 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_type_variation = &"menu_body"
+theme_type_variation = &"MenuBody"
 script = ExtResource("29_ctrls")
 scope = ExtResource("21_dqueq")
 
 [node name="Controller" type="VBoxContainer" parent="." unique_id=1067462580]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"menu_body"
+theme_type_variation = &"MenuBody"
 
 [node name="Steam" type="Node" parent="Controller" unique_id=227106428]
-
-[node name="ShowConfigurator" type="Node" parent="Controller/Steam" unique_id=1656845675 node_paths=PackedStringArray("targets")]
-script = ExtResource("1_slt8e")
-targets = [NodePath("../../SteamInput")]
-expressions_allow = Array[ExtResource("2_xiafk")]([SubResource("Resource_pi47t")])
 
 [node name="HideActionSets" type="Node" parent="Controller/Steam" unique_id=1583061204 node_paths=PackedStringArray("targets")]
 script = ExtResource("1_slt8e")
 targets = [NodePath("../../../ActionSets")]
 expressions_allow = Array[ExtResource("2_xiafk")]([SubResource("Resource_w3k9d")])
-
-[node name="StdConditionParent" type="Node" parent="Controller/Steam" unique_id=1290507853]
-script = ExtResource("7_i8vxq")
-expressions_allow = Array[ExtResource("2_xiafk")]([SubResource("Resource_jhqli")])
-
-[node name="SteamConfigurator" type="Node" parent="Controller/Steam/StdConditionParent" unique_id=260426632 node_paths=PackedStringArray("button")]
-script = ExtResource("9_d7lqc")
-button = NodePath("../../../SteamInput/Configurator/Prompt")
-configurator = "uid://dm7wsbaixmu22"
 
 [node name="Gamepad" parent="Controller" unique_id=91263986 instance=ExtResource("10_heyw7")]
 layout_mode = 2
@@ -83,6 +69,7 @@ label = "kit_options_controls_gamepad"
 
 [node name="ButtonPrompt" parent="Controller/Gamepad" unique_id=1305254804 instance=ExtResource("11_ph7kg")]
 layout_mode = 2
+id = &"controller_button_prompt"
 label = "kit_options_controls_button_prompt"
 
 [node name="OptionButton" parent="Controller/Gamepad/ButtonPrompt" unique_id=517560482 instance=ExtResource("14_f6pwm")]
@@ -99,6 +86,7 @@ formatter = ExtResource("18_8p5d5")
 
 [node name="DisableVibration" parent="Controller/Gamepad" unique_id=375030441 instance=ExtResource("11_ph7kg")]
 layout_mode = 2
+id = &"controller_disable_vibration"
 label = "kit_options_controls_disable_vibration"
 
 [node name="Checkbox" parent="Controller/Gamepad/DisableVibration" unique_id=1716786017 instance=ExtResource("12_jaj02")]
@@ -110,6 +98,7 @@ property = ExtResource("14_rj08w")
 
 [node name="VibrationStrength" parent="Controller/Gamepad" unique_id=1334046052 instance=ExtResource("11_ph7kg")]
 layout_mode = 2
+id = &"controller_vibration_strength"
 label = "kit_options_controls_vibration_strength"
 
 [node name="Slider" parent="Controller/Gamepad/VibrationStrength" unique_id=992911386 instance=ExtResource("15_8qtro")]
@@ -125,14 +114,29 @@ disabled = ExtResource("14_rj08w")
 layout_mode = 2
 label = "kit_options_controls_steam"
 
+[node name="ShowConfigurator" type="Node" parent="Controller/SteamInput" unique_id=1656845675 node_paths=PackedStringArray("targets")]
+script = ExtResource("1_slt8e")
+targets = [NodePath("..")]
+expressions_allow = Array[ExtResource("2_xiafk")]([SubResource("Resource_pi47t")])
+
 [node name="Configurator" parent="Controller/SteamInput" unique_id=59299337 instance=ExtResource("11_ph7kg")]
 layout_mode = 2
+id = &"controller_steam_configurator"
 label = "kit_options_controls_steam_configurator"
 
 [node name="Prompt" parent="Controller/SteamInput/Configurator" unique_id=1164586023 instance=ExtResource("18_v42t3")]
 custom_minimum_size = Vector2(128, 48)
 layout_mode = 2
 text = "OPEN"
+
+[node name="StdConditionParent" type="Node" parent="Controller/SteamInput/Configurator" unique_id=1290507853]
+script = ExtResource("7_i8vxq")
+expressions_allow = Array[ExtResource("2_xiafk")]([SubResource("Resource_jhqli")])
+
+[node name="SteamConfigurator" type="Node" parent="Controller/SteamInput/Configurator/StdConditionParent" unique_id=260426632 node_paths=PackedStringArray("button")]
+script = ExtResource("9_d7lqc")
+button = NodePath("../../Prompt")
+configurator = "uid://dm7wsbaixmu22"
 
 [node name="Disconnected" type="Label" parent="Controller" unique_id=1726503318]
 unique_name_in_owner = true
@@ -144,7 +148,7 @@ autowrap_mode = 3
 [node name="Keyboard" type="VBoxContainer" parent="." unique_id=1439178426]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"menu_body"
+theme_type_variation = &"MenuBody"
 
 [node name="Mouse" parent="Keyboard" unique_id=1950413672 instance=ExtResource("10_heyw7")]
 layout_mode = 2
@@ -152,6 +156,7 @@ label = "kit_options_controls_mouse"
 
 [node name="ConfineCursor" parent="Keyboard/Mouse" unique_id=731845120 instance=ExtResource("11_ph7kg")]
 layout_mode = 2
+id = &"keyboard_mouse_confine_cursor"
 label = "kit_options_controls_confine_cursor"
 
 [node name="Checkbox" parent="Keyboard/Mouse/ConfineCursor" unique_id=1288135067 instance=ExtResource("12_jaj02")]
@@ -167,7 +172,7 @@ property = ExtResource("3_c0nf1")
 [node name="ActionSets" type="VBoxContainer" parent="." unique_id=1871204496]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"menu_body"
+theme_type_variation = &"MenuBody"
 
 [node name="MenuControls" parent="ActionSets" unique_id=1209626123 instance=ExtResource("19_ngc7g")]
 unique_name_in_owner = true
@@ -181,6 +186,7 @@ action_set = ExtResource("22_6tsaj")
 scope = ExtResource("21_dqueq")
 
 [node name="MenuOptions" parent="ActionSets" unique_id=123406559 instance=ExtResource("19_ngc7g")]
+unique_name_in_owner = true
 layout_mode = 2
 action_set = ExtResource("28_8eihr")
 scope = ExtResource("21_dqueq")
