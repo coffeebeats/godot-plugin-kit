@@ -41,7 +41,7 @@ func test_to_locale_every_kit_locale_is_reached_from_a_steam_code() -> void:
 	var locales := _list_kit_locales()
 	assert_gt(locales.size(), 0, "precondition")
 
-	# Given: Every locale Steam's codes map to, matched to kit's closest locale.
+	# When: Every Steam code's locale is matched to kit's closest locale.
 	var reached: Array[String] = []
 	for code in StdInputSteamLanguages.LOCALES:
 		reached.append(_find_closest(SteamStorefront.to_locale(code), locales))

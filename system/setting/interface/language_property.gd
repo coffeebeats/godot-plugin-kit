@@ -19,8 +19,8 @@ const Storefront := preload("../../../platform/storefront/storefront.gd")
 # -- PUBLIC METHODS ------------------------------------------------------------------ #
 
 
-## initialize sets up the default value for this property. This must be called after the
-## configuration data has been hydrated from disk.
+## initialize sets this property's default and erases a saved language that isn't among
+## the loaded locales. It must be called after the configuration loads from disk.
 func initialize() -> void:
 	assert(scope, "invalid state; missing scope")
 	assert(default == "", "invalid state; has this property already been initialized?")
