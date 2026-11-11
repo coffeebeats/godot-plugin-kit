@@ -14,8 +14,8 @@ var _logger := StdLogger.create(&"platform/storefront/steam")
 
 
 ## has_language_choice returns whether `available`, Steam's comma-separated list of the
-## game's languages, offers more than one. With one or none, Steam names English even
-## for a player whose client is in another language.
+## game's languages, offers more than one. With one, Steam can only name that language,
+## and with none it names English, so neither reflects the player's choice.
 static func has_language_choice(available: String) -> bool:
 	return available.split(",", false).size() > 1
 
