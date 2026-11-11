@@ -15,6 +15,23 @@ const Provider := preload("provider.gd")
 ## MODULE_ID is the ID the storefront registers under as a `KitModule`.
 const MODULE_ID := &"storefront"
 
+# -- PUBLIC METHODS ------------------------------------------------------------------ #
+
+
+## find_locale returns the locale of the language the build's storefront has for the
+## game, or an empty string unless exactly one implementation is in the scene tree and
+## it names one.
+##
+## NOTE: Kit's scripts call this rather than naming the `Platform` autoload, since a
+## script naming it fails to parse wherever that autoload is missing or not yet loaded.
+static func find_locale() -> String:
+	var providers := StdGroup.with_id(Provider.GROUP_STOREFRONT_PROVIDER).list_members()
+	if providers.size() != 1:
+		return ""
+
+	return providers[0].get_locale()
+
+
 # -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
 
 

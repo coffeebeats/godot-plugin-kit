@@ -12,6 +12,15 @@ extends Node
 
 const GROUP_STOREFRONT_PROVIDER := &"platform/storefront:provider"
 
+# -- PUBLIC METHODS ------------------------------------------------------------------ #
+
+
+## get_locale returns the locale of the language the storefront has for the game, or an
+## empty string if it has none.
+func get_locale() -> String:
+	return ""
+
+
 # -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
 
 

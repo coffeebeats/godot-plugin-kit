@@ -1,6 +1,5 @@
 ##
-## LanguageObserver is a `StdSettingsObserver` that handles updating the display
-## language.
+## LanguageObserver is a `StdSettingsObserver` that updates the display language.
 ##
 
 extends StdSettingsObserver
@@ -25,6 +24,13 @@ var _custom_translations := {}
 var _logger := StdLogger.create(&"system/setting/language")
 
 # -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
+
+
+func _notification(what: int) -> void:
+	# NOTE: Steam sends no callback when the player changes the game's language in its
+	# window, so the language is read again each time focus returns to the game.
+	if what == NOTIFICATION_APPLICATION_FOCUS_IN and is_node_ready():
+		language_property.refresh_default()
 
 
 func _ready() -> void:
@@ -67,8 +73,8 @@ func _load_custom_translations() -> void:
 		logger.debug("Custom locale directory doesn't exist; skipping locale import.")
 		return
 
-	# NOTE: Because the file names are sorted alphabetically, `.mo` files will always be
-	# loaded before `.po` files, which is the desired behavior.
+	# NOTE: The file names sort alphabetically, so a `.mo` file loads before a `.po`
+	# file of the same name, which is then skipped as a duplicate locale.
 	for filename in DirAccess.get_files_at(path_dir):
 		if not (filename.ends_with(&".po") or filename.ends_with(&".mo")):
 			continue
