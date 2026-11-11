@@ -1,6 +1,6 @@
 ##
 ## Tests for how the Steam storefront checks the game's language list and maps Steam's
-## language codes to locales.
+## language codes to kit's locales.
 ##
 
 extends GutTest
@@ -43,21 +43,12 @@ func test_to_locale_every_kit_locale_is_reached_from_a_steam_code() -> void:
 
 	# Given: Every locale Steam's codes map to, matched to kit's closest locale.
 	var reached: Array[String] = []
-	for code: String in SteamStorefront.LOCALES:
+	for code in StdInputSteamLanguages.LOCALES:
 		reached.append(_find_closest(SteamStorefront.to_locale(code), locales))
 
 	# Then: Each of kit's locales is reached from some code.
 	for locale in locales:
 		assert_has(reached, locale, "no Steam code reaches '%s'" % locale)
-
-
-func test_to_locale_every_locale_is_standard() -> void:
-	for code: String in SteamStorefront.LOCALES:
-		# When: The locale for one of Steam's codes is read.
-		var locale := SteamStorefront.to_locale(code)
-
-		# Then: Godot keeps it as written, so no region is dropped.
-		assert_eq(TranslationServer.standardize_locale(locale), locale, code)
 
 
 func test_to_locale_unknown_code_returns_empty() -> void:

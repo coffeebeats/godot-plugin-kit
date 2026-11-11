@@ -5,46 +5,6 @@
 
 extends "../provider.gd"
 
-# -- DEFINITIONS --------------------------------------------------------------------- #
-
-## LOCALES maps each of Steam's API language codes to a locale. See
-## https://partner.steamgames.com/doc/store/localization/languages.
-##
-## NOTE: Godot drops the region from `es_419`, so Latin American Spanish is `es_MX`.
-const LOCALES: Dictionary[String, String] = {
-	"arabic": "ar",
-	"brazilian": "pt_BR",
-	"bulgarian": "bg",
-	"czech": "cs",
-	"danish": "da",
-	"dutch": "nl",
-	"english": "en",
-	"finnish": "fi",
-	"french": "fr",
-	"german": "de",
-	"greek": "el",
-	"hungarian": "hu",
-	"indonesian": "id",
-	"italian": "it",
-	"japanese": "ja",
-	"koreana": "ko",
-	"latam": "es_MX",
-	"malay": "ms",
-	"norwegian": "nb",
-	"polish": "pl",
-	"portuguese": "pt_PT",
-	"romanian": "ro",
-	"russian": "ru",
-	"schinese": "zh_CN",
-	"spanish": "es_ES",
-	"swedish": "sv",
-	"tchinese": "zh_TW",
-	"thai": "th",
-	"turkish": "tr",
-	"ukrainian": "uk",
-	"vietnamese": "vi",
-}
-
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
 var _is_initialized: bool = false
@@ -63,7 +23,7 @@ static func has_language_choice(available: String) -> bool:
 ## to_locale returns the locale for Steam's API language code `code`, or an empty string
 ## if `code` isn't one of Steam's.
 static func to_locale(code: String) -> String:
-	return LOCALES.get(code, "")
+	return StdInputSteamLanguages.LOCALES.get(code, "")
 
 
 # -- PUBLIC METHODS (OVERRIDES) ------------------------------------------------------ #
@@ -71,7 +31,7 @@ static func to_locale(code: String) -> String:
 
 ## get_locale returns the locale of the player's pick in the game's Steam properties, or
 ## else of Steam's own language. It returns an empty string if Steam failed to start,
-## the game lists fewer than two languages, or `LOCALES` lacks the language Steam names.
+## the game lists fewer than two languages, or Steam names a language std doesn't know.
 func get_locale() -> String:
 	if not _is_initialized:
 		return ""
