@@ -11,6 +11,7 @@ const ControlsScene := preload("controls/controls.tscn")
 const MenuScene := preload("menu.tscn")
 const PlatformScene := preload("res://premade/platform.tscn")
 const SettingScene := preload("setting.tscn")
+const SettingsScreen := preload("screen.tres")
 const SettingsScene := preload("res://system/setting/settings.tscn")
 const SettingsSystem := preload("res://system/setting/settings.gd")
 const SystemInputScene := preload("res://system/input/input.tscn")
@@ -29,6 +30,9 @@ const _GAME_ACTIONS: Array[StringName] = [
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
 var _added_actions: Array[StringName] = []
+
+## _input mounts the screen manager a test opens the settings screen on.
+var _input: StdTestInput = null
 
 ## _menu is the settings menu a test added to the tree.
 var _menu: Control = null
@@ -147,6 +151,40 @@ func test_menu_enter_tree_without_overrides_leaves_out_the_accessibility_tab() -
 
 	# Then: Kit's other tabs stay.
 	assert_true(_menu.get_node(^"%TabContents").has_node(^"KeyboardMouse"))
+
+
+func test_menu_reopened_returns_to_the_default_tab() -> void:
+	# Given: A platform and the input scene with its slot.
+	add_child_autofree(PlatformScene.instantiate())
+	add_child_autofree(SystemInputScene.instantiate())
+
+	# Given: The settings component.
+	add_child_autofree(SettingsSystem.new())
+
+	# Given: Kit's settings screen open on a screen manager.
+	var manager := StdTestScreenManager.new()
+	_input = await StdTestInput.mount(self, manager)
+	var menu: Control = await manager.push_and_wait(SettingsScreen)
+
+	# Given: No tab switch sound, as no audio system is mounted.
+	menu.tab_switch_sound_event = null
+
+	# Given: A tab other than the default selected.
+	var tab_group: Node = menu.get_node(^"%TabGroup")
+	var other: int = (tab_group.default_tab + 1) % tab_group.tabs.size()
+	tab_group.select(other)
+
+	# When: The screen closes and opens again.
+	manager.pop(null, true)
+	var reopened := await manager.push_and_wait(SettingsScreen)
+
+	# Then: The same menu opens again, kept in the tree.
+	assert_eq(reopened, menu)
+	assert_not_null(manager._cache.get_entry(SettingsScreen).overlay)
+
+	# Then: It shows its default tab and hides the other.
+	assert_true(tab_group.content.get_child(tab_group.default_tab).visible)
+	assert_false(tab_group.content.get_child(other).visible)
 
 
 func test_prune_keeps_the_accessibility_tab_once_its_hold_row_shows() -> void:
@@ -305,6 +343,9 @@ func after_each() -> void:
 	# first here too, while the slot its tabs watch still exists.
 	if is_instance_valid(_menu):
 		_menu.free()
+
+	if is_instance_valid(_input):
+		_input.free()
 
 	# NOTE: The menu loaded kit's menu set into the slot, which outlives the test, so
 	# leave an empty one behind rather than a set whose actions a later test lacks.

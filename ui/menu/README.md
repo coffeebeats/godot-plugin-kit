@@ -25,5 +25,5 @@ It changes these values from `alert.tscn`, and a dialog for gameplay built from 
 | `screen.attachment_scenes`, holding `menu/pause/pusher.tscn` | The pause key opens the pause menu over the dialog, so quitting and returning to the main menu still work. |
 | The loader's `action_set_layers`, holding `system/input/actions/menu_options.tres` | The dialog loads kit's `Menu` set, which lacks `ui_toggle_menu`, so without this layer the pause key never reaches the pusher. |
 | `dismissable`, off | A gamepad's back button would otherwise close the dialog before the player chooses. |
-| `screen.cache_instance`, off | The dialog frees itself once it closes, so a map makes a new one each time. |
+| `screen.cache_mode`, `NONE` | The dialog frees itself once it closes, so a map makes a new one each time. |
 | The secondary button's `FocusHandler`, not an anchor | Focus starts on the primary button. |

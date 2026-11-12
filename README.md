@@ -41,7 +41,7 @@ Each value the game owns is an export on a scene instanced in `System`:
 | `system/input/input.tscn` | `glyph_sets` | The glyph sets button prompts draw from, defaulting to kit's. See [Change the button prompts](#change-the-button-prompts). |
 | `system/input/input.tscn` | `origin_names` | The names a screen reader reads for each button and key in a prompt, defaulting to kit's. See [Name the button prompts](#name-the-button-prompts). |
 | `system/input/input.tscn` | `unknown_glyph` | The glyph a prompt draws for a bound button with no art, defaulting to kit's "??" icon. Left empty, the prompt draws nothing for such a button. |
-| `system/setting/settings.tscn` | `menu_tabs` | The game's own settings menu tabs, keyed by their label's message ID. |
+| `system/setting/settings.tscn` | `menu_tabs` | The game's own settings menu tabs, keyed by their label's message ID. The menu stays in the tree, hidden, between opens, so a tab follows the rules on `StdScreen.CacheMode` for `IN_TREE`: it holds no `CanvasLayer`, `Node3D`, shown `Window`, `CanvasItem` under a plain `Node`, or node with a process mode of its own other than disabled, and it does its work for each open on the screen manager's `screen_entering` rather than `_enter_tree`. A tab that breaks them keeps the menu detached, and std logs an error. |
 | `system/setting/settings.tscn` | `menu_setting_overrides` | Kit's settings menu rows and rebinding groups the game shows or hides, by id, where it differs from kit's default. See [Pick the settings the menu shows](#pick-the-settings-the-menu-shows). |
 | `system/setting/interface/font_scaling_observer.tscn` | `theme` | The game's theme, the one `[gui] theme/custom` names, which the text scaling setting resizes. |
 | `system/save/saves.tscn` | `schema` | The game's save data, required. |
@@ -72,9 +72,9 @@ The game's own nodes become modules the same way: extend `KitModule`, override `
 
 Each menu is a finished screen, used in place:
 
-- **Settings:** push `menu/settings/screen.tres`, or list `menu/settings/pusher.tscn` in a screen's `attachment_scenes` to open it on `ui_toggle_menu`.
+- **Settings:** push `menu/settings/screen.tres`, or list `menu/settings/pusher.tscn` in a screen's `attachment_scenes` to open it on `ui_toggle_menu`. The screen's `cache_mode` is `IN_TREE`, so its menu is built, hidden, when the first screen listing it under `dependency_screens` mounts, and opening it only shows it. List it under the `dependency_screens` of the screen it opens from, such as the main menu's; without that, the first open builds the menu in view.
 - **Save slots:** push `menu/save/screen.tres` and await its `popped` signal, which carries the chosen slot's index.
-- **Pause:** list `menu/pause/pusher.tscn` in a gameplay screen's `attachment_scenes`.
+- **Pause:** list `menu/pause/pusher.tscn` in a gameplay screen's `attachment_scenes`, and `menu/pause/screen.tres` under its `dependency_screens`. The pause screen lists the settings screen under its own, so the gameplay screen's mount builds the settings menu too. The pause screen keeps its own menu out of the tree between pauses (`cache_mode` is `DETACHED`).
 - **Alerts over gameplay:** a map opens `ui/menu/alert_gameplay.tscn` for a match's result, a game over or a disconnect, as [`ui/menu/README.md`](ui/menu/README.md) describes.
 - **Splash:** push `ui/splash/godot_screen.tres`, whose scene emits `advanced` once it is done. `ui/splash/splash.gd` makes a splash of any scene.
 

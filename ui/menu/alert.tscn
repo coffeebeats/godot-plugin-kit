@@ -10,7 +10,7 @@
 [sub_resource type="Resource" id="SubResource_screen"]
 resource_local_to_scene = true
 script = ExtResource("2_screen")
-cache_instance = true
+cache_mode = 1
 
 [node name="AlertDialog" type="Control" unique_id=2078874449]
 layout_mode = 3

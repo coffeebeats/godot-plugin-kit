@@ -610,7 +610,7 @@ func _resolve(identifier: String) -> Variant:
 
 	var classes := _global_classes()
 	if classes.has(identifier):
-		return load(classes[identifier])
+		return StdLoader.load_now(classes[identifier])
 
 	return null
 

@@ -9,3 +9,9 @@ disallow_engine_output=true
 
 ; GUT loads a test script while it collects the tests, before any can start a load.
 excludes=["res://*_test.gd"]
+
+[resource-loader]
+
+; Only std's loader calls the engine's loads. A test loads scripts for GUT's doubles.
+allow=["res://addons/std/load/loader.gd"]
+excludes=["res://*_test.gd"]

@@ -25,8 +25,8 @@ const GROUP_REBINDER := &"menu/settings:rebinder"
 const DEVICE_TYPE_GENERIC := StdInputDevice.DEVICE_TYPE_GENERIC
 const DEVICE_TYPE_KEYBOARD := StdInputDevice.DEVICE_TYPE_KEYBOARD
 
-# NOTE: Never preload this scene. `StdScreenLoader` loads it on one thread and the
-# settings menu on another, and a preload of a scene still loading can fail or hang.
+# NOTE: Never preload this scene. `StdLoader` may be loading it on another thread, and
+# a preload of a scene still loading can fail or hang.
 const _SCENE_PATH := "uid://dm1yyvkqdxmqe"
 
 const MSGCTXT_REBINDER_KEYBOARD := &"keyboard"
@@ -120,7 +120,7 @@ static func start_rebinding(
 		return false
 
 	if not _instance:
-		_instance = load(_SCENE_PATH).instantiate()
+		_instance = StdLoader.load_now(_SCENE_PATH).instantiate()
 
 	_instance._cursor_was_visible = KitSystems.input().is_cursor_visible()
 
