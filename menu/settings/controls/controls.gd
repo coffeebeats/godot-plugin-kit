@@ -42,10 +42,24 @@ const _TAB_IDS: Dictionary[StdInputDevice.DeviceType, String] = {
 ## it.
 @export var action_set_scene: PackedScene = null
 
+# -- INITIALIZATION ------------------------------------------------------------------ #
+
+## _slot is the player's input slot, which a controller tab watches for controllers
+## connecting and disconnecting while both are in the tree.
+var _slot: StdInputSlot = null
+
 # -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
 
 
 func _enter_tree() -> void:
+	# NOTE: The slot is watched on each entry, since a cached settings menu leaves the
+	# tree, and its devices can change while the tab is out of it.
+	if device_category == DEVICE_TYPE_GENERIC:
+		var slot := KitSystems.input().get_input_slot()
+		assert(slot is StdInputSlot, "invalid state; missing player slot")
+
+		_set_slot(slot)
+
 	# NOTE: A cached settings menu re-enters the tree with the tab already set up.
 	if is_node_ready():
 		return
@@ -72,19 +86,14 @@ func _enter_tree() -> void:
 	get_node(^"%MenuOptions").linked_layers = KitSystems.input().menu_options_layers
 
 
+func _exit_tree() -> void:
+	# NOTE: The tab can outlive the slot once out of the tree, cached or as the game
+	# quits, and a slot leaving the tree disconnects each device on its way out.
+	_set_slot(null)
+
+
 func _ready() -> void:
 	_add_action_sets(KitSystems.input().action_sets)
-
-	if device_category != DEVICE_TYPE_GENERIC:
-		return
-
-	var slot := KitSystems.input().get_input_slot()
-	assert(slot is StdInputSlot, "invalid state; missing player slot")
-
-	Signals.connect_safe(slot.device_connected, _on_device_connection_changed)
-	Signals.connect_safe(slot.device_disconnected, _on_device_connection_changed)
-
-	_update_disconnected()
 
 
 # -- PRIVATE METHODS ----------------------------------------------------------------- #
@@ -116,11 +125,42 @@ func _get_bindings_id(action_set: StdInputActionSet) -> StringName:
 	return StringName("%s_bindings_%s" % [tab, action_set.name.to_snake_case()])
 
 
-## _update_disconnected shows the note asking for a controller while none is connected,
-## since a controller tab's rebinds have nothing to listen to then.
+## _set_slot watches `slot` in place of the slot the tab watched, and shows the note
+## for its controllers. A `null` slot leaves the note as it is.
+func _set_slot(slot: StdInputSlot) -> void:
+	if slot == _slot:
+		return
+
+	if _slot:
+		_set_slot_connected(_slot, false)
+
+	_slot = slot
+
+	if _slot:
+		_set_slot_connected(_slot, true)
+		_update_disconnected()
+
+
+## _set_slot_connected connects the tab to the signals of `slot` which change the note
+## or end the watch, or disconnects it from them.
+func _set_slot_connected(slot: StdInputSlot, connected: bool) -> void:
+	for pair in [
+		[slot.device_connected, _on_device_connection_changed],
+		[slot.device_disconnected, _on_device_connection_changed],
+		[slot.tree_exiting, _on_slot_tree_exiting],
+	]:
+		if connected:
+			Signals.connect_safe(pair[0], pair[1])
+		else:
+			Signals.disconnect_safe(pair[0], pair[1])
+
+
+## _update_disconnected shows the note asking for a controller while the watched slot
+## has none connected, since a controller tab's rebinds have nothing to listen to then.
 func _update_disconnected() -> void:
-	var slot := KitSystems.input().get_input_slot()
-	get_node(^"%Disconnected").visible = not slot.get_connected_devices(false)
+	# NOTE: This reads the watched slot, since one leaving the tree can no longer be
+	# looked up by the time it disconnects its devices.
+	get_node(^"%Disconnected").visible = not _slot.get_connected_devices(false)
 
 
 # -- SIGNAL HANDLERS ----------------------------------------------------------------- #
@@ -128,3 +168,7 @@ func _update_disconnected() -> void:
 
 func _on_device_connection_changed(_device: StdInputDevice) -> void:
 	_update_disconnected()
+
+
+func _on_slot_tree_exiting() -> void:
+	_set_slot(null)
