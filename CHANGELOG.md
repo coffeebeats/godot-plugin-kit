@@ -1,5 +1,14 @@
 # Changelog
 
+## 4.1.2 (2026-11-12)
+
+## What's Changed
+* fix(lifecycle): make `Lifecycle` a subclass of std v10.1's `StdLifecycle` by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/148
+* fix(menu): free the pause and save menus' dialogs on a shutdown, not on a close request a game may cancel by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/150
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v4.1.1...v4.1.2
+
 ## 4.1.1 (2026-11-12)
 
 ## What's Changed
