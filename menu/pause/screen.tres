@@ -2,11 +2,13 @@
 
 [ext_resource type="Script" uid="uid://b7ynn70doalds" path="res://addons/std/screen/screen.gd" id="1_screen"]
 [ext_resource type="Resource" uid="uid://c5bekd2nyjnp8" path="res://ui/menu/menu_toggle_sound_event.tres" id="2_sound"]
+[ext_resource type="Resource" uid="uid://d2vp2eesnf5ng" path="res://menu/settings/screen.tres" id="3_settings"]
 
 [resource]
 script = ExtResource("1_screen")
 scene_path = "uid://cpaus3m3nuscn"
-cache_instance = true
+cache_mode = 1
+dependency_screens = Array[ExtResource("1_screen")]([ExtResource("3_settings")])
 dependency_scenes = ["uid://dii55pwtpi0w6", "uid://cjsmesktoceke"]
 close_actions = Array[StringName]([&"ui_cancel", &"ui_toggle_menu"])
 sound_enter = ExtResource("2_sound")

@@ -14,9 +14,16 @@ const Menu := preload("res://system/input/actions/menu.tres")
 const MenuOptions := preload("res://system/input/actions/menu_options.tres")
 const PauseScreen := preload("res://menu/pause/screen.tres")
 const PlatformScene := preload("res://premade/platform.tscn")
+const SettingsSystem := preload("res://system/setting/settings.gd")
 const SystemInputScene := preload("res://system/input/input.tscn")
 
 # -- DEFINITIONS --------------------------------------------------------------------- #
+
+## _GAME_ACTIONS are the actions in kit's sets which the game binds, so kit's own input
+## map lacks them. The pause screen builds the settings menu, whose rows read them.
+const _GAME_ACTIONS: Array[StringName] = [
+	&"ui_binding_stop", &"ui_tab_next", &"ui_tab_prev"
+]
 
 ## _TIMEOUT is how long, in seconds, a test waits for a screen to finish entering or
 ## leaving.
@@ -30,6 +37,10 @@ var _gameplay: StdInputActionSet = null
 var _hud: Button = null
 var _input: StdTestInput = null
 var _manager: StdTestScreenManager = null
+
+## _preparation holds what opening the alert needs loaded, as a game holds it, so the
+## alert opens at once.
+var _preparation: StdScreenManager.Preparation = null
 
 # -- TEST METHODS -------------------------------------------------------------------- #
 
@@ -135,8 +146,9 @@ func test_alert_gameplay_cancel_or_a_click_on_the_hud_leaves_it_open() -> void:
 
 
 func after_all() -> void:
-	InputMap.erase_action(&"ui_toggle_menu")
-	ProjectSettings.set_setting(&"input/ui_toggle_menu", null)
+	for action: StringName in _GAME_ACTIONS + [&"ui_toggle_menu"]:
+		InputMap.erase_action(action)
+		ProjectSettings.set_setting(&"input/" + action, null)
 
 
 func after_each() -> void:
@@ -144,6 +156,8 @@ func after_each() -> void:
 	# manager goes first here too, while the slot its loaders hold still exists.
 	if is_instance_valid(_input):
 		_input.free()
+
+	_preparation = null
 
 	# NOTE: The Godot backend keeps the loaded set across slots, so leave an empty one
 	# behind rather than a set whose actions a later test's input map lacks.
@@ -153,6 +167,12 @@ func after_each() -> void:
 
 
 func before_all() -> void:
+	# NOTE: std reads an action's defaults from the project settings, so each action is
+	# added there as well as to the input map, as a game's project defines it.
+	for action in _GAME_ACTIONS:
+		ProjectSettings.set_setting(&"input/" + action, {"deadzone": 0.5, "events": []})
+		InputMap.add_action(action)
+
 	# NOTE: Kit's own project defines no actions, and the options layer names this one;
 	# a game defines it with a default binding, which the Godot backend reads here.
 	InputMap.add_action(&"ui_toggle_menu")
@@ -164,9 +184,11 @@ func before_all() -> void:
 
 
 func before_each() -> void:
-	# Given: A platform whose profile loaded, and the input scene with its slot.
+	# Given: A platform whose profile loaded, the input scene with its slot, and the
+	# settings the pause screen's settings menu reads.
 	add_child_autofree(PlatformScene.instantiate())
 	add_child_autofree(SystemInputScene.instantiate())
+	add_child_autofree(SettingsSystem.new())
 
 	_actions.clear()
 
@@ -205,6 +227,10 @@ func _mount() -> void:
 	_dialog.secondary_label = "kit_alert_cancel"
 	_dialog.closed.connect(_actions.append)
 	watch_signals(_dialog.screen)
+
+	_preparation = _manager.load_screen(_dialog.screen)
+	if not _preparation.is_done():
+		await _preparation.done
 
 
 ## _open mounts a map and returns once the alert has entered over it.
