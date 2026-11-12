@@ -239,6 +239,56 @@ func test_controls_controller_tab_without_a_joypad_disables_rebinding() -> void:
 		assert_false(binding.button.disabled)
 
 
+func test_controls_controller_tab_out_of_the_tree_ignores_the_slot_leaving() -> void:
+	# Given: A controller tab in the tree.
+	var controls := await _add_controls(_CONTROLLER)
+
+	# Given: The tab leaves the tree, as the main scene does first when the game quits.
+	remove_child(controls)
+
+	# When: The input scene leaves the tree, where its slot disconnects each device.
+	remove_child(KitSystems.input())
+
+	# Then: The tab handles none of them, so nothing fails.
+	assert_engine_error_count(0)
+
+
+func test_controls_controller_tab_outliving_the_slot_asks_for_a_controller() -> void:
+	# Given: A connected joypad.
+	_connect_joypad()
+
+	# Given: A controller tab in the tree, with no note asking for a controller.
+	var controls := await _add_controls(_CONTROLLER)
+	assert_false(controls.get_node(^"%Disconnected").visible, "precondition")
+
+	# When: The input scene leaves the tree, where its slot disconnects each device.
+	remove_child(KitSystems.input())
+
+	# Then: The note asks for a controller.
+	assert_true(controls.get_node(^"%Disconnected").visible)
+
+
+func test_controls_controller_tab_reentering_the_tree_asks_for_a_lost_joypad() -> void:
+	# Given: A connected joypad.
+	_connect_joypad()
+
+	# Given: A controller tab in the tree, with no note asking for a controller.
+	var controls := await _add_controls(_CONTROLLER)
+	assert_false(controls.get_node(^"%Disconnected").visible, "precondition")
+
+	# Given: The tab leaves the tree, as a cached settings menu does.
+	remove_child(controls)
+
+	# Given: The joypad disconnects while the tab is out of the tree.
+	_disconnect_joypad()
+
+	# When: The tab re-enters the tree.
+	add_child(controls)
+
+	# Then: The note asks for a controller.
+	assert_true(controls.get_node(^"%Disconnected").visible)
+
+
 func test_controls_menu_options_rebind_writes_each_game_layer_declaring_it() -> void:
 	# Given: The game lists its options layer and its shop layer for kit's options.
 	_list_game_layers()
@@ -447,6 +497,10 @@ func _connect_joypad() -> void:
 	StdInputSlot.for_player(1).joypad_monitor.joy_connected.emit(
 		_JOYPAD, StdInputDevice.DEVICE_TYPE_XBOX_ONE
 	)
+
+
+func _disconnect_joypad() -> void:
+	StdInputSlot.for_player(1).joypad_monitor.joy_disconnected.emit(_JOYPAD)
 
 
 ## _find_reset returns the reset button in `binding`'s row.
