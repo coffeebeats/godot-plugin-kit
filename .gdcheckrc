@@ -4,3 +4,8 @@
 [logging]
 
 disallow_engine_output=true
+
+[preload]
+
+; GUT loads a test script while it collects the tests, before any can start a load.
+excludes=["res://*_test.gd"]

@@ -46,6 +46,7 @@ Follows the GDScript style guide and `godot-plugin-std`'s conventions:
 - Global class names take the `Kit` prefix, private members `_`, and StringName literals `&`.
 - Use `##` for public API docs and `# NOTE:` for what a reader must know before touching the code.
 - Translation keys take the `kit_` prefix.
+- Export a scene, or a resource that carries a script, and set it in the scene that ships the script instead of `preload`ing it, since such a preload can deadlock Godot's threaded loader; the checker's `preload` rule enforces this. Preloading a script is fine.
 
 ### Coroutines
 
