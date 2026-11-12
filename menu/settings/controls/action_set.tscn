@@ -4,6 +4,8 @@
 [ext_resource type="Script" uid="uid://daw6nj4n70xkl" path="res://menu/settings/controls/action_set.gd" id="2_vv7fq"]
 [ext_resource type="PackedScene" uid="uid://dkq868y2yu5r6" path="res://menu/settings/controls/reset.tscn" id="3_racla"]
 [ext_resource type="Resource" uid="uid://ccmnjg2p3cow0" path="res://system/input/unknown/bindings_scope.tres" id="4_ifr1x"]
+[ext_resource type="PackedScene" uid="uid://bdaxk1l73tb67" path="res://menu/settings/controls/binding.tscn" id="5_bind"]
+[ext_resource type="PackedScene" uid="uid://dyoqungyuv513" path="res://menu/settings/setting.tscn" id="6_setting"]
 
 [node name="ActionSet" unique_id=218690206 instance=ExtResource("1_61w7n")]
 anchors_preset = 8
@@ -19,6 +21,9 @@ script = ExtResource("2_vv7fq")
 action_set = null
 scope = null
 player_id = 1
+binding_scene = ExtResource("5_bind")
+reset_scene = ExtResource("3_racla")
+setting_scene = ExtResource("6_setting")
 
 [node name="Label" parent="Header" parent_id_path=PackedInt32Array(1020668401) index="0" unique_id=877942154]
 size_flags_horizontal = 2

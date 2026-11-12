@@ -15,7 +15,6 @@ extends VBoxContainer
 # -- DEPENDENCIES -------------------------------------------------------------------- #
 
 const ActionSet := preload("action_set.gd")
-const ActionSetScene := preload("action_set.tscn")
 const Signals := preload("res://addons/std/event/signal.gd")
 
 # -- DEFINITIONS --------------------------------------------------------------------- #
@@ -38,6 +37,10 @@ const _TAB_IDS: Dictionary[StdInputDevice.DeviceType, String] = {
 
 ## scope is the settings scope in which the game's binding overrides will be stored.
 @export var scope: StdSettingsScope = null
+
+## action_set_scene is the rebinding group listed per game action set. Kit's scene sets
+## it.
+@export var action_set_scene: PackedScene = null
 
 # -- ENGINE METHODS (OVERRIDES) ------------------------------------------------------ #
 
@@ -95,7 +98,7 @@ func _add_action_sets(action_sets: Array[StdInputActionSet]) -> void:
 	var index := 0
 
 	for action_set in action_sets:
-		var group := ActionSetScene.instantiate()
+		var group := action_set_scene.instantiate()
 		group.action_set = action_set
 		group.device_category = device_category
 		group.scope = scope

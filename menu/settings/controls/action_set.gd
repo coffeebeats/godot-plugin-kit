@@ -10,11 +10,8 @@ extends "../group.gd"
 # -- DEPENDENCIES -------------------------------------------------------------------- #
 
 const Locales := preload("../../../locale/locales.gd")
-const BindingScene := preload("binding.tscn")
 const Reset := preload("reset.gd")
-const ResetScene := preload("reset.tscn")
 const Setting := preload("../setting.gd")
-const SettingScene := preload("../setting.tscn")
 
 # -- DEFINITIONS --------------------------------------------------------------------- #
 
@@ -62,6 +59,19 @@ const DEVICE_TYPE_KEYBOARD := StdInputDevice.DEVICE_TYPE_KEYBOARD
 
 		if is_node_ready():
 			_generate_settings()
+
+@export_subgroup("Scenes")
+
+## binding_scene is the binding button shown twice per row, once for the primary binding
+## and once for the secondary. Kit's scene sets it.
+@export var binding_scene: PackedScene = null
+
+## reset_scene is the button which resets one row's bindings. Kit's scene sets it.
+@export var reset_scene: PackedScene = null
+
+## setting_scene is the row holding an action's label, reset button and bindings. Kit's
+## scene sets it.
+@export var setting_scene: PackedScene = null
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
@@ -114,7 +124,7 @@ func _generate_settings() -> void:
 			if action in layer.list_action_names():
 				linked.append(layer)
 
-		var primary := BindingScene.instantiate()
+		var primary := binding_scene.instantiate()
 		primary.scope = scope
 		primary.device_category = device_category
 		primary.linked_layers = linked
@@ -123,7 +133,7 @@ func _generate_settings() -> void:
 		primary.binding_index = StdInputDeviceActions.BINDING_INDEX_PRIMARY
 		primary.player_id = player_id
 
-		var secondary := BindingScene.instantiate()
+		var secondary := binding_scene.instantiate()
 		secondary.scope = scope
 		secondary.device_category = device_category
 		secondary.linked_layers = linked
@@ -132,7 +142,7 @@ func _generate_settings() -> void:
 		secondary.binding_index = StdInputDeviceActions.BINDING_INDEX_SECONDARY
 		secondary.player_id = player_id
 
-		var reset := ResetScene.instantiate()
+		var reset := reset_scene.instantiate()
 		reset.scope = scope
 		reset.bindings.append_array([primary, secondary])
 
@@ -142,7 +152,7 @@ func _generate_settings() -> void:
 			)
 			handler.use_as_anchor = true
 
-		var setting := SettingScene.instantiate()
+		var setting := setting_scene.instantiate()
 		setting.label = Locales.tr_action(action_set.name, action)
 		setting.add_child(reset)
 		setting.add_child(primary)
