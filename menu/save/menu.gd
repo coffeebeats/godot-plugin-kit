@@ -28,7 +28,11 @@ const SlotButton := preload("slot_button.gd")
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
+## _confirm_delete is the delete dialog, held out of the tree between uses.
 var _confirm_delete: KitAlertDialog
+
+## _delete_failed is the dialog shown when a delete fails, held out of the tree between
+## uses.
 var _delete_failed: KitAlertDialog
 
 @onready var _delete_buttons: Control = %DeleteButtons
@@ -38,7 +42,9 @@ var _delete_failed: KitAlertDialog
 
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_PREDELETE or what == NOTIFICATION_WM_CLOSE_REQUEST:
+	# NOTE: The dialogs are freed with the menu, and on a shutdown before Godot reports
+	# orphans. A close request alone frees nothing, since a game may cancel it.
+	if what == NOTIFICATION_PREDELETE or what == StdLifecycle.NOTIFICATION_SHUTDOWN:
 		if is_instance_valid(_confirm_delete):
 			_confirm_delete.free()
 			_confirm_delete = null
