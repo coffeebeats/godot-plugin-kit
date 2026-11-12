@@ -19,9 +19,6 @@ extends Button
 
 # -- DEPENDENCIES -------------------------------------------------------------------- #
 
-const GlyphTypeProperty := preload(
-	"res://system/setting/controls/glyph_type_property.tres"
-)
 const Locales := preload("../../locale/locales.gd")
 
 # -- DEFINITIONS --------------------------------------------------------------------- #
@@ -114,6 +111,16 @@ const _HOLD_FILL_COLOR_DEFAULT := Color(1.0, 1.0, 1.0, 0.25)
 		if _glyph:
 			_glyph.player_id = value
 			_hold_monitor.player_id = value
+
+@export_subgroup("Device")
+
+## device_type_override is the player's setting for the device type whose glyph is
+## drawn, the Button prompts setting in kit's scene.
+@export var device_type_override: StdSettingsPropertyInt = null:
+	set(value):
+		device_type_override = value
+		if _glyph:
+			_glyph.device_type_override = value
 
 @export_subgroup("Behavior")
 
@@ -213,7 +220,6 @@ func _init() -> void:
 		return
 
 	_glyph = StdInputGlyphTexture.new()
-	_glyph.device_type_override = GlyphTypeProperty
 	_glyph.changed.connect(_update_accessibility_name)
 	icon = _glyph
 

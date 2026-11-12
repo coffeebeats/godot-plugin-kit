@@ -8,7 +8,7 @@ extends GutTest
 # -- DEPENDENCIES -------------------------------------------------------------------- #
 
 const GROUP_2D := preload("../group_2d.tscn")
-const NUMBERS := preload("numbers.gd")
+const NUMBERS := preload("numbers.tscn")
 const STYLE_CRIT := preload("style_crit.tres")
 const STYLE_DAMAGE := preload("style_damage.tres")
 
@@ -81,7 +81,7 @@ func test_number_does_not_follow_its_entity() -> void:
 
 func test_two_styles_produce_different_motion() -> void:
 	# Given: Two numbers elements in one group, one damage and one critical.
-	var crit := NUMBERS.new()
+	var crit: KitHudNumbers = NUMBERS.instantiate()
 	crit.style = STYLE_CRIT
 	_group.add_child(crit)
 	crit.owner = _group
@@ -135,7 +135,7 @@ func test_pop_works_before_the_layer_is_ready() -> void:
 	_target.add_child(anchor)
 
 	var group := layer.attach(anchor)
-	var numbers := NUMBERS.new()
+	var numbers: KitHudNumbers = NUMBERS.instantiate()
 	numbers.style = STYLE_DAMAGE
 	group.add_child(numbers)
 
@@ -156,7 +156,7 @@ func test_pop_works_before_the_layer_is_ready() -> void:
 func test_pop_outside_a_group_freezes_the_screen_position() -> void:
 	# Given: A numbers element mounted on the layer with no group to ask, with drift
 	# removed so the projection is the only thing that can move what it spawns.
-	var loose := NUMBERS.new()
+	var loose: KitHudNumbers = NUMBERS.instantiate()
 	loose.style = _make_still_style()
 	_layer.add_child(loose)
 	loose.global_position = Vector2(400, 300)
@@ -220,7 +220,7 @@ func before_each() -> void:
 
 	_group = _anchor.group
 
-	_numbers = NUMBERS.new()
+	_numbers = NUMBERS.instantiate()
 	_numbers.style = STYLE_DAMAGE
 	_group.add_child(_numbers)
 

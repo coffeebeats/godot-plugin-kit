@@ -11,10 +11,6 @@ extends BoxContainer
 ## tab_changed is emitted when the active tab changes.
 signal tab_changed(index: int)
 
-# -- DEPENDENCIES -------------------------------------------------------------------- #
-
-const ButtonScene := preload("../input/button.tscn")
-
 # -- CONFIGURATION ------------------------------------------------------------------- #
 
 ## tabs is the list of tab labels. One button will be created per entry.
@@ -28,6 +24,9 @@ const ButtonScene := preload("../input/button.tscn")
 ## content is an optional container whose children's visibility is toggled to match the
 ## selected tab.
 @export var content: Node = null
+
+## button_scene is the button created per tab. Kit's scene sets `ui/input/button.tscn`.
+@export var button_scene: PackedScene = null
 
 @export_group("Theme")
 
@@ -125,7 +124,7 @@ func set_tab_disabled(index: int, disabled: bool) -> void:
 
 func _ready() -> void:
 	for i in tabs.size():
-		var button: Button = ButtonScene.instantiate()
+		var button: Button = button_scene.instantiate()
 		button.text = tabs[i]
 		button.focus_mode = Control.FOCUS_NONE
 		button.custom_minimum_size.x = 160

@@ -16,18 +16,14 @@
 class_name KitHudNumbers
 extends Control
 
-# -- DEPENDENCIES -------------------------------------------------------------------- #
-
-const NUMBER := preload("number.tscn")
-
 # -- CONFIGURATION ------------------------------------------------------------------- #
 
 ## style carries the motion, timing and theme variation of the numbers this element
 ## spawns.
 @export var style: KitHudNumberStyle = null
 
-## number_scene overrides the scene spawned per number. It must have a `KitHudNumber`
-## root.
+## number_scene is the scene spawned per number, which must have a `KitHudNumber` root.
+## Kit's scene sets `number.tscn`.
 @export var number_scene: PackedScene = null
 
 # -- PUBLIC METHODS ------------------------------------------------------------------ #
@@ -47,8 +43,11 @@ func pop(value: float) -> void:
 	if not layer:
 		return
 
-	var scene: PackedScene = number_scene if number_scene else NUMBER
-	var number := scene.instantiate() as KitHudNumber
+	assert(number_scene, "invalid config; missing 'number_scene'")
+	if not number_scene:
+		return
+
+	var number := number_scene.instantiate() as KitHudNumber
 	assert(number, "invalid config; 'number_scene' root must be a 'KitHudNumber'")
 	if not number:
 		return
