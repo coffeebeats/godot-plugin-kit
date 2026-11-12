@@ -272,12 +272,14 @@ func test_controls_controller_tab_reentering_the_tree_asks_for_a_lost_joypad() -
 	# Given: A connected joypad.
 	_connect_joypad()
 
-	# Given: A controller tab which left the tree, as a cached settings menu does.
+	# Given: A controller tab in the tree, with no note asking for a controller.
 	var controls := await _add_controls(_CONTROLLER)
 	assert_false(controls.get_node(^"%Disconnected").visible, "precondition")
+
+	# Given: The tab leaves the tree, as a cached settings menu does.
 	remove_child(controls)
 
-	# When: The joypad disconnects.
+	# Given: The joypad disconnects while the tab is out of the tree.
 	_disconnect_joypad()
 
 	# When: The tab re-enters the tree.
