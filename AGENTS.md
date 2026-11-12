@@ -46,7 +46,7 @@ Follows the GDScript style guide and `godot-plugin-std`'s conventions:
 - Global class names take the `Kit` prefix, private members `_`, and StringName literals `&`.
 - Use `##` for public API docs and `# NOTE:` for what a reader must know before touching the code.
 - Translation keys take the `kit_` prefix.
-- Never `preload` a scene, or a resource that carries a script such as a `StdScreen` or an action set; export it as a `PackedScene` or `Resource` and set it in the scene that ships the script. Godot 4.6 to 4.8 can deadlock when a script compiling on one thread waits on a resource another thread is loading. Preloading a script is fine, as is any preload in a GUT test, which compiles before any load starts.
+- Export a scene, or a resource that carries a script, and set it in the scene that ships the script instead of `preload`ing it, since such a preload can deadlock Godot's threaded loader; the checker's `preload` rule enforces this. Preloading a script is fine.
 
 ### Coroutines
 
