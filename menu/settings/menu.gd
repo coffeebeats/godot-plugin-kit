@@ -39,30 +39,23 @@ var _tabs_left_out: Array[Node] = []
 
 
 func _enter_tree() -> void:
-	if not is_node_ready():
-		var settings := KitSystems.settings()
+	# NOTE: A detached menu re-enters the tree with its tabs already set up.
+	if is_node_ready():
+		return
 
-		# NOTE: Tabs are added before `TabGroup._ready` builds a button per label.
-		_add_tabs(settings.menu_tabs)
+	var settings := KitSystems.settings()
 
-		# NOTE: A tab is pruned after its own `_enter_tree`, where the controls tab names
-		# its rebinding groups, and before its rows enter the tree.
-		var shown := settings.get_shown_menu_settings()
-		var tab_group: TabGroup = get_node(^"%TabGroup")
-		for tab in tab_group.content.get_children():
-			tab.tree_entered.connect(
-				_on_tab_tree_entered.bind(tab, shown), CONNECT_ONE_SHOT
-			)
+	# NOTE: Tabs are added before `TabGroup._ready` builds a button per label.
+	_add_tabs(settings.menu_tabs)
 
-		return  # First enter; _ready() handles initial state.
-
-	# A re-entry pushes a cached instance, so reset to the default tab without its sound.
-	if _tab_group.tabs.is_empty():
-		return  # Every tab was removed; there is nothing to select.
-
-	_tab_switch_muted = true
-	_tab_group.select(_tab_group.default_tab)
-	(func() -> void: _tab_switch_muted = false).call_deferred()
+	# NOTE: A tab is pruned after its own `_enter_tree`, where the controls tab names its
+	# rebinding groups, and before its rows enter the tree.
+	var shown := settings.get_shown_menu_settings()
+	var tab_group: TabGroup = get_node(^"%TabGroup")
+	for tab in tab_group.content.get_children():
+		tab.tree_entered.connect(
+			_on_tab_tree_entered.bind(tab, shown), CONNECT_ONE_SHOT
+		)
 
 
 func _ready() -> void:
@@ -74,6 +67,12 @@ func _ready() -> void:
 	_tabs_left_out.clear()
 
 	Signals.connect_safe(_tab_group.tab_changed, _on_tab_changed)
+
+	# NOTE: `_enter_tree` misses each open of a menu kept in the tree, so the manager's
+	# `screen_entering` marks each open instead.
+	var manager := _find_manager()
+	if manager:
+		Signals.connect_safe(manager.screen_entering, _on_screen_entering)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -138,6 +137,16 @@ func _find_anchors(node: Node) -> Array[Node]:
 	return out
 
 
+## _find_manager returns the `StdScreenManager` among the menu's ancestors, or null
+## when it is mounted without one, as in a test.
+func _find_manager() -> StdScreenManager:
+	var node := get_parent()
+	while node and not node is StdScreenManager:
+		node = node.get_parent()
+
+	return node as StdScreenManager
+
+
 ## _get_id returns the id of `node` if it is a settings row or group, or else `&""`.
 func _get_id(node: Node) -> StringName:
 	return node.id if node is Group or node is Setting else &""
@@ -198,6 +207,19 @@ func _prune_children(node: Node, shown: Array[StringName]) -> bool:
 
 
 # -- SIGNAL HANDLERS ----------------------------------------------------------------- #
+
+
+func _on_screen_entering(_screen: StdScreen, scene: Node) -> void:
+	if scene != self:
+		return
+
+	if _tab_group.tabs.is_empty():
+		return  # Every tab was removed; there is nothing to select.
+
+	# Each open shows the kept menu again, so it returns to the default tab silently.
+	_tab_switch_muted = true
+	_tab_group.select(_tab_group.default_tab)
+	(func() -> void: _tab_switch_muted = false).call_deferred()
 
 
 func _on_tab_changed(_index: int) -> void:

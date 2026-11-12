@@ -26,7 +26,7 @@ func _ready() -> void:
 	assert(button is Button, "invalid config; missing button node")
 	assert(configurator, "invalid state; missing scene")
 
-	var packed_scene: PackedScene = load(configurator)
+	var packed_scene: PackedScene = StdLoader.load_now(configurator)
 	assert(packed_scene is PackedScene, "invalid config; missing configurator scene")
 
 	var node := packed_scene.instantiate()

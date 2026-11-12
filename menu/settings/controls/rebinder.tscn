@@ -9,7 +9,7 @@
 
 [sub_resource type="Resource" id="Resource_2wtn0"]
 script = ExtResource("2_bowq3")
-cache_instance = true
+cache_mode = 1
 metadata/_custom_type_script = "uid://b7ynn70doalds"
 
 [node name="Rebinder" type="Control" unique_id=439458338]

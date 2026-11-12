@@ -57,6 +57,10 @@ const MODULE_ID := &"settings"
 ## menu_tabs are the game's own settings menu tabs, each keyed by its label's message
 ## ID, which the settings menu shows after kit's own. The settings menu loads at
 ## runtime, out of reach of the scene placing this node, so it reads the value here.
+##
+## NOTE: The menu stays in the tree between opens, so a tab follows the `IN_TREE` rules
+## on `StdScreen.CacheMode` and does per-open work on `screen_entering`, not
+## `_enter_tree`. One that breaks them keeps the menu detached, and std logs an error.
 @export var menu_tabs: Dictionary[String, PackedScene] = {}
 
 # -- INITIALIZATION ------------------------------------------------------------------ #

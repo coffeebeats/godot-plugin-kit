@@ -81,7 +81,7 @@ func _load_custom_translations() -> void:
 
 		logger = logger.with({&"file": filename})
 
-		var translation: Translation = load(path_dir.path_join(filename))
+		var translation: Translation = StdLoader.load_now(path_dir.path_join(filename))
 		if not translation is Translation:
 			logger.warn("Failed to load custom translation file.")
 			continue
