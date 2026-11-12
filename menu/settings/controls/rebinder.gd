@@ -17,7 +17,6 @@ const Signals := preload("res://addons/std/event/signal.gd")
 const Locales := preload("../../../locale/locales.gd")
 const Screens := preload("../../../ui/menu/screens.gd")
 const Rebinder := preload("rebinder.gd")
-const RebinderScene := preload("rebinder.tscn")
 
 # -- DEFINITIONS --------------------------------------------------------------------- #
 
@@ -25,6 +24,10 @@ const GROUP_REBINDER := &"menu/settings:rebinder"
 
 const DEVICE_TYPE_GENERIC := StdInputDevice.DEVICE_TYPE_GENERIC
 const DEVICE_TYPE_KEYBOARD := StdInputDevice.DEVICE_TYPE_KEYBOARD
+
+# NOTE: Never preload this scene. `StdScreenLoader` loads it on one thread and the
+# settings menu on another, and a preload of a scene still loading can fail or hang.
+const _SCENE_PATH := "uid://dm1yyvkqdxmqe"
 
 const MSGCTXT_REBINDER_KEYBOARD := &"keyboard"
 const MSGCTXT_REBINDER_GAMEPAD := &"gamepad"
@@ -117,7 +120,7 @@ static func start_rebinding(
 		return false
 
 	if not _instance:
-		_instance = RebinderScene.instantiate()
+		_instance = load(_SCENE_PATH).instantiate()
 
 	_instance._cursor_was_visible = KitSystems.input().is_cursor_visible()
 
@@ -143,10 +146,8 @@ static func start_rebinding(
 ## stop terminates the rebinding process, halting input event listeners and popping the
 ## rebinder screen.
 func stop(bound: bool = false) -> void:
-	# NOTE: Restore cursor visibility *before* popping the screen. The rebind key press
-	# may have triggered cursor hiding (the cursor's '_input' processes key events as
-	# hide actions). Restoring here prevents focus mode from activating during the
-	# screen close sequence.
+	# NOTE: Restore the cursor before popping the screen, since the rebind's press may
+	# have hidden it, and showing it later lets focus mode turn on as the screen closes.
 	if _cursor_was_visible:
 		KitSystems.input().show_cursor()
 
@@ -254,8 +255,7 @@ func _ready() -> void:
 # -- PRIVATE METHODS ----------------------------------------------------------------- #
 
 
-## _activate enables input processing and updates the prompt UI. Called from tree
-## lifecycle methods (`_ready` on first push, `_enter_tree` on subsequent pushes).
+## _activate enables input processing and updates the prompt UI.
 func _activate() -> void:
 	assert(not is_processing_input(), "invalid state; already processing input")
 	set_process_input(true)
