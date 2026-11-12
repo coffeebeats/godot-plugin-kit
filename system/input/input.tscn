@@ -34,9 +34,16 @@
 [ext_resource type="Resource" uid="uid://chr33gg6rm0kw" path="res://system/input/unknown/names/switch_joy_con_right.tres" id="39_names_switch_joy_con_right"]
 [ext_resource type="Resource" uid="uid://diibwsx72xyfy" path="res://system/input/unknown/glyphs/switch_joy_con_pair.tres" id="40_switch_joy_con_pair"]
 [ext_resource type="Resource" uid="uid://8i4oq0sqhjnd" path="res://system/input/unknown/names/switch_joy_con_pair.tres" id="41_names_switch_joy_con_pair"]
+[ext_resource type="Script" uid="uid://cljg7byxqnq7d" path="res://addons/std/input/action_set.gd" id="42_set"]
+[ext_resource type="Resource" uid="uid://ldk7k2w5uvks" path="res://system/input/actions/menu.tres" id="43_menu"]
+[ext_resource type="Resource" uid="uid://bhsjw6b4deo8i" path="res://system/input/actions/menu_binding.tres" id="44_binding"]
+[ext_resource type="Resource" uid="uid://bcsts082smqrp" path="res://system/input/actions/menu_options.tres" id="45_options"]
+[ext_resource type="Resource" uid="uid://dp0wxxg20ablh" path="res://system/input/actions/menu_tabbed.tres" id="46_tabbed"]
+[ext_resource type="Resource" uid="uid://dya1kttgcn4aq" path="res://system/input/actions/splash.tres" id="47_splash"]
 
 [node name="Input" type="Node" unique_id=1621058833]
 script = ExtResource("1_sl0pi")
+kit_action_sets = Array[ExtResource("42_set")]([ExtResource("43_menu"), ExtResource("44_binding"), ExtResource("45_options"), ExtResource("46_tabbed"), ExtResource("47_splash")])
 glyph_sets = Array[ExtResource("6_set")]([ExtResource("7_keyboard"), ExtResource("8_mouse"), ExtResource("15_xbox_one"), ExtResource("9_xbox"), ExtResource("16_playstation_4"), ExtResource("10_playstation"), ExtResource("11_steam_deck"), ExtResource("36_switch_joy_con_left"), ExtResource("37_switch_joy_con_right"), ExtResource("17_switch_joy_con_single"), ExtResource("40_switch_joy_con_pair"), ExtResource("12_switch"), ExtResource("13_steam_controller")])
 origin_names = Array[ExtResource("25_names")]([ExtResource("26_names_keyboard_mouse"), ExtResource("27_names_xbox_one"), ExtResource("28_names_xbox"), ExtResource("29_names_playstation_4"), ExtResource("30_names_playstation"), ExtResource("31_names_steam_deck"), ExtResource("38_names_switch_joy_con_left"), ExtResource("39_names_switch_joy_con_right"), ExtResource("35_names_switch_joy_con_single"), ExtResource("41_names_switch_joy_con_pair"), ExtResource("32_names_switch"), ExtResource("33_names_steam_controller"), ExtResource("34_names_default")])
 unknown_glyph = ExtResource("14_unknown")

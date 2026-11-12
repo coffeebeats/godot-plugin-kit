@@ -27,11 +27,6 @@ signal focus_root_changed(root: Control)
 const StdInputDevice := preload("res://addons/std/input/device.gd")
 const Signals := preload("res://addons/std/event/signal.gd")
 const Profile := preload("../../platform/profile/profile.gd")
-const MenuActions := preload("actions/menu.tres")
-const MenuBindingActions := preload("actions/menu_binding.tres")
-const MenuOptionsActions := preload("actions/menu_options.tres")
-const MenuTabbedActions := preload("actions/menu_tabbed.tres")
-const SplashActions := preload("actions/splash.tres")
 
 # -- DEFINITIONS --------------------------------------------------------------------- #
 
@@ -57,6 +52,10 @@ const MODULE_ID := &"input"
 ## A rebind in the controls tabs' `MenuOptions` group writes to each one declaring it,
 ## so list them here and not in `action_sets`.
 @export var menu_options_layers: Array[StdInputActionSetLayer] = []
+
+## kit_action_sets are kit's own sets and layers, those of its menus and splash screens,
+## validated with the game's. Kit's scene sets them.
+@export var kit_action_sets: Array[StdInputActionSet] = []
 
 ## focused_sound_group is the sound group used for focused UI elements.
 @export var focused_sound_group: StdSoundGroup = null
@@ -254,15 +253,9 @@ func _get_module_requires() -> Array[StringName]:
 ## _list_action_sets returns kit's sets and layers followed by the game's, each listed
 ## once.
 func _list_action_sets() -> Array[StdInputActionSet]:
-	var listed: Array[StdInputActionSet] = [
-		MenuActions,
-		MenuBindingActions,
-		MenuOptionsActions,
-		MenuTabbedActions,
-		SplashActions,
-	]
+	var listed: Array[StdInputActionSet] = []
 
-	for action_set in action_sets + menu_options_layers:
+	for action_set in kit_action_sets + action_sets + menu_options_layers:
 		if action_set not in listed:
 			listed.append(action_set)
 

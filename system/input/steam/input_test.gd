@@ -12,6 +12,7 @@ const HoldModeProperty := preload(
 )
 const PlatformScene := preload("res://premade/platform.tscn")
 const SystemInput := preload("res://system/input/input.gd")
+const SystemInputScene := preload("res://system/input/input.tscn")
 
 const Menu := preload("res://system/input/actions/menu.tres")
 const MenuBinding := preload("res://system/input/actions/menu_binding.tres")
@@ -66,9 +67,9 @@ func test_input_monitor_kit_sets_are_each_validated_by_the_input_system() -> voi
 	# Given: The Steam input scene, whose monitor lists kit's own sets and layers.
 	var input: Node = autofree(_input_scene.instantiate())
 
-	# When: The input system lists the sets it validates.
+	# When: The input system's scene lists the sets it validates.
 	var listed: Array[StdInputActionSet] = (
-		autofree(SystemInput.new())._list_action_sets()
+		autofree(SystemInputScene.instantiate())._list_action_sets()
 	)
 
 	# Then: Each of kit's sets on the monitor is among them.
