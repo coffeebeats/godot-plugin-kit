@@ -72,9 +72,9 @@ The game's own nodes become modules the same way: extend `KitModule`, override `
 
 Each menu is a finished screen, used in place:
 
-- **Settings:** push `menu/settings/screen.tres`, or list `menu/settings/pusher.tscn` in a screen's `attachment_scenes` to open it on `ui_toggle_menu`. The screen's `cache_mode` is `IN_TREE`, so its menu is built, hidden, when the first screen listing it under `dependency_screens` mounts, and opening it only shows it. List it under the `dependency_screens` of the screen it opens from, such as the main menu's; without that the first open builds the menu in view.
+- **Settings:** push `menu/settings/screen.tres`, or list `menu/settings/pusher.tscn` in a screen's `attachment_scenes` to open it on `ui_toggle_menu`. The screen's `cache_mode` is `IN_TREE`, so its menu is built, hidden, when the first screen listing it under `dependency_screens` mounts, and opening it only shows it. List it under the `dependency_screens` of the screen it opens from, such as the main menu's; without that, the first open builds the menu in view.
 - **Save slots:** push `menu/save/screen.tres` and await its `popped` signal, which carries the chosen slot's index.
-- **Pause:** list `menu/pause/pusher.tscn` in a gameplay screen's `attachment_scenes`, and `menu/pause/screen.tres` under its `dependency_screens`. The pause screen lists the settings screen under its own, so the gameplay screen's mount builds the settings menu too, and keeps its own menu out of the tree between pauses (`cache_mode` is `DETACHED`).
+- **Pause:** list `menu/pause/pusher.tscn` in a gameplay screen's `attachment_scenes`, and `menu/pause/screen.tres` under its `dependency_screens`. The pause screen lists the settings screen under its own, so the gameplay screen's mount builds the settings menu too. The pause screen keeps its own menu out of the tree between pauses (`cache_mode` is `DETACHED`).
 - **Alerts over gameplay:** a map opens `ui/menu/alert_gameplay.tscn` for a match's result, a game over or a disconnect, as [`ui/menu/README.md`](ui/menu/README.md) describes.
 - **Splash:** push `ui/splash/godot_screen.tres`, whose scene emits `advanced` once it is done. `ui/splash/splash.gd` makes a splash of any scene.
 

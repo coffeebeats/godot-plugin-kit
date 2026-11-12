@@ -184,10 +184,11 @@ func before_all() -> void:
 
 
 func before_each() -> void:
-	# Given: A platform whose profile loaded, the input scene with its slot, and the
-	# settings the pause screen's settings menu reads.
+	# Given: A platform whose profile loaded, and the input scene with its slot.
 	add_child_autofree(PlatformScene.instantiate())
 	add_child_autofree(SystemInputScene.instantiate())
+
+	# Given: The settings component the pause screen's settings menu reads.
 	add_child_autofree(SettingsSystem.new())
 
 	_actions.clear()

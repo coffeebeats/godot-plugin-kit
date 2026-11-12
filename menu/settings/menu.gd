@@ -68,8 +68,8 @@ func _ready() -> void:
 
 	Signals.connect_safe(_tab_group.tab_changed, _on_tab_changed)
 
-	# NOTE: A kept menu enters the tree once, or is only shown, so each open is told
-	# by the manager rather than by `_enter_tree`.
+	# NOTE: `_enter_tree` misses each open of a menu kept in the tree, so the manager's
+	# `screen_entering` marks each open instead.
 	var manager := _find_manager()
 	if manager:
 		Signals.connect_safe(manager.screen_entering, _on_screen_entering)
@@ -119,16 +119,6 @@ func _anchor_first_row(tab: Node) -> void:
 			anchor.priority = anchors.size() - i
 
 
-## _find_manager returns the `StdScreenManager` among the menu's ancestors, or null
-## when it is mounted without one, as in a test.
-func _find_manager() -> StdScreenManager:
-	var node := get_parent()
-	while node and not node is StdScreenManager:
-		node = node.get_parent()
-
-	return node as StdScreenManager
-
-
 ## _find_anchors returns, in tree order, each focus handler under `node` and each
 ## rebinding group, whose rows do not exist until it is ready.
 func _find_anchors(node: Node) -> Array[Node]:
@@ -145,6 +135,16 @@ func _find_anchors(node: Node) -> Array[Node]:
 		out.append_array(_find_anchors(child))
 
 	return out
+
+
+## _find_manager returns the `StdScreenManager` among the menu's ancestors, or null
+## when it is mounted without one, as in a test.
+func _find_manager() -> StdScreenManager:
+	var node := get_parent()
+	while node and not node is StdScreenManager:
+		node = node.get_parent()
+
+	return node as StdScreenManager
 
 
 ## _get_id returns the id of `node` if it is a settings row or group, or else `&""`.
@@ -213,11 +213,10 @@ func _on_screen_entering(_screen: StdScreen, scene: Node) -> void:
 	if scene != self:
 		return
 
-	# NOTE: An open after the first shows a kept menu, so it returns to the default tab,
-	# without the tab's sound.
 	if _tab_group.tabs.is_empty():
 		return  # Every tab was removed; there is nothing to select.
 
+	# Each open shows the kept menu again, so it returns to the default tab silently.
 	_tab_switch_muted = true
 	_tab_group.select(_tab_group.default_tab)
 	(func() -> void: _tab_switch_muted = false).call_deferred()

@@ -154,9 +154,11 @@ func test_menu_enter_tree_without_overrides_leaves_out_the_accessibility_tab() -
 
 
 func test_menu_reopened_returns_to_the_default_tab() -> void:
-	# Given: A platform, the input scene with its slot, and the settings component.
+	# Given: A platform and the input scene with its slot.
 	add_child_autofree(PlatformScene.instantiate())
 	add_child_autofree(SystemInputScene.instantiate())
+
+	# Given: The settings component.
 	add_child_autofree(SettingsSystem.new())
 
 	# Given: Kit's settings screen open on a screen manager.
@@ -164,8 +166,10 @@ func test_menu_reopened_returns_to_the_default_tab() -> void:
 	_input = await StdTestInput.mount(self, manager)
 	var menu: Control = await manager.push_and_wait(SettingsScreen)
 
-	# Given: Another tab than the default selected, with no audio system to sound it.
+	# Given: No tab switch sound, as no audio system is mounted.
 	menu.tab_switch_sound_event = null
+
+	# Given: A tab other than the default selected.
 	var tab_group: Node = menu.get_node(^"%TabGroup")
 	var other: int = (tab_group.default_tab + 1) % tab_group.tabs.size()
 	tab_group.select(other)
@@ -174,9 +178,11 @@ func test_menu_reopened_returns_to_the_default_tab() -> void:
 	manager.pop(null, true)
 	var reopened := await manager.push_and_wait(SettingsScreen)
 
-	# Then: The menu, kept in the tree, opened again on its default tab.
+	# Then: The same menu opens again, kept in the tree.
 	assert_eq(reopened, menu)
 	assert_not_null(manager._cache.get_entry(SettingsScreen).overlay)
+
+	# Then: It shows its default tab and hides the other.
 	assert_true(tab_group.content.get_child(tab_group.default_tab).visible)
 	assert_false(tab_group.content.get_child(other).visible)
 
