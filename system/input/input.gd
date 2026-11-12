@@ -55,7 +55,10 @@ const MODULE_ID := &"input"
 
 ## kit_action_sets are kit's own sets and layers, those of its menus and splash screens,
 ## validated with the game's. Kit's scene sets them.
-@export var kit_action_sets: Array[StdInputActionSet] = []
+##
+## NOTE: Stored in the scene but hidden from the inspector, so a game doesn't add its
+## own sets here; those belong in `action_sets` or `menu_options_layers`.
+@export_storage var kit_action_sets: Array[StdInputActionSet] = []
 
 ## focused_sound_group is the sound group used for focused UI elements.
 @export var focused_sound_group: StdSoundGroup = null
