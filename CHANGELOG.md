@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.1.1 (2026-11-12)
+
+## What's Changed
+* fix(menu): stop the controller tab erroring at quit by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/146
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v4.1.0...v4.1.1
+
 ## 4.1.0 (2026-11-12)
 
 ## What's Changed
