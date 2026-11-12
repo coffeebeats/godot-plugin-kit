@@ -1,5 +1,16 @@
 # Changelog
 
+## 4.1.0 (2026-11-12)
+
+## What's Changed
+* fix(menu): stop the settings menu hanging the screen loader at boot by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/140
+* fix: replace kit's scene and resource preloads with exports set in its own scenes, so a threaded load can't deadlock by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/141
+* chore: document the preload rule in AGENTS.md and exclude GUT tests from the `preload` checker rule by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/145
+* feat(menu): keep the settings menu in the tree and load through `StdLoader`, for std v10 by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/143
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v4.0.0...v4.1.0
+
 ## 4.0.0 (2026-11-11)
 
 ## What's Changed
