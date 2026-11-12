@@ -32,8 +32,8 @@ func is_shutting_down() -> bool:
 	return _is_shutdown_requested
 
 
-## shutdown gracefully shuts down the application, allowing all nodes in the scene the
-## chance to respond to the shutdown notification.
+## shutdown gracefully shuts down the application. Listeners of `shutdown_requested` run
+## first, then each screen manager tears down, then every node gets the close request.
 func shutdown(exit_code: int = 0) -> void:
 	assert(exit_code >= 0, "invalid argument: must be >= 0")
 
@@ -59,6 +59,12 @@ func shutdown(exit_code: int = 0) -> void:
 
 	# First, emit the shutdown signal so any listeners can gracefully handle it.
 	shutdown_requested.emit(exit_code)
+
+	# Next, tear down each screen manager, now that the quit is certain, so that its
+	# screens close while the tree stands rather than as Godot frees it.
+	var managers := StdGroup.with_id(StdScreenManager.GROUP_SCREEN_MANAGER)
+	for manager: StdScreenManager in managers.list_members():
+		manager.tear_down()
 
 	var scene_tree := get_tree()
 
