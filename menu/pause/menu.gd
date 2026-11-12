@@ -33,8 +33,12 @@ static var return_to_main_menu: Callable = Callable()
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
+## _confirm_quit is the quit dialog, held out of the tree between uses.
 var _confirm_quit: KitAlertDialog
+
+## _confirm_return is the return dialog, held out of the tree between uses.
 var _confirm_return: KitAlertDialog
+
 @onready var _options: Button = %Options
 @onready var _quit: Button = %Quit
 @onready var _resume: Button = %Resume

@@ -28,7 +28,11 @@ const SlotButton := preload("slot_button.gd")
 
 # -- INITIALIZATION ------------------------------------------------------------------ #
 
+## _confirm_delete is the delete dialog, held out of the tree between uses.
 var _confirm_delete: KitAlertDialog
+
+## _delete_failed is the dialog shown when a delete fails, held out of the tree between
+## uses.
 var _delete_failed: KitAlertDialog
 
 @onready var _delete_buttons: Control = %DeleteButtons
