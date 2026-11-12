@@ -50,6 +50,7 @@ grow_vertical = 2
 theme_type_variation = &"MenuBody"
 script = ExtResource("29_ctrls")
 scope = ExtResource("21_dqueq")
+action_set_scene = ExtResource("19_ngc7g")
 
 [node name="Controller" type="VBoxContainer" parent="." unique_id=1067462580]
 unique_name_in_owner = true

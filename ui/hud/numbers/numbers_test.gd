@@ -8,7 +8,7 @@ extends GutTest
 # -- DEPENDENCIES -------------------------------------------------------------------- #
 
 const GROUP_2D := preload("../group_2d.tscn")
-const NUMBERS := preload("numbers.gd")
+const NUMBERS := preload("numbers.tscn")
 const STYLE_CRIT := preload("style_crit.tres")
 const STYLE_DAMAGE := preload("style_damage.tres")
 
@@ -33,19 +33,25 @@ func test_pop_spawns_a_number_under_the_layer() -> void:
 	# When: A value is popped.
 	_numbers.pop(12.0)
 
-	# Then: A number exists, parented to the layer rather than to the group, so it does
-	# not follow the entity that produced it.
+	# Then: A number exists.
 	var number := _find_number()
 	assert_not_null(number)
+
+	# Then: It sits under the layer, not the group, so it doesn't follow the entity.
 	assert_eq(number.get_parent(), _layer)
+
+	# Then: It shows the value.
 	assert_eq(number.text, "12")
 
 
 func test_number_holds_its_world_position_across_a_camera_pan() -> void:
-	# Given: A number popped over an entity, with drift removed so the projection is the
-	# only thing that can move it.
+	# Given: A style with no drift, so only the projection can move a number.
 	_numbers.style = _make_still_style()
+
+	# Given: An entity at a known position.
 	_target.global_position = Vector2(120, 80)
+
+	# Given: A number popped over it.
 	_numbers.pop(5.0)
 	await wait_process_frames(1)
 
@@ -56,15 +62,18 @@ func test_number_holds_its_world_position_across_a_camera_pan() -> void:
 	_viewport.canvas_transform = Transform2D(0.0, Vector2(-40, -10))
 	await wait_process_frames(1)
 
-	# Then: The number moves with the world, staying over the spot it came from, rather
-	# than hanging in screen space.
+	# Then: The number moves with the world, staying over the spot it came from.
 	assert_almost_eq(number.global_position - before, Vector2(-40, -10), Vector2(1, 1))
 
 
 func test_number_does_not_follow_its_entity() -> void:
-	# Given: A number popped over an entity, with drift removed.
+	# Given: A style with no drift.
 	_numbers.style = _make_still_style()
+
+	# Given: An entity at a known position.
 	_target.global_position = Vector2(120, 80)
+
+	# Given: A number popped over it.
 	_numbers.pop(5.0)
 	await wait_process_frames(1)
 
@@ -75,13 +84,13 @@ func test_number_does_not_follow_its_entity() -> void:
 	_target.global_position = Vector2(300, 80)
 	await wait_process_frames(1)
 
-	# Then: The number stays where the hit landed. Only the drift moved it.
+	# Then: The number stays where the hit landed.
 	assert_lt(absf(number.global_position.x - before.x), 2.0)
 
 
 func test_two_styles_produce_different_motion() -> void:
 	# Given: Two numbers elements in one group, one damage and one critical.
-	var crit := NUMBERS.new()
+	var crit: KitHudNumbers = NUMBERS.instantiate()
 	crit.style = STYLE_CRIT
 	_group.add_child(crit)
 	crit.owner = _group
@@ -91,11 +100,11 @@ func test_two_styles_produce_different_motion() -> void:
 	crit.pop(7.0)
 	await wait_process_frames(1)
 
-	# Then: They differ in how they read, from the style alone and with no branch in the
-	# element; the critical one is scaled up by its punch.
+	# Then: Both numbers spawn.
 	var spawned := _find_numbers()
 	assert_eq(spawned.size(), 2)
 
+	# Then: Only the critical one is scaled up, by its style's punch.
 	var scales: Array[float] = []
 	for number in spawned:
 		scales.append(number.scale.x)
@@ -112,30 +121,36 @@ func test_number_frees_itself_when_it_finishes() -> void:
 	style.punch = 0.0
 	_numbers.style = style
 
-	# When: A value is popped and its life elapses.
+	# When: A value is popped.
 	_numbers.pop(1.0)
+
+	# Then: One number exists.
 	assert_eq(_find_numbers().size(), 1)
 
+	# When: Its life elapses.
 	await wait_seconds(0.2)
 
-	# Then: It is gone, with no pool and nothing to clean up.
+	# Then: It is gone.
 	assert_eq(_find_numbers().size(), 0)
 
 
 func test_pop_works_before_the_layer_is_ready() -> void:
-	# Given: A layer that has not entered the tree, so nothing under it has been readied.
-	# An entity placed in a map scene at author time pops its first number from a
-	# `_ready` that lands in exactly this window.
+	# Given: A layer that has not entered the tree, so nothing under it is ready.
+	#
+	# NOTE: An entity placed in a map scene pops its first number from a `_ready` that
+	# lands in exactly this window.
 	var layer := KitHudLayer2D.new()
 	layer.map = _map
 	assert_false(layer.is_node_ready())
 
+	# Given: An anchor on the entity, attached to that layer.
 	var anchor := KitHudAnchor2D.new()
 	anchor.group_scene = GROUP_2D
 	_target.add_child(anchor)
-
 	var group := layer.attach(anchor)
-	var numbers := NUMBERS.new()
+
+	# Given: A numbers element in the anchor's group.
+	var numbers: KitHudNumbers = NUMBERS.instantiate()
 	numbers.style = STYLE_DAMAGE
 	group.add_child(numbers)
 
@@ -154,20 +169,20 @@ func test_pop_works_before_the_layer_is_ready() -> void:
 
 
 func test_pop_outside_a_group_freezes_the_screen_position() -> void:
-	# Given: A numbers element mounted on the layer with no group to ask, with drift
-	# removed so the projection is the only thing that can move what it spawns.
-	var loose := NUMBERS.new()
+	# Given: A numbers element on the layer with no group to ask, and no drift.
+	var loose: KitHudNumbers = NUMBERS.instantiate()
 	loose.style = _make_still_style()
 	_layer.add_child(loose)
 	loose.global_position = Vector2(400, 300)
 
-	# When: A value is popped and the camera then pans.
+	# When: A value is popped.
 	loose.pop(3.0)
 	await wait_process_frames(1)
 
 	var number := _find_number()
 	var before := number.global_position
 
+	# When: The camera pans.
 	_viewport.canvas_transform = Transform2D(0.0, Vector2(-40, 0))
 	await wait_process_frames(1)
 
@@ -220,7 +235,7 @@ func before_each() -> void:
 
 	_group = _anchor.group
 
-	_numbers = NUMBERS.new()
+	_numbers = NUMBERS.instantiate()
 	_numbers.style = STYLE_DAMAGE
 	_group.add_child(_numbers)
 
