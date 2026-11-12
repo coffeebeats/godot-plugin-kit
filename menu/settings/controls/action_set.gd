@@ -50,9 +50,8 @@ const DEVICE_TYPE_KEYBOARD := StdInputDevice.DEVICE_TYPE_KEYBOARD
 
 @export_subgroup("Player")
 
-## player_id is a player identifier which will be used to look up the action's input
-## origin bindings. Specifically, this is used to find the corresponding `StdInputSlot`
-## node, which must be present in the scene tree.
+## player_id selects the player whose `StdInputSlot`, which must be in the scene tree,
+## supplies the action's bindings.
 @export var player_id: int = 1:
 	set(value):
 		player_id = value

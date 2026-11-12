@@ -1,7 +1,7 @@
 ##
 ## TabGroup is a `BoxContainer` that manages a group of tab buttons. Each tab is an
-## instance of a project button with `theme_type_variation` toggled between selected
-## and unselected states.
+## instance of `button_scene` with `theme_type_variation` toggled between selected and
+## unselected states.
 ##
 
 extends BoxContainer
@@ -13,7 +13,7 @@ signal tab_changed(index: int)
 
 # -- CONFIGURATION ------------------------------------------------------------------- #
 
-## tabs is the list of tab labels. One button will be created per entry.
+## tabs is the list of tab labels, one button per entry.
 @export var tabs: PackedStringArray = []
 
 ## default_tab is the initially selected tab index.

@@ -136,8 +136,7 @@ func is_using_focus_ui_navigation() -> bool:
 
 
 ## mute_next_focus_sound suppresses the next focus or hover sound event. The sound group
-## is unmuted after the first focus change settles; a `process_frame` fallback
-## guarantees cleanup if no focus change occurs (e.g. cursor mode).
+## unmutes once that focus change settles, or by the next frame if focus never moves.
 func mute_next_focus_sound() -> void:
 	# NOTE: The sound group is the game's to supply. With none there is nothing to mute.
 	if not focused_sound_group:

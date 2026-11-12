@@ -250,7 +250,7 @@ func _ready() -> void:
 	_update_text()
 	_update_trigger()
 
-	# NOTE: This binds the texture to the player's slot and draws it.
+	# Binds the texture to the player's slot and draws it.
 	_glyph.update()
 
 
