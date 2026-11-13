@@ -47,6 +47,7 @@ Follows the GDScript style guide and `godot-plugin-std`'s conventions:
 - Use `##` for public API docs and `# NOTE:` for what a reader must know before touching the code.
 - Translation keys take the `kit_` prefix.
 - Export a scene, or a resource that carries a script, and set it in the scene that ships the script instead of `preload`ing it, since such a preload can deadlock Godot's threaded loader; the checker's `preload` rule enforces this. Preloading a script is fine.
+- Name no 3D class outside a 3D-only script, whether in `extends`, a type hint, `is`, `as` or a constructor call. Kit's own 3D classes, such as `KitHudLayer3D`, count. A 2D game's export template is often built with `disable_3d`, which drops `Node3D` and its subclasses, most classes named with `3D`, the XR and glTF classes, the primitive meshes and `WorldEnvironment`, and the engine then fails to parse the script and every script depending on it. The editor keeps 3D, so nothing shows until a 2D export boots. Test a node with `is_class(&"Node3D")` instead. A 3D-only script lives under `map/3d/` or is named `*_3d.gd`; `test/disable_3d_test.gd` checks every other shipped script, errs toward flagging, and a flagged class that 2D builds keep, such as `Texture3D`, goes in its allowlist.
 
 ### Coroutines
 
