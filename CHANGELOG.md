@@ -1,5 +1,15 @@
 # Changelog
 
+## 4.1.4 (2026-11-13)
+
+## What's Changed
+* chore(addons): bump `std` to v10.1.2 by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/153
+* chore: guard against 3D classes with the checker's `disable-3d` rule by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/156
+* chore(addons): bump `std` to v10.1.3 by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/157
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v4.1.3...v4.1.4
+
 ## 4.1.3 (2026-11-13)
 
 ## What's Changed
