@@ -315,12 +315,14 @@ func load_save_data(data: StdSaveData) -> bool:
 
 	_save_data = create_new_save_data()
 
-	save_slot.status = await _writer.load_save_data(_save_data)
-	save_slot.summary = _save_data.summary  # Don't duplicate; '_save_data' is private.
+	var status := await _writer.load_save_data(_save_data)
+	if not _is_slot_untouched(status):
+		save_slot.status = status
+		save_slot.summary = _save_data.summary  # Don't duplicate; it's private.
 
-	logger = logger.with({&"status": save_slot.status})
+	logger = logger.with({&"status": status})
 
-	match save_slot.status:
+	match status:
 		KitSaveSlot.STATUS_OK:
 			logger.info("Successfully loaded save slot.")
 			data.copy(_save_data)
@@ -337,6 +339,10 @@ func load_save_data(data: StdSaveData) -> bool:
 			logger.warn("Failed to load save; slot is broken or corrupted.")
 			_save_data = null  # Clear this so that next load can retry.
 			save_slot.summary = null
+
+		StdSaveFile.STATUS_BUSY, StdSaveFile.STATUS_DISK_FULL:
+			logger.warn("Failed to load save; save file could not be read.")
+			_save_data = null  # Clear this so that next load can retry.
 
 	return false  # gdlint:ignore=max-returns
 
@@ -394,12 +400,14 @@ func store_save_data(data: StdSaveData) -> bool:
 
 	_save_data = data
 
-	save_slot.status = await _writer.store_save_data(_save_data)
-	save_slot.summary = _save_data.summary  # Don't duplicate; '_save_data' is private.
+	var status := await _writer.store_save_data(_save_data)
+	if not _is_slot_untouched(status):
+		save_slot.status = status
+		save_slot.summary = _save_data.summary  # Don't duplicate; it's private.
 
-	logger = logger.with({&"status": save_slot.status})
+	logger = logger.with({&"status": status})
 
-	match save_slot.status:
+	match status:
 		KitSaveSlot.STATUS_OK:
 			logger.info("Successfully saved game.")
 			slot_scope.config.set_int(CATEGORY_SLOT_DATA, KEY_ACTIVE_SLOT, index)
@@ -417,6 +425,14 @@ func store_save_data(data: StdSaveData) -> bool:
 			_save_data = null  # Clear this so that next load can retry.
 			save_slot.summary = null
 			slot_saved.emit.call_deferred(index, ERR_INVALID_DATA)
+
+		StdSaveFile.STATUS_BUSY:
+			logger.error("Failed to save game; save file was busy.")
+			slot_saved.emit.call_deferred(index, ERR_BUSY)
+
+		StdSaveFile.STATUS_DISK_FULL:
+			logger.error("Failed to save game; save file could not be written.")
+			slot_saved.emit.call_deferred(index, ERR_FILE_CANT_WRITE)
 
 	return false
 
@@ -459,6 +475,12 @@ func _is_module_async() -> bool:
 # -- PRIVATE METHODS ----------------------------------------------------------------- #
 
 
+## _is_slot_untouched returns whether `status` reports a save file request that never
+## read or wrote the slot's file, so the slot keeps the status and summary it had.
+static func _is_slot_untouched(status: StdSaveFile.Status) -> bool:
+	return status == StdSaveFile.STATUS_BUSY or status == StdSaveFile.STATUS_DISK_FULL
+
+
 ## _load_all_slots asynchronously loads save data for each slot. This method is
 ## idempotent; subsequent calls after the first completion are no-ops.
 func _load_all_slots() -> void:
@@ -480,12 +502,14 @@ func _load_all_slots() -> void:
 		var save_slot := KitSaveSlot.new()
 		_save_slots[i] = save_slot
 
-		save_slot.status = await _writer.load_save_data(data)
-		save_slot.summary = data.summary  # Don't duplicate; 'data' is private.
+		var status := await _writer.load_save_data(data)
+		if not _is_slot_untouched(status):
+			save_slot.status = status
+			save_slot.summary = data.summary  # Don't duplicate; 'data' is private.
 
-		logger = logger.with({&"status": save_slot.status})
+		logger = logger.with({&"status": status})
 
-		match save_slot.status:
+		match status:
 			KitSaveSlot.STATUS_OK:
 				logger.info("Successfully loaded save slot.")
 
@@ -495,6 +519,9 @@ func _load_all_slots() -> void:
 			KitSaveSlot.STATUS_BROKEN, KitSaveSlot.STATUS_UNKNOWN:
 				logger.warn("Save slot is broken or corrupted.")
 				save_slot.summary = null
+
+			StdSaveFile.STATUS_BUSY, StdSaveFile.STATUS_DISK_FULL:
+				logger.warn("Save slot could not be read.")
 
 	_writer.slot = -1
 	_slots_ready = true
