@@ -4,7 +4,8 @@
 ## Tests that no script kit ships to every game names a 3D class, since an engine built
 ## with `disable_3d` registers none and fails to parse a script naming one, along with
 ## every script depending on it. The 3D-only scripts, under `map/3d` or named `*_3d.gd`,
-## are left out, and the classes they declare count as 3D classes.
+## are left out, and the classes they declare count as 3D classes, as do paths to them
+## in `extends` or `preload`.
 ##
 
 extends GutTest
@@ -180,6 +181,59 @@ func test_find_3d_names_in_source_finds_type_uses() -> void:
 	assert_eq(found, PackedStringArray(["Node3D", "Camera3D", "KitHudLayer3D"]))
 
 
+func test_find_3d_names_in_source_finds_3d_only_script_paths() -> void:
+	# Given: A source in `map` naming 3D-only scripts by each form of path.
+	var lines := [
+		'extends "../ui/hud/layer_3d.gd"',
+		'const A := preload("3d/scene.gd")',
+		"const B := preload('./3d/viewport_observer.gd')",
+		'const C := preload("res://ui/hud/layer_3d.gd")',
+		'const D := preload("uid://dld1uw3phkfna")',
+		'const E := preload("uid://dllaqka540nal")',
+		"const F := preload('''3d/scene.gd''')",
+	]
+	var source := "\n".join(lines)
+
+	# When: The source is searched for paths to 3D-only scripts.
+	var found := _find_3d_names(source, "res://map/scene.gd")
+
+	# Then: Each path is found, resolved to the script it names.
+	var expected := [
+		"res://ui/hud/layer_3d.gd",
+		"res://map/3d/scene.gd",
+		"res://map/3d/viewport_observer.gd",
+		"res://ui/hud/layer_3d.gd",
+		"res://map/3d/scene.gd",
+		"res://ui/hud/layer_3d.gd",
+		"res://map/3d/scene.gd",
+	]
+	assert_eq(found, PackedStringArray(expected))
+
+
+func test_find_3d_names_in_source_ignores_other_paths_and_text() -> void:
+	# Given: A source in `map` whose paths and text load no 3D-only script on parse.
+	var lines := [
+		'# preload("3d/scene.gd")',
+		'## See "res://ui/hud/layer_3d.gd".',
+		'const A := preload("2d/scene.gd")',
+		'const B := preload("uid://dm1yyvkqdxmqe")',
+		'const C := preload("uid://aaaaaaaaaaaaa")',
+		'const D := preload("res://map/3d/scene.tscn")',
+		'const E := load("user://layer_3d.gd")',
+		'var s := "Ignored \'%s\'" % "%s: %s"',
+		'var t := ^"3d/scene"',
+		'var u := load("3d/scene.gd")',
+		'const G := "res://ui/hud/layer_3d.gd"',
+	]
+	var source := "\n".join(lines)
+
+	# When: The source is searched for paths to 3D-only scripts.
+	var found := _find_3d_names(source, "res://map/scene.gd")
+
+	# Then: Nothing is found.
+	assert_eq(found, PackedStringArray())
+
+
 func test_list_shipped_scripts_in_kit_leaves_out_3d_only_and_vendored_scripts() -> void:
 	# Given: The scripts the sweep reads.
 	var paths := _list_shipped_scripts("res://")
@@ -200,10 +254,10 @@ func test_shipped_scripts_on_3d_disabled_build_name_no_3d_class() -> void:
 	var paths := _list_shipped_scripts("res://")
 	assert_gt(paths.size(), 0)
 
-	# When: Each is searched for 3D class names outside comments and strings.
+	# When: Each is searched for 3D class names and paths to 3D-only scripts.
 	var offenders := PackedStringArray()
 	for path in paths:
-		for found in _find_3d_names(FileAccess.get_file_as_string(path)):
+		for found in _find_3d_names(FileAccess.get_file_as_string(path), path):
 			offenders.append("%s: %s" % [path, found])
 
 	# Then: None names one.
@@ -213,8 +267,17 @@ func test_shipped_scripts_on_3d_disabled_build_name_no_3d_class() -> void:
 # -- PRIVATE METHODS ----------------------------------------------------------------- #
 
 
-func _find_3d_names(source: String) -> PackedStringArray:
+func _find_3d_names(source: String, path_script := "res://") -> PackedStringArray:
 	var found := PackedStringArray()
+
+	for result in _literal_or_comment.search_all(source):
+		var before := source.left(result.get_start()).rstrip(" \t\r\n")
+		if not (before.ends_with("preload(") or before.ends_with("extends")):
+			continue
+
+		var path := _resolve_path(result.get_string(), path_script)
+		if _is_3d_only_script(path):
+			found.append(path)
 
 	var code := _literal_or_comment.sub(source, " ", true)
 	for result in _identifier.search_all(code):
@@ -246,7 +309,29 @@ func _is_3d_class(candidate: String) -> bool:
 
 
 func _is_3d_only_script(path: String) -> bool:
+	if not path.ends_with(".gd"):
+		return false
+
 	return path.ends_with(_SUFFIX_3D_ONLY) or path.begins_with(_DIR_3D_ONLY + "/")
+
+
+# NOTE: Only a literal after `extends` or in `preload` counts, as GDScript loads it on
+# parse. A relative one resolves from the script's directory, with or without `./`.
+func _resolve_path(literal: String, path_script: String) -> String:
+	if literal.begins_with("#"):
+		return ""
+
+	var quotes := 3 if literal.begins_with('"""') or literal.begins_with("'''") else 1
+	var ref := literal.substr(quotes, literal.length() - 2 * quotes)
+
+	if ref.begins_with("uid://"):
+		var id := ResourceUID.text_to_id(ref)
+		return ResourceUID.get_id_path(id) if ResourceUID.has_id(id) else ""
+
+	if ref.is_relative_path():
+		return path_script.get_base_dir().path_join(ref).simplify_path()
+
+	return ref.simplify_path() if ref.begins_with("res://") else ""
 
 
 func _list_shipped_scripts(path_dir: String) -> PackedStringArray:
