@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.1.3 (2026-11-13)
+
+## What's Changed
+* fix(save): report a save that fails on a full disk, and keep the slot as it was by @coffeebeats in https://github.com/coffeebeats/godot-plugin-kit/pull/151
+
+
+**Full Changelog**: https://github.com/coffeebeats/godot-plugin-kit/compare/v4.1.2...v4.1.3
+
 ## 4.1.2 (2026-11-12)
 
 ## What's Changed
