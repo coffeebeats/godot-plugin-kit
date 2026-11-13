@@ -20,7 +20,7 @@ signal slot_deactivated(index: int)
 ## slot_erased is emitted when a save slot's data was just erased.
 signal slot_erased(index: int)
 
-## slot_saved is emitted when a slot save finishes.
+## slot_saved is emitted when a slot save finishes, with `error` set to `OK` on success.
 signal slot_saved(index: int, error: Error)
 
 ## slot_saving is emitted when a slot save begins.
@@ -111,7 +111,6 @@ func activate_slot(index: int) -> bool:
 		logger.warn("Refusing to change active save slot; worker in progress.")
 		return false
 
-	# No change required.
 	if index == _active_slot:
 		return true
 
@@ -215,7 +214,7 @@ func erase_slot(index: int) -> bool:
 			return false
 
 
-## get_active_save_slot returns the index of the currently active save slot. If not save
+## get_active_save_slot returns the index of the currently active save slot. If no save
 ## slot is active, `-1` is returned.
 func get_active_save_slot() -> int:
 	return _active_slot
@@ -342,9 +341,8 @@ func load_save_data(data: StdSaveData) -> bool:
 	return false  # gdlint:ignore=max-returns
 
 
-## flush_save_data synchronously persists the provided save data to the active slot.
-## Intended for shutdown paths where await is unavailable. This is a last-resort path;
-## it blocks until any in-flight save completes, then writes synchronously if dirty.
+## flush_save_data blocks until any in-flight save completes, then writes the provided
+## save data to the active slot if it's dirty. Use it on shutdown, where `await` isn't.
 func flush_save_data(data: StdSaveData) -> void:
 	_writer.wait()
 
